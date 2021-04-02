@@ -1,0 +1,12 @@
+{
+  "name": "CarDealer",
+  "displayName": "CarDealer",
+  "expo": {
+    "name": "CarDealer",
+    "slug": "CarDealer",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
