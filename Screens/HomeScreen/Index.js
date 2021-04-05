@@ -1,13 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Text, View } from "react-native";
 import { Button } from "../../Component/Button/Index";
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
   const Logout = async () => {
     try {
       const val = await AsyncStorage.removeItem("user");
-      console.log(val);
+      navigation.navigate("LoginScreen");
     } catch (error) {
       console.log(error);
     }

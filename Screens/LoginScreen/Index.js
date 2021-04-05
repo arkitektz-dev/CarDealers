@@ -24,21 +24,24 @@ const logoWidth = screenWidth * 0.5;
 
 export const LoginScreen = () => {
   const [user, setUser] = useState({ email: "", password: "" });
+  const navigation = useNavigation();
+
   const Login = async () => {
     await auth()
       .signInWithEmailAndPassword(user.email, user.password)
       .then(async (response) => {
         try {
           await AsyncStorage.setItem("user", response.user.uid);
+          console.log(response.user.uid);
+          navigation.navigate("Home");
         } catch (error) {
           console.log(error);
+          console.log("Testing");
         }
       })
 
       .catch(() => console.log("Invalid Email Or Password"));
   };
-
-  const navigation = useNavigation();
 
   return (
     <ImageBackground

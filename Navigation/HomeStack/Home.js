@@ -1,18 +1,18 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Home from "../../Screens/HomeScreen/Index";
+import HomeScreen from "../../Screens/HomeScreen/Index";
 
-const HomeIndexStack = () => {
+const HomeStack = () => {
   const Stack = createStackNavigator();
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
-        component={Home}
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
-export default HomeIndexStack;
+export default HomeStack;
