@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../../Screens/HomeScreen/Index";
 
-const HomeIndexStack = () => {
+const HomeStack = () => {
   const Stack = createStackNavigator();
 
   return (
@@ -15,4 +15,4 @@ const HomeIndexStack = () => {
     </Stack.Navigator>
   );
 };
-export default HomeIndexStack;
+export default HomeStack;

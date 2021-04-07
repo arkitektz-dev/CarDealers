@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { Text, View } from "react-native";
 import { Button } from "../../Component/Button/Index";
+import HomeCard from "../../Component/CardComponent/Home";
 
 const HomeScreen = () => {
   const Logout = async () => {
@@ -14,6 +15,7 @@ const HomeScreen = () => {
   };
   return (
     <View style={{ justifyContent: "center", alignContent: "center" }}>
+      <HomeCard />
       <Button title="Test" onLogin={Logout} />
     </View>
   );
