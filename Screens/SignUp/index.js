@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
+import firebase from "firebase";
+
 import { TextInput } from "react-native-paper";
 import {
   Dimensions,
@@ -16,32 +18,46 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const logoHeight = screenHeight * 0.3;
-const titleHeight = screenHeight * 0.1;
+const titleHeight = screenHeight * 0.2;
 
 const titleWidth = screenWidth * 0.6;
 const logoWidth = screenWidth * 0.5;
 
 export const SignupScreen = () => {
-  const [user, setUser] = useState({ email: "", password: "" });
-
-  const Signup = async () => {
-    auth()
-      .createUserWithEmailAndPassword(user.email, user.password)
-      .then(() => {
-        console.log("User account created & signed in!");
-      })
-      .catch((error) => {
-        if (error.code === "auth/email-already-in-use") {
-          alert("That email address is already in use!");
-        }
-
-        if (error.code === "auth/invalid-email") {
-          alert("That email address is invalid!");
-        }
-
-        console.error(error);
-      });
+  const [user, setUser] = useState({
+    name: "",
+    username: "",
+    phone: "",
+    email: "",
+    password: "",
+  });
+  var firebaseConfig = {
+    apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
+    authDomain: "cardealer-41e38.firebaseapp.com",
+    databaseURL: "https://cardealer-41e38-default-rtdb.firebaseio.com",
+    projectId: "cardealer-41e38",
+    storageBucket: "cardealer-41e38.appspot.com",
+    messagingSenderId: "161859702626",
+    appId: "1:161859702626:web:6450930824e4b62a52e63b",
+    measurementId: "G-E240F5VSHS",
   };
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const Signup = async () => {
+    try {
+      firebase
+        .database()
+        //referncing to the table
+        .ref("users/")
+        //inserting Data
+        .set(user);
+      alert("Registered Succesfully !");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const navigation = useNavigation();
   return (
     <DismissKeyboard>
@@ -54,15 +70,68 @@ export const SignupScreen = () => {
         style={styles.imageBackground}
       >
         <View style={styles.container}>
-          <View style={styles.logoContainer}>
-            <Text style={{ color: "red", textAlign: "center" }}>Hey</Text>
-          </View>
-
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>Register User</Text>
           </View>
           <View style={{ height: screenWidth * 0.05 }}></View>
           <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Name"
+              placeholderTextColor="white"
+              label="Name:"
+              theme={{
+                colors: {
+                  primary: "white",
+                  placeholder: "#ffffff",
+                  text: "white",
+                },
+              }}
+              underlineColor="#fff"
+              underlineColorAndroid="#fff"
+              style={styles.textInput}
+              style={{ backgroundColor: "transparent" }}
+              onChangeText={(e) => setUser({ ...user, name: e })}
+            />
+            <View style={styles.distance}></View>
+
+            <TextInput
+              placeholder="Username"
+              placeholderTextColor="white"
+              label="Username:"
+              theme={{
+                colors: {
+                  primary: "white",
+                  placeholder: "#ffffff",
+                  text: "white",
+                },
+              }}
+              underlineColor="#fff"
+              underlineColorAndroid="#fff"
+              style={styles.textInput}
+              style={{ backgroundColor: "transparent" }}
+              onChangeText={(e) => setUser({ ...user, username: e })}
+            />
+            <View style={styles.distance}></View>
+
+            <TextInput
+              placeholder="Phone"
+              placeholderTextColor="white"
+              label="Phone:"
+              theme={{
+                colors: {
+                  primary: "white",
+                  placeholder: "#ffffff",
+                  text: "white",
+                },
+              }}
+              underlineColor="#fff"
+              underlineColorAndroid="#fff"
+              style={styles.textInput}
+              style={{ backgroundColor: "transparent" }}
+              onChangeText={(e) => setUser({ ...user, phone: e })}
+            />
+            <View style={styles.distance}></View>
+
             <TextInput
               placeholder="Email"
               placeholderTextColor="white"
@@ -99,6 +168,24 @@ export const SignupScreen = () => {
               style={{ backgroundColor: "transparent" }}
               onChangeText={(e) => setUser({ ...user, password: e })}
             />
+            <View style={styles.distance}></View>
+            <TextInput
+              placeholder="Confirm Password"
+              placeholderTextColor="white"
+              label="Confirm Password:"
+              theme={{
+                colors: {
+                  primary: "white",
+                  placeholder: "#ffffff",
+                  text: "white",
+                },
+              }}
+              underlineColor="#fff"
+              underlineColorAndroid="#fff"
+              style={styles.textInput}
+              style={{ backgroundColor: "transparent" }}
+              // onChangeText={(e) => setUser({ ...user, password: e })}
+            />
           </View>
 
           <View style={styles.buttonContainer}>
@@ -123,7 +210,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "white",
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "700",
     textAlign: "center",
   },
@@ -187,5 +274,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: titleHeight,
     width: titleWidth,
+    justifyContent: "center",
+    flexDirection: "column",
   },
 });

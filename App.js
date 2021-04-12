@@ -13,7 +13,10 @@ import { LoginScreen } from "./Screens/LoginScreen/Index";
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Login"
+    >
       <Stack.Screen name="Login" component={LoginStack} />
       <Stack.Screen name="Home" component={HomeStack} />
     </Stack.Navigator>
