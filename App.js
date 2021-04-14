@@ -6,10 +6,7 @@ import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
-
-import HomeScreen from "./Screens/HomeScreen/Index";
-import { LoginScreen } from "./Screens/LoginScreen/Index";
-
+import firebase from "firebase";
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
@@ -24,6 +21,16 @@ const MainStack = () => {
 };
 
 export default function App() {
+  var firebaseConfig = {
+    apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
+    authDomain: "cardealer-41e38.firebaseapp.com",
+    databaseURL: "https://cardealer-41e38-default-rtdb.firebaseio.com",
+    projectId: "cardealer-41e38",
+    storageBucket: "cardealer-41e38.appspot.com",
+    messagingSenderId: "161859702626",
+    appId: "1:161859702626:web:6450930824e4b62a52e63b",
+    measurementId: "G-E240F5VSHS",
+  };
   let user;
   useEffect(() => {
     getUser();
@@ -32,6 +39,9 @@ export default function App() {
     user = await AsyncStorage.getItem("user");
     console.log(user);
   };
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
   return (
     <NavigationContainer>
       <MainStack />

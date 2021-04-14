@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import firebase from "firebase";
 import auth from "@react-native-firebase/auth";
+
 import {
   Dimensions,
   ImageBackground,
@@ -11,7 +13,7 @@ import {
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
 import { TextInput } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import database from "@react-native-firebase/database";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -23,24 +25,33 @@ const titleWidth = screenWidth * 0.6;
 const logoWidth = screenWidth * 0.5;
 
 export const LoginScreen = () => {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({ name: "", phone: "", password: "" });
+
   const navigation = useNavigation();
 
   const Login = async () => {
-    await auth()
-      .signInWithEmailAndPassword(user.email, user.password)
-      .then(async (response) => {
-        try {
-          await AsyncStorage.setItem("user", response.user.uid);
-          console.log(response.user.uid);
-          navigation.navigate("Home");
-        } catch (error) {
-          console.log(error);
-          console.log("Testing");
-        }
-      })
-
-      .catch(() => console.log("Invalid Email Or Password"));
+    // var alpha = "^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$";
+    // var num = "^[0-9]*$";    console.log(snapshot.key);
+    try {
+      console.log("Checig");
+      await firebase
+        .database()
+        .ref("users/")
+        .orderByChild("email")
+        .equalTo("test")
+        .on("child_added", async () => {
+          await firebase
+            .database()
+            .ref("users/")
+            .orderByChild("password")
+            .equalTo("test")
+            .on("child_added", function (snapshot) {
+              console.log(snapshot.key);
+            });
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -59,27 +70,8 @@ export const LoginScreen = () => {
       <View style={styles.titleContainer}>
         <View style={{ height: screenWidth * 0.07 }}></View>
 
-        <Text
-          style={{
-            color: "white",
-            fontSize: 20,
-            fontWeight: "700",
-            textAlign: "center",
-          }}
-        >
-          Welcome Back
-        </Text>
-        <Text
-          style={{
-            color: "white",
-            fontSize: 14,
-            fontWeight: "400",
-            textAlign: "center",
-            top: 7,
-          }}
-        >
-          SignIn to Continue
-        </Text>
+        <Text style={styles.header}>Welcome Back</Text>
+        <Text style={styles.text_h2}>SignIn to Continue</Text>
       </View>
       <View style={{ height: screenWidth * 0.07 }}></View>
       <View style={styles.inputContainer}>
@@ -97,7 +89,7 @@ export const LoginScreen = () => {
             backgroundColor: "transparent",
             color: "#fff",
           }}
-          onChangeText={(e) => setUser({ ...user, email: e })}
+          onChangeText={(e) => setUser({ ...user, phone: e })}
         />
         <View style={styles.distance}></View>
         <TextInput
@@ -132,6 +124,19 @@ export const LoginScreen = () => {
   );
 };
 const styles = StyleSheet.create({
+  header: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  text_h2: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "400",
+    textAlign: "center",
+    top: 7,
+  },
   imageBackground: {
     flex: 1,
     height: null,
