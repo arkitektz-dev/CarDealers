@@ -46,7 +46,7 @@ export const LoginScreen = () => {
             .orderByChild("password")
             .equalTo("test")
             .on("child_added", function (snapshot) {
-              console.log(snapshot.key);
+              console.l - og(snapshot.key);
             });
         });
     } catch (error) {

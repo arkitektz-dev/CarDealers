@@ -1,6 +1,8 @@
 import React, { createRef, useEffect, useRef, useState } from "react";
 import { Dimensions, Modal, StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
+import auth from "@react-native-firebase/auth";
+import { Button } from "../Button/Index";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -16,6 +18,14 @@ export const OTPModal = ({ status }) => {
     pin5: "",
     pin6: "",
   });
+
+  async function confirmCode() {
+    try {
+      await confirm.confirm(code);
+    } catch (error) {
+      console.log("Invalid code.");
+    }
+  }
   return (
     <Modal visible={status} animationType={"slide"}>
       <View
@@ -155,6 +165,7 @@ export const OTPModal = ({ status }) => {
           />
         </View>
       </View>
+      <Button title="Verify" onLogin={confirmCode} />
     </Modal>
   );
 };

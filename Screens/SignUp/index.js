@@ -1,10 +1,7 @@
 import React, { useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firebase from "firebase";
-<<<<<<< HEAD
-=======
 
->>>>>>> 8757a1f3ebe4001632db8c4532c9661f705d34ee
 import { TextInput } from "react-native-paper";
 import {
   Dimensions,
@@ -36,28 +33,20 @@ export const SignupScreen = () => {
     email: "",
     password: "",
   });
-<<<<<<< HEAD
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const Signup = async () => {
     setModalVisible(true);
-    // try {
-    //   const confirmation = await auth().signInWithPhoneNumber("+923070211892");
-    //   setConfirm(confirmation);
-    //   console.log("Fired");
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-  async function confirmCode() {
     try {
-      await confirm.confirm(code);
+      const confirmation = await auth().signInWithPhoneNumber("+923070211892");
+      setConfirm(confirmation);
+      console.log("Fired");
     } catch (error) {
-      console.log("Invalid code.");
+      console.log(error);
     }
-  }
+  };
 
   // const Signup = async () => {
 
@@ -74,34 +63,6 @@ export const SignupScreen = () => {
   //   //   console.log(error);
   //   // }
   // };
-=======
-  var firebaseConfig = {
-    apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
-    authDomain: "cardealer-41e38.firebaseapp.com",
-    databaseURL: "https://cardealer-41e38-default-rtdb.firebaseio.com",
-    projectId: "cardealer-41e38",
-    storageBucket: "cardealer-41e38.appspot.com",
-    messagingSenderId: "161859702626",
-    appId: "1:161859702626:web:6450930824e4b62a52e63b",
-    measurementId: "G-E240F5VSHS",
-  };
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const Signup = async () => {
-    try {
-      firebase
-        .database()
-        //referncing to the table
-        .ref("users/")
-        //inserting Data
-        .set(user);
-      alert("Registered Succesfully !");
-    } catch (error) {
-      console.log(error);
-    }
-  };
->>>>>>> 8757a1f3ebe4001632db8c4532c9661f705d34ee
 
   const navigation = useNavigation();
   return (
