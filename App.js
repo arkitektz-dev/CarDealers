@@ -7,15 +7,24 @@ import { StyleSheet, Text, View } from "react-native";
 import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 const MainStack = () => {
   const Stack = createStackNavigator();
+  // let user;
+  // useEffect(() => {
+  //   getUser();
+  // },[]);
+  // const getUser = async () => {
+  //   user = await AsyncStorage.getItem("user");
+  //   console.log(user);
+  // };
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="Login"
     >
-      <Stack.Screen name="Login" component={LoginStack} />
       <Stack.Screen name="Home" component={HomeStack} />
+      <Stack.Screen name="Login" component={LoginStack} />
     </Stack.Navigator>
   );
 };
@@ -31,21 +40,16 @@ export default function App() {
     appId: "1:161859702626:web:6450930824e4b62a52e63b",
     measurementId: "G-E240F5VSHS",
   };
-  let user;
-  useEffect(() => {
-    getUser();
-  });
-  const getUser = async () => {
-    user = await AsyncStorage.getItem("user");
-    console.log(user);
-  };
+
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
   return (
-    <NavigationContainer>
-      <MainStack />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <MainStack />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
   // user ? (
   //   <NavigationContainer>

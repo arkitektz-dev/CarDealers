@@ -1,24 +1,29 @@
 import React, { useState } from "react";
 import firebase from "firebase";
 import auth from "@react-native-firebase/auth";
-
 import {
   Dimensions,
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+
+import BackgroundImage from "../../Assets/loginBackground.png";
+import AppLogo from "../../Assets/AppLogo.png";
+
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import database from "@react-native-firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const logoHeight = screenHeight * 0.3;
+const logoHeight = screenHeight * 0.2;
 const titleHeight = screenHeight * 0.1;
 
 const titleWidth = screenWidth * 0.6;
@@ -26,74 +31,87 @@ const logoWidth = screenWidth * 0.5;
 
 export const LoginScreen = () => {
   const [user, setUser] = useState({ name: "", phone: "", password: "" });
+  const [auth, setAuth] = useState(false);
+  const [emptyFieldError, setEmptyFieldError] = useState(false);
 
   const navigation = useNavigation();
 
   const Login = async () => {
     // var alpha = "^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$";
     // var num = "^[0-9]*$";    console.log(snapshot.key);
-    try {
-      console.log("Checig");
-      await firebase
-        .database()
-        .ref("users/")
-        .orderByChild("email")
-        .equalTo("test")
-        .on("child_added", async () => {
-          await firebase
-            .database()
-            .ref("users/")
-            .orderByChild("password")
-            .equalTo("test")
-            .on("child_added", function (snapshot) {
-              console.l - og(snapshot.key);
-            });
-        });
-    } catch (error) {
-      console.log(error);
+    if (user.name == "" || user.password == "") {
+      alert("Fields Can not be empty");
+      setEmptyFieldError(true);
+    } else {
+      await database()
+        .ref("/users/")
+        .orderByChild("username")
+        .equalTo(user.name)
+        .once("value")
+        .then(async (snapshot) => {
+          const userInfo = Object.values(snapshot.val())[0];
+          if (user.password == userInfo.password) {
+            // await AsyncStorage.setItem("user", snapshot.key);
+            console.log(snapshot.key);
+            navigation.replace("Home");
+          } else {
+            alert("Invalid Email Or Password");
+          }
+        })
+        .catch(() => alert("Invalid Email Or Password"));
     }
   };
-
+  const hasErrors = () => {
+    return user.name == "";
+  };
   return (
     <ImageBackground
       blurRadius={2}
-      source={{
-        uri:
-          "https://reactnativecode.com/wp-content/uploads/2017/10/Guitar.jpg",
-      }}
+      source={BackgroundImage}
       style={styles.imageBackground}
     >
       <View style={styles.logoContainer}>
-        <Text style={{ color: "red", textAlign: "center" }}>Hey</Text>
+        <Image
+          source={AppLogo}
+          resizeMode="contain"
+          style={{ width: 300, height: 300, alignSelf: "center" }}
+        />
       </View>
 
       <View style={styles.titleContainer}>
         <View style={{ height: screenWidth * 0.07 }}></View>
 
         <Text style={styles.header}>Welcome Back</Text>
-        <Text style={styles.text_h2}>SignIn to Continue</Text>
+        <Text style={styles.text_h2}>Signin to Continue</Text>
       </View>
       <View style={{ height: screenWidth * 0.07 }}></View>
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="white"
-          mode="flat"
-          label="Email:"
-          underlineColor="#fff"
-          underlineColorAndroid="#fff"
-          theme={{
-            colors: { primary: "white", placeholder: "#ffffff", text: "white" },
-          }}
-          style={{
-            backgroundColor: "transparent",
-            color: "#fff",
-          }}
-          onChangeText={(e) => setUser({ ...user, phone: e })}
-        />
+        <View>
+          <TextInput
+            renderToHardwareTextureAndroid
+            returnKeyType="next"
+            placeholderTextColor="white"
+            mode="flat"
+            label="Username:"
+            underlineColor="#fff"
+            underlineColorAndroid="#fff"
+            theme={{
+              colors: {
+                primary: "white",
+                placeholder: "#ffffff",
+                text: "white",
+              },
+            }}
+            style={{
+              backgroundColor: "transparent",
+              color: "#fff",
+            }}
+            onChangeText={(e) => setUser({ ...user, name: e })}
+          />
+        </View>
         <View style={styles.distance}></View>
         <TextInput
-          placeholder="Password"
+          secureTextEntry
           placeholderTextColor="white"
           label="Password:"
           theme={{
@@ -109,9 +127,19 @@ export const LoginScreen = () => {
         <Text style={styles.forgotpassText}>Forgot Password?</Text>
         <View style={{ width: "15%" }}></View>
       </View>
+      <View style={styles.distance}></View>
+      {emptyFieldError ? (
+        <HelperText
+          type="error"
+          style={{ color: "#fff", fontWeight: "500", textAlign: "center" }}
+        >
+          Field can not be empty!
+        </HelperText>
+      ) : null}
       <View style={styles.buttonContainer}>
         <Button title="Login" onLogin={Login} />
       </View>
+
       <View style={styles.signupContainer}>
         <Text
           style={styles.signupText}
@@ -130,9 +158,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
+  errorSpace: {
+    top: "3%",
+  },
   text_h2: {
     color: "white",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "400",
     textAlign: "center",
     top: 7,
@@ -180,7 +211,6 @@ const styles = StyleSheet.create({
     top: 15,
   },
   logoContainer: {
-    backgroundColor: "yellow",
     height: logoHeight,
     width: logoWidth,
     justifyContent: "center",

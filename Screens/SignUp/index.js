@@ -1,20 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firebase from "firebase";
-
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import {
   Dimensions,
   ImageBackground,
   Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { Button } from "../../Component/Button/Index";
 import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { useNavigation } from "@react-navigation/core";
-import { OTPModal } from "../../Component/Modal/OTPModal";
+
+import BackgroundImage from "../../Assets/loginBackground.png";
+import AppLogo from "../../Assets/AppLogo.png";
+import { Tooltip } from "react-native-elements";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -29,62 +32,135 @@ export const SignupScreen = () => {
   const [user, setUser] = useState({
     name: "",
     username: "",
-    phone: "",
+    phone: "+92",
     email: "",
     password: "",
+    confirmPassowrd: "",
   });
   const [confirm, setConfirm] = useState(null);
-  const [code, setCode] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [emptyFieldError, setEmptyFieldError] = useState(false);
+  const [timeoutButton, setTimeoutButton] = useState(false);
+  const [emaiError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [otpInput, setOTPInput] = useState({
+    pin1: "",
+    pin2: "",
+    pin3: "",
+    pin4: "",
+    pin5: "",
+    pin6: "",
+  });
 
   const Signup = async () => {
-    setModalVisible(true);
-    try {
-      const confirmation = await auth().signInWithPhoneNumber("+923070211892");
-      setConfirm(confirmation);
-      console.log("Fired");
-    } catch (error) {
-      console.log(error);
+    console.log(user);
+    if (
+      user.name == "" ||
+      user.password == "" ||
+      user.phone == "" ||
+      user.username == "" ||
+      user.email == ""
+    ) {
+      alert("Fields Can not be empty");
+      setEmptyFieldError(true);
+    } else {
+      if (!emaiError && !usernameError) {
+        setModalVisible(true);
+        try {
+          const confirmation = await auth().signInWithPhoneNumber(user.phone);
+          setConfirm(confirmation);
+          console.log("Fired");
+        } catch (error) {
+          alert("Invalid Number");
+        }
+      }
     }
   };
 
-  // const Signup = async () => {
-
-  //   // try {
-  //   //   let userSignup = firebase
-  //   //     .database()
-  //   //     //referncing to the table
-  //   //     .ref("users/");
-  //   //   //inserting Data
-  //   //   let newUser = userSignup.push();
-  //   //   newUser.set(user);
-  //   //   alert("Registered Succesfully !");
-  //   // } catch (error) {
-  //   //   console.log(error);
-  //   // }
-  // };
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     console.log("This will run after 1 second!");
+  //     setTimeoutButton;
+  //   }, 30000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   const navigation = useNavigation();
+
+  async function confirmCode() {
+    try {
+      await confirm.confirm(
+        otpInput.pin1 +
+          otpInput.pin2 +
+          otpInput.pin3 +
+          otpInput.pin4 +
+          otpInput.pin5 +
+          otpInput.pin6
+      );
+
+      try {
+        let userSignup = firebase
+          .database()
+          //referncing to the table
+          .ref("users/");
+        //inserting Data
+        let newUser = userSignup.push();
+        newUser.set(user);
+        setModalVisible(false);
+        alert("Registered Succesfully !");
+        navigation.replace("Home");
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log("Invalid code.");
+    }
+  }
+  const handleChangeConfirmPassowrd = (e) => {
+    setUser({ ...user, confirmPassowrd: e });
+    if (user.password == user.confirmPassowrd) {
+      setConfirmPasswordError(false);
+    } else {
+      setConfirmPasswordError(true);
+    }
+  };
+  const handleChangeEmail = (e) => {
+    setUser({ ...user, email: e });
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(e) === false) {
+      setEmailError(true);
+      console.log("Email is Not Correct");
+    } else {
+      setEmailError(false);
+    }
+  };
+  const handleChangeUsername = (e) => {
+    setUser({ ...user, username: e });
+    let reg = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
+    if (reg.test(e) === true) {
+      setUsernameError(false);
+    } else {
+      setUsernameError(true);
+      console.log("Username is Not Correct");
+    }
+  };
   return (
     <DismissKeyboard>
       <ImageBackground
         blurRadius={2}
-        source={{
-          uri:
-            "https://reactnativecode.com/wp-content/uploads/2017/10/Guitar.jpg",
-        }}
+        source={BackgroundImage}
         style={styles.imageBackground}
       >
-        <View style={styles.container}>
+        <View style={styles.form_container}>
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>Register User</Text>
           </View>
-          <View style={{ height: screenWidth * 0.05 }}></View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Name"
+              autoCapitalize="none"
               placeholderTextColor="white"
-              label="Name:"
+              label="Name"
               theme={{
                 colors: {
                   primary: "white",
@@ -101,9 +177,9 @@ export const SignupScreen = () => {
             <View style={styles.distance}></View>
 
             <TextInput
-              placeholder="Username"
+              autoCapitalize="none"
               placeholderTextColor="white"
-              label="Username:"
+              label="Username"
               theme={{
                 colors: {
                   primary: "white",
@@ -115,14 +191,18 @@ export const SignupScreen = () => {
               underlineColorAndroid="#fff"
               style={styles.textInput}
               style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, username: e })}
+              onChangeText={handleChangeUsername}
             />
+            {usernameError ? (
+              <Text style={{ color: "#fff" }}>Username is Not Correct</Text>
+            ) : null}
             <View style={styles.distance}></View>
 
             <TextInput
-              placeholder="Phone"
-              placeholderTextColor="white"
-              label="Phone:"
+              autoCapitalize="none"
+              keyboardType="number-pad"
+              maxLength={14}
+              label="Phone"
               theme={{
                 colors: {
                   primary: "white",
@@ -132,18 +212,42 @@ export const SignupScreen = () => {
               }}
               underlineColor="#fff"
               underlineColorAndroid="#fff"
-              style={styles.textInput}
               style={{ backgroundColor: "transparent" }}
               onChangeText={(e) => setUser({ ...user, phone: e })}
             />
+            {/* <TextInputMask
+              // type={"cel-phone"}
+              // options={{
+              //   maskType: "BRL",
+              //   withDDD: true,
+              //   dddMask: "(99) ",
+              // }}
+              type={"datetime"}
+              options={{
+                format: "YYYY/MM/DD",
+              }}
+              style={{
+                color: "white",
+                borderBottomColor: "#fff",
+                borderBottomWidth: 1,
+              }}
+              placeholder="Phone"
+              placeholderTextColor="#fff"
+              onChangeText={(text) => {
+                console.log(text);
+              }}
+            /> */}
+
             <View style={styles.distance}></View>
 
             <TextInput
-              placeholder="Email"
+              autoCapitalize="none"
               placeholderTextColor="white"
+              maxLength={40}
               // style={styles.textInput}
+              keyboardType="email-address"
               mode="flat"
-              label="Email:"
+              label="Email"
               underlineColor="#fff"
               underlineColorAndroid="#fff"
               theme={{
@@ -154,13 +258,19 @@ export const SignupScreen = () => {
                 },
               }}
               style={{ backgroundColor: "transparent", color: "#fff" }}
-              onChangeText={(e) => setUser({ ...user, email: e })}
+              onChangeText={handleChangeEmail}
             />
+            {emaiError ? (
+              <Text style={{ color: "#fff" }}>Email is Not Correct</Text>
+            ) : null}
+
             <View style={styles.distance}></View>
             <TextInput
-              placeholder="Password"
+              autoCapitalize="none"
+              maxLength={20}
+              secureTextEntry
               placeholderTextColor="white"
-              label="Password:"
+              label="Password"
               theme={{
                 colors: {
                   primary: "white",
@@ -174,11 +284,16 @@ export const SignupScreen = () => {
               style={{ backgroundColor: "transparent" }}
               onChangeText={(e) => setUser({ ...user, password: e })}
             />
+            <Tooltip popover={<Text>Info here</Text>}>
+              <Text style={{ color: "white" }}>Press me</Text>
+            </Tooltip>
             <View style={styles.distance}></View>
             <TextInput
-              placeholder="Confirm Password"
+              autoCapitalize="none"
+              maxLength={20}
+              secureTextEntry
               placeholderTextColor="white"
-              label="Confirm Password:"
+              label="Confirm Password"
               theme={{
                 colors: {
                   primary: "white",
@@ -190,15 +305,196 @@ export const SignupScreen = () => {
               underlineColorAndroid="#fff"
               style={styles.textInput}
               style={{ backgroundColor: "transparent" }}
-              // onChangeText={(e) => setUser({ ...user, password: e })}
+              onChangeText={handleChangeConfirmPassowrd}
             />
+            {confirmPasswordError ? (
+              <HelperText
+                type="error"
+                style={{
+                  color: "#fff",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
+              >
+                Passwords Do Not Match
+              </HelperText>
+            ) : null}
           </View>
+          {emptyFieldError ? (
+            <HelperText
+              type="error"
+              style={{ color: "#fff", fontWeight: "500", textAlign: "center" }}
+            >
+              Field can not be empty!
+            </HelperText>
+          ) : null}
+          <View style={styles.distance}></View>
 
           <View style={styles.buttonContainer}>
             <Button title="Register" onLogin={Signup} />
           </View>
 
-          <OTPModal status={modalVisible} />
+          <Modal visible={modalVisible} animationType={"slide"}>
+            <View
+              style={{
+                flexDirection: "column",
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <TextInput
+                  autoFocus={true}
+                  blurOnSubmit={false}
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin1: e })}
+                  returnKeyType={"next"}
+                  maxLength={1}
+                  placeholder="-"
+                  keyboardType="number-pad"
+                  textAlign="center"
+                  style={styles.OTP_text}
+                  value={otpInput.first}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+                <View style={styles.space} />
+                <TextInput
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin2: e })}
+                  maxLength={1}
+                  placeholder="-"
+                  keyboardType="number-pad"
+                  style={styles.OTP_text}
+                  value={otpInput.second}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+                <View style={styles.space} />
+
+                <TextInput
+                  maxLength={1}
+                  placeholder="-"
+                  keyboardType="number-pad"
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin3: e })}
+                  style={styles.OTP_text}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+                <View style={styles.space} />
+
+                <TextInput
+                  maxLength={1}
+                  placeholder="-"
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin4: e })}
+                  keyboardType="number-pad"
+                  style={styles.OTP_text}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+                <View style={styles.space} />
+
+                <TextInput
+                  maxLength={1}
+                  placeholder="-"
+                  keyboardType="number-pad"
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin5: e })}
+                  style={styles.OTP_text}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+                <View style={styles.space} />
+
+                <TextInput
+                  maxLength={1}
+                  placeholder="-"
+                  keyboardType="number-pad"
+                  onChangeText={(e) => setOTPInput({ ...otpInput, pin6: e })}
+                  style={styles.OTP_text}
+                  theme={{
+                    colors: {
+                      primary: "red",
+                      placeholder: "red",
+                      text: "red",
+                    },
+                  }}
+                  underlineColor="red"
+                  underlineColorAndroid="red"
+                />
+              </View>
+              <View style={styles.distance}></View>
+
+              <Button title="Verify" onLogin={confirmCode} />
+              <View style={styles.distance}></View>
+              <TouchableOpacity
+                onPress={() => {
+                  setConfirm(null), setModalVisible(false);
+                }}
+                style={{ justifyContent: "center" }}
+              >
+                <Text
+                  style={{
+                    color: "#333",
+                    alignSelf: "center",
+                    fontSize: 24,
+                    fontWeight: "600",
+                  }}
+                >
+                  Resend Code
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
           <View style={styles.signupContainer}>
             <Text
               style={styles.signupText}
@@ -213,6 +509,14 @@ export const SignupScreen = () => {
   );
 };
 const styles = StyleSheet.create({
+  OTP_text: {
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  space: {
+    width: screenWidth * 0.04,
+  },
+
   underlineStyleHighLighted: {
     borderColor: "#03DAC6",
   },
@@ -225,8 +529,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
-  container: {
-    height: screenHeight * 0.8,
+  form_container: {
+    height: screenHeight * 0.7,
   },
   textInput: {
     borderBottomColor: "#fff",
@@ -239,7 +543,10 @@ const styles = StyleSheet.create({
     width: null,
     // opacity: 0.7,
   },
-  inputContainer: { width: screenWidth * 0.7, alignSelf: "center" },
+  inputContainer: {
+    width: screenWidth * 0.7,
+    alignSelf: "center",
+  },
   forgotpassContainer: {
     flexDirection: "row",
     flex: 0.1,
