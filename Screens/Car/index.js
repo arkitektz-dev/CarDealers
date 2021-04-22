@@ -2,10 +2,11 @@ import React from "react";
 import { Text } from "react-native";
 import { View } from "react-native";
 
-export const Screen1 = () => {
+const CarScreen = () => {
   return (
     <View>
-      <Text>OKay</Text>
+      <Text> Car Screen</Text>
     </View>
   );
 };
+export default CarScreen;

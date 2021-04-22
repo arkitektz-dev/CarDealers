@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import {
   Dimensions,
@@ -18,7 +19,7 @@ const CategoryCard = () => {
 
   const imageHeight = screenHeight * 0;
   const imageWidth = screenWidth * 0.3;
-
+  const naivgation = useNavigation();
   return (
     <View style={{ flexDirection: "row" }}>
       <View
@@ -28,9 +29,15 @@ const CategoryCard = () => {
           flex: 1,
         }}
       >
-        <Image source={Car} style={{ width: 100, height: 100 }} />
-        <Image source={ShowRoom} style={{ width: 95, height: 95 }} />
-        <Image source={Dealer} style={{ width: 100, height: 100 }} />
+        <TouchableOpacity onPress={() => naivgation.navigate("CarStack")}>
+          <Image source={Car} style={{ width: 100, height: 100 }} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => naivgation.navigate("ShowroomStack")}>
+          <Image source={ShowRoom} style={{ width: 95, height: 95 }} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => naivgation.navigate("DealerStack")}>
+          <Image source={Dealer} style={{ width: 100, height: 100 }} />
+        </TouchableOpacity>
       </View>
     </View>
   );

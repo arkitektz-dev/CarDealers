@@ -21,12 +21,15 @@ import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
 import { SearchComponent } from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
+import { TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = ({ navigation }) => {
+  // const navigation = useNavigation();
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const Logout = async () => {
@@ -39,49 +42,123 @@ const HomeScreen = () => {
   };
 
   return (
-    <View
-      style={{
-        justifyContent: "center",
-        flexDirection: "column",
-        flex: 1,
-      }}
-    >
-      <View style={styles.distance}></View>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={styles.welcome}> Hi, Jon Herry</Text>
-        <View
-          style={{
-            backgroundColor: "yellow",
-          }}
-        >
-          <Image
-            source={Drawer}
-            resizeMode="contain"
+    <ScrollView>
+      <View
+        style={{
+          justifyContent: "center",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
+        <View style={styles.distance}></View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.welcome}> Hi, Jon Herry</Text>
+          <View
             style={{
-              width: 60,
-              height: 60,
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "flex-end",
+              bottom: "10%",
             }}
-          />
+          >
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Image
+                source={Drawer}
+                resizeMode="contain"
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+        <View style={styles.distance}></View>
+
+        <SearchComponent />
+
+        <View style={styles.distance}></View>
+        <CategoryCard />
+
+        <View style={styles.distance}></View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.heading}> FEATURED CARS</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              style={styles.border}
+              onPress={() => navigation.navigate("CarStack")}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+                {" View More "}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Card />
+
+        <View style={styles.distance}></View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.heading}> FEATURED DEALERS</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              style={styles.border}
+              onPress={() => navigation.navigate("DealerStack")}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+                {" View More "}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <DealerCard />
+        <View style={styles.distance}></View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.heading}> SHOWROOM DEALERS</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              style={styles.border}
+              onPress={() => navigation.navigate("ShowroomStack")}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+                {" View More "}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ShowroomCard />
+
+        {/* <Button title="Logout" onLogin={Logout} /> */}
       </View>
-      <View style={styles.distance}></View>
-
-      <SearchComponent />
-      <View style={styles.distance}></View>
-
-      <CategoryCard />
-      <View style={styles.distance}></View>
-      <Text style={styles.heading}> FEATURED CARS</Text>
-      <Card />
-      <View style={styles.distance}></View>
-      <Text style={styles.heading}> FEATURED DEALERS</Text>
-      <DealerCard />
-      <Button title="Logout" onLogin={Logout} />
-    </View>
+    </ScrollView>
   );
 };
 export default HomeScreen;
 const styles = StyleSheet.create({
+  border: {
+    borderColor: "red",
+    borderWidth: 2,
+    right: "13%",
+  },
   distance: {
     height: screenHeight * 0.02,
   },
@@ -89,6 +166,7 @@ const styles = StyleSheet.create({
     color: "#565656",
     fontSize: 20,
     fontWeight: "bold",
+    left: "5%",
   },
   welcome: {
     color: "#565656",

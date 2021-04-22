@@ -49,7 +49,7 @@ const Card = () => {
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity>
-        <View style={{ justifyContent: "space-between" }}>
+        <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
             source={item.image}
             style={{ width: 100, height: 100 }}
@@ -93,6 +93,7 @@ const Card = () => {
     <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <FlatList
         ItemSeparatorComponent={ListItemSeparator}
+        showsHorizontalScrollIndicator={false}
         data={data}
         renderItem={_renderItem}
         horizontal={true}

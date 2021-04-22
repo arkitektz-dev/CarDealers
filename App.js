@@ -4,12 +4,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import HomeStack from "./Navigation/HomeStack/Home";
+// import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import MyTabs from "./Navigation/BottomTab/Index";
 const MainStack = () => {
   const Stack = createStackNavigator();
+
   // let user;
   // useEffect(() => {
   //   getUser();
@@ -23,8 +25,8 @@ const MainStack = () => {
       screenOptions={{ headerShown: false }}
       initialRouteName="Login"
     >
-      <Stack.Screen name="Home" component={HomeStack} />
       <Stack.Screen name="Login" component={LoginStack} />
+      <Stack.Screen name="Home" component={MyTabs} />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import Dealer from "../../Assets/Dealer.png";
+import Dealer from "../../Assets/Showroom.png";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
 import { Dimensions } from "react-native";
@@ -7,24 +7,24 @@ import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const DealerCard = () => {
+const ShowroomCard = () => {
   const data = [
     {
-      address: "03102324123",
+      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
       image: Dealer,
     },
     {
-      address: "03002354122",
+      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
 
       image: Dealer,
     },
     {
-      address: "0329421012",
+      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
 
       image: Dealer,
     },
     {
-      address: "03451234567",
+      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
 
       image: Dealer,
     },
@@ -68,4 +68,4 @@ const DealerCard = () => {
   );
 };
 
-export default DealerCard;
+export default ShowroomCard;
