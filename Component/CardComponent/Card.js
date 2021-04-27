@@ -1,8 +1,18 @@
 import React from "react";
 import Car from "../../Assets/Car.png";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
 
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const Card = () => {
   const data = [
     {
@@ -52,7 +62,7 @@ const Card = () => {
         <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
             source={item.image}
-            style={{ width: 100, height: 100 }}
+            style={styles.imageSize}
             resizeMode={"contain"}
           />
           <Text
@@ -104,3 +114,9 @@ const Card = () => {
 };
 
 export default Card;
+const styles = StyleSheet.create({
+  imageSize: {
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.15,
+  },
+});

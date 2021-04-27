@@ -81,7 +81,10 @@ const HomeScreen = ({ navigation }) => {
         <CategoryCard />
 
         <View style={styles.distance}></View>
-        <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          style={{ flexDirection: "row" }}
+          onPress={() => navigation.navigate("CarStack")}
+        >
           <Text style={styles.heading}> FEATURED CARS</Text>
           <View
             style={{
@@ -90,21 +93,21 @@ const HomeScreen = ({ navigation }) => {
               justifyContent: "flex-end",
             }}
           >
-            <TouchableOpacity
-              style={styles.border}
-              onPress={() => navigation.navigate("CarStack")}
-            >
+            <View style={styles.border}>
               <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
                 {" View More "}
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <Card />
 
         <View style={styles.distance}></View>
-        <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("DealerStack")}
+          style={{ flexDirection: "row" }}
+        >
           <Text style={styles.heading}> FEATURED DEALERS</Text>
           <View
             style={{
@@ -113,19 +116,19 @@ const HomeScreen = ({ navigation }) => {
               justifyContent: "flex-end",
             }}
           >
-            <TouchableOpacity
-              style={styles.border}
-              onPress={() => navigation.navigate("DealerStack")}
-            >
+            <View style={styles.border}>
               <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
                 {" View More "}
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <DealerCard />
         <View style={styles.distance}></View>
-        <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ShowroomStack")}
+          style={{ flexDirection: "row" }}
+        >
           <Text style={styles.heading}> SHOWROOM DEALERS</Text>
           <View
             style={{
@@ -134,16 +137,13 @@ const HomeScreen = ({ navigation }) => {
               justifyContent: "flex-end",
             }}
           >
-            <TouchableOpacity
-              style={styles.border}
-              onPress={() => navigation.navigate("ShowroomStack")}
-            >
+            <View style={styles.border}>
               <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
                 {" View More "}
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <ShowroomCard />
 

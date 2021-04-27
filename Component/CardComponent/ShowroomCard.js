@@ -1,6 +1,13 @@
 import React from "react";
 import Dealer from "../../Assets/Showroom.png";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
 import { Dimensions } from "react-native";
 
@@ -35,7 +42,7 @@ const ShowroomCard = () => {
         <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
             source={item.image}
-            style={{ width: 100, height: 100 }}
+            style={styles.imageSize}
             resizeMode={"contain"}
           />
 
@@ -69,3 +76,9 @@ const ShowroomCard = () => {
 };
 
 export default ShowroomCard;
+const styles = StyleSheet.create({
+  imageSize: {
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.15,
+  },
+});

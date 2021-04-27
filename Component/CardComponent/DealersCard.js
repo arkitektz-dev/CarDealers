@@ -1,6 +1,13 @@
 import React from "react";
 import Dealer from "../../Assets/Dealer.png";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
 import { Dimensions } from "react-native";
 
@@ -32,11 +39,20 @@ const DealerCard = () => {
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity>
-        <View style={{ justifyContent: "space-between", left: "10%" }}>
+        <View
+          style={{
+            justifyContent: "space-between",
+            left: "10%",
+            backgroundColor: "#fff",
+            opacity: 1,
+            shadowOpacity: 1,
+            shadowColor: "grey",
+          }}
+        >
           <Image
             source={item.image}
-            style={{ width: 100, height: 100 }}
-            resizeMode={"contain"}
+            style={styles.imageSize}
+            resizeMode="contain"
           />
 
           <Text
@@ -69,3 +85,9 @@ const DealerCard = () => {
 };
 
 export default DealerCard;
+const styles = StyleSheet.create({
+  imageSize: {
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.15,
+  },
+});

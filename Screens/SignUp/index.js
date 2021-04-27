@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
-import firebase from "firebase";
+import firestore from "@react-native-firebase/firestore";
 import { HelperText, TextInput } from "react-native-paper";
 import {
   Dimensions,
@@ -16,7 +16,6 @@ import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { useNavigation } from "@react-navigation/core";
 
 import BackgroundImage from "../../Assets/loginBackground.png";
-import AppLogo from "../../Assets/AppLogo.png";
 import { Tooltip } from "react-native-elements";
 
 const screenWidth = Dimensions.get("window").width;
@@ -44,6 +43,7 @@ export const SignupScreen = () => {
   const [emaiError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [alreadyExit, setAlreadyExit] = useState(false);
   const [otpInput, setOTPInput] = useState({
     pin1: "",
     pin2: "",
@@ -87,6 +87,7 @@ export const SignupScreen = () => {
   // }, []);
 
   const navigation = useNavigation();
+  const ref = firestore().collection("Users");
 
   async function confirmCode() {
     try {
@@ -100,14 +101,12 @@ export const SignupScreen = () => {
       );
 
       try {
-        let userSignup = firebase
-          .database()
-          //referncing to the table
-          .ref("users/");
-        //inserting Data
-        let newUser = userSignup.push();
-        newUser.set(user);
-        setModalVisible(false);
+        await ref
+          .add(user)
+          .then(() => {
+            console.log("User added!");
+          })
+          .catch((err) => console.log(err));
         alert("Registered Succesfully !");
         navigation.replace("Home");
       } catch (error) {
@@ -119,10 +118,10 @@ export const SignupScreen = () => {
   }
   const handleChangeConfirmPassowrd = (e) => {
     setUser({ ...user, confirmPassowrd: e });
-    if (user.password == user.confirmPassowrd) {
-      setConfirmPasswordError(false);
-    } else {
+    if (e != user.password) {
       setConfirmPasswordError(true);
+    } else {
+      setConfirmPasswordError(false);
     }
   };
   const handleChangeEmail = (e) => {
@@ -135,16 +134,28 @@ export const SignupScreen = () => {
       setEmailError(false);
     }
   };
-  const handleChangeUsername = (e) => {
+
+  const handleChangeUsername = async (e) => {
     setUser({ ...user, username: e });
+
     let reg = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
+
     if (reg.test(e) === true) {
       setUsernameError(false);
     } else {
       setUsernameError(true);
       console.log("Username is Not Correct");
     }
+    await ref
+      .where("username", "==", user.username)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.size == 1) {
+          console.log("Test");
+        }
+      });
   };
+
   return (
     <DismissKeyboard>
       <ImageBackground
@@ -195,6 +206,9 @@ export const SignupScreen = () => {
             />
             {usernameError ? (
               <Text style={{ color: "#fff" }}>Username is Not Correct</Text>
+            ) : null}
+            {alreadyExit ? (
+              <Text style={{ color: "#fff" }}>Username Already Exist</Text>
             ) : null}
             <View style={styles.distance}></View>
 
@@ -287,7 +301,7 @@ export const SignupScreen = () => {
             <Tooltip popover={<Text>Info here</Text>}>
               <Text style={{ color: "white" }}>Press me</Text>
             </Tooltip>
-            <View style={styles.distance}></View>
+            {/* <View style={styles.distance}></View> */}
             <TextInput
               autoCapitalize="none"
               maxLength={20}
@@ -333,7 +347,14 @@ export const SignupScreen = () => {
           <View style={styles.buttonContainer}>
             <Button title="Register" onLogin={Signup} />
           </View>
-
+          <View style={styles.signupContainer}>
+            <Text
+              style={styles.signupText}
+              onPress={() => navigation.navigate("LoginScreen")}
+            >
+              Already have a account ?
+            </Text>
+          </View>
           <Modal visible={modalVisible} animationType={"slide"}>
             <View
               style={{
@@ -494,15 +515,6 @@ export const SignupScreen = () => {
               </TouchableOpacity>
             </View>
           </Modal>
-
-          <View style={styles.signupContainer}>
-            <Text
-              style={styles.signupText}
-              onPress={() => navigation.navigate("LoginScreen")}
-            >
-              Already have a account ?
-            </Text>
-          </View>
         </View>
       </ImageBackground>
     </DismissKeyboard>
@@ -590,7 +602,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignSelf: "center",
-    height: titleHeight,
+    height: titleHeight * 0.6,
     width: titleWidth,
     justifyContent: "center",
     flexDirection: "column",

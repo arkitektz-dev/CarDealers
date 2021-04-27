@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import firebase from "firebase";
-import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 import {
   Dimensions,
   Image,
@@ -17,7 +16,6 @@ import AppLogo from "../../Assets/AppLogo.png";
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
 import { HelperText, TextInput } from "react-native-paper";
-import database from "@react-native-firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("window").width;
@@ -30,35 +28,47 @@ const titleWidth = screenWidth * 0.6;
 const logoWidth = screenWidth * 0.5;
 
 export const LoginScreen = () => {
-  const [user, setUser] = useState({ name: "", phone: "", password: "" });
+  const [user, setUser] = useState({ name: "TesUser1", password: "test" });
   const [auth, setAuth] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
 
   const navigation = useNavigation();
 
   const Login = async () => {
-    // var alpha = "^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$";
-    // var num = "^[0-9]*$";    console.log(snapshot.key);
+    const ref = firestore().collection("Users");
+
     if (user.name == "" || user.password == "") {
       alert("Fields Can not be empty");
       setEmptyFieldError(true);
     } else {
-      await database()
-        .ref("/users/")
-        .orderByChild("username")
-        .equalTo(user.name)
-        .once("value")
-        .then(async (snapshot) => {
-          const userInfo = Object.values(snapshot.val())[0];
-          if (user.password == userInfo.password) {
-            // await AsyncStorage.setItem("user", snapshot.key);
-            console.log(snapshot.key);
-            navigation.replace("Home");
-          } else {
-            alert("Invalid Email Or Password");
-          }
+      ref
+        .where("username", "==", user.name)
+        .where("password", "==", user.password)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => console.log(doc.data()));
+          navigation.replace("Home");
         })
-        .catch(() => alert("Invalid Email Or Password"));
+        .catch((e) => {
+          console.log(e), alert("Invalid Email Or Password");
+        });
+
+      //  database()
+      //   .ref("/users/")
+      //   .orderByChild("username")
+      //   .equalTo(user.name)
+      //   .once("value")
+      //   .then(async (snapshot) => {
+      //     const userInfo = Object.values(snapshot.val())[0];
+      //     if (user.password == userInfo.password) {
+      //       // await AsyncStorage.setItem("user", snapshot.key);
+      //       console.log(snapshot.key);
+      //
+      //     } else {
+      //
+      //     }
+      //   })
+      //   .catch(() => alert("Invalid Email Or Password"));
     }
   };
   const hasErrors = () => {
