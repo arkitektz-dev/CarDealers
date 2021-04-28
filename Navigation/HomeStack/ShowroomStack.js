@@ -1,8 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ShowroomScreen from "../../Screens/Showroom";
-import DetailScreen from "../../Screens/Showroom/Details";
 import ListingShowroom from "../../Screens/Showroom/Listing";
+import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 
 const ShowroomStack = () => {
   const Stack = createStackNavigator();
@@ -10,7 +10,11 @@ const ShowroomStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="ShowScreen" component={ShowroomScreen} />
-      <Stack.Screen name="DetailScreen" component={DetailScreen} />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShowroomDetailScreen"
+        component={ShowroomDetailScreen}
+      />
       <Stack.Screen name="ListingScreen" component={ListingShowroom} />
     </Stack.Navigator>
   );

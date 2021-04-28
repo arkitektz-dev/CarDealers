@@ -16,7 +16,7 @@ const CarStack = () => {
       <Stack.Screen
         name="DetailCarScreen"
         component={DetailCarScreen}
-        options={{ headerTitleAlign: "center", title: "Car" }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

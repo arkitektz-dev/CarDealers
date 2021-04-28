@@ -29,7 +29,6 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const HomeScreen = ({ navigation }) => {
-  // const navigation = useNavigation();
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const Logout = async () => {

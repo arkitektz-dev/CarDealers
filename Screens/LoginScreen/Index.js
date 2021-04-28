@@ -52,23 +52,6 @@ export const LoginScreen = () => {
         .catch((e) => {
           console.log(e), alert("Invalid Email Or Password");
         });
-
-      //  database()
-      //   .ref("/users/")
-      //   .orderByChild("username")
-      //   .equalTo(user.name)
-      //   .once("value")
-      //   .then(async (snapshot) => {
-      //     const userInfo = Object.values(snapshot.val())[0];
-      //     if (user.password == userInfo.password) {
-      //       // await AsyncStorage.setItem("user", snapshot.key);
-      //       console.log(snapshot.key);
-      //
-      //     } else {
-      //
-      //     }
-      //   })
-      //   .catch(() => alert("Invalid Email Or Password"));
     }
   };
   const hasErrors = () => {

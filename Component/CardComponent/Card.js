@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
+import { useNavigation } from "@react-navigation/core";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -56,9 +57,13 @@ const Card = () => {
       image: Car,
     },
   ];
+  const navigation = useNavigation();
+  const onPressHandler = (item) => {
+    navigation.navigate("DetailCarScreen", { item });
+  };
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
             source={item.image}

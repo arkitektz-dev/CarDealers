@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -9,93 +9,27 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-
+import firestore from "@react-native-firebase/firestore";
 import Car from "../../Assets/Car.png";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingShowroom = () => {
-  const data = [
-    {
-      id: 1,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 2,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 3,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 4,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 5,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 6,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      id: 7,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-  ];
+  const [data, setData] = useState([]);
+  const ref = firestore().collection("Showrooms");
+  useEffect(() => {
+    ref.get().then((querySnapshot) => {
+      console.log("Abc");
+      const arr = [];
+      querySnapshot.forEach((documentSnapshot) => {
+        // setData(documentSnapshot.data());
+        arr.push(documentSnapshot.data());
+      });
+      setData(arr);
+    });
+  }, []);
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DetailScreen", { item });
+    navigation.navigate("ShowroomDetailScreen", { item });
   };
   const _renderItem = ({ item }) => {
     return (
@@ -126,7 +60,7 @@ const ListingShowroom = () => {
                 fontWeight: "bold",
               }}
             >
-              {item.name + item.model}
+              {item.name}
             </Text>
             <Text
               style={{
@@ -136,17 +70,7 @@ const ListingShowroom = () => {
                 fontWeight: "bold",
               }}
             >
-              {item.amount}
-            </Text>
-            <Text
-              style={{
-                color: "#565656",
-                fontSize: 10,
-                fontWeight: "800",
-                textAlign: "left",
-              }}
-            >
-              {item.city} | {item.model} | {item.milage} | {item.engineType}
+              {item.location}
             </Text>
           </View>
         </View>

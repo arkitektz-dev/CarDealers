@@ -23,7 +23,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
-
+      Transmission: "Auto",
       image: Car,
     },
     {
@@ -34,7 +34,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
-
+      Transmission: "Auto",
       image: Car,
     },
     {
@@ -45,7 +45,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
-
+      Transmission: "Auto",
       image: Car,
     },
     {
@@ -56,6 +56,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
+      Transmission: "Auto",
 
       image: Car,
     },
@@ -67,6 +68,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
+      Transmission: "Auto",
 
       image: Car,
     },
@@ -78,7 +80,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
-
+      Transmission: "Auto",
       image: Car,
     },
     {
@@ -89,7 +91,7 @@ const ListingCars = () => {
       city: "Karachi",
       milage: "23,000KM",
       engineType: "petrol",
-
+      Transmission: "Auto",
       image: Car,
     },
   ];
@@ -103,15 +105,17 @@ const ListingCars = () => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
-            margin: 5,
             backgroundColor: "white",
-            borderRadius: 20,
             flexDirection: "column",
+            borderBottomWidth: 2,
+            height: "15%",
+            borderBottomColor: "#e0e0e0",
           }}
         >
           <View
             style={{
               left: "5%",
+              flexDirection: "row",
             }}
           >
             <Image
@@ -119,43 +123,49 @@ const ListingCars = () => {
               style={styles.imageSize}
               resizeMode={"contain"}
             />
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.name + item.model}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "red",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.amount}
-            </Text>
-            <Text
-              style={{
-                color: "#565656",
-                fontSize: 10,
-                fontWeight: "800",
-                textAlign: "left",
-              }}
-            >
-              {item.city} | {item.model} | {item.milage} | {item.engineType}
-            </Text>
+
+            <View style={{ flexDirection: "column", margin: 15 }}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  color: "#565656",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.name + item.model}
+              </Text>
+              <View style={{ height: 10 }}></View>
+              <Text
+                style={{
+                  textAlign: "left",
+                  color: "red",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.amount}
+              </Text>
+              <View style={{ height: 10 }}></View>
+
+              <Text
+                style={{
+                  color: "#565656",
+                  fontSize: 14,
+                  fontWeight: "800",
+                  textAlign: "left",
+                }}
+              >
+                {item.city} | {item.model}
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
     );
   };
   return (
-    <View>
+    <View style={{ backgroundColor: "white" }}>
       <FlatList
         data={data}
         renderItem={_renderItem}
@@ -168,6 +178,6 @@ export default ListingCars;
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,
-    height: screenHeight * 0.15,
+    height: screenHeight * 0.2,
   },
 });

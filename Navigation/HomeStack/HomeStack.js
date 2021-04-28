@@ -4,6 +4,8 @@ import HomeScreen from "../../Screens/HomeScreen/Index";
 import CarStack from "./CarStack";
 import ShowroomStack from "./ShowroomStack";
 import DealerStack from "./DealerStack";
+import DetailCarScreen from "../../Screens/Car/Details";
+import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -21,6 +23,11 @@ const HomeStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShowroomDetailScreen"
+        component={ShowroomDetailScreen}
+      />
+      <Stack.Screen
         name="ShowroomStack"
         component={ShowroomStack}
         options={{ headerShown: false }}
@@ -28,6 +35,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="DealerStack"
         component={DealerStack}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailCarScreen"
+        component={DetailCarScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
