@@ -1,8 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import firebase from "firebase";
-import auth from "@react-native-firebase/auth";
-import React, { useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -31,6 +29,7 @@ const screenHeight = Dimensions.get("window").height;
 const HomeScreen = ({ navigation }) => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
+  const [data, setData] = useState([]);
   const Logout = async () => {
     navigation.navigate("Login");
     // try {
@@ -39,7 +38,27 @@ const HomeScreen = ({ navigation }) => {
     // } catch (error) {
     //   console.log(error);
   };
+  const arr = [];
 
+  // const fetchData = async () => {
+  //   const ref = firestore().collection("Advertisments");
+  //   // ref.get().then((querySnapshot) => {
+  //   //   querySnapshot.forEach((documentSnapshot) => {
+  //   //     arr.push(documentSnapshot.data());
+  //   //   });
+  //   await ref.onSnapshot((querySnapshot) => {
+  //     arr.push(querySnapshot.docs);
+  //     setData(arr);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  arr.forEach((element) => {
+    console.log(element);
+  });
   return (
     <ScrollView>
       <View

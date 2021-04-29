@@ -32,7 +32,7 @@ function CustomDrawerContent(props) {
         }}
       >
         <Image
-          source={require("../../Assets/Profile.png")}
+          source={require("../../Assets/RedProfileLogo.png")}
           style={styles.image}
         />
         <View>

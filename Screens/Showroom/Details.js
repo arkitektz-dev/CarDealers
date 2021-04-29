@@ -12,12 +12,14 @@ import {
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import Car from "../../Assets/Car.png";
+import { useNavigation } from "@react-navigation/core";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
-  const [count, setCount] = useState({ Dealer: "", Car: "" });
+  const [dealerCount, setdealerCount] = useState(0);
+  const [carCount, setcarCount] = useState(0);
   // const [data, setData] = useState();
 
   useEffect(() => {
@@ -25,13 +27,13 @@ const ShowroomDetailScreen = ({ route }) => {
       .collection("Dealers")
       .get()
       .then((querySnapshot) => {
-        setCount({ ...count, Dealer: querySnapshot.size });
+        setdealerCount(querySnapshot.size);
       });
     firestore()
       .collection("Advertisments")
       .get()
       .then((querySnapshot) => {
-        setCount({ ...count, Car: querySnapshot.size });
+        setcarCount(querySnapshot.size);
         // querySnapshot.forEach((documentSnapshot) => {
         //   setData([documentSnapshot.data().vehicle]);
         // });
@@ -119,7 +121,7 @@ const ShowroomDetailScreen = ({ route }) => {
       image: Car,
     },
   ];
-
+  const navigation = useNavigation();
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
@@ -179,7 +181,34 @@ const ShowroomDetailScreen = ({ route }) => {
   };
   return (
     <View style={styles.parent}>
-      <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={Drawer}
+            resizeMode="contain"
+            style={{
+              width: 60,
+              height: 60,
+              alignSelf: "flex-end",
+            }}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "grey",
+            fontWeight: "bold",
+            fontSize: 22,
+            alignItems: "center",
+            textAlignVertical: "center",
+          }}
+        >
+          Profile
+        </Text>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image
             source={Drawer}
@@ -194,7 +223,7 @@ const ShowroomDetailScreen = ({ route }) => {
       </View>
       <View style={styles.topDiv}>
         <View style={styles.CarInfoTitle}>
-          <Text style={styles.carInfoText}>{item.name}</Text>
+          <Text style={styles.carInfoText}> {item.name} </Text>
         </View>
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.h1}>Engine Type</Text>
@@ -216,11 +245,14 @@ const ShowroomDetailScreen = ({ route }) => {
               textAlign: "center",
             }}
           >
-            {count.Dealer}
+            {dealerCount}
           </Text>
-          <View style={styles.CarInfoTitle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ListingDealer")}
+            style={styles.CarInfoTitle}
+          >
             <Text style={styles.countText}> Dealers </Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{ flexDirection: "column" }}>
           <Text
@@ -231,11 +263,14 @@ const ShowroomDetailScreen = ({ route }) => {
               textAlign: "center",
             }}
           >
-            {count.Car}
+            {carCount}
           </Text>
-          <View style={styles.CarInfoTitle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ListCarScreen")}
+            style={styles.CarInfoTitle}
+          >
             <Text style={styles.countText}> Cars </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <FlatList
@@ -287,7 +322,7 @@ const styles = StyleSheet.create({
   },
   carInfoText: {
     fontWeight: "bold",
-    fontSize: 21,
+    fontSize: 18,
     color: "white",
     marginBottom: 5,
     textAlign: "center",

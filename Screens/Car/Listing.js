@@ -105,10 +105,8 @@ const ListingCars = () => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
-            backgroundColor: "white",
             flexDirection: "column",
             borderBottomWidth: 2,
-            height: "15%",
             borderBottomColor: "#e0e0e0",
           }}
         >

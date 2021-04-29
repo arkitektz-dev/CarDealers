@@ -40,7 +40,7 @@ const DealerCard = () => {
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DealerDetailScreen", { item });
   };
   const _renderItem = ({ item }) => {
     return (
@@ -53,6 +53,7 @@ const DealerCard = () => {
             opacity: 1,
             shadowOpacity: 1,
             shadowColor: "grey",
+            margin: 5,
           }}
         >
           <Image

@@ -15,6 +15,15 @@ import { useNavigation } from "@react-navigation/core";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const Card = () => {
+  // console.log(carData[0]);
+  // carData[0].forEach((element) => {
+  //   console.log(element.data(), "Map");
+  // });
+  // const data = cardata;
+
+  // cardata.forEach((element) => {
+  //   console.log(element);
+  // });
   const data = [
     {
       name: "Toyota Corolla",

@@ -6,6 +6,9 @@ import ShowroomStack from "./ShowroomStack";
 import DealerStack from "./DealerStack";
 import DetailCarScreen from "../../Screens/Car/Details";
 import ShowroomDetailScreen from "../../Screens/Showroom/Details";
+import DealerDetailScreen from "../../Screens/Dealer/Detail";
+import ListingDealer from "../../Screens/Dealer/Listing";
+import CarScreen from "../../Screens/Car";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -41,6 +44,21 @@ const HomeStack = () => {
         name="DetailCarScreen"
         component={DetailCarScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DealerDetailScreen"
+        component={DealerDetailScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ListingDealer"
+        component={ListingDealer}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ListCarScreen"
+        component={CarScreen}
+        options={{ headerTitleAlign: "center", title: "Car" }}
       />
     </Stack.Navigator>
   );
