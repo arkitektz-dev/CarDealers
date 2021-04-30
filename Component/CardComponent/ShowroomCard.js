@@ -1,5 +1,5 @@
-import React from "react";
-import Dealer from "../../Assets/Showroom.png";
+import React, { useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
   Image,
@@ -16,27 +16,20 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const ShowroomCard = () => {
-  const data = [
-    {
-      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
-      image: Dealer,
-    },
-    {
-      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
+  const [showroomData, setShowroomData] = useState();
+  const ref = firestore().collection("Showrooms");
 
-      image: Dealer,
-    },
-    {
-      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
+  useEffect(() => {
+    ref.get().then((querySnapshot) => {
+      const arr = [];
+      querySnapshot.forEach((documentSnapshot) => {
+        // setData(documentSnapshot.data());
+        arr.push(documentSnapshot.data());
+      });
+      setShowroomData(arr);
+    });
+  }, []);
 
-      image: Dealer,
-    },
-    {
-      address: "Suit No:303 Third Floor Tariq Center Main Tariq Road",
-
-      image: Dealer,
-    },
-  ];
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
@@ -47,7 +40,7 @@ const ShowroomCard = () => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
-            source={item.image}
+            source={{ uri: item.images[0] }}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
@@ -61,7 +54,18 @@ const ShowroomCard = () => {
               fontWeight: "bold",
             }}
           >
-            {item.address}
+            {item.name}
+          </Text>
+          <Text
+            style={{
+              width: screenWidth * 0.3,
+              textAlign: "left",
+              color: "#565656",
+              fontSize: 14,
+              fontWeight: "bold",
+            }}
+          >
+            {item.location}
           </Text>
         </View>
       </TouchableOpacity>
@@ -69,9 +73,32 @@ const ShowroomCard = () => {
   };
   return (
     <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("ShowroomStack", {
+            showroomData,
+          })
+        }
+        style={{ flexDirection: "row", marginBottom: 15 }}
+      >
+        <Text style={styles.heading}> SHOWROOM DEALERS</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "flex-end",
+          }}
+        >
+          <View style={styles.border}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+              {" View More "}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
       <FlatList
         ItemSeparatorComponent={ListItemSeparator}
-        data={data}
+        data={showroomData}
         renderItem={_renderItem}
         showsHorizontalScrollIndicator={false}
         horizontal={true}
@@ -84,7 +111,18 @@ const ShowroomCard = () => {
 export default ShowroomCard;
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.5,
-    height: screenHeight * 0.15,
+    width: screenWidth * 0.48,
+    height: screenHeight * 0.1,
+  },
+  border: {
+    borderColor: "red",
+    borderWidth: 2,
+    right: "13%",
+  },
+  heading: {
+    color: "#565656",
+    fontSize: 20,
+    fontWeight: "bold",
+    left: "5%",
   },
 });

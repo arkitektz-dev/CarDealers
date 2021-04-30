@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,30 +8,30 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 import Car from "../../Assets/Car.png";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const ListingShowroom = () => {
-  const [data, setData] = useState([]);
+const ListingShowroom = ({route}) => {
+  const [showroomdata, setShowroomData] = useState([]);
   const ref = firestore().collection("Showrooms");
   useEffect(() => {
     ref.get().then((querySnapshot) => {
-      console.log("Abc");
       const arr = [];
       querySnapshot.forEach((documentSnapshot) => {
         // setData(documentSnapshot.data());
         arr.push(documentSnapshot.data());
       });
-      setData(arr);
+      setShowroomData(arr);
     });
   }, []);
   const navigation = useNavigation();
+
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", { item });
+    navigation.navigate("ShowroomDetailScreen", {item});
   };
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -47,11 +47,13 @@ const ListingShowroom = () => {
               left: "5%",
             }}
           >
-            <Image
-              source={item.image}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
+            <View style={styles.imageHolder}>
+              <Image
+                source={{uri: item.images[0]}}
+                style={styles.imageSize}
+                resizeMode={"contain"}
+              />
+            </View>
             <Text
               style={{
                 textAlign: "left",
@@ -80,7 +82,7 @@ const ListingShowroom = () => {
   return (
     <View>
       <FlatList
-        data={data}
+        data={showroomdata}
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -90,7 +92,15 @@ const ListingShowroom = () => {
 export default ListingShowroom;
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.35,
-    height: screenHeight * 0.15,
+    borderRadius: 15,
+    backgroundColor: "white",
+    marginBottom: 20,
+    overflow: "hidden",
+  },
+  imageHolder: {
+    alignSelf: "flex-start",
+    height: 200,
+    overflow: "hidden",
+    width: 400,
   },
 });

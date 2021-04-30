@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,99 +8,33 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 
-import Car from "../../Assets/Car.png";
+import firestore from "@react-native-firebase/firestore";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingCars = () => {
-  const data = [
-    {
-      id: 1,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 2,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 3,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 4,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-
-      image: Car,
-    },
-    {
-      id: 5,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-
-      image: Car,
-    },
-    {
-      id: 6,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 7,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-  ];
   const navigation = useNavigation();
+  const [dataCar, setDataCar] = useState([]);
+  const arr = [];
 
-  const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+  const fetchData = async () => {
+    const ref = firestore().collection("Advertisments");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        arr.push(documentSnapshot.data());
+      });
+      setDataCar(arr);
+    });
   };
-  const _renderItem = ({ item }) => {
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const onPressHandler = (item) => {
+    navigation.navigate("DetailCarScreen", {item});
+  };
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -117,12 +51,12 @@ const ListingCars = () => {
             }}
           >
             <Image
-              source={item.image}
+              source={{uri: item.images[0]}}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
 
-            <View style={{ flexDirection: "column", margin: 15 }}>
+            <View style={{flexDirection: "column", margin: 15}}>
               <Text
                 style={{
                   textAlign: "left",
@@ -131,10 +65,12 @@ const ListingCars = () => {
                   fontWeight: "bold",
                 }}
               >
-                {item.name + item.model}
+                {item.vehicle.information.make +
+                  item.vehicle.information.model +
+                  item.vehicle.information.modelYear}
               </Text>
-              <View style={{ height: 10 }}></View>
-              <Text
+              <View style={{height: 10}}></View>
+              {/* <Text
                 style={{
                   textAlign: "left",
                   color: "red",
@@ -143,8 +79,8 @@ const ListingCars = () => {
                 }}
               >
                 {item.amount}
-              </Text>
-              <View style={{ height: 10 }}></View>
+              </Text> */}
+              <View style={{height: 10}}></View>
 
               <Text
                 style={{
@@ -154,7 +90,8 @@ const ListingCars = () => {
                   textAlign: "left",
                 }}
               >
-                {item.city} | {item.model}
+                {item.vehicle.city} | {item.vehicle.mileage} |
+                {item.vehicle.additionalInformation.engineType}
               </Text>
             </View>
           </View>
@@ -163,9 +100,9 @@ const ListingCars = () => {
     );
   };
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{backgroundColor: "white"}}>
       <FlatList
-        data={data}
+        data={dataCar}
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
       />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,50 +8,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 import Dealer from "../../Assets/Dealer.png";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingDealer = () => {
-  //   const [data, setData] = useState([]);
+  const [dealerdata, setDealerData] = useState([]);
   const ref = firestore().collection("Dealers");
+  useEffect(() => {
+    ref.get().then((querySnapshot) => {
+      const arr = [];
+      querySnapshot.forEach((documentSnapshot) => {
+        // setData(documentSnapshot.data());
+        arr.push(documentSnapshot.data());
+      });
+      setDealerData(arr);
+    });
+  }, []);
 
-  //   useEffect(async () => {
-  //     await ref.get().then((querySnapshot) => {
-  //       querySnapshot.forEach((documentSnapshot) => {
-  //         setData(documentSnapshot.data());
-  //       });
-  //       //   console.log(data.contactInformation[1]);
-  //     });
-  //   }, []);
-
-  const data = [
-    {
-      address: "03102324123",
-      image: Dealer,
-      name: "Home Land",
-    },
-    {
-      address: "03002354122",
-
-      image: Dealer,
-      name: "Home Land",
-    },
-    {
-      address: "0329421012",
-
-      image: Dealer,
-      name: "Home Land",
-    },
-    {
-      address: "03451234567",
-
-      image: Dealer,
-      name: "Home Land",
-    },
-  ];
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -68,12 +44,13 @@ const ListingDealer = () => {
             }}
           >
             <Image
-              source={item.image}
+              source={{uri: item.images[0]}}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
             <Text
               style={{
+                width: screenWidth * 0.3,
                 textAlign: "left",
                 color: "#565656",
                 fontSize: 14,
@@ -84,13 +61,14 @@ const ListingDealer = () => {
             </Text>
             <Text
               style={{
+                width: screenWidth * 0.3,
                 textAlign: "left",
                 color: "red",
                 fontSize: 14,
                 fontWeight: "bold",
               }}
             >
-              {item.address}
+              {item.contactInformation[0]}
             </Text>
           </View>
         </View>
@@ -99,13 +77,13 @@ const ListingDealer = () => {
   };
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DealerDetailScreen", { item });
+    navigation.navigate("DealerDetailScreen", {item});
   };
 
   return (
     <View>
       <FlatList
-        data={data}
+        data={dealerdata}
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -115,7 +93,13 @@ const ListingDealer = () => {
 export default ListingDealer;
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.35,
-    height: screenHeight * 0.15,
+    width: "100%",
+    height: "100%",
+  },
+  imageHolder: {
+    alignSelf: "flex-start",
+    height: 200,
+    overflow: "hidden",
+    width: 100,
   },
 });

@@ -9,7 +9,7 @@ const CarStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="CarScreen"
+        name="ListCarScreen"
         component={CarScreen}
         options={{ headerTitleAlign: "center", title: "Car" }}
       />

@@ -1,8 +1,8 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { View } from "react-native";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {useEffect} from "react";
+import {useState} from "react";
+import {View} from "react-native";
+import {Avatar, Button, Card, Title, Paragraph} from "react-native-paper";
 
 const HomeCard = () => {
   const [data, setData] = useState();
@@ -15,7 +15,6 @@ const HomeCard = () => {
   useEffect(() => {
     setData(info);
   });
-  console.log(info);
   return (
     <View>
       <Card>

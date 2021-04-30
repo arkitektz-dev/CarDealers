@@ -18,7 +18,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const DealerDetailScreen = ({ route }) => {
-  const item = route.params.item;
+  const param = route.params.item;
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
   useEffect(() => {
@@ -119,6 +119,9 @@ const DealerDetailScreen = ({ route }) => {
       image: Car,
     },
   ];
+  const onPressHandler = (item) => {
+    navigation.navigate("DetailCarScreen", { item });
+  };
 
   const _renderItem = ({ item }) => {
     return (
@@ -238,11 +241,16 @@ const DealerDetailScreen = ({ route }) => {
           <View style={{ width: 15 }}></View>
           <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
             <View style={styles.CarInfoTitle}>
-              <Text style={styles.carInfoText}> DEALER NAME </Text>
+              <Text style={styles.carInfoText}>{param.name}</Text>
             </View>
             <View style={{ flexDirection: "column" }}>
-              <Text style={styles.h1}>Showroom Name</Text>
-              <Text style={styles.txt1}>Number</Text>
+              {param.showrooms.map((item) => {
+                return <Text style={styles.h1}>{item.name}</Text>;
+              })}
+
+              {param.contactInformation.map((item) => {
+                return <Text style={styles.txt1}>{item}</Text>;
+              })}
             </View>
           </View>
         </View>
@@ -329,15 +337,14 @@ const styles = StyleSheet.create({
   },
   txt1: {
     color: "grey",
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "bold",
   },
   carInfoText: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 17,
     color: "white",
     marginBottom: 5,
-    textAlign: "center",
   },
   countText: {
     fontWeight: "bold",
@@ -349,6 +356,17 @@ const styles = StyleSheet.create({
   CarInfoTitle: {
     flexDirection: "row",
     backgroundColor: "red",
-    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    color: "#565656",
+    fontSize: 20,
+    fontWeight: "bold",
+    left: "5%",
+  },
+  border: {
+    borderColor: "red",
+    borderWidth: 2,
+    right: "13%",
   },
 });

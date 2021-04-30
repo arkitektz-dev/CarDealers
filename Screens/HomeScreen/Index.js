@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from "@react-native-firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   FlatList,
   Image,
@@ -11,22 +11,22 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { Button } from "../../Component/Button/Index";
+import {Button} from "../../Component/Button/Index";
 import Card from "../../Component/CardComponent/Card";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
 import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
-import { SearchComponent } from "../../Component/Search";
+import {SearchComponent} from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
-import { TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {TouchableOpacity} from "react-native";
+import {ScrollView} from "react-native-gesture-handler";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const [data, setData] = useState([]);
@@ -36,29 +36,8 @@ const HomeScreen = ({ navigation }) => {
     //   const val = await AsyncStorage.removeItem("user");
     //   navigation.navigate("LoginScreen");
     // } catch (error) {
-    //   console.log(error);
   };
-  const arr = [];
 
-  // const fetchData = async () => {
-  //   const ref = firestore().collection("Advertisments");
-  //   // ref.get().then((querySnapshot) => {
-  //   //   querySnapshot.forEach((documentSnapshot) => {
-  //   //     arr.push(documentSnapshot.data());
-  //   //   });
-  //   await ref.onSnapshot((querySnapshot) => {
-  //     arr.push(querySnapshot.docs);
-  //     setData(arr);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  arr.forEach((element) => {
-    console.log(element);
-  });
   return (
     <ScrollView>
       <View
@@ -66,10 +45,11 @@ const HomeScreen = ({ navigation }) => {
           justifyContent: "center",
           flexDirection: "column",
           flex: 1,
+          backgroundColor: "#fff",
         }}
       >
         <View style={styles.distance}></View>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{flexDirection: "row"}}>
           <Text style={styles.welcome}> Hi, Jon Herry</Text>
           <View
             style={{
@@ -99,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
         <CategoryCard />
 
         <View style={styles.distance}></View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{ flexDirection: "row" }}
           onPress={() => navigation.navigate("CarStack")}
         >
@@ -117,51 +97,14 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Card />
 
         <View style={styles.distance}></View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("DealerStack")}
-          style={{ flexDirection: "row" }}
-        >
-          <Text style={styles.heading}> FEATURED DEALERS</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              justifyContent: "flex-end",
-            }}
-          >
-            <View style={styles.border}>
-              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-                {" View More "}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+
         <DealerCard />
         <View style={styles.distance}></View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ShowroomStack")}
-          style={{ flexDirection: "row" }}
-        >
-          <Text style={styles.heading}> SHOWROOM DEALERS</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              justifyContent: "flex-end",
-            }}
-          >
-            <View style={styles.border}>
-              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-                {" View More "}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
 
         <ShowroomCard />
 

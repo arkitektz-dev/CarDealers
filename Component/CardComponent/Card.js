@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Car from "../../Assets/Car.png";
 import {
   FlatList,
@@ -10,75 +10,43 @@ import {
   Dimensions,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
+import firestore from "@react-native-firebase/firestore";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const Card = () => {
-  // console.log(carData[0]);
-  // carData[0].forEach((element) => {
-  //   console.log(element.data(), "Map");
-  // });
-  // const data = cardata;
+  const [dataCar, setDataCar] = useState([]);
+  const arr = [];
 
-  // cardata.forEach((element) => {
-  //   console.log(element);
-  // });
-  const data = [
-    {
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
+  const fetchData = async () => {
+    const ref = firestore().collection("Advertisments");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        arr.push(documentSnapshot.data());
+      });
+      setDataCar(arr);
+    });
+  };
 
-      image: Car,
-    },
-    {
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-      image: Car,
-    },
-    {
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-    {
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-
-      image: Car,
-    },
-  ];
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", {item});
   };
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View style={{ justifyContent: "space-between", left: "10%" }}>
+        <View style={{justifyContent: "space-between", left: "10%"}}>
           <Image
-            source={item.image}
+            source={{uri: item.images[0]}}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
+
           <Text
             style={{
               textAlign: "left",
@@ -87,9 +55,10 @@ const Card = () => {
               fontWeight: "bold",
             }}
           >
-            {item.name + item.model}
+            {item.vehicle.information.make} {item.vehicle.information.model}
+            {item.vehicle.information.modelYear}
           </Text>
-          <Text
+          {/* <Text
             style={{
               textAlign: "left",
               color: "red",
@@ -98,7 +67,7 @@ const Card = () => {
             }}
           >
             {item.amount}
-          </Text>
+          </Text> */}
           <Text
             style={{
               color: "#565656",
@@ -107,20 +76,41 @@ const Card = () => {
               textAlign: "left",
             }}
           >
-            {item.city} | {item.model} | {item.milage} | {item.engineType}
+            {item.vehicle.city} | {item.vehicle.mileage}|
+            {item.vehicle.additionalInformation.engineType}
           </Text>
         </View>
       </TouchableOpacity>
     );
   };
+  //
   return (
-    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
+    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
+      <TouchableOpacity
+        style={{flexDirection: "row", marginBottom: 15}}
+        onPress={() => navigation.navigate("CarStack")}
+      >
+        <Text style={styles.heading}> FEATURED CARS</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "flex-end",
+          }}
+        >
+          <View style={styles.border}>
+            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+              {" View More "}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
       <FlatList
-        ItemSeparatorComponent={ListItemSeparator}
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        renderItem={_renderItem}
         horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={ListItemSeparator}
+        data={dataCar}
+        renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
     </View>
@@ -132,5 +122,16 @@ const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.5,
     height: screenHeight * 0.15,
+  },
+  heading: {
+    color: "#565656",
+    fontSize: 20,
+    fontWeight: "bold",
+    left: "5%",
+  },
+  border: {
+    borderColor: "red",
+    borderWidth: 2,
+    right: "13%",
   },
 });

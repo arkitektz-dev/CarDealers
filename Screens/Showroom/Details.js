@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
@@ -12,11 +12,11 @@ import {
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import Car from "../../Assets/Car.png";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const ShowroomDetailScreen = ({ route }) => {
+const ShowroomDetailScreen = ({route}) => {
   const item = route.params.item;
   const [dealerCount, setdealerCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -122,7 +122,7 @@ const ShowroomDetailScreen = ({ route }) => {
     },
   ];
   const navigation = useNavigation();
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -131,7 +131,6 @@ const ShowroomDetailScreen = ({ route }) => {
             backgroundColor: "white",
             borderRadius: 20,
             flexDirection: "column",
-            marginHorizontal: 30,
           }}
         >
           <View
@@ -225,8 +224,8 @@ const ShowroomDetailScreen = ({ route }) => {
         <View style={styles.CarInfoTitle}>
           <Text style={styles.carInfoText}> {item.name} </Text>
         </View>
-        <View style={{ flexDirection: "column" }}>
-          <Text style={styles.h1}>Engine Type</Text>
+        <View style={{flexDirection: "column"}}>
+          <Text style={styles.h1}>{item.contactInformation}</Text>
           <Text style={styles.txt1}>{item.location}</Text>
         </View>
       </View>
@@ -236,7 +235,7 @@ const ShowroomDetailScreen = ({ route }) => {
           justifyContent: "space-evenly",
         }}
       >
-        <View style={{ flexDirection: "column" }}>
+        <View style={{flexDirection: "column"}}>
           <Text
             style={{
               fontSize: 30,
@@ -254,7 +253,7 @@ const ShowroomDetailScreen = ({ route }) => {
             <Text style={styles.countText}> Dealers </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: "column" }}>
+        <View style={{flexDirection: "column"}}>
           <Text
             style={{
               fontSize: 30,
@@ -284,7 +283,7 @@ const ShowroomDetailScreen = ({ route }) => {
 };
 export default ShowroomDetailScreen;
 const styles = StyleSheet.create({
-  Nav: { flexDirection: "row" },
+  Nav: {flexDirection: "row"},
   parent: {
     flexDirection: "column",
     flex: 1,
@@ -307,7 +306,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e0e0e0",
   },
   imageSize: {
-    width: screenWidth * 0.35,
+    width: screenWidth * 0.5,
     height: screenHeight * 0.15,
   },
   h1: {

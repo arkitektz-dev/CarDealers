@@ -14,137 +14,136 @@ import Drawer from "../../Assets/Drawer.png";
 const imagecontainerWidth = screenWidth;
 const imagecontainerHeight = screenHeight * 0.3;
 
-const DetailCarScreen = ({ route }) => {
+const DetailCarScreen = ({route, navigation}) => {
   const item = route.params.item;
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.openDrawer()}>
+      {/* <TouchableOpacity onPress={() => navigation.openDrawer()}>
         <Image
           source={Drawer}
           resizeMode="contain"
           style={{
-            width: 60,
-            height: 60,
             alignSelf: "flex-end",
+            width: 65,
+            height: 65,
           }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={Drawer}
+            resizeMode="contain"
+            style={{
+              width: 60,
+              height: 60,
+              alignSelf: "flex-end",
+            }}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "grey",
+            fontWeight: "bold",
+            fontSize: 22,
+            alignItems: "center",
+            textAlignVertical: "center",
+          }}
+        >
+          Profile
+        </Text>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Image
+            source={Drawer}
+            resizeMode="contain"
+            style={{
+              width: 60,
+              height: 60,
+              alignSelf: "flex-end",
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.imageHolder}>
-        <Image source={item.image} style={styles.imageSize} />
+        <Image
+          source={{uri: item.images[0]}}
+          style={styles.imageSize}
+          resizeMode={"contain"}
+        />
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.price}>{item.amount}</Text>
-        <Text style={styles.location}>{item.city}</Text>
+        <Text style={styles.title}>
+          {item.vehicle.information.make} {item.vehicle.information.model}
+          {item.vehicle.information.modelYear}
+        </Text>
+        {/* <Text style={styles.price}>{item.amount}</Text> */}
+        <Text style={styles.location}> {item.vehicle.city} </Text>
       </View>
       <ScrollView>
         <View style={styles.detailView}>
           <View style={styles.CarInfoTitle}>
             <Text style={styles.carInfoText}>Car Information</Text>
           </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
+          <View style={{flexDirection: "row", justifyContent: "space-around"}}>
             <View style={styles.subDataRow}>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Model Year</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.information.modelYear}
+                  </Text>
                 </View>
               </View>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Transmission</Text>
-                  <Text style={styles.txt1}>{item.Transmission}</Text>
-                </View>
-              </View>
-              {/* <View style={styles.subData}>
-                <View style={styles.line}>
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Transmission</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
-                </View>
-              </View>
-              <View style={styles.subData}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    backgroundColor: "red",
-                    height: screenHeight * 0.06,
-                  }}
-                >
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Engine Type</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.additionalInformation.transmission}
+                  </Text>
                 </View>
               </View>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Engine Capacity</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.additionalInformation.engineCapacity}
+                  </Text>
                 </View>
               </View>
+
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Registration City</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
+                <View style={{flexDirection: "column"}}>
+                  <Text style={styles.h1}>Assembly</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.additionalInformation.assembly}
+                  </Text>
                 </View>
               </View>
-              <View style={styles.subData}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    backgroundColor: "red",
-                    height: screenHeight * 0.06,
-                  }}
-                >
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Body Type</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
-                </View>
-              </View>
-              <View style={styles.subData}>
-                <View style={styles.line}>
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Exterior Color</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
-                </View>
-              </View> */}
             </View>
 
             <View style={styles.subDataRow}>
@@ -152,101 +151,50 @@ const DetailCarScreen = ({ route }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Milage</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
+                  <Text style={styles.txt1}>{item.vehicle.mileage}</Text>
                 </View>
               </View>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Engine Type</Text>
-                  <Text style={styles.txt1}>{item.engineType}</Text>
-                </View>
-              </View>
-              {/* <View style={styles.subData}>
-                <View style={styles.line}>
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Transmission</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
-                </View>
-              </View>
-              <View style={styles.subData}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    backgroundColor: "red",
-                    height: screenHeight * 0.06,
-                  }}
-                >
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Engine Type</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.additionalInformation.engineType}
+                  </Text>
                 </View>
               </View>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Engine Capacity</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
-                </View>
-              </View>
-              <View style={styles.subData}>
-                <View style={styles.line}>
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Registration City</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
-                </View>
-              </View>
-              <View style={styles.subData}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    backgroundColor: "red",
-                    height: screenHeight * 0.06,
-                  }}
-                >
-                  <Text>|</Text>
-                </View>
-                <View style={{ width: 10 }}></View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>Body Type</Text>
-                  <Text style={styles.txt1}>{item.model}</Text>
+                  <Text style={styles.txt1}>
+                    {item.vehicle.registrationCity}
+                  </Text>
                 </View>
               </View>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
-                <View style={{ flexDirection: "column" }}>
+                <View style={{width: 10}}></View>
+
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Exterior Color</Text>
-                  <Text style={styles.txt1}>{item.milage}</Text>
+                  <Text style={styles.txt1}>{item.vehicle.exteriorColor}</Text>
                 </View>
-              </View> */}
+              </View>
             </View>
           </View>
         </View>
@@ -312,22 +260,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   imageSize: {
-    width: imagecontainerWidth + 30,
-    height: imagecontainerHeight + 30,
-    resizeMode: "contain",
-    alignSelf: "center",
+    width: "100%",
+    height: "100%",
   },
   imageHolder: {
-    width: imagecontainerWidth,
-    height: imagecontainerHeight,
-    borderBottomWidth: 0.4,
-    opacity: 2,
-    shadowColor: "grey",
-    shadowOpacity: 2,
+    alignSelf: "center",
+    height: 200,
+    justifyContent: "center",
+    overflow: "hidden",
+    width: 300,
   },
   container: {
     flex: 1,
-    flexDirection: "column",
+    // backgroundColor: "green",
   },
   titleContainer: {
     margin: 10,

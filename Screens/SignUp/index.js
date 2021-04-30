@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import { HelperText, TextInput } from "react-native-paper";
+import {HelperText, TextInput} from "react-native-paper";
 import {
   Dimensions,
   ImageBackground,
@@ -11,12 +11,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button } from "../../Component/Button/Index";
-import { DismissKeyboard } from "../../Component/KeyboardDismiss";
-import { useNavigation } from "@react-navigation/core";
+import {Button} from "../../Component/Button/Index";
+import {DismissKeyboard} from "../../Component/KeyboardDismiss";
+import {useNavigation} from "@react-navigation/core";
 
 import BackgroundImage from "../../Assets/loginBackground.png";
-import { Tooltip } from "react-native-elements";
+import {Tooltip} from "react-native-elements";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -54,7 +54,6 @@ export const SignupScreen = () => {
   });
 
   const Signup = async () => {
-    console.log(user);
     if (
       user.name == "" ||
       user.password == "" ||
@@ -70,7 +69,6 @@ export const SignupScreen = () => {
         try {
           const confirmation = await auth().signInWithPhoneNumber(user.phone);
           setConfirm(confirmation);
-          console.log("Fired");
         } catch (error) {
           alert("Invalid Number");
         }
@@ -80,7 +78,6 @@ export const SignupScreen = () => {
 
   // useEffect(() => {
   //   const timer = setTimeout(() => {
-  //     console.log("This will run after 1 second!");
   //     setTimeoutButton;
   //   }, 30000);
   //   return () => clearTimeout(timer);
@@ -104,7 +101,7 @@ export const SignupScreen = () => {
         await ref
           .add(user)
           .then(() => {
-            console.log("User added!");
+            alert("User added!");
           })
           .catch((err) => console.log(err));
         alert("Registered Succesfully !");
@@ -117,7 +114,7 @@ export const SignupScreen = () => {
     }
   }
   const handleChangeConfirmPassowrd = (e) => {
-    setUser({ ...user, confirmPassowrd: e });
+    setUser({...user, confirmPassowrd: e});
     if (e != user.password) {
       setConfirmPasswordError(true);
     } else {
@@ -125,7 +122,7 @@ export const SignupScreen = () => {
     }
   };
   const handleChangeEmail = (e) => {
-    setUser({ ...user, email: e });
+    setUser({...user, email: e});
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(e) === false) {
       setEmailError(true);
@@ -136,7 +133,7 @@ export const SignupScreen = () => {
   };
 
   const handleChangeUsername = async (e) => {
-    setUser({ ...user, username: e });
+    setUser({...user, username: e});
 
     let reg = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
 
@@ -151,7 +148,6 @@ export const SignupScreen = () => {
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.size == 1) {
-          console.log("Test");
         }
       });
   };
@@ -182,8 +178,8 @@ export const SignupScreen = () => {
               underlineColor="#fff"
               underlineColorAndroid="#fff"
               style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, name: e })}
+              style={{backgroundColor: "transparent"}}
+              onChangeText={(e) => setUser({...user, name: e})}
             />
             <View style={styles.distance}></View>
 
@@ -201,14 +197,14 @@ export const SignupScreen = () => {
               underlineColor="#fff"
               underlineColorAndroid="#fff"
               style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
+              style={{backgroundColor: "transparent"}}
               onChangeText={handleChangeUsername}
             />
             {usernameError ? (
-              <Text style={{ color: "#fff" }}>Username is Not Correct</Text>
+              <Text style={{color: "#fff"}}>Username is Not Correct</Text>
             ) : null}
             {alreadyExit ? (
-              <Text style={{ color: "#fff" }}>Username Already Exist</Text>
+              <Text style={{color: "#fff"}}>Username Already Exist</Text>
             ) : null}
             <View style={styles.distance}></View>
 
@@ -226,8 +222,8 @@ export const SignupScreen = () => {
               }}
               underlineColor="#fff"
               underlineColorAndroid="#fff"
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, phone: e })}
+              style={{backgroundColor: "transparent"}}
+              onChangeText={(e) => setUser({...user, phone: e})}
             />
             {/* <TextInputMask
               // type={"cel-phone"}
@@ -248,7 +244,6 @@ export const SignupScreen = () => {
               placeholder="Phone"
               placeholderTextColor="#fff"
               onChangeText={(text) => {
-                console.log(text);
               }}
             /> */}
 
@@ -271,11 +266,11 @@ export const SignupScreen = () => {
                   text: "white",
                 },
               }}
-              style={{ backgroundColor: "transparent", color: "#fff" }}
+              style={{backgroundColor: "transparent", color: "#fff"}}
               onChangeText={handleChangeEmail}
             />
             {emaiError ? (
-              <Text style={{ color: "#fff" }}>Email is Not Correct</Text>
+              <Text style={{color: "#fff"}}>Email is Not Correct</Text>
             ) : null}
 
             <View style={styles.distance}></View>
@@ -295,11 +290,11 @@ export const SignupScreen = () => {
               underlineColor="#fff"
               underlineColorAndroid="#fff"
               style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, password: e })}
+              style={{backgroundColor: "transparent"}}
+              onChangeText={(e) => setUser({...user, password: e})}
             />
             <Tooltip popover={<Text>Info here</Text>}>
-              <Text style={{ color: "white" }}>Press me</Text>
+              <Text style={{color: "white"}}>Press me</Text>
             </Tooltip>
             {/* <View style={styles.distance}></View> */}
             <TextInput
@@ -318,7 +313,7 @@ export const SignupScreen = () => {
               underlineColor="#fff"
               underlineColorAndroid="#fff"
               style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
+              style={{backgroundColor: "transparent"}}
               onChangeText={handleChangeConfirmPassowrd}
             />
             {confirmPasswordError ? (
@@ -337,7 +332,7 @@ export const SignupScreen = () => {
           {emptyFieldError ? (
             <HelperText
               type="error"
-              style={{ color: "#fff", fontWeight: "500", textAlign: "center" }}
+              style={{color: "#fff", fontWeight: "500", textAlign: "center"}}
             >
               Field can not be empty!
             </HelperText>
@@ -372,7 +367,7 @@ export const SignupScreen = () => {
                 <TextInput
                   autoFocus={true}
                   blurOnSubmit={false}
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin1: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin1: e})}
                   returnKeyType={"next"}
                   maxLength={1}
                   placeholder="-"
@@ -394,7 +389,7 @@ export const SignupScreen = () => {
                 <TextInput
                   returnKeyType="next"
                   blurOnSubmit={false}
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin2: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin2: e})}
                   maxLength={1}
                   placeholder="-"
                   keyboardType="number-pad"
@@ -425,7 +420,7 @@ export const SignupScreen = () => {
                   maxLength={1}
                   placeholder="-"
                   keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin3: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin3: e})}
                   style={styles.OTP_text}
                   theme={{
                     colors: {
@@ -442,7 +437,7 @@ export const SignupScreen = () => {
                 <TextInput
                   maxLength={1}
                   placeholder="-"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin4: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin4: e})}
                   keyboardType="number-pad"
                   style={styles.OTP_text}
                   theme={{
@@ -461,7 +456,7 @@ export const SignupScreen = () => {
                   maxLength={1}
                   placeholder="-"
                   keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin5: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin5: e})}
                   style={styles.OTP_text}
                   theme={{
                     colors: {
@@ -479,7 +474,7 @@ export const SignupScreen = () => {
                   maxLength={1}
                   placeholder="-"
                   keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin6: e })}
+                  onChangeText={(e) => setOTPInput({...otpInput, pin6: e})}
                   style={styles.OTP_text}
                   theme={{
                     colors: {
@@ -500,7 +495,7 @@ export const SignupScreen = () => {
                 onPress={() => {
                   setConfirm(null), setModalVisible(false);
                 }}
-                style={{ justifyContent: "center" }}
+                style={{justifyContent: "center"}}
               >
                 <Text
                   style={{
