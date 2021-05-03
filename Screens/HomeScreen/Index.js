@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from "@react-native-firebase/firestore";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -15,17 +15,17 @@ import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
 import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
-import {SearchComponent} from "../../Component/Search";
+import { SearchComponent } from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
-import {TouchableOpacity} from "react-native";
-import {ScrollView} from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const [data, setData] = useState([]);
@@ -48,8 +48,11 @@ const HomeScreen = ({navigation}) => {
         }}
       >
         <View style={styles.distance}></View>
-        <View style={{flexDirection: "row"}}>
-          <Text style={styles.welcome}> Hi, Jon Herry</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "column" }}>
+            <Text style={styles.welcome}> Hi, Jon Herry</Text>
+            <Text style={styles.location}> Karachi, Pakistan</Text>
+          </View>
           <View
             style={{
               flexDirection: "row",
@@ -72,7 +75,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.distance}></View>
 
-        <SearchComponent />
+        <SearchComponent image={BellIcon} />
 
         <View style={styles.distance}></View>
         <CategoryCard />
@@ -83,7 +86,7 @@ const HomeScreen = ({navigation}) => {
 
         <View style={styles.distance}></View>
 
-        {/* <DealerCard /> */}
+        <DealerCard />
         <View style={styles.distance}></View>
 
         <ShowroomCard />
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
     right: "13%",
   },
   distance: {
-    height: screenHeight * 0.02,
+    height: screenHeight * 0.035,
   },
   heading: {
     color: "#565656",
@@ -112,6 +115,11 @@ const styles = StyleSheet.create({
   welcome: {
     color: "#565656",
     fontSize: 25,
+    fontWeight: "bold",
+  },
+  location: {
+    color: "#565656",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

@@ -63,14 +63,10 @@ const DealerDetailScreen = ({ route }) => {
             backgroundColor: "white",
             borderRadius: 20,
             flexDirection: "column",
-            marginHorizontal: 30,
+            margin: 10,
           }}
         >
-          <View
-            style={{
-              left: "5%",
-            }}
-          >
+          <View>
             <Image
               source={{ uri: item.images[0] }}
               style={styles.imageSize}
@@ -95,7 +91,7 @@ const DealerDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              26 Lacs PKR
+              {item.amount}
             </Text>
             <Text
               style={{
@@ -206,9 +202,9 @@ const DealerDetailScreen = ({ route }) => {
           >
             {showroomCount}
           </Text>
-          <View style={styles.CarInfoTitle}>
+          <TouchableOpacity style={styles.CarInfoTitle}>
             <Text style={styles.countText}> Showrooms </Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{ flexDirection: "column" }}>
           <Text

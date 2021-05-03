@@ -9,10 +9,10 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import ListItemSeparator from "../ItemSeperator/Index";
 import { useNavigation } from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
-import SkeletonLoader from "../SkeletonPlaceholder/Index";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -44,44 +44,68 @@ const Card = () => {
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View style={{ justifyContent: "space-between", left: "10%" }}>
+        <View
+          style={{
+            justifyContent: "space-between",
+            backgroundColor: "white",
+            margin: 5,
+            borderRadius: 20,
+            shadowColor: "#470000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            elevation: 2,
+          }}
+        >
           <Image
             source={{ uri: item.images[0] }}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
+          <View style={{ alignItems: "flex-start" }}>
+            <Text
+              style={{
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              {"  \b\b"}
+              {item.vehicle.information.make} {item.vehicle.information.model}
+              {"\b"}
+              {item.vehicle.information.modelYear}
+            </Text>
+            <Text
+              style={{
+                color: "red",
+                fontSize: 12,
+                fontWeight: "900",
+                textAlign: "left",
+              }}
+            >
+              {"  \b\b"}
 
-          <Text
-            style={{
-              textAlign: "left",
-              color: "#565656",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          >
-            {item.vehicle.information.make}
-            {""}
-            {item.vehicle.information.model}
-            {"\b"}
-            {item.vehicle.information.modelYear}
-          </Text>
+              {item.amount}
+            </Text>
 
-          <Text
-            style={{
-              color: "#565656",
-              fontSize: 10,
-              fontWeight: "800",
-              textAlign: "left",
-            }}
-          >
-            {item.vehicle.city} | {item.vehicle.mileage} | {""}
-            {item.vehicle.additionalInformation.engineType}
-          </Text>
+            <Text
+              style={{
+                color: "#565656",
+                fontSize: 10,
+                fontWeight: "800",
+                textAlign: "left",
+              }}
+            >
+              {"  \b\b"}
+              {item.vehicle.city} | {item.vehicle.mileage} | {""}
+              {item.vehicle.additionalInformation.engineType}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
-  //
+
   return (
     <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <TouchableOpacity

@@ -8,7 +8,11 @@ const DealerStack = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ListingDealer" component={ListingDealer} />
+      <Stack.Screen
+        name="ListingDealer"
+        component={ListingDealer}
+        options={{ title: "Dealers" }}
+      />
       <Stack.Screen name="DealerScreen" component={DealerScreen} />
     </Stack.Navigator>
   );

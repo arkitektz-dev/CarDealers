@@ -22,11 +22,15 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 15,
     backgroundColor: colors.white,
-    marginBottom: 20,
     overflow: "hidden",
+    margin: 10,
+    shadowColor: "#470000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    elevation: 2,
   },
   detailsContainer: {
-    padding: 20,
+    padding: 10,
   },
   image: {
     width: "100%",

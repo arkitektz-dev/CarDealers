@@ -40,9 +40,10 @@ function CustomDrawerContent(props) {
           <Caption style={styles.caption}>@rukstech</Caption>
         </View>
       </View>
-      <DrawerItemList {...props} />
+      {/* <DrawerItemList {...props} /> */}
+      <DrawerItem label="Home" onPress={() => navigation.navigate("Home")} />
       <DrawerItem
-        label="SignOut"
+        label="Sign Out"
         onPress={() => navigation.navigate("Login")}
       />
     </>

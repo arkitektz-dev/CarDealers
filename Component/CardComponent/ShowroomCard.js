@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
@@ -9,9 +9,8 @@ import {
   View,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {Dimensions} from "react-native";
-import {useNavigation} from "@react-navigation/core";
-import {set} from "react-native-reanimated";
+import { Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 
 const screenWidth = Dimensions.get("window").width;
@@ -21,45 +20,59 @@ const ShowroomCard = () => {
   const [showroomData, setShowroomData] = useState();
   const [loading, setLoading] = useState(false);
 
-  const ref = firestore().collection("Showrooms");
+  const fetchData = async () => {
+    const ref = firestore().collection("Showrooms");
 
-  useEffect(() => {
     setLoading(true);
-    ref.get().then((querySnapshot) => {
+    await ref.get().then((querySnapshot) => {
       const arr = [];
       querySnapshot.forEach((documentSnapshot) => {
-        // setData(documentSnapshot.data());
         arr.push(documentSnapshot.data());
       });
       setShowroomData(arr);
-      setLoading(false);
     });
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", {item});
+    navigation.navigate("ShowroomDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View style={{justifyContent: "space-between", left: "10%"}}>
+        <View
+          style={{
+            justifyContent: "space-between",
+            backgroundColor: "white",
+            margin: 5,
+            borderRadius: 20,
+            shadowColor: "#470000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            elevation: 2,
+          }}
+        >
           <Image
-            source={{uri: item.images[0]}}
+            source={{ uri: item.images[0] }}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
 
           <Text
             style={{
-              width: screenWidth * 0.3,
               textAlign: "left",
               color: "#565656",
               fontSize: 14,
               fontWeight: "bold",
             }}
           >
+            {"  \b\b"}
             {item.name}
           </Text>
           <Text
@@ -71,6 +84,7 @@ const ShowroomCard = () => {
               fontWeight: "bold",
             }}
           >
+            {"  \b\b"}
             {item.location}
           </Text>
         </View>
@@ -78,14 +92,14 @@ const ShowroomCard = () => {
     );
   };
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("ShowroomStack", {
             showroomData,
           })
         }
-        style={{flexDirection: "row", marginBottom: 15}}
+        style={{ flexDirection: "row", marginBottom: 15 }}
       >
         <Text style={styles.heading}> SHOWROOM DEALERS</Text>
         <View
@@ -96,7 +110,7 @@ const ShowroomCard = () => {
           }}
         >
           <View style={styles.border}>
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </View>

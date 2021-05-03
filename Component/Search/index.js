@@ -6,12 +6,12 @@ import { Searchbar } from "react-native-paper";
 
 import BellIcon from "../../Assets/BellIcon.png";
 
-export const SearchComponent = () => {
+export const SearchComponent = ({ image }) => {
   return (
     <View style={styles.search}>
       <Searchbar style={{ width: "75%", borderRadius: 20, maxHeight: "80%" }} />
       <Image
-        source={BellIcon}
+        source={image}
         resizeMode="contain"
         style={{
           width: 60,

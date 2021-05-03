@@ -11,7 +11,11 @@ const CarStack = () => {
       <Stack.Screen
         name="ListCarScreen"
         component={CarScreen}
-        options={{ headerTitleAlign: "center", title: "Car" }}
+        options={{
+          headerShown: false,
+          headerTitleAlign: "center",
+          title: "Car",
+        }}
       />
       <Stack.Screen
         name="DetailCarScreen"

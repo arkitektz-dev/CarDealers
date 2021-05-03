@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/core";
 
 import firestore from "@react-native-firebase/firestore";
+import { SearchComponent } from "../../Component/Search";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingCars = () => {
@@ -65,9 +66,8 @@ const ListingCars = () => {
                   fontWeight: "bold",
                 }}
               >
-                {item.vehicle.information.make}
-                {""}
-                {item.vehicle.information.model} {"\b"}
+                {item.vehicle.information.make} {item.vehicle.information.model}{" "}
+                {"\b"}
                 {item.vehicle.information.modelYear}
               </Text>
               <View style={{ height: 10 }}></View>
@@ -94,6 +94,9 @@ const ListingCars = () => {
   };
   return (
     <View style={{ backgroundColor: "white" }}>
+      <View style={styles.searchHolder}>
+        <SearchComponent />
+      </View>
       <FlatList
         data={dataCar}
         renderItem={_renderItem}
@@ -107,5 +110,8 @@ const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,
     height: screenHeight * 0.2,
+  },
+  searchHolder: {
+    top: 10,
   },
 });

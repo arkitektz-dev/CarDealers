@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {Dimensions} from "react-native";
-import {useNavigation} from "@react-navigation/core";
+import { Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 
 const screenWidth = Dimensions.get("window").width;
@@ -38,19 +38,25 @@ const DealerCard = () => {
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("DealerDetailScreen", {item});
+    navigation.navigate("DealerDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
             justifyContent: "space-between",
-            left: "10%",
+            backgroundColor: "white",
+            margin: 5,
+            borderRadius: 20,
+            shadowColor: "#470000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.2,
+            elevation: 2,
           }}
         >
           <Image
-            source={{uri: item.images[0]}}
+            source={{ uri: item.images[0] }}
             style={styles.imageSize}
             resizeMode="contain"
           />
@@ -63,6 +69,8 @@ const DealerCard = () => {
               fontWeight: "bold",
             }}
           >
+            {" "}
+            {"  \b\b"}
             {item.name}
           </Text>
           <Text
@@ -73,6 +81,8 @@ const DealerCard = () => {
               fontWeight: "bold",
             }}
           >
+            {" "}
+            {"  \b\b"}
             {item.contactInformation[0]}
           </Text>
         </View>
@@ -80,10 +90,10 @@ const DealerCard = () => {
     );
   };
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <TouchableOpacity
         onPress={() => navigation.navigate("DealerStack")}
-        style={{flexDirection: "row"}}
+        style={{ flexDirection: "row" }}
       >
         <Text style={styles.heading}> FEATURED DEALERS</Text>
         <View
@@ -94,7 +104,7 @@ const DealerCard = () => {
           }}
         >
           <View style={styles.border}>
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </View>
