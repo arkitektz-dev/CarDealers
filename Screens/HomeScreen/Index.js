@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from "@react-native-firebase/firestore";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -11,22 +11,21 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import {Button} from "../../Component/Button/Index";
-import Card from "../../Component/CardComponent/Card";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
 import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
-import {SearchComponent} from "../../Component/Search";
+import { SearchComponent } from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
-import {TouchableOpacity} from "react-native";
-import {ScrollView} from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
+import CarCard from "../../Component/CardComponent/CarCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
   const [data, setData] = useState([]);
@@ -49,7 +48,7 @@ const HomeScreen = ({navigation}) => {
         }}
       >
         <View style={styles.distance}></View>
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <Text style={styles.welcome}> Hi, Jon Herry</Text>
           <View
             style={{
@@ -79,27 +78,8 @@ const HomeScreen = ({navigation}) => {
         <CategoryCard />
 
         <View style={styles.distance}></View>
-        {/* <TouchableOpacity
-          style={{ flexDirection: "row" }}
-          onPress={() => navigation.navigate("CarStack")}
-        >
-          <Text style={styles.heading}> FEATURED CARS</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              justifyContent: "flex-end",
-            }}
-          >
-            <View style={styles.border}>
-              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-                {" View More "}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity> */}
 
-        <Card />
+        <CarCard />
 
         <View style={styles.distance}></View>
 

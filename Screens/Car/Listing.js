@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 
 import firestore from "@react-native-firebase/firestore";
 const screenWidth = Dimensions.get("window").width;
@@ -32,9 +32,9 @@ const ListingCars = () => {
     fetchData();
   }, []);
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", {item});
+    navigation.navigate("DetailCarScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -51,12 +51,12 @@ const ListingCars = () => {
             }}
           >
             <Image
-              source={{uri: item.images[0]}}
+              source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
 
-            <View style={{flexDirection: "column", margin: 15}}>
+            <View style={{ flexDirection: "column", margin: 15 }}>
               <Text
                 style={{
                   textAlign: "left",
@@ -65,22 +65,14 @@ const ListingCars = () => {
                   fontWeight: "bold",
                 }}
               >
-                {item.vehicle.information.make +
-                  item.vehicle.information.model +
-                  item.vehicle.information.modelYear}
+                {item.vehicle.information.make}
+                {""}
+                {item.vehicle.information.model} {"\b"}
+                {item.vehicle.information.modelYear}
               </Text>
-              <View style={{height: 10}}></View>
-              {/* <Text
-                style={{
-                  textAlign: "left",
-                  color: "red",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                {item.amount}
-              </Text> */}
-              <View style={{height: 10}}></View>
+              <View style={{ height: 10 }}></View>
+
+              <View style={{ height: 10 }}></View>
 
               <Text
                 style={{
@@ -90,7 +82,8 @@ const ListingCars = () => {
                   textAlign: "left",
                 }}
               >
-                {item.vehicle.city} | {item.vehicle.mileage} |
+                {item.vehicle.city} | {""}
+                {item.vehicle.mileage} | {""}
                 {item.vehicle.additionalInformation.engineType}
               </Text>
             </View>
@@ -100,7 +93,7 @@ const ListingCars = () => {
     );
   };
   return (
-    <View style={{backgroundColor: "white"}}>
+    <View style={{ backgroundColor: "white" }}>
       <FlatList
         data={dataCar}
         renderItem={_renderItem}

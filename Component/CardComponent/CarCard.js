@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Car from "../../Assets/Car.png";
 import {
   FlatList,
@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 
 const screenWidth = Dimensions.get("window").width;
@@ -35,14 +35,14 @@ const Card = () => {
 
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", {item});
+    navigation.navigate("DetailCarScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View style={{justifyContent: "space-between", left: "10%"}}>
+        <View style={{ justifyContent: "space-between", left: "10%" }}>
           <Image
-            source={{uri: item.images[0]}}
+            source={{ uri: item.images[0] }}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
@@ -55,19 +55,13 @@ const Card = () => {
               fontWeight: "bold",
             }}
           >
-            {item.vehicle.information.make} {item.vehicle.information.model}
+            {item.vehicle.information.make}
+            {""}
+            {item.vehicle.information.model}
+            {"\b"}
             {item.vehicle.information.modelYear}
           </Text>
-          {/* <Text
-            style={{
-              textAlign: "left",
-              color: "red",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          >
-            {item.amount}
-          </Text> */}
+
           <Text
             style={{
               color: "#565656",
@@ -76,7 +70,7 @@ const Card = () => {
               textAlign: "left",
             }}
           >
-            {item.vehicle.city} | {item.vehicle.mileage}|
+            {item.vehicle.city} | {item.vehicle.mileage} | {""}
             {item.vehicle.additionalInformation.engineType}
           </Text>
         </View>
@@ -85,9 +79,9 @@ const Card = () => {
   };
   //
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <TouchableOpacity
-        style={{flexDirection: "row", marginBottom: 15}}
+        style={{ flexDirection: "row", marginBottom: 15 }}
         onPress={() => navigation.navigate("CarStack")}
       >
         <Text style={styles.heading}> FEATURED CARS</Text>
@@ -99,7 +93,7 @@ const Card = () => {
           }}
         >
           <View style={styles.border}>
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </View>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 import Dealer from "../../Assets/Dealer.png";
+import Card from "../../Component/Card";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingDealer = () => {
@@ -27,57 +28,19 @@ const ListingDealer = () => {
     });
   }, []);
 
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View
-          style={{
-            margin: 5,
-            backgroundColor: "white",
-            borderRadius: 20,
-            flexDirection: "column",
-          }}
-        >
-          <View
-            style={{
-              left: "5%",
-            }}
-          >
-            <Image
-              source={{uri: item.images[0]}}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
-            <Text
-              style={{
-                width: screenWidth * 0.3,
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={{
-                width: screenWidth * 0.3,
-                textAlign: "left",
-                color: "red",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.contactInformation[0]}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <Card
+        onPressHandler={() => onPressHandler(item)}
+        image={item.images[0]}
+        title={item.name}
+        subTitle={item.contactInformation[0]}
+      />
     );
   };
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DealerDetailScreen", {item});
+    navigation.navigate("DealerDetailScreen", { item });
   };
 
   return (

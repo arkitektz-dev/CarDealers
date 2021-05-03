@@ -57,11 +57,6 @@ const DrawerNav = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Home" component={HomeStack} />
-      <Drawer.Screen
-        name="Notifications"
-        component={About}
-        options={{ headerShown: true }}
-      />
     </Drawer.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
-import Car from "../../Assets/Car.png";
+import Card from "../../Component/Card";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const ListingShowroom = ({route}) => {
+const ListingShowroom = ({ route }) => {
   const [showroomdata, setShowroomData] = useState([]);
   const ref = firestore().collection("Showrooms");
   useEffect(() => {
@@ -29,54 +29,16 @@ const ListingShowroom = ({route}) => {
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", {item});
+    navigation.navigate("ShowroomDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View
-          style={{
-            margin: 5,
-            backgroundColor: "white",
-            borderRadius: 20,
-            flexDirection: "column",
-          }}
-        >
-          <View
-            style={{
-              left: "5%",
-            }}
-          >
-            <View style={styles.imageHolder}>
-              <Image
-                source={{uri: item.images[0]}}
-                style={styles.imageSize}
-                resizeMode={"contain"}
-              />
-            </View>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "red",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.location}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <Card
+        onPressHandler={() => onPressHandler(item)}
+        image={item.images[0]}
+        title={item.name}
+        subTitle={item.location}
+      />
     );
   };
   return (
