@@ -20,6 +20,17 @@ const screenHeight = Dimensions.get("window").height;
 const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
   const [showroomCount, setshowroomCount] = useState(0);
+  const [dataCar, setDataCar] = useState([]);
+  const fetchData = async () => {
+    const ref = firestore().collection("Advertisments");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        arr.push(documentSnapshot.data());
+      });
+      setDataCar(arr);
+    });
+  };
+
   const [carCount, setcarCount] = useState(0);
   useEffect(() => {
     firestore()
@@ -33,92 +44,12 @@ const DealerDetailScreen = ({ route }) => {
       .get()
       .then((querySnapshot) => {
         setcarCount(querySnapshot.size);
-        // querySnapshot.forEach((documentSnapshot) => {
-        //   setData([documentSnapshot.data().vehicle]);
-        // });
       });
+    fetchData();
   }, []);
-  const data = [
-    {
-      id: 1,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 2,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 3,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 4,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
 
-      image: Car,
-    },
-    {
-      id: 5,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
+  const arr = [];
 
-      image: Car,
-    },
-    {
-      id: 6,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-    {
-      id: 7,
-      name: "Toyota Corolla",
-      model: 2018,
-      amount: "PKR 26.0 Lacs",
-      city: "Karachi",
-      milage: "23,000KM",
-      engineType: "petrol",
-      Transmission: "Auto",
-      image: Car,
-    },
-  ];
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
@@ -141,7 +72,7 @@ const DealerDetailScreen = ({ route }) => {
             }}
           >
             <Image
-              source={item.image}
+              source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
@@ -153,7 +84,8 @@ const DealerDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {item.name}
+              {item.vehicle.information.make} {item.vehicle.information.model}{" "}
+              {item.vehicle.information.modelYear}
             </Text>
             <Text
               style={{
@@ -163,7 +95,7 @@ const DealerDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {item.amount}
+              26 Lacs PKR
             </Text>
             <Text
               style={{
@@ -173,7 +105,8 @@ const DealerDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {item.milage}
+              {item.vehicle.city} | {item.vehicle.mileage} | {""}
+              {item.vehicle.additionalInformation.engineType}
             </Text>
           </View>
         </View>
@@ -259,7 +192,7 @@ const DealerDetailScreen = ({ route }) => {
         style={{
           flexDirection: "row",
           margin: 5,
-          justifyContent: "space-around",
+          justifyContent: "space-between",
         }}
       >
         <View style={{ flexDirection: "column" }}>
@@ -295,7 +228,7 @@ const DealerDetailScreen = ({ route }) => {
       </View>
       <FlatList
         numColumns={2}
-        data={data}
+        data={dataCar}
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -357,6 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "red",
     justifyContent: "center",
+    width: "80%",
   },
   heading: {
     color: "#565656",

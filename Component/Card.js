@@ -1,11 +1,11 @@
 import React from "react";
-import {View, StyleSheet, Image} from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import colors from "../config/colors";
 import AppText from "./AppText";
-function Card({title, subTitle, image}) {
+function Card({ title, subTitle, image, onPressHandler }) {
   return (
-    <View style={styles.card}>
-      <Image style={styles.image} source={{uri: image}}></Image>
+    <TouchableOpacity style={styles.card} onPress={onPressHandler}>
+      <Image style={styles.image} source={{ uri: image }}></Image>
       <View style={styles.detailsContainer}>
         <AppText style={styles.title} numberOfLines={1}>
           {title}
@@ -14,7 +14,7 @@ function Card({title, subTitle, image}) {
           {subTitle}
         </AppText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -33,11 +33,16 @@ const styles = StyleSheet.create({
     height: 200,
   },
   subTitle: {
-    color: colors.secondary,
+    textAlign: "left",
+    color: "red",
+    fontSize: 14,
     fontWeight: "bold",
   },
   title: {
-    marginBottom: 7,
+    textAlign: "left",
+    color: "#565656",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 export default Card;
