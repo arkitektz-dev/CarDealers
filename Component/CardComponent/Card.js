@@ -12,14 +12,17 @@ import {
 import ListItemSeparator from "../ItemSeperator/Index";
 import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
+import SkeletonLoader from "../SkeletonPlaceholder/Index";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
+  const [loading, setLoading] = useState(false);
   const arr = [];
 
   const fetchData = async () => {
+    setLoading(true);
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
@@ -27,6 +30,7 @@ const Card = () => {
       });
       setDataCar(arr);
     });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -58,16 +62,7 @@ const Card = () => {
             {item.vehicle.information.make} {item.vehicle.information.model}
             {item.vehicle.information.modelYear}
           </Text>
-          {/* <Text
-            style={{
-              textAlign: "left",
-              color: "red",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          >
-            {item.amount}
-          </Text> */}
+
           <Text
             style={{
               color: "#565656",
@@ -105,14 +100,18 @@ const Card = () => {
           </View>
         </View>
       </TouchableOpacity>
-      <FlatList
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={ListItemSeparator}
-        data={dataCar}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <FlatList
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={ListItemSeparator}
+          data={dataCar}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

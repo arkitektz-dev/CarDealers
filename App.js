@@ -10,6 +10,7 @@ import firebase from "firebase";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
 import ListingsScreen from "./Screens/ListingsScreen";
+import SkeletonLoader from "./Component/SkeletonPlaceholder/Index";
 const MainStack = () => {
   const Stack = createStackNavigator();
 
@@ -40,12 +41,12 @@ export default function App() {
     firebase.initializeApp(firebaseConfig);
   }
   return (
-    // <SafeAreaProvider>
-    //   <NavigationContainer>
-    //     <MainStack />
-    //   </NavigationContainer>
-    // </SafeAreaProvider>
-    <ListingsScreen />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <MainStack />
+        {/* <SkeletonLoader /> */}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
   // user ? (
   //   <NavigationContainer>

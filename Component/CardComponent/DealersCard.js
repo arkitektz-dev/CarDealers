@@ -11,14 +11,17 @@ import {
 import ListItemSeparator from "../ItemSeperator/Index";
 import {Dimensions} from "react-native";
 import {useNavigation} from "@react-navigation/core";
+import SkeletonLoader from "../SkeletonPlaceholder/Index";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const DealerCard = () => {
   const [dealerData, setDealerData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const arr = [];
   const fetchData = async () => {
+    setLoading(true);
     const ref = firestore().collection("Dealers");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
@@ -26,6 +29,7 @@ const DealerCard = () => {
       });
       setDealerData(arr);
     });
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -96,14 +100,18 @@ const DealerCard = () => {
           </View>
         </View>
       </TouchableOpacity>
-      <FlatList
-        ItemSeparatorComponent={ListItemSeparator}
-        data={dealerData}
-        renderItem={_renderItem}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <FlatList
+          ItemSeparatorComponent={ListItemSeparator}
+          data={dealerData}
+          renderItem={_renderItem}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

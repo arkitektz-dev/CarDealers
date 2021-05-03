@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import {Button} from "../../Component/Button/Index";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import Card from "../../Component/CardComponent/Card";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
@@ -25,7 +25,6 @@ import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
 const HomeScreen = ({navigation}) => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState("");
@@ -99,11 +98,11 @@ const HomeScreen = ({navigation}) => {
           </View>
         </TouchableOpacity> */}
 
-        <Card />
+        {/* <Card /> */}
 
         <View style={styles.distance}></View>
 
-        <DealerCard />
+        {/* <DealerCard /> */}
         <View style={styles.distance}></View>
 
         <ShowroomCard />
