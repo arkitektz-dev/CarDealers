@@ -1,26 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {NavigationContainer} from "@react-navigation/native";
+import {createStackNavigator} from "@react-navigation/stack";
+import React, {useState} from "react";
+import {useEffect} from "react";
+import {StyleSheet, Text, View} from "react-native";
 // import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import {SafeAreaProvider} from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
-<<<<<<< HEAD
-import ListingsScreen from "./Screens/ListingsScreen";
-import SkeletonLoader from "./Component/SkeletonPlaceholder/Index";
-=======
-
->>>>>>> 46132becba2da5708b4847f2092559d97c99e048
 const MainStack = () => {
   const Stack = createStackNavigator();
 
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{headerShown: false}}
       initialRouteName="Home"
     >
       <Stack.Screen name="Login" component={LoginStack} />
