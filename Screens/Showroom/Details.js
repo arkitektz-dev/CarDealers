@@ -34,9 +34,6 @@ const ShowroomDetailScreen = ({route}) => {
       .get()
       .then((querySnapshot) => {
         setcarCount(querySnapshot.size);
-        // querySnapshot.forEach((documentSnapshot) => {
-        //   setData([documentSnapshot.data().vehicle]);
-        // });
       });
   }, []);
 

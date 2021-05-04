@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dimensions,
   FlatList,
   Image,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
-import Card from "../../Component/Card";
+import Card from "../../Component/CardViews/Card";
+import {SearchComponent} from "../../Component/Search";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-const ListingShowroom = ({ route }) => {
+const ListingShowroom = ({route}) => {
   const [showroomdata, setShowroomData] = useState([]);
   const ref = firestore().collection("Showrooms");
   useEffect(() => {
@@ -29,9 +31,9 @@ const ListingShowroom = ({ route }) => {
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", { item });
+    navigation.navigate("ShowroomDetailScreen", {item});
   };
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <Card
         onPressHandler={() => onPressHandler(item)}
@@ -42,7 +44,36 @@ const ListingShowroom = ({ route }) => {
     );
   };
   return (
-    <View>
+    <View style={{backgroundColor: "#fff"}}>
+      <StatusBar hidden={false} animated={true} />
+      <View style={styles.searchHolder}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            left: 10,
+            backgroundColor: "#fff",
+            width: 20,
+            borderRadius: 10,
+          }}
+        >
+          <Text style={{color: "#fff"}}>sd</Text>
+        </TouchableOpacity>
+        <View style={styles.distance}></View>
+
+        <SearchComponent style={styles.search} />
+      </View>
+      <View style={{flexDirection: "row", padding: 10}}>
+        <Text
+          style={{
+            color: "#333",
+            display: "flex",
+            fontWeight: "800",
+            fontSize: 18,
+          }}
+        >
+          Result
+        </Text>
+      </View>
       <FlatList
         data={showroomdata}
         renderItem={_renderItem}
@@ -64,5 +95,20 @@ const styles = StyleSheet.create({
     height: 200,
     overflow: "hidden",
     width: 400,
+  },
+  searchHolder: {
+    backgroundColor: "red",
+    flexDirection: "row",
+    flexGrow: 1,
+  },
+  search: {
+    width: "75%",
+    borderRadius: 5,
+    maxHeight: "72%",
+
+    alignSelf: "center",
+  },
+  distance: {
+    width: screenWidth * 0.09,
   },
 });

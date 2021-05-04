@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Car from "../../Assets/Car.png";
 import {
   FlatList,
@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import ListItemSeparator from "../ItemSeperator/Index";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 
 const screenWidth = Dimensions.get("window").width;
@@ -39,9 +39,9 @@ const Card = () => {
 
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", {item});
   };
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -51,17 +51,17 @@ const Card = () => {
             margin: 5,
             borderRadius: 20,
             shadowColor: "#470000",
-            shadowOffset: { width: 0, height: 1 },
+            shadowOffset: {width: 0, height: 1},
             shadowOpacity: 0.2,
             elevation: 2,
           }}
         >
           <Image
-            source={{ uri: item.images[0] }}
+            source={{uri: item.images[0]}}
             style={styles.imageSize}
             resizeMode={"contain"}
           />
-          <View style={{ alignItems: "flex-start" }}>
+          <View style={{alignItems: "flex-start", padding: 10}}>
             <Text
               style={{
                 textAlign: "left",
@@ -79,7 +79,7 @@ const Card = () => {
               style={{
                 color: "red",
                 fontSize: 12,
-                fontWeight: "900",
+                fontWeight: "bold",
                 textAlign: "left",
               }}
             >
@@ -107,11 +107,8 @@ const Card = () => {
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
-      <TouchableOpacity
-        style={{ flexDirection: "row", marginBottom: 15 }}
-        onPress={() => navigation.navigate("CarStack")}
-      >
+    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
+      <View style={{flexDirection: "row", marginBottom: 15}}>
         <Text style={styles.heading}> FEATURED CARS</Text>
         <View
           style={{
@@ -120,13 +117,16 @@ const Card = () => {
             justifyContent: "flex-end",
           }}
         >
-          <View style={styles.border}>
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+          <TouchableOpacity
+            style={styles.border}
+            onPress={() => navigation.navigate("CarStack")}
+          >
+            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
               {" View More "}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
       {loading ? (
         <SkeletonLoader />
       ) : (

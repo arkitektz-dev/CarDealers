@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Dimensions,
   FlatList,
   Image,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 
 import firestore from "@react-native-firebase/firestore";
-import { SearchComponent } from "../../Component/Search";
+import {SearchComponent} from "../../Component/Search";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingCars = () => {
   const navigation = useNavigation();
   const [dataCar, setDataCar] = useState([]);
+  const [carCount, setcarCount] = useState([]);
   const arr = [];
 
   const fetchData = async () => {
@@ -26,6 +28,12 @@ const ListingCars = () => {
         arr.push(documentSnapshot.data());
       });
       setDataCar(arr);
+      firestore()
+        .collection("Advertisments")
+        .get()
+        .then((querySnapshot) => {
+          setcarCount(querySnapshot.size);
+        });
     });
   };
 
@@ -33,9 +41,9 @@ const ListingCars = () => {
     fetchData();
   }, []);
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", {item});
   };
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -52,12 +60,12 @@ const ListingCars = () => {
             }}
           >
             <Image
-              source={{ uri: item.images[0] }}
+              source={{uri: item.images[0]}}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
 
-            <View style={{ flexDirection: "column", margin: 15 }}>
+            <View style={{flexDirection: "column", margin: 15}}>
               <Text
                 style={{
                   textAlign: "left",
@@ -70,9 +78,9 @@ const ListingCars = () => {
                 {"\b"}
                 {item.vehicle.information.modelYear}
               </Text>
-              <View style={{ height: 10 }}></View>
+              <View style={{height: 10}}></View>
 
-              <View style={{ height: 10 }}></View>
+              <View style={{height: 10}}></View>
 
               <Text
                 style={{
@@ -93,9 +101,35 @@ const ListingCars = () => {
     );
   };
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{backgroundColor: "white"}}>
+      <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
-        <SearchComponent />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            left: 10,
+            backgroundColor: "#fff",
+            width: 20,
+            borderRadius: 10,
+          }}
+        >
+          <Text style={{color: "#fff"}}>sd</Text>
+        </TouchableOpacity>
+        <View style={styles.distance}></View>
+
+        <SearchComponent style={styles.search} />
+      </View>
+      <View style={{flexDirection: "row", padding: 10}}>
+        <Text
+          style={{
+            color: "#333",
+            display: "flex",
+            fontWeight: "800",
+            fontSize: 18,
+          }}
+        >
+          {carCount} Results
+        </Text>
       </View>
       <FlatList
         data={dataCar}
@@ -112,6 +146,18 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.2,
   },
   searchHolder: {
-    top: 10,
+    backgroundColor: "red",
+    flexDirection: "row",
+    flexGrow: 1,
+  },
+  search: {
+    width: "75%",
+    borderRadius: 5,
+    maxHeight: "72%",
+
+    alignSelf: "center",
+  },
+  distance: {
+    width: screenWidth * 0.09,
   },
 });

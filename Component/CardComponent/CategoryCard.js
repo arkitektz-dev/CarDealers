@@ -1,9 +1,10 @@
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 import React from "react";
 import {
   Dimensions,
   FlatList,
   Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -21,7 +22,7 @@ const CategoryCard = () => {
   const imageWidth = screenWidth * 0.3;
   const naivgation = useNavigation();
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{flexDirection: "row"}}>
       <View
         style={{
           justifyContent: "space-evenly",
@@ -30,17 +31,39 @@ const CategoryCard = () => {
         }}
       >
         <TouchableOpacity onPress={() => naivgation.navigate("CarStack")}>
-          <Image source={Car} style={{ width: 100, height: 100 }} />
+          <View style={styles.container}>
+            <Image source={Car} style={styles.image} />
+          </View>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => naivgation.navigate("DealerStack")}>
-          <Image source={Dealer} style={{ width: 100, height: 100 }} />
+          <View style={styles.container}>
+            <Image source={Dealer} style={styles.image} />
+          </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => naivgation.navigate("ShowroomStack")}>
-          <Image source={ShowRoom} style={{ width: 95, height: 95 }} />
+          <View style={styles.container}>
+            <Image source={ShowRoom} style={styles.image} />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  card: {},
+  container: {
+    alignItems: "center",
+    backgroundColor: "red",
+    borderRadius: 15,
+    height: 100,
+    justifyContent: "center",
+    overflow: "hidden",
+    width: 110,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+});
 export default CategoryCard;

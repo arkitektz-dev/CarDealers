@@ -1,23 +1,22 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Image } from "react-native";
-import { View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import {StyleSheet} from "react-native";
+import {Image} from "react-native";
+import {View} from "react-native";
+import {Searchbar} from "react-native-paper";
 
 import BellIcon from "../../Assets/BellIcon.png";
 
-export const SearchComponent = ({ image }) => {
+export const SearchComponent = ({image, style}) => {
   return (
     <View style={styles.search}>
-      <Searchbar style={{ width: "75%", borderRadius: 20, maxHeight: "80%" }} />
+      <Searchbar placeholder="Search By Keyword" style={style} />
       <Image
         source={image}
         resizeMode="contain"
         style={{
           width: 60,
           height: 60,
-          opacity: 1,
-          shadowOpacity: 1,
+          bottom: "2.5%",
         }}
       />
     </View>
@@ -26,6 +25,6 @@ export const SearchComponent = ({ image }) => {
 const styles = StyleSheet.create({
   search: {
     flexDirection: "row",
-    alignSelf: "center",
+    justifyContent: "space-between",
   },
 });
