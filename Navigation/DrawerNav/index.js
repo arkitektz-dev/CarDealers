@@ -8,10 +8,10 @@ import {
 import HomeScreen from "../../Screens/HomeScreen/Index";
 import About from "../../Screens/AboutScreen";
 import HomeStack from "../HomeStack/HomeStack";
-import { Header } from "@react-navigation/stack";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
-import { Avatar, Caption, Title } from "react-native-paper";
-import { useNavigation } from "@react-navigation/core";
+import {Header} from "@react-navigation/stack";
+import {Dimensions, Image, StyleSheet, View} from "react-native";
+import {Avatar, Caption, Title} from "react-native-paper";
+import {useNavigation} from "@react-navigation/core";
 
 const Drawer = createDrawerNavigator();
 
@@ -41,7 +41,7 @@ function CustomDrawerContent(props) {
         </View>
       </View>
       {/* <DrawerItemList {...props} /> */}
-      <DrawerItem label="Home" onPress={() => navigation.navigate("Home")} />
+      <DrawerItem label="Home" onPress={() => navigation.replace("Home")} />
       <DrawerItem
         label="Sign Out"
         onPress={() => navigation.navigate("Login")}

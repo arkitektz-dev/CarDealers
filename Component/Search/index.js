@@ -4,12 +4,14 @@ import {Image} from "react-native";
 import {View} from "react-native";
 import {Searchbar} from "react-native-paper";
 
-import BellIcon from "../../Assets/BellIcon.png";
-
 export const SearchComponent = ({image, style}) => {
   return (
     <View style={styles.search}>
-      <Searchbar placeholder="Search By Keyword" style={style} />
+      <Searchbar
+        placeholder="Search By Keyword"
+        style={style}
+        inputStyle={{fontSize: 13}}
+      />
       <Image
         source={image}
         resizeMode="contain"

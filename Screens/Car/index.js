@@ -1,11 +1,11 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
-import { View } from "react-native";
+import {StyleSheet, Text} from "react-native";
+import {View} from "react-native";
 import ListingCars from "./Listing";
 
 const CarScreen = () => {
   return (
-    <View>
+    <View style={{flex: 1, flexDirection: "column", backgroundColor: "#fff"}}>
       <ListingCars />
     </View>
   );

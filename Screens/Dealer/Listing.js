@@ -18,15 +18,18 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingDealer = () => {
   const [dealerdata, setDealerData] = useState([]);
+  const [dealerCount, setDealerCount] = useState();
   const ref = firestore().collection("Dealers");
   useEffect(() => {
     ref.get().then((querySnapshot) => {
       const arr = [];
       querySnapshot.forEach((documentSnapshot) => {
-        // setData(documentSnapshot.data());
         arr.push(documentSnapshot.data());
       });
       setDealerData(arr);
+      ref.get().then((querySnapshot) => {
+        setDealerCount(querySnapshot.size);
+      });
     });
   }, []);
 
@@ -53,13 +56,13 @@ const ListingDealer = () => {
           onPress={() => navigation.goBack()}
           style={{
             left: 10,
+            top: 10,
             backgroundColor: "#fff",
-            width: 20,
-            borderRadius: 10,
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
           }}
-        >
-          <Text style={{color: "#fff"}}>sd</Text>
-        </TouchableOpacity>
+        ></TouchableOpacity>
         <View style={styles.distance}></View>
 
         <SearchComponent style={styles.search} />
@@ -73,14 +76,16 @@ const ListingDealer = () => {
             fontSize: 18,
           }}
         >
-          Results
+          {dealerCount} Results
         </Text>
       </View>
-      <FlatList
-        data={dealerdata}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {
+        <FlatList
+          data={dealerdata}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      }
     </View>
   );
 };
@@ -103,6 +108,7 @@ const styles = StyleSheet.create({
   },
   search: {
     width: "75%",
+    textAlign: "left",
     borderRadius: 5,
     maxHeight: "72%",
 

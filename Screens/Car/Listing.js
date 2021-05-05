@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -16,12 +17,14 @@ import {SearchComponent} from "../../Component/Search";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingCars = () => {
-  const navigation = useNavigation();
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState([]);
   const arr = [];
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const fetchData = async () => {
+    setLoading(true);
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
@@ -34,6 +37,7 @@ const ListingCars = () => {
         .then((querySnapshot) => {
           setcarCount(querySnapshot.size);
         });
+      setLoading(false);
     });
   };
 
@@ -102,19 +106,18 @@ const ListingCars = () => {
   };
   return (
     <View style={{backgroundColor: "white"}}>
-      <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
             left: 10,
+            top: 10,
             backgroundColor: "#fff",
-            width: 20,
-            borderRadius: 10,
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
           }}
-        >
-          <Text style={{color: "#fff"}}>sd</Text>
-        </TouchableOpacity>
+        ></TouchableOpacity>
         <View style={styles.distance}></View>
 
         <SearchComponent style={styles.search} />
@@ -131,11 +134,15 @@ const ListingCars = () => {
           {carCount} Results
         </Text>
       </View>
-      <FlatList
-        data={dataCar}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator color="red" size="large" />
+      ) : (
+        <FlatList
+          data={dataCar}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

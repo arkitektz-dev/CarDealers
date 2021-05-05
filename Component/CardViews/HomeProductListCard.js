@@ -41,7 +41,6 @@ const HomeCard = ({image, title, subtitle, pressHandler}) => {
           </Text>
           <Text
             style={{
-              width: screenWidth * 0.3,
               textAlign: "left",
               color: "#565656",
               fontSize: 14,

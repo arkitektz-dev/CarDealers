@@ -17,6 +17,8 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingShowroom = ({route}) => {
   const [showroomdata, setShowroomData] = useState([]);
+  const [showroomCount, setshowroomCount] = useState([]);
+
   const ref = firestore().collection("Showrooms");
   useEffect(() => {
     ref.get().then((querySnapshot) => {
@@ -26,6 +28,9 @@ const ListingShowroom = ({route}) => {
         arr.push(documentSnapshot.data());
       });
       setShowroomData(arr);
+    });
+    ref.get().then((querySnapshot) => {
+      setshowroomCount(querySnapshot.size);
     });
   }, []);
   const navigation = useNavigation();
@@ -51,13 +56,13 @@ const ListingShowroom = ({route}) => {
           onPress={() => navigation.goBack()}
           style={{
             left: 10,
+            top: 10,
             backgroundColor: "#fff",
-            width: 20,
-            borderRadius: 10,
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
           }}
-        >
-          <Text style={{color: "#fff"}}>sd</Text>
-        </TouchableOpacity>
+        ></TouchableOpacity>
         <View style={styles.distance}></View>
 
         <SearchComponent style={styles.search} />
@@ -71,7 +76,7 @@ const ListingShowroom = ({route}) => {
             fontSize: 18,
           }}
         >
-          Result
+          {showroomCount} Results
         </Text>
       </View>
       <FlatList

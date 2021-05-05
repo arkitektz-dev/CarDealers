@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
@@ -13,13 +13,15 @@ import {
 import firestore from "@react-native-firebase/firestore";
 import Car from "../../Assets/Car.png";
 import Profile from "../../Assets/RedProfileLogo.png";
-import { useNavigation } from "@react-navigation/core";
+import {useNavigation} from "@react-navigation/core";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const DealerDetailScreen = ({ route }) => {
+const DealerDetailScreen = ({route}) => {
   const param = route.params.item;
   const [showroomCount, setshowroomCount] = useState(0);
+  const [carCount, setcarCount] = useState(0);
+
   const [dataCar, setDataCar] = useState([]);
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
@@ -31,7 +33,6 @@ const DealerDetailScreen = ({ route }) => {
     });
   };
 
-  const [carCount, setcarCount] = useState(0);
   useEffect(() => {
     firestore()
       .collection("Showrooms")
@@ -51,24 +52,23 @@ const DealerDetailScreen = ({ route }) => {
   const arr = [];
 
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", {item});
   };
 
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({item}) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
-            margin: 5,
-            backgroundColor: "white",
             borderRadius: 20,
             flexDirection: "column",
-            margin: 10,
+            margin: 5,
+            left: 5,
           }}
         >
           <View>
             <Image
-              source={{ uri: item.images[0] }}
+              source={{uri: item.images[0]}}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
@@ -97,7 +97,7 @@ const DealerDetailScreen = ({ route }) => {
               style={{
                 textAlign: "left",
                 color: "#565656",
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: "bold",
               }}
             >
@@ -118,17 +118,17 @@ const DealerDetailScreen = ({ route }) => {
           justifyContent: "space-between",
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={Drawer}
-            resizeMode="contain"
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "flex-end",
-            }}
-          />
-        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            left: 10,
+            top: 10,
+            backgroundColor: "red",
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
+          }}
+        ></TouchableOpacity>
         <Text
           style={{
             color: "grey",
@@ -167,12 +167,17 @@ const DealerDetailScreen = ({ route }) => {
               height: 85,
             }}
           />
-          <View style={{ width: 15 }}></View>
-          <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
-            <View style={styles.CarInfoTitle}>
-              <Text style={styles.carInfoText}>{param.name}</Text>
+          <View style={{width: 15}}></View>
+          <View style={{flexDirection: "column", justifyContent: "flex-end"}}>
+            <View style={styles.DealerName}>
+              <Text style={styles.carInfoText}>
+                {"\b"}
+
+                {param.name}
+                {" \b"}
+              </Text>
             </View>
-            <View style={{ flexDirection: "column" }}>
+            <View style={{flexDirection: "column"}}>
               {param.showrooms.map((item) => {
                 return <Text style={styles.h1}>{item.name}</Text>;
               })}
@@ -188,13 +193,13 @@ const DealerDetailScreen = ({ route }) => {
         style={{
           flexDirection: "row",
           margin: 5,
-          justifyContent: "space-between",
+          justifyContent: "space-evenly",
         }}
       >
-        <View style={{ flexDirection: "column" }}>
+        <View style={{flexDirection: "column"}}>
           <Text
             style={{
-              fontSize: 30,
+              fontSize: 35,
               fontWeight: "bold",
               color: "grey",
               textAlign: "center",
@@ -206,10 +211,10 @@ const DealerDetailScreen = ({ route }) => {
             <Text style={styles.countText}> Showrooms </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: "column" }}>
+        <View style={{flexDirection: "column"}}>
           <Text
             style={{
-              fontSize: 30,
+              fontSize: 35,
               fontWeight: "bold",
               color: "grey",
               textAlign: "center",
@@ -223,6 +228,7 @@ const DealerDetailScreen = ({ route }) => {
         </View>
       </View>
       <FlatList
+        contentContainerStyle={{alignSelf: "center"}}
         numColumns={2}
         data={dataCar}
         renderItem={_renderItem}
@@ -233,7 +239,7 @@ const DealerDetailScreen = ({ route }) => {
 };
 export default DealerDetailScreen;
 const styles = StyleSheet.create({
-  Nav: { flexDirection: "row" },
+  Nav: {flexDirection: "row"},
   parent: {
     flexDirection: "column",
     flex: 1,
@@ -282,11 +288,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: "center",
   },
-  CarInfoTitle: {
-    flexDirection: "row",
+  DealerName: {
     backgroundColor: "red",
     justifyContent: "center",
-    width: "80%",
+  },
+  CarInfoTitle: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    width: screenWidth * 0.35,
   },
   heading: {
     color: "#565656",

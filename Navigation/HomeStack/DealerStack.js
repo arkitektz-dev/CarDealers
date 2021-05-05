@@ -1,5 +1,5 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {createStackNavigator} from "@react-navigation/stack";
 import DealerScreen from "../../Screens/Dealer";
 import ListingDealer from "../../Screens/Dealer/Listing";
 
@@ -11,7 +11,7 @@ const DealerStack = () => {
       <Stack.Screen
         name="ListingDealer"
         component={ListingDealer}
-        options={{ title: "Dealers" }}
+        options={{headerShown: false}}
       />
       <Stack.Screen name="DealerScreen" component={DealerScreen} />
     </Stack.Navigator>

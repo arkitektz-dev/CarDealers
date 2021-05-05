@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "#565656",
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     left: "5%",
   },

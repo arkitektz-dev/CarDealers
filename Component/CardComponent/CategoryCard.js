@@ -13,11 +13,9 @@ import {
 import Car from "../../Assets/CarImage.png";
 import Dealer from "../../Assets/DealerImage.png";
 import ShowRoom from "../../Assets/ShowroomImage.png";
-
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const CategoryCard = () => {
-  const screenWidth = Dimensions.get("window").width;
-  const screenHeight = Dimensions.get("window").height;
-
   const imageHeight = screenHeight * 0;
   const imageWidth = screenWidth * 0.3;
   const naivgation = useNavigation();
@@ -51,15 +49,16 @@ const CategoryCard = () => {
   );
 };
 const styles = StyleSheet.create({
-  card: {},
   container: {
     alignItems: "center",
     backgroundColor: "red",
     borderRadius: 15,
     height: 100,
+    padding: 5,
+    margin: 5,
     justifyContent: "center",
     overflow: "hidden",
-    width: 110,
+    width: screenWidth * 0.3,
   },
   image: {
     width: "100%",

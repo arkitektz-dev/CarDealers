@@ -14,7 +14,7 @@ import Drawer from "../../Assets/Drawer.png";
 const imagecontainerWidth = screenWidth;
 const imagecontainerHeight = screenHeight * 0.3;
 
-const DetailCarScreen = ({ route, navigation }) => {
+const DetailCarScreen = ({route, navigation}) => {
   const item = route.params.item;
   return (
     <View style={styles.container}>
@@ -24,17 +24,17 @@ const DetailCarScreen = ({ route, navigation }) => {
           justifyContent: "space-between",
         }}
       >
-        <TouchableOpacity>
-          {/* <Image
-            source={Drawer}
-            resizeMode="contain"
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "flex-end",
-            }}
-          /> */}
-        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            left: 10,
+            top: 10,
+            backgroundColor: "red",
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
+          }}
+        ></TouchableOpacity>
         <Text
           style={{
             color: "grey",
@@ -60,7 +60,7 @@ const DetailCarScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.imageHolder}>
         <Image
-          source={{ uri: item.images[0] }}
+          source={{uri: item.images[0]}}
           style={styles.imageSize}
           resizeMode={"contain"}
         />
@@ -77,17 +77,15 @@ const DetailCarScreen = ({ route, navigation }) => {
           <View style={styles.CarInfoTitle}>
             <Text style={styles.carInfoText}>Car Information</Text>
           </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
+          <View style={{flexDirection: "row", justifyContent: "space-around"}}>
             <View style={styles.subDataRow}>
               <View style={styles.subData}>
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Model Year</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.information.modelYear}
@@ -98,9 +96,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Transmission</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.additionalInformation.transmission}
@@ -111,9 +109,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Engine Capacity</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.additionalInformation.engineCapacity}
@@ -125,9 +123,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Assembly</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.additionalInformation.assembly}
@@ -141,9 +139,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Milage</Text>
                   <Text style={styles.txt1}>{item.vehicle.mileage}</Text>
                 </View>
@@ -152,9 +150,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Engine Type</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.additionalInformation.engineType}
@@ -165,9 +163,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Registration City</Text>
                   <Text style={styles.txt1}>
                     {item.vehicle.registrationCity}
@@ -178,9 +176,9 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.line}>
                   <Text>|</Text>
                 </View>
-                <View style={{ width: 10 }}></View>
+                <View style={{width: 10}}></View>
 
-                <View style={{ flexDirection: "column" }}>
+                <View style={{flexDirection: "column"}}>
                   <Text style={styles.h1}>Exterior Color</Text>
                   <Text style={styles.txt1}>{item.vehicle.exteriorColor}</Text>
                 </View>
