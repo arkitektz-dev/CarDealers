@@ -4,6 +4,9 @@ import About from "../../Screens/AboutScreen";
 import DrawerNav from "../DrawerNav";
 import {Image} from "react-native";
 import {StyleSheet} from "react-native";
+import ListingDealer from "../../Screens/Dealer/Listing";
+import DealerDetailScreen from "../../Screens/Dealer/Detail";
+import BottomDealerDetailScreen from "../../Screens/ListingsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,12 +30,12 @@ function MyTabs() {
       />
       <Tab.Screen
         name="About"
-        component={About}
+        component={BottomDealerDetailScreen}
         options={{
           tabBarIcon: ({color}) => (
             <Image
               style={{height: 25, width: 25}}
-              source={require("../../Assets/Compass.png")}
+              source={require("../../Assets/userprofile.png")}
             />
           ),
         }}

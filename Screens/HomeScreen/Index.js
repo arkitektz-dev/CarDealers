@@ -51,7 +51,7 @@ const HomeScreen = ({navigation}) => {
         <View style={styles.distance}></View>
         <View style={{flexDirection: "row"}}>
           <View style={{flexDirection: "column"}}>
-            <Text style={styles.welcome}> Hi, Jon Herry</Text>
+            <Text style={styles.welcome}> Hi, Ijaz hussain</Text>
             <View style={{height: screenHeight * 0.02}}></View>
             <View style={{flexDirection: "row"}}>
               <View

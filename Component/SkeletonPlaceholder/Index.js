@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import {View} from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 const SkeletonLoader = () => {
@@ -12,30 +12,30 @@ const SkeletonLoader = () => {
           justifyContent: "flex-start",
         }}
       >
-        <View style={{ flexDirection: "column" }}>
-          <View style={{ margin: 10, width: 60, height: 60 }} />
-          <View style={{ marginLeft: 5 }}>
-            <View style={{ width: 120, height: 20, borderRadius: 4 }} />
+        <View style={{flexDirection: "column"}}>
+          <View style={{margin: 10, width: 150, height: 100}} />
+          <View style={{marginLeft: 5}}>
+            <View style={{width: 120, height: 20, borderRadius: 4}} />
             <View
-              style={{ marginTop: 6, width: 80, height: 20, borderRadius: 4 }}
+              style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
             />
           </View>
         </View>
-        <View style={{ flexDirection: "column" }}>
-          <View style={{ margin: 10, width: 60, height: 60 }} />
-          <View style={{ marginLeft: 5 }}>
-            <View style={{ width: 120, height: 20, borderRadius: 4 }} />
+        <View style={{flexDirection: "column"}}>
+          <View style={{margin: 10, width: 150, height: 100}} />
+          <View style={{marginLeft: 5}}>
+            <View style={{width: 120, height: 20, borderRadius: 4}} />
             <View
-              style={{ marginTop: 6, width: 80, height: 20, borderRadius: 4 }}
+              style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
             />
           </View>
         </View>
-        <View style={{ flexDirection: "column" }}>
-          <View style={{ margin: 10, width: 60, height: 60 }} />
-          <View style={{ marginLeft: 5 }}>
-            <View style={{ width: 120, height: 20, borderRadius: 4 }} />
+        <View style={{flexDirection: "column"}}>
+          <View style={{margin: 10, width: 150, height: 100}} />
+          <View style={{marginLeft: 5}}>
+            <View style={{width: 120, height: 20, borderRadius: 4}} />
             <View
-              style={{ marginTop: 6, width: 80, height: 20, borderRadius: 4 }}
+              style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
             />
           </View>
         </View>

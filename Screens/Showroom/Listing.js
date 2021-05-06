@@ -13,24 +13,27 @@ import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 import Card from "../../Component/CardViews/Card";
 import {SearchComponent} from "../../Component/Search";
+import {ActivityIndicator} from "react-native-paper";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingShowroom = ({route}) => {
   const [showroomdata, setShowroomData] = useState([]);
-  const [showroomCount, setshowroomCount] = useState([]);
+  const [showroomCount, setshowroomCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const ref = firestore().collection("Showrooms");
   useEffect(() => {
+    setLoading(true);
     ref.get().then((querySnapshot) => {
       const arr = [];
       querySnapshot.forEach((documentSnapshot) => {
-        // setData(documentSnapshot.data());
         arr.push(documentSnapshot.data());
       });
       setShowroomData(arr);
     });
     ref.get().then((querySnapshot) => {
       setshowroomCount(querySnapshot.size);
+      setLoading(false);
     });
   }, []);
   const navigation = useNavigation();
@@ -79,11 +82,16 @@ const ListingShowroom = ({route}) => {
           {showroomCount} Results
         </Text>
       </View>
-      <FlatList
-        data={showroomdata}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator color="red" size="small" />
+      ) : (
+        <FlatList
+          contentContainerStyle={{paddingBottom: "30%"}}
+          data={showroomdata}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

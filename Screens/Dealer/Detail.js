@@ -11,7 +11,8 @@ import {
   FlatList,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-import Car from "../../Assets/Car.png";
+import BellIcon from "../../Assets/BellIcon.png";
+
 import Profile from "../../Assets/RedProfileLogo.png";
 import {useNavigation} from "@react-navigation/core";
 const screenWidth = Dimensions.get("window").width;
@@ -60,10 +61,16 @@ const DealerDetailScreen = ({route}) => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
+            justifyContent: "space-between",
+            backgroundColor: "white",
+            padding: 10,
+            margin: 8,
+
             borderRadius: 20,
-            flexDirection: "column",
-            margin: 5,
-            left: 5,
+            shadowColor: "#470000",
+            shadowOffset: {width: 0, height: 1},
+            shadowOpacity: 0.2,
+            elevation: 2,
           }}
         >
           <View>
@@ -138,11 +145,24 @@ const DealerDetailScreen = ({route}) => {
             textAlignVertical: "center",
           }}
         >
-          Profile
+          PROFILE
         </Text>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image
             source={Drawer}
+            resizeMode="contain"
+            style={{
+              width: 60,
+              height: 60,
+              alignSelf: "flex-end",
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+        <TouchableOpacity>
+          <Image
+            source={BellIcon}
             resizeMode="contain"
             style={{
               width: 60,
@@ -182,12 +202,14 @@ const DealerDetailScreen = ({route}) => {
                 return <Text style={styles.h1}>{item.name}</Text>;
               })}
 
-              {param.contactInformation.map((item) => {
+              {/* {param.contactInformation.map((item) => {
                 return <Text style={styles.txt1}>{item}</Text>;
-              })}
+              })} */}
+              <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
             </View>
           </View>
         </View>
+        <View style={{height: 20}}></View>
       </View>
       <View
         style={{
@@ -208,7 +230,7 @@ const DealerDetailScreen = ({route}) => {
             {showroomCount}
           </Text>
           <TouchableOpacity style={styles.CarInfoTitle}>
-            <Text style={styles.countText}> Showrooms </Text>
+            <Text style={styles.countText}> SHOWROOMS </Text>
           </TouchableOpacity>
         </View>
         <View style={{flexDirection: "column"}}>
@@ -223,7 +245,7 @@ const DealerDetailScreen = ({route}) => {
             {carCount}
           </Text>
           <View style={styles.CarInfoTitle}>
-            <Text style={styles.countText}> Cars </Text>
+            <Text style={styles.countText}> CARS </Text>
           </View>
         </View>
       </View>
@@ -254,10 +276,8 @@ const styles = StyleSheet.create({
   },
   topDiv: {
     width: screenWidth,
-    height: screenHeight * 0.2,
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    bottom: "1%",
     borderBottomWidth: 2,
     borderBottomColor: "#e0e0e0",
   },

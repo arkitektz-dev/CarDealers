@@ -4,7 +4,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,7 +17,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
-  const [carCount, setcarCount] = useState([]);
+  const [carCount, setcarCount] = useState(0);
   const arr = [];
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -69,7 +68,7 @@ const ListingCars = () => {
               resizeMode={"contain"}
             />
 
-            <View style={{flexDirection: "column", margin: 15}}>
+            <View style={{flexDirection: "column", margin: 15, top: 10}}>
               <Text
                 style={{
                   textAlign: "left",
@@ -83,7 +82,16 @@ const ListingCars = () => {
                 {item.vehicle.information.modelYear}
               </Text>
               <View style={{height: 10}}></View>
-
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  textAlign: "left",
+                }}
+              >
+                {item.amount}
+              </Text>
               <View style={{height: 10}}></View>
 
               <Text

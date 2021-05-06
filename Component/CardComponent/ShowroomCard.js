@@ -23,15 +23,18 @@ const ShowroomCard = () => {
 
   const fetchData = async () => {
     const ref = firestore().collection("Showrooms");
+    const arr = [];
 
     setLoading(true);
-    await ref.get().then((querySnapshot) => {
-      const arr = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
+    await ref
+      .get()
+
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          arr.push({...doc.data(), id: doc.id});
+        });
+        setShowroomData(arr);
       });
-      setShowroomData(arr);
-    });
     setLoading(false);
   };
 

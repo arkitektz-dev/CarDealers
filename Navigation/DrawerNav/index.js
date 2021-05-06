@@ -36,8 +36,8 @@ function CustomDrawerContent(props) {
           style={styles.image}
         />
         <View>
-          <Title style={styles.title}>John Harry</Title>
-          <Caption style={styles.caption}>@rukstech</Caption>
+          <Title style={styles.title}> Ijaz Hussain</Title>
+          <Caption style={styles.caption}> @ijazhussain</Caption>
         </View>
       </View>
       {/* <DrawerItemList {...props} /> */}

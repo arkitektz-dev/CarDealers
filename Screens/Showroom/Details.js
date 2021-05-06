@@ -11,7 +11,7 @@ import {
   FlatList,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-import Car from "../../Assets/Car.png";
+import Profile from "../../Assets/RedProfileLogo.png";
 import {useNavigation} from "@react-navigation/core";
 import BellIcon from "../../Assets/BellIcon.png";
 
@@ -34,6 +34,7 @@ const ShowroomDetailScreen = ({route}) => {
   };
 
   useEffect(() => {
+    console.log(item.id);
     firestore()
       .collection("Dealers")
       .get()
@@ -53,10 +54,15 @@ const ShowroomDetailScreen = ({route}) => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
+            justifyContent: "space-between",
+            backgroundColor: "white",
+            padding: 10,
+            margin: 8,
             borderRadius: 20,
-            flexDirection: "column",
-            margin: 5,
-            left: 5,
+            shadowColor: "#470000",
+            shadowOffset: {width: 0, height: 1},
+            shadowOpacity: 0.2,
+            elevation: 2,
           }}
         >
           <View>
@@ -103,7 +109,6 @@ const ShowroomDetailScreen = ({route}) => {
     );
   };
   const navigation = useNavigation();
-
   return (
     <View style={styles.parent}>
       <View
@@ -146,27 +151,48 @@ const ShowroomDetailScreen = ({route}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{flexDirection: "row"}}>
-        <View style={styles.topDiv}>
-          <View style={styles.DealerName}>
-            <Text style={styles.carInfoText}> {item.name} </Text>
-          </View>
-          <View style={{flexDirection: "column"}}>
-            <Text style={styles.h1}>{item.contactInformation}</Text>
-            <Text style={styles.txt1}>{item.location}</Text>
-          </View>
-        </View>
+      <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
         <TouchableOpacity>
           <Image
             source={BellIcon}
             resizeMode="contain"
             style={{
-              width: 52,
-              height: 52,
-              justifyContent: "flex-end",
+              width: 60,
+              height: 60,
+              alignSelf: "flex-end",
             }}
           />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.topDiv}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "flex-start",
+            marginHorizontal: 25,
+          }}
+        >
+          <Image
+            source={{uri: item.images[0]}}
+            onPress={() => navigation.goBack()}
+            style={{
+              width: 85,
+              height: 85,
+              borderRadius: 85 / 2,
+            }}
+          />
+          <View style={{width: 15}}></View>
+          <View style={{flexDirection: "column", justifyContent: "flex-end"}}>
+            <View style={styles.DealerName}>
+              <Text style={styles.carInfoText}> {item.name} </Text>
+            </View>
+            <View style={{flexDirection: "column"}}>
+              <Text style={styles.h1}>{item.contactInformation}</Text>
+              <Text style={styles.txt1}>{item.location}</Text>
+            </View>
+          </View>
+        </View>
       </View>
 
       <View
@@ -208,6 +234,7 @@ const ShowroomDetailScreen = ({route}) => {
         </View>
       </View>
       <FlatList
+        contentContainerStyle={{alignSelf: "center"}}
         numColumns={2}
         data={dataCar}
         renderItem={_renderItem}
@@ -233,10 +260,8 @@ const styles = StyleSheet.create({
   },
   topDiv: {
     width: screenWidth,
-    height: screenHeight * 0.2,
+    height: screenHeight * 0.15,
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     borderBottomWidth: 2,
     borderBottomColor: "#e0e0e0",
   },

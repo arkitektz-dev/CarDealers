@@ -44,7 +44,7 @@ const DetailCarScreen = ({route, navigation}) => {
             textAlignVertical: "center",
           }}
         >
-          Profile
+          PROFILE
         </Text>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image

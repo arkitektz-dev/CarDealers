@@ -14,13 +14,16 @@ import firestore from "@react-native-firebase/firestore";
 import Dealer from "../../Assets/Dealer.png";
 import Card from "../../Component/CardViews/Card";
 import {SearchComponent} from "../../Component/Search";
+import {ActivityIndicator} from "react-native-paper";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const ListingDealer = () => {
   const [dealerdata, setDealerData] = useState([]);
-  const [dealerCount, setDealerCount] = useState();
+  const [dealerCount, setDealerCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const ref = firestore().collection("Dealers");
   useEffect(() => {
+    setLoading(true);
     ref.get().then((querySnapshot) => {
       const arr = [];
       querySnapshot.forEach((documentSnapshot) => {
@@ -29,6 +32,7 @@ const ListingDealer = () => {
       setDealerData(arr);
       ref.get().then((querySnapshot) => {
         setDealerCount(querySnapshot.size);
+        setLoading(false);
       });
     });
   }, []);
@@ -79,13 +83,16 @@ const ListingDealer = () => {
           {dealerCount} Results
         </Text>
       </View>
-      {
+      {loading ? (
+        <ActivityIndicator color="red" size="small" />
+      ) : (
         <FlatList
+          contentContainerStyle={{paddingBottom: "30%"}}
           data={dealerdata}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
-      }
+      )}
     </View>
   );
 };
