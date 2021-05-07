@@ -9,6 +9,7 @@ import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 import DealerDetailScreen from "../../Screens/Dealer/Detail";
 import ListingDealer from "../../Screens/Dealer/Listing";
 import CarScreen from "../../Screens/Car";
+import ProfileStack from "./ProfileStack";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -60,6 +61,11 @@ const HomeStack = () => {
         component={CarScreen}
         options={{ headerTitleAlign: "center", title: "Car" }}
       />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{ headerShown: false }}
+        />
     </Stack.Navigator>
   );
 };

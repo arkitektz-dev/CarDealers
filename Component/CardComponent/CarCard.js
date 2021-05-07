@@ -13,6 +13,7 @@ import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import ListItemSeparator from "../ItemSeperator/Index";
 import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
+import HomeCard from "../CardViews/HomeProductListCard";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,10 +27,10 @@ const Card = () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
+      setDataCar(documentSnapshot.data());
       });
-      setDataCar(arr);
-    });
+      console.log(dataCar)
+          });
     setLoading(false);
   };
 
@@ -43,66 +44,12 @@ const Card = () => {
   };
   const _renderItem = ({item}) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View
-          style={{
-            justifyContent: "space-between",
-            backgroundColor: "white",
-            margin: 5,
-            borderRadius: 20,
-            shadowColor: "#470000",
-            shadowOffset: {width: 0, height: 1},
-            shadowOpacity: 0.2,
-            elevation: 2,
-          }}
-        >
-          <Image
-            source={{uri: item.images[0]}}
-            style={styles.imageSize}
-            resizeMode={"contain"}
-          />
-          <View style={{alignItems: "flex-start", padding: 10}}>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {"  \b\b"}
-              {item.vehicle.information.make} {item.vehicle.information.model}
-              {"\b"}
-              {item.vehicle.information.modelYear}
-            </Text>
-            <Text
-              style={{
-                color: "red",
-                fontSize: 12,
-                fontWeight: "bold",
-                textAlign: "left",
-              }}
-            >
-              {"  \b\b"}
-
-              {item.amount}
-            </Text>
-
-            <Text
-              style={{
-                color: "#565656",
-                fontSize: 10,
-                fontWeight: "800",
-                textAlign: "left",
-              }}
-            >
-              {"  \b\b"}
-              {item.vehicle.city} | {item.vehicle.mileage} | {""}
-              {item.vehicle.additionalInformation.engineType}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <HomeCard  title={`${item.vehicle.information.make+" "+item.vehicle.information.model+" "+item.vehicle.information.modelYear} `}  
+      price= {`${item.amount}`}
+      subtitle={`${item.vehicle.city+" "+item.vehicle.mileage+" "+item.vehicle.additionalInformation.engineType} `} 
+      image={{uri: item.images[0]}}
+      pressHandler={() => onPressHandler(item)} />
+       
     );
   };
 

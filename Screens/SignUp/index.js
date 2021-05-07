@@ -340,7 +340,7 @@ export const SignupScreen = () => {
           <View style={styles.distance}></View>
 
           <View style={styles.buttonContainer}>
-            <Button title="Register" onLogin={Signup} />
+            <Button title="Register" onPressHandler={Signup} />
           </View>
           <View style={styles.signupContainer}>
             <Text
@@ -489,7 +489,7 @@ export const SignupScreen = () => {
               </View>
               <View style={styles.distance}></View>
 
-              <Button title="Verify" onLogin={confirmCode} />
+              <Button title="Verify" onPressHandler={confirmCode} />
               <View style={styles.distance}></View>
               <TouchableOpacity
                 onPress={() => {

@@ -45,7 +45,7 @@ const DealerCard = () => {
     return (
       <HomeCard
         title={item.name}
-        subtitle={item.contactInformation[0]}
+        price={item.contactInformation[0]}
         image={{uri: item.images[0]}}
         pressHandler={() => onPressHandler(item)}
       />

@@ -11,7 +11,7 @@ import {
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const HomeCard = ({image, title, subtitle, pressHandler}) => {
+const HomeCard = ({image, title,price, subtitle, pressHandler}) => {
   return (
     <TouchableOpacity onPress={pressHandler}>
       <View
@@ -36,18 +36,30 @@ const HomeCard = ({image, title, subtitle, pressHandler}) => {
               fontWeight: "bold",
             }}
           >
-            {"  \b\b"}
+           
             {title}
           </Text>
+          <Text
+              style={{
+                color: "red",
+                fontSize: 12,
+                fontWeight: "bold",
+                textAlign: "left",
+              }}
+            >
+             
+
+              {price}
+            </Text>
           <Text
             style={{
               textAlign: "left",
               color: "#565656",
-              fontSize: 14,
+              fontSize: 10,
               fontWeight: "bold",
             }}
           >
-            {"  \b\b"}
+           
             {subtitle}
           </Text>
         </View>

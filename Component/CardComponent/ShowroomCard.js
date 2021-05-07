@@ -51,7 +51,7 @@ const ShowroomCard = () => {
     return (
       <HomeCard
         title={item.name}
-        subtitle={item.location}
+        price={item.location}
         image={{uri: item.images[0]}}
         pressHandler={() => onPressHandler(item)}
       />
@@ -60,7 +60,7 @@ const ShowroomCard = () => {
   return (
     <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
       <View style={{flexDirection: "row", marginBottom: 15}}>
-        <Text style={styles.heading}> SHOWROOM DEALERS</Text>
+        <Text style={styles.heading}> FEATURED SHOWROOMS</Text>
         <View
           style={{
             flexDirection: "row",

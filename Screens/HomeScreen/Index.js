@@ -10,6 +10,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
+  ScrollView
 } from "react-native";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
@@ -18,7 +19,6 @@ import Drawer from "../../Assets/Drawer.png";
 import {SearchComponent} from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
 import {TouchableOpacity} from "react-native";
-import {ScrollView} from "react-native-gesture-handler";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 

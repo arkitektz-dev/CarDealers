@@ -12,6 +12,8 @@ import {Header} from "@react-navigation/stack";
 import {Dimensions, Image, StyleSheet, View} from "react-native";
 import {Avatar, Caption, Title} from "react-native-paper";
 import {useNavigation} from "@react-navigation/core";
+import Profile from "../../Screens/DrawerScreen/Profile";
+import ProfileStack from "../HomeStack/ProfileStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -40,8 +42,7 @@ function CustomDrawerContent(props) {
           <Caption style={styles.caption}> @ijazhussain</Caption>
         </View>
       </View>
-      {/* <DrawerItemList {...props} /> */}
-      <DrawerItem label="Home" onPress={() => navigation.replace("Home")} />
+      <DrawerItemList {...props} />
       <DrawerItem
         label="Sign Out"
         onPress={() => navigation.navigate("Login")}

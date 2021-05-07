@@ -6,11 +6,10 @@ const ScreenWrapper = () => {
 };
 const styles = StyleSheet.create({
   parent: {
-    flexDirection: "column",
-    backgroundColor: "#fff",
     justifyContent: "center",
-
+    flexDirection: "column",
     flex: 1,
+    backgroundColor: "#fff",
     padding: 10,
   },
 });

@@ -130,7 +130,7 @@ export const LoginScreen = () => {
         </HelperText>
       ) : null}
       <View style={styles.buttonContainer}>
-        <Button title="Login" onLogin={Login} />
+        <Button title="Login" onPressHandler={Login} />
       </View>
 
       <View style={styles.signupContainer}>
