@@ -1,20 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
-import React, {useState} from "react";
-import {useEffect} from "react";
-import {StyleSheet, Text, View} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
 // import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
-import {SafeAreaProvider} from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
+import AddCar from "./Screens/Forms/AddCar";
 const MainStack = () => {
   const Stack = createStackNavigator();
 
   return (
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
       initialRouteName="Home"
     >
       <Stack.Screen name="Login" component={LoginStack} />
@@ -39,21 +40,12 @@ export default function App() {
     firebase.initializeApp(firebaseConfig);
   }
   return (
-    // <SafeAreaProvider>
-    <NavigationContainer>
-      <MainStack />
-    </NavigationContainer>
-    // </SafeAreaProvider>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <MainStack />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
-  // user ? (
-  //   <NavigationContainer>
-  //     <LoginScreen />
-  //   </NavigationContainer>
-  // ) : (
-  //   <NavigationContainer>
-  //     <HomeScreen />
-  //   </NavigationContainer>
-  // );
 }
 
 const styles = StyleSheet.create({

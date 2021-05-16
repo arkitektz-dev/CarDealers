@@ -13,9 +13,9 @@ const screenHeight = Dimensions.get("window").height;
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
-export const Button = ({ title, onPressHandler }) => {
+export const Button = ({ title, style, onPressHandler }) => {
   return (
-    <TouchableOpacity style={styles.background} onPress={onPressHandler}>
+    <TouchableOpacity style={style} onPress={onPressHandler}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );

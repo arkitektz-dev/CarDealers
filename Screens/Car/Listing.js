@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -9,15 +9,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
-
+import { useNavigation } from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
-import {SearchComponent} from "../../Component/Search";
+
+import { SearchComponent } from "../../Component/Search";
+import Filter from "../../Component/Search/Fliter";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
+  const [filteredData, setfilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [shown, setShown] = useState(false);
   const arr = [];
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -30,6 +36,7 @@ const ListingCars = () => {
         arr.push(documentSnapshot.data());
       });
       setDataCar(arr);
+      setfilteredData(arr);
       firestore()
         .collection("Advertisments")
         .get()
@@ -43,10 +50,25 @@ const ListingCars = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", {item});
+  const searchCar = (text) => {
+    if (text) {
+      const newData = dataCar.filter((item) => {
+        return (
+          item.vehicle.information.make.indexOf(text) >= 0 ||
+          item.vehicle.information.modelYear.indexOf(text) >= 0 ||
+          item.vehicle.information.model.indexOf(text) >= 0
+        );
+      });
+
+      setDataCar(newData);
+    } else {
+      setDataCar(filteredData);
+    }
   };
-  const _renderItem = ({item}) => {
+  const onPressHandler = (item) => {
+    navigation.navigate("DetailCarScreen", { item });
+  };
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -63,12 +85,12 @@ const ListingCars = () => {
             }}
           >
             <Image
-              source={{uri: item.images[0]}}
+              source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
 
-            <View style={{flexDirection: "column", margin: 15, top: 10}}>
+            <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
                 style={{
                   textAlign: "left",
@@ -81,7 +103,7 @@ const ListingCars = () => {
                 {"\b"}
                 {item.vehicle.information.modelYear}
               </Text>
-              <View style={{height: 10}}></View>
+              <View style={{ height: 10 }}></View>
               <Text
                 style={{
                   color: "red",
@@ -92,7 +114,7 @@ const ListingCars = () => {
               >
                 {item.amount}
               </Text>
-              <View style={{height: 10}}></View>
+              <View style={{ height: 10 }}></View>
 
               <Text
                 style={{
@@ -113,7 +135,7 @@ const ListingCars = () => {
     );
   };
   return (
-    <View style={{backgroundColor: "white"}}>
+    <View style={{ backgroundColor: "white" }}>
       <View style={styles.searchHolder}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -128,9 +150,18 @@ const ListingCars = () => {
         ></TouchableOpacity>
         <View style={styles.distance}></View>
 
-        <SearchComponent style={styles.search} />
+        <SearchComponent
+          style={styles.search}
+          onChangeHandler={(text) => searchCar(text)}
+        />
       </View>
-      <View style={{flexDirection: "row", padding: 10}}>
+      <View
+        style={{
+          justifyContent: "space-between",
+          flexDirection: "row",
+          padding: 10,
+        }}
+      >
         <Text
           style={{
             color: "#333",
@@ -141,6 +172,22 @@ const ListingCars = () => {
         >
           {carCount} Results
         </Text>
+        <Filter
+          modalVisible={shown}
+          onChnage={(index, value) => console.log(value)}
+        />
+        <TouchableOpacity onPress={() => setShown(true)}>
+          <Text
+            style={{
+              color: "#333",
+              display: "flex",
+              fontWeight: "800",
+              fontSize: 18,
+            }}
+          >
+            Filter
+          </Text>
+        </TouchableOpacity>
       </View>
       {loading ? (
         <ActivityIndicator color="red" size="large" />
