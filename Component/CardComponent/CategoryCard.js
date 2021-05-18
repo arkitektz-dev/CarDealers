@@ -13,11 +13,10 @@ import {
 import Car from "../../Assets/CarImage.png";
 import Dealer from "../../Assets/DealerImage.png";
 import ShowRoom from "../../Assets/ShowroomImage.png";
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import { screenHeight, screenWidth } from "../../Global/Dimension";
+
 const CategoryCard = () => {
-  const imageHeight = screenHeight * 0;
-  const imageWidth = screenWidth * 0.3;
+ 
   const naivgation = useNavigation();
   return (
     <View style={{flexDirection: "row"}}>

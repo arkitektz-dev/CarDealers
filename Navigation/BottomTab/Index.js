@@ -1,12 +1,9 @@
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import About from "../../Screens/AboutScreen";
 import DrawerNav from "../DrawerNav";
 import {Image} from "react-native";
-import {StyleSheet} from "react-native";
-import ListingDealer from "../../Screens/Dealer/Listing";
-import DealerDetailScreen from "../../Screens/Dealer/Detail";
-import BottomDealerDetailScreen from "../../Screens/ListingsScreen";
+
+import ProfileStack from "../HomeStack/ProfileStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +27,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="About"
-        component={BottomDealerDetailScreen}
+        component={ProfileStack}
         options={{
           tabBarIcon: ({color}) => (
             <Image

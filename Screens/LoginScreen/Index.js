@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import firestore from "@react-native-firebase/firestore";
+import { useDispatch } from "react-redux";
 import {
   Dimensions,
   Image,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import firestore from "@react-native-firebase/firestore";
 
 import BackgroundImage from "../../Assets/loginBackground.png";
 import AppLogo from "../../Assets/AppLogo.png";
@@ -16,9 +17,9 @@ import AppLogo from "../../Assets/AppLogo.png";
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
 import { HelperText, TextInput } from "react-native-paper";
-
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import { screenHeight, screenWidth } from "../../Global/Dimension";
+import { UserInfo } from "../../Redux/Reducer/UserInfo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -33,10 +34,18 @@ export const LoginScreen = () => {
   const [user, setUser] = useState({ name: "TesUser1", password: "test" });
   const [auth, setAuth] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const storeData = async (value) => {
+    try {
+      const data = JSON.stringify(value);
+      await AsyncStorage.setItem("userInfo", data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const Login = async () => {
+    // dispatch(UserInfo(user))
     const ref = firestore().collection("Users");
 
     if (user.name == "" || user.password == "") {
@@ -47,8 +56,14 @@ export const LoginScreen = () => {
         .where("username", "==", user.name)
         .where("password", "==", user.password)
         .get()
-        .then((querySnapshot) => {
-          querySnapshot.docs.forEach((doc) => console.log(doc.data()));
+        .then(async (querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => {
+            const a = { ...doc.data() };
+            a.id = doc.id;
+
+            storeData(a);
+          });
+          global.user = true;
           navigation.replace("Home");
         })
         .catch((e) => {
@@ -56,9 +71,7 @@ export const LoginScreen = () => {
         });
     }
   };
-  const hasErrors = () => {
-    return user.name == "";
-  };
+
   return (
     <ImageBackground
       blurRadius={2}
@@ -142,9 +155,22 @@ export const LoginScreen = () => {
       <View style={styles.signupContainer}>
         <Text
           style={styles.signupText}
-          onPress={() => navigation.navigate("SignupScreen")}
+          onPress={() => {
+            navigation.navigate("SignupScreen");
+          }}
         >
           Signup for an account?
+        </Text>
+      </View>
+      <View style={styles.distance}></View>
+      <View style={styles.signupContainer}>
+        <Text
+          style={styles.signupText}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+        >
+          SKIP
         </Text>
       </View>
     </ImageBackground>

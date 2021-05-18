@@ -15,8 +15,8 @@ import Dealer from "../../Assets/Dealer.png";
 import Card from "../../Component/CardViews/Card";
 import {SearchComponent} from "../../Component/Search";
 import {ActivityIndicator} from "react-native-paper";
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import { screenWidth } from "../../Global/Dimension";
+
 const ListingDealer = () => {
   const [dealerdata, setDealerData] = useState([]);
   const [dealerCount, setDealerCount] = useState(0);

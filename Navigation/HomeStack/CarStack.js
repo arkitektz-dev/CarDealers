@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import CarScreen from "../../Screens/Car";
 import DetailCarScreen from "../../Screens/Car/Details";
-
+import AddCar from '../../Screens/Forms/AddCar'
 const CarStack = () => {
   const Stack = createStackNavigator();
 
@@ -20,6 +20,11 @@ const CarStack = () => {
       <Stack.Screen
         name="DetailCarScreen"
         component={DetailCarScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddCar"
+        component={AddCar}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

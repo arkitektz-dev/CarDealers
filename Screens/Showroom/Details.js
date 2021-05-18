@@ -14,9 +14,9 @@ import firestore from "@react-native-firebase/firestore";
 import Profile from "../../Assets/RedProfileLogo.png";
 import {useNavigation} from "@react-navigation/core";
 import BellIcon from "../../Assets/BellIcon.png";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+
 const ShowroomDetailScreen = ({route}) => {
   const item = route.params.item;
   const [dealerCount, setdealerCount] = useState(0);

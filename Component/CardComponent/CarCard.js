@@ -14,9 +14,8 @@ import ListItemSeparator from "../ItemSeperator/Index";
 import {useNavigation} from "@react-navigation/core";
 import firestore from "@react-native-firebase/firestore";
 import HomeCard from "../CardViews/HomeProductListCard";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,8 @@ const Card = () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-      setDataCar(documentSnapshot.data());
+      arr.push(documentSnapshot.data());
+      setDataCar(arr)
       });
       console.log(dataCar)
           });

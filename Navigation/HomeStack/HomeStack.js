@@ -8,7 +8,6 @@ import DetailCarScreen from "../../Screens/Car/Details";
 import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 import DealerDetailScreen from "../../Screens/Dealer/Detail";
 import ListingDealer from "../../Screens/Dealer/Listing";
-import CarScreen from "../../Screens/Car";
 import ProfileStack from "./ProfileStack";
 
 const HomeStack = () => {
@@ -26,6 +25,7 @@ const HomeStack = () => {
         component={CarStack}
         options={{ headerShown: false }}
       />
+     
       <Stack.Screen
         options={{ headerShown: false }}
         name="ShowroomDetailScreen"
@@ -56,11 +56,11 @@ const HomeStack = () => {
         component={ListingDealer}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ListCarScreen"
         component={CarScreen}
         options={{ headerTitleAlign: "center", title: "Car" }}
-      />
+      /> */}
       <Stack.Screen
         name="Profile"
         component={ProfileStack}

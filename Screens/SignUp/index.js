@@ -17,9 +17,8 @@ import { useNavigation } from "@react-navigation/core";
 
 import BackgroundImage from "../../Assets/loginBackground.png";
 import { Tooltip } from "react-native-elements";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;

@@ -7,9 +7,8 @@ import {
   Dimensions,
   Text,
 } from "react-native";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 
 const HomeCard = ({image, title,price, subtitle, pressHandler}) => {
   return (

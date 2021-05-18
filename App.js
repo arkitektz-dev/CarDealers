@@ -1,15 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import IndexReducer from "./Redux/Reducer/Index";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 // import HomeStack from "./Navigation/HomeStack/Home";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
-import AddCar from "./Screens/Forms/AddCar";
+
 const MainStack = () => {
   const Stack = createStackNavigator();
 
@@ -25,6 +29,8 @@ const MainStack = () => {
 };
 
 export default function App() {
+  const store = createStore(IndexReducer, compose(applyMiddleware(thunk)));
+
   var firebaseConfig = {
     apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
     authDomain: "cardealer-41e38.firebaseapp.com",
@@ -40,11 +46,13 @@ export default function App() {
     firebase.initializeApp(firebaseConfig);
   }
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <MainStack />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <MainStack />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

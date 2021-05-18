@@ -15,8 +15,8 @@ import BellIcon from "../../Assets/BellIcon.png";
 
 import Profile from "../../Assets/RedProfileLogo.png";
 import {useNavigation} from "@react-navigation/core";
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import { screenHeight, screenWidth } from "../../Global/Dimension";
+
 
 const DealerDetailScreen = ({route}) => {
   const param = route.params.item;

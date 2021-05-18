@@ -14,15 +14,13 @@ import firestore from "@react-native-firebase/firestore";
 
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
-  const [search, setSearch] = useState("");
   const [shown, setShown] = useState(false);
   const arr = [];
   const [loading, setLoading] = useState(false);
@@ -154,6 +152,17 @@ const ListingCars = () => {
           style={styles.search}
           onChangeHandler={(text) => searchCar(text)}
         />
+ <TouchableOpacity
+          onPress={() => navigation.navigate('AddCar')}
+          style={{
+          right:75,
+            top: 10,
+            backgroundColor: "#fff",
+            width: 35,
+            height: 35,
+            borderRadius: 35 / 2,
+          }}
+        ></TouchableOpacity>
       </View>
       <View
         style={{
@@ -174,7 +183,12 @@ const ListingCars = () => {
         </Text>
         <Filter
           modalVisible={shown}
-          onChnage={(index, value) => console.log(value)}
+          // onChnage={(index, value) => console.log(value)}
+          toggleModal={(dropdownValues)=>{
+            setShown(false)
+            console.log(dropdownValues)
+          }}
+          
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text

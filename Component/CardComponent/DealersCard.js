@@ -13,9 +13,9 @@ import {Dimensions} from "react-native";
 import {useNavigation} from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
+import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+
 
 const DealerCard = () => {
   const [dealerData, setDealerData] = useState([]);

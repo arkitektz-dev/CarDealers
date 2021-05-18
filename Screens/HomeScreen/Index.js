@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import firestore from "@react-native-firebase/firestore";
+import {useSelector}from'react-redux'
 import React, {useEffect, useState} from "react";
 import {
   FlatList,
@@ -21,9 +21,8 @@ import DealerCard from "../../Component/CardComponent/DealersCard";
 import {TouchableOpacity} from "react-native";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
+import { screenHeight } from "../../Global/Dimension";
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 
 const HomeScreen = ({navigation}) => {
   const [confirm, setConfirm] = useState(null);
@@ -36,7 +35,8 @@ const HomeScreen = ({navigation}) => {
     //   navigation.navigate("LoginScreen");
     // } catch (error) {
   };
-
+  const user=useSelector((state) => state)
+  console.log(user)
   return (
     <ScrollView>
       <View
