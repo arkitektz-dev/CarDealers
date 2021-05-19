@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
@@ -9,56 +9,43 @@ import {
   View,
   Dimensions,
 } from "react-native";
+import { fetchShowroomData } from "../../Data/FetchData";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-
 
 const ShowroomCard = () => {
   const [showroomData, setShowroomData] = useState();
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    const ref = firestore().collection("Showrooms");
-    const arr = [];
-
-    setLoading(true);
-    await ref
-      .get()
-
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          arr.push({...doc.data(), id: doc.id});
-        });
-        setShowroomData(arr);
-      });
-    setLoading(false);
-  };
-
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+    fetchShowroomData().then((res) => {
+      setLoading(false);
+      setShowroomData(res);
+    });
   }, []);
 
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", {item});
+    navigation.navigate("ShowroomDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <HomeCard
         title={item.name}
         price={item.location}
-        image={{uri: item.images[0]}}
+        image={{ uri: item.images[0] }}
         pressHandler={() => onPressHandler(item)}
       />
     );
   };
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
-      <View style={{flexDirection: "row", marginBottom: 15}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
+      <View style={{ flexDirection: "row", marginBottom: 15 }}>
         <Text style={styles.heading}> FEATURED SHOWROOMS</Text>
         <View
           style={{
@@ -75,7 +62,7 @@ const ShowroomCard = () => {
               })
             }
           >
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </TouchableOpacity>

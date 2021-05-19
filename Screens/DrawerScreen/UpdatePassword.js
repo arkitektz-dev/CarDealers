@@ -8,13 +8,12 @@ import { Button } from "../../Component/Button/Index";
 import { updateProfile } from "../../Data/FetchData";
 import { ScrollView } from "react-native-gesture-handler";
 
-const EditProfile = ({ navigation, route }) => {
+const UpdatePassword = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
   const [userData, setUserData] = useState({
-    email: "",
-    username: "",
-    name: "",
-    phone: "",
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const item = route.params.userinfo;
 
@@ -78,6 +77,7 @@ const EditProfile = ({ navigation, route }) => {
               style={styles.inputContainer}
             />
             <TextInput
+              label="Testt"
               onChangeText={(e) => setUserData({ ...userData, username: e })}
               underlineColor="#696969"
               underlineColorAndroid="#696969"
@@ -94,23 +94,6 @@ const EditProfile = ({ navigation, route }) => {
               style={styles.inputContainer}
             />
 
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, phone: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
-              }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              defaultValue={userinfo && userinfo.phone}
-              style={styles.inputContainer}
-            />
-
             <Button
               onPressHandler={() => updateProfile(userinfo, userData)}
               style={styles.buttonContainer}
@@ -122,7 +105,7 @@ const EditProfile = ({ navigation, route }) => {
     </View>
   );
 };
-export default EditProfile;
+export default UpdatePassword;
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "red",

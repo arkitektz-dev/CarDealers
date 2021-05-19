@@ -1,43 +1,49 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Dimensions,
   FlatList,
-  Image,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
-import firestore from "@react-native-firebase/firestore";
-import Dealer from "../../Assets/Dealer.png";
+import { useNavigation } from "@react-navigation/core";
 import Card from "../../Component/CardViews/Card";
-import {SearchComponent} from "../../Component/Search";
-import {ActivityIndicator} from "react-native-paper";
+import { SearchComponent } from "../../Component/Search";
+import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
+import { fetchDealerData } from "../../Data/FetchData";
 
 const ListingDealer = () => {
   const [dealerdata, setDealerData] = useState([]);
   const [dealerCount, setDealerCount] = useState(0);
+  const [filteredData, setfilteredData] = useState([]);
+
   const [loading, setLoading] = useState(false);
-  const ref = firestore().collection("Dealers");
   useEffect(() => {
     setLoading(true);
-    ref.get().then((querySnapshot) => {
-      const arr = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
-      });
-      setDealerData(arr);
-      ref.get().then((querySnapshot) => {
-        setDealerCount(querySnapshot.size);
-        setLoading(false);
-      });
+    fetchDealerData().then((data) => {
+      setDealerData(data.arr);
+      setfilteredData(data.arr);
+      setDealerCount(data.size);
+      setLoading(false);
     });
   }, []);
+  const searchDealer = (text) => {
+    if (text) {
+      const newData = dealerdata.filter((item) => {
+        return (
+          item.contactInformation[0].toLowerCase(text).indexOf(text) >= 0 ||
+          item.name.toLowerCase(text).indexOf(text) >= 0
+        );
+      });
 
-  const _renderItem = ({item}) => {
+      setDealerData(newData);
+    } else {
+      setDealerData(filteredData);
+    }
+  };
+  const _renderItem = ({ item }) => {
     return (
       <Card
         onPressHandler={() => onPressHandler(item)}
@@ -49,11 +55,11 @@ const ListingDealer = () => {
   };
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DealerDetailScreen", {item});
+    navigation.navigate("DealerDetailScreen", { item });
   };
 
   return (
-    <View style={{backgroundColor: "#fff"}}>
+    <View style={{ backgroundColor: "#fff" }}>
       <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
         <TouchableOpacity
@@ -69,9 +75,12 @@ const ListingDealer = () => {
         ></TouchableOpacity>
         <View style={styles.distance}></View>
 
-        <SearchComponent style={styles.search} />
+        <SearchComponent
+          style={styles.search}
+          onChangeHandler={(text) => searchDealer(text)}
+        />
       </View>
-      <View style={{flexDirection: "row", padding: 10}}>
+      <View style={{ flexDirection: "row", padding: 10 }}>
         <Text
           style={{
             color: "#333",
@@ -87,7 +96,7 @@ const ListingDealer = () => {
         <ActivityIndicator color="red" size="small" />
       ) : (
         <FlatList
-          contentContainerStyle={{paddingBottom: "30%"}}
+          contentContainerStyle={{ paddingBottom: "30%" }}
           data={dealerdata}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}

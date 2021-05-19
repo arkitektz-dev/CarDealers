@@ -1,47 +1,55 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Dimensions,
   FlatList,
-  Image,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import {useNavigation} from "@react-navigation/core";
-import firestore from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/core";
 import Card from "../../Component/CardViews/Card";
-import {SearchComponent} from "../../Component/Search";
-import {ActivityIndicator} from "react-native-paper";
+import { SearchComponent } from "../../Component/Search";
+import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
+import { fetchShowroomData } from "../../Data/FetchData";
 
-const ListingShowroom = ({route}) => {
+const ListingShowroom = ({ route }) => {
   const [showroomdata, setShowroomData] = useState([]);
   const [showroomCount, setshowroomCount] = useState(0);
+  const [filteredData, setfilteredData] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
-  const ref = firestore().collection("Showrooms");
   useEffect(() => {
     setLoading(true);
-    ref.get().then((querySnapshot) => {
-      const arr = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
-      });
-      setShowroomData(arr);
-    });
-    ref.get().then((querySnapshot) => {
-      setshowroomCount(querySnapshot.size);
+    fetchShowroomData().then((data) => {
+      setShowroomData(data.arr);
+      setfilteredData(data.arr);
+      setshowroomCount(data.size);
       setLoading(false);
     });
   }, []);
   const navigation = useNavigation();
+  const searchShowroom = (text) => {
+    if (text) {
+      const newData = dataCar.filter((item) => {
+        return (
+          item.vehicle.information.make.toLowerCase(text).indexOf(text) >= 0 ||
+          item.vehicle.information.model.toLowerCase(text).indexOf(text) >= 0
+        );
+      });
+
+      setDataCar(newData);
+    } else {
+      setDataCar(filteredData);
+    }
+  };
 
   const onPressHandler = (item) => {
-    navigation.navigate("ShowroomDetailScreen", {item});
+    navigation.navigate("ShowroomDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <Card
         onPressHandler={() => onPressHandler(item)}
@@ -52,7 +60,7 @@ const ListingShowroom = ({route}) => {
     );
   };
   return (
-    <View style={{backgroundColor: "#fff"}}>
+    <View style={{ backgroundColor: "#fff" }}>
       <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
         <TouchableOpacity
@@ -68,9 +76,12 @@ const ListingShowroom = ({route}) => {
         ></TouchableOpacity>
         <View style={styles.distance}></View>
 
-        <SearchComponent style={styles.search} />
+        <SearchComponent
+          style={styles.search}
+          onChangeHandler={(text) => searchShowroom(text)}
+        />
       </View>
-      <View style={{flexDirection: "row", padding: 10}}>
+      <View style={{ flexDirection: "row", padding: 10 }}>
         <Text
           style={{
             color: "#333",
@@ -86,7 +97,7 @@ const ListingShowroom = ({route}) => {
         <ActivityIndicator color="red" size="small" />
       ) : (
         <FlatList
-          contentContainerStyle={{paddingBottom: "30%"}}
+          contentContainerStyle={{ paddingBottom: "30%" }}
           data={showroomdata}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}

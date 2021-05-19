@@ -4,13 +4,13 @@ import AppPicker from "../../Component/Picker/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
 import { ScrollView } from "react-native-gesture-handler";
-import firestore from '@react-native-firebase/firestore';
+import firestore from "@react-native-firebase/firestore";
 import { screenWidth } from "../../Global/Dimension";
-
+import { TouchableOpacity } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
-const AddCar = () => {
+const AddCar = ({ navigation }) => {
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
@@ -32,30 +32,41 @@ const AddCar = () => {
   const items = ["1000 Km", "2000 Km", "3000 Km"];
 
   const onPressHandler = () => {
-   firestore().collection("Car")
-  .add(dropdownValues)
+    firestore()
+      .collection("Car")
+      .add(dropdownValues)
       .then(() => {
-alert('User Added')      })
-}
+        alert("User Added");
+      });
+  };
 
   return (
     <View
       style={{
-        backgroundColor:'#fff',
-        right:10,
-        alignItems:'flex-start',
-        width:'100%',
-        alignSelf:'flex-start',
+        flexDirection: "column",
         flex: 1,
+        backgroundColor: "#fff",
+        padding: 10,
+        width: "100%",
       }}
     >
-    
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          left: 10,
+          top: 10,
+          backgroundColor: "red",
+          width: 35,
+          height: 35,
+          borderRadius: 35 / 2,
+        }}
+      ></TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
-      <AppPicker
+        <AppPicker
           placeholder={"Select Assembly"}
           options={items}
           onChangeHandler={(index, value) =>
-            setDropDownValues({...dropdownValues, Assemble: value })
+            setDropDownValues({ ...dropdownValues, Assemble: value })
           }
         />
         <AppPicker
@@ -135,33 +146,37 @@ alert('User Added')      })
             setDropDownValues({ ...dropdownValues, ExteriorColor: value })
           }
         />
-        <AppTextInput
-          label={"Description"}
-          multiline={true}
-          onChangeHandler={(e) =>
-            setDropDownValues({ ...dropdownValues, Description: e })
-          }
-        />
-        <AppTextInput
-          label={"Mileage"}
-          keyboardType={"number-pad"}
-          onChangeHandler={(e) =>
-            setDropDownValues({ ...dropdownValues, mileage: e })
-          }
-        />
-        <AppTextInput
-          label={"Price"}
-          keyboardType={"number-pad"}
-          onChangeHandler={(e) =>
-            setDropDownValues({ ...dropdownValues, price: e })
-          }
-        />
+        <View style={{ flexDirection: "column", alignSelf: "center" }}>
+          <View style={{ maxWidth: "70%" }}>
+            <AppTextInput
+              label={"Description"}
+              multiline={true}
+              onChangeHandler={(e) =>
+                setDropDownValues({ ...dropdownValues, Description: e })
+              }
+            />
+            <AppTextInput
+              label={"Mileage"}
+              keyboardType={"number-pad"}
+              onChangeHandler={(e) =>
+                setDropDownValues({ ...dropdownValues, mileage: e })
+              }
+            />
+            <AppTextInput
+              label={"Price"}
+              keyboardType={"number-pad"}
+              onChangeHandler={(e) =>
+                setDropDownValues({ ...dropdownValues, price: e })
+              }
+            />
 
-        <Button
-          style={styles.background}
-          title="Submit"
-          onPressHandler={onPressHandler}
-        />
+            <Button
+              style={styles.background}
+              title="Submit"
+              onPressHandler={onPressHandler}
+            />
+          </View>
+        </View>
       </ScrollView>
     </View>
   );

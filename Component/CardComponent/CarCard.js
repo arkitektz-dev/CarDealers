@@ -1,61 +1,60 @@
-import React, {useEffect, useState} from "react";
-import Car from "../../Assets/Car.png";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  Image,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
-  Dimensions,
 } from "react-native";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {useNavigation} from "@react-navigation/core";
-import firestore from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/core";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import { fetchCarData } from "../../Data/FetchData";
 
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
   const [loading, setLoading] = useState(false);
-  const arr = [];
-
-  const fetchData = async () => {
-    setLoading(true);
-    const ref = firestore().collection("Advertisments");
-    await ref.get().then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-      arr.push(documentSnapshot.data());
-      setDataCar(arr)
-      });
-      console.log(dataCar)
-          });
-    setLoading(false);
-  };
 
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+    fetchCarData().then((data) => {
+      setDataCar(data.arr), setLoading(false);
+    });
   }, []);
 
   const navigation = useNavigation();
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", {item});
+    navigation.navigate("DetailCarScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
-      <HomeCard  title={`${item.vehicle.information.make+" "+item.vehicle.information.model+" "+item.vehicle.information.modelYear} `}  
-      price= {`${item.amount}`}
-      subtitle={`${item.vehicle.city+" "+item.vehicle.mileage+" "+item.vehicle.additionalInformation.engineType} `} 
-      image={{uri: item.images[0]}}
-      pressHandler={() => onPressHandler(item)} />
-       
+      <HomeCard
+        title={`${
+          item.vehicle.information.make +
+          " " +
+          item.vehicle.information.model +
+          " " +
+          item.vehicle.information.modelYear
+        } `}
+        price={`${item.amount}`}
+        subtitle={`${
+          item.vehicle.city +
+          " " +
+          item.vehicle.mileage +
+          " " +
+          item.vehicle.additionalInformation.engineType
+        } `}
+        image={{ uri: item.images[0] }}
+        pressHandler={() => onPressHandler(item)}
+      />
     );
   };
 
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
-      <View style={{flexDirection: "row", marginBottom: 15}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
+      <View style={{ flexDirection: "row", marginBottom: 15 }}>
         <Text style={styles.heading}> FEATURED CARS</Text>
         <View
           style={{
@@ -68,7 +67,7 @@ const Card = () => {
             style={styles.border}
             onPress={() => navigation.navigate("CarStack")}
           >
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </TouchableOpacity>

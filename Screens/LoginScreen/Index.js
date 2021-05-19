@@ -20,6 +20,7 @@ import { HelperText, TextInput } from "react-native-paper";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { UserInfo } from "../../Redux/Reducer/UserInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeData } from "../../Data/FetchData";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -31,43 +32,39 @@ const titleWidth = screenWidth * 0.6;
 const logoWidth = screenWidth * 0.5;
 
 export const LoginScreen = () => {
-  const [user, setUser] = useState({ name: "TesUser1", password: "test" });
+  const [user, setUser] = useState({ name: "", password: "" });
   const [auth, setAuth] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const storeData = async (value) => {
-    try {
-      const data = JSON.stringify(value);
-      await AsyncStorage.setItem("userInfo", data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+
   const Login = async () => {
     // dispatch(UserInfo(user))
     const ref = firestore().collection("Users");
 
     if (user.name == "" || user.password == "") {
-      alert("Fields Can not be empty");
       setEmptyFieldError(true);
     } else {
       ref
         .where("username", "==", user.name)
         .where("password", "==", user.password)
         .get()
-        .then(async (querySnapshot) => {
-          querySnapshot.docs.forEach((doc) => {
+        .then((querySnapshot) => {
+          if (querySnapshot.size == 0) {
+            alert("Invalid Username or Password");
+          }
+          querySnapshot.forEach((doc) => {
             const a = { ...doc.data() };
             a.id = doc.id;
-
+            a.isSignedIn = true;
             storeData(a);
           });
+
           global.user = true;
           navigation.replace("Home");
         })
-        .catch((e) => {
-          alert("Invalid Email Or Password");
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
         });
     }
   };
@@ -114,7 +111,9 @@ export const LoginScreen = () => {
               backgroundColor: "transparent",
               color: "#fff",
             }}
-            onChangeText={(e) => setUser({ ...user, name: e })}
+            onChangeText={(e) => {
+              setEmptyFieldError(false), setUser({ ...user, name: e });
+            }}
           />
         </View>
         <View style={styles.distance}></View>
@@ -128,7 +127,9 @@ export const LoginScreen = () => {
           underlineColor="#fff"
           underlineColorAndroid="#fff"
           style={{ backgroundColor: "transparent" }}
-          onChangeText={(e) => setUser({ ...user, password: e })}
+          onChangeText={(e) => {
+            setEmptyFieldError(false), setUser({ ...user, password: e });
+          }}
         />
       </View>
       <View style={styles.forgotpassContainer}>

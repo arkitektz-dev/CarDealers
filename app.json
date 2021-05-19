@@ -5,6 +5,9 @@
     "name": "CarDealer",
     "slug": "CarDealer",
     "version": "1.0.0",
+    "splash": {
+      "backgroundColor": "#e63c4b"
+    },
     "assetBundlePatterns": [
       "**/*"
     ]

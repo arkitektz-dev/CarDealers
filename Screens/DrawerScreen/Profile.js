@@ -2,22 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { Component, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { Button } from "../../Component/Button/Index";
+import { getData } from "../../Data/FetchData";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userInfo");
-      const data = JSON.parse(value);
-      if (data !== null) {
-        setUserInfo(data);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+
   useEffect(() => {
-    getData();
+    getData().then((data) => setUserInfo(data));
   }, []);
   return (
     <View style={styles.container}>
@@ -44,12 +35,16 @@ const Profile = ({ navigation }) => {
           <Text style={styles.info}>Email: {userinfo && userinfo.email}</Text>
 
           <Button
-            onPressHandler={() => navigation.navigate("EditProfile")}
+            onPressHandler={() =>
+              navigation.navigate("EditProfile", { userinfo })
+            }
             style={styles.buttonContainer}
             title="Edit Profile"
           />
           <Button
-            onPressHandler={() => alert("TEs")}
+            onPressHandler={() =>
+              navigation.navigate("UpdatePassword", { userinfo })
+            }
             style={styles.buttonContainer}
             title="Update Password"
           />

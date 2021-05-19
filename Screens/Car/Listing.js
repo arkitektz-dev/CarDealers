@@ -10,51 +10,37 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import firestore from "@react-native-firebase/firestore";
-
+import { fetchCarData } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [shown, setShown] = useState(false);
-  const arr = [];
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
-  const fetchData = async () => {
+  useEffect(() => {
     setLoading(true);
-    const ref = firestore().collection("Advertisments");
-    await ref.get().then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
-      });
-      setDataCar(arr);
-      setfilteredData(arr);
-      firestore()
-        .collection("Advertisments")
-        .get()
-        .then((querySnapshot) => {
-          setcarCount(querySnapshot.size);
-        });
+    fetchCarData().then((res) => {
+      setDataCar(res.arr);
+      setfilteredData(res.arr);
+      setcarCount(res.size);
       setLoading(false);
     });
-  };
-
-  useEffect(() => {
-    fetchData();
   }, []);
+
   const searchCar = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
         return (
-          item.vehicle.information.make.indexOf(text) >= 0 ||
-          item.vehicle.information.modelYear.indexOf(text) >= 0 ||
-          item.vehicle.information.model.indexOf(text) >= 0
+          item.vehicle.information.make.toLowerCase(text).indexOf(text) >= 0 ||
+          item.vehicle.information.modelYear.toLowerCase(text).indexOf(text) >=
+            0 ||
+          item.vehicle.information.model.toLowerCase(text).indexOf(text) >= 0
         );
       });
 
@@ -152,10 +138,10 @@ const ListingCars = () => {
           style={styles.search}
           onChangeHandler={(text) => searchCar(text)}
         />
- <TouchableOpacity
-          onPress={() => navigation.navigate('AddCar')}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AddCar")}
           style={{
-          right:75,
+            right: 75,
             top: 10,
             backgroundColor: "#fff",
             width: 35,
@@ -184,11 +170,10 @@ const ListingCars = () => {
         <Filter
           modalVisible={shown}
           // onChnage={(index, value) => console.log(value)}
-          toggleModal={(dropdownValues)=>{
-            setShown(false)
-            console.log(dropdownValues)
+          toggleModal={(dropdownValues) => {
+            setShown(false);
+            console.log(dropdownValues);
           }}
-          
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text

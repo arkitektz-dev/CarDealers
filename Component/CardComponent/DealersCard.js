@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
@@ -9,51 +9,42 @@ import {
   View,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import {Dimensions} from "react-native";
-import {useNavigation} from "@react-navigation/core";
+import { Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-
-
+import { fetchDealerData } from "../../Data/FetchData";
 
 const DealerCard = () => {
   const [dealerData, setDealerData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const arr = [];
-  const fetchData = async () => {
-    setLoading(true);
-    const ref = firestore().collection("Dealers");
-    await ref.get().then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
-      });
-      setDealerData(arr);
-    });
-    setLoading(false);
-  };
+
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+    fetchDealerData().then((res) => {
+      setLoading(false), setDealerData(res);
+    });
   }, []);
 
   const navigation = useNavigation();
 
   const onPressHandler = (item) => {
-    navigation.navigate("DealerDetailScreen", {item});
+    navigation.navigate("DealerDetailScreen", { item });
   };
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <HomeCard
         title={item.name}
         price={item.contactInformation[0]}
-        image={{uri: item.images[0]}}
+        image={{ uri: item.images[0] }}
         pressHandler={() => onPressHandler(item)}
       />
     );
   };
   return (
-    <View style={{flex: 1, flexDirection: "column", alignContent: "center"}}>
-      <View style={{flexDirection: "row", marginBottom: 15}}>
+    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
+      <View style={{ flexDirection: "row", marginBottom: 15 }}>
         <Text style={styles.heading}> FEATURED DEALERS</Text>
         <View
           style={{
@@ -66,7 +57,7 @@ const DealerCard = () => {
             style={styles.border}
             onPress={() => navigation.navigate("DealerStack")}
           >
-            <Text style={{fontSize: 15, fontWeight: "bold", color: "red"}}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
             </Text>
           </TouchableOpacity>
