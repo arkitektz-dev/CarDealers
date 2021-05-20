@@ -1,15 +1,50 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import firestore from "@react-native-firebase/firestore";
 import React, { Component, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
-import { getData } from "../../Data/FetchData";
+import { getData, uploadImage } from "../../Data/FetchData";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     getData().then((data) => setUserInfo(data));
   }, []);
+  const setUploadImage = async () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        const source = { uri: response.uri };
+        setImage(source);
+      }
+    });
+    const { uri } = image;
+    const filename = uri.substring(uri.lastIndexOf("/") + 1);
+    const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+
+    firestore()
+      .collection("Users")
+      .doc("Image")
+      .set(uploadUri)
+      .then(() => {
+        console.log("User added!");
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -27,7 +62,10 @@ const Profile = ({ navigation }) => {
       </View>
       <Image
         style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
+        accessibilityLabel="Pic"
+        source={{
+          uri: image && image.uri,
+        }}
       />
       <View style={styles.body}>
         <View style={styles.bodyContent}>
@@ -47,6 +85,11 @@ const Profile = ({ navigation }) => {
             }
             style={styles.buttonContainer}
             title="Update Password"
+          />
+          <Button
+            onPressHandler={setUploadImage}
+            style={styles.buttonContainer}
+            title="Upload Picture"
           />
         </View>
       </View>

@@ -50,10 +50,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        {/* <NavigationContainer>
+        <NavigationContainer>
           <MainStack />
-        </NavigationContainer> */}
-        <AppPicker />
+        </NavigationContainer>
       </SafeAreaProvider>
     </Provider>
   );

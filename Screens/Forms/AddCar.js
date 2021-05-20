@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import AppPicker from "../../Component/Picker/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";

@@ -1,4 +1,3 @@
-import React from "react";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -83,17 +82,3 @@ export const updatePassword = async (userinfo, userData) => {
       alert("User updated!");
     });
 };
-
-// export const searchCar = (text, dataCar) => {
-//   const newData = dataCar.filter((item) => {
-//     const itemData = `${item.vehicle.information.make.toUpperCase()}
-//       ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
-//     const textData = text.toUpperCase();
-
-//     itemData.indexOf(textData) > -1;
-//   });
-//   return newData;
-//   // setDataCar(newData);
-
-//   // setDataCar(filteredData);
-// };
