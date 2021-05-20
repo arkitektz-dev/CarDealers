@@ -28,8 +28,17 @@ const AddCar = ({ navigation }) => {
     mileage: "",
     price: "",
   });
-
-  const items = ["1000 Km", "2000 Km", "3000 Km"];
+  var index = 0;
+  const items = [
+    { key: index++, label: "1000 Km" },
+    { key: index++, label: "2000 Km" },
+    { key: index++, label: "3000 Km" },
+  ];
+  // const color = ["red", "blue", "yellow"];
+  // const city = ["Karachi", "Lahore", "Islamabad"];
+  // const type = ["Automatic", "Manual"];
+  // const year = ["2000", "2002", "2009 Km"];
+  // const company = ["Suzuki", "Toyota", "Honda"];
 
   const onPressHandler = () => {
     firestore()
@@ -63,89 +72,103 @@ const AddCar = ({ navigation }) => {
       ></TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppPicker
-          placeholder={"Select Assembly"}
+          // placeholder={"Select Assemble"}
+
           options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Assemble: value })
+          onChangeHandler={
+            (option) => console.log(option.label)
+
+            // setDropDownValues({ ...dropdownValues, Assemble: value })
           }
         />
-        <AppPicker
-          placeholder={"Select Engine Capacity"}
+        {/* <AppPicker
+          //  placeholder={"Select Engine Capacity"}
+          
           options={items}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, EngineCapacity: value })
           }
         />
         <AppPicker
-          placeholder={"Select Engine Type"}
-          options={items}
+          // placeholder={"Select Engine Type"}
+          
+          options={type}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Engine: value })
           }
         />
         <AppPicker
-          placeholder={"Select Features"}
+          //  placeholder={"Select Features"}
+          
           options={items}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Features: value })
           }
         />
         <AppPicker
-          placeholder={"Select City"}
-          options={items}
+          //  placeholder={"Select City"}
+          
+          options={city}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, City: value })
           }
         />
         <AppPicker
-          placeholder={"Select Company"}
-          options={items}
+          //  placeholder={"Select Company"}
+          
+          options={company}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Make: value })
           }
         />
         <AppPicker
-          placeholder={"Select Model"}
+          //  placeholder={"Select Model"}
+          
           options={items}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Model: value })
           }
         />
         <AppPicker
-          placeholder={"Select Year"}
-          options={items}
+          // placeholder={"Select Year"}
+          
+          options={year}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Year: value })
           }
         />
         <AppPicker
-          placeholder={"Select Version"}
+          // placeholder={"Select Version"}
+          
           options={items}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, Version: value })
           }
         />
         <AppPicker
-          placeholder={"Select RegistrationCity"}
+          // placeholder={"Select RegistrationCity"}
+          
           options={items}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, registrationCity: value })
           }
         />
         <AppPicker
-          placeholder={"Select InteriorColor"}
-          options={items}
+          // placeholder={"Select InteriorColor"}
+          
+          options={color}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, InteriorColor: value })
           }
         />
         <AppPicker
-          placeholder={"Select ExteriorColor"}
-          options={items}
+          // placeholder={"Select ExteriorColor"}
+          
+          options={color}
           onChangeHandler={(index, value) =>
             setDropDownValues({ ...dropdownValues, ExteriorColor: value })
           }
-        />
+        /> */}
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <View style={{ maxWidth: "70%" }}>
             <AppTextInput

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import firestore from "@react-native-firebase/firestore";
 import {
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import ListItemSeparator from "../ItemSeperator/Index";
-import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
@@ -23,7 +20,7 @@ const DealerCard = () => {
   useEffect(() => {
     setLoading(true);
     fetchDealerData().then((res) => {
-      setLoading(false), setDealerData(res);
+      setDealerData(res.arr), setLoading(false);
     });
   }, []);
 

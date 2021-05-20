@@ -29,20 +29,21 @@ const ListingDealer = () => {
       setLoading(false);
     });
   }, []);
+
   const searchDealer = (text) => {
     if (text) {
       const newData = dealerdata.filter((item) => {
-        return (
-          item.contactInformation[0].toLowerCase(text).indexOf(text) >= 0 ||
-          item.name.toLowerCase(text).indexOf(text) >= 0
-        );
+        const itemData = `${item.contactInformation[0].toUpperCase()}   
+         ${item.name.toUpperCase()}`;
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
       });
-
       setDealerData(newData);
     } else {
       setDealerData(filteredData);
     }
   };
+
   const _renderItem = ({ item }) => {
     return (
       <Card

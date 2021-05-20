@@ -1,22 +1,32 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { Component, useEffect, useState } from "react";
-import firestore from "@react-native-firebase/firestore";
-
+import React, { useEffect, useState } from "react";
+import { updatePassword } from "../../Data/FetchData";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import { Button } from "../../Component/Button/Index";
-import { updateProfile } from "../../Data/FetchData";
 import { ScrollView } from "react-native-gesture-handler";
 
 const UpdatePassword = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
+  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [confirmMatch, setConfirmMatch] = useState(false);
   const [userData, setUserData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    password: "",
   });
   const item = route.params.userinfo;
-
+  const onChangeHandeler = (text) => {
+    if (text.length >= 4 && text != userinfo.password) {
+      setPasswordMatch(true);
+    } else {
+      setPasswordMatch(false);
+    }
+  };
+  const onConfirmPassword = (text) => {
+    if (text.length >= 4 && text != userData.password) {
+      setConfirmMatch(true);
+    } else {
+      setConfirmMatch(false);
+    }
+  };
   useEffect(() => {
     setUserInfo(item);
   }, []);
@@ -44,7 +54,8 @@ const UpdatePassword = ({ navigation, route }) => {
         <View style={styles.bodyContent}>
           <ScrollView>
             <TextInput
-              onChangeText={(e) => setUserData({ ...userData, email: e })}
+              placeholder="Old Password"
+              onChangeText={onChangeHandeler}
               underlineColor="#696969"
               underlineColorAndroid="#696969"
               theme={{
@@ -56,12 +67,22 @@ const UpdatePassword = ({ navigation, route }) => {
               }}
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              defaultValue={userinfo && userinfo.email}
               style={styles.inputContainer}
             />
-
+            {passwordMatch ? (
+              <HelperText
+                type="error"
+                style={{
+                  color: "#333",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
+              >
+                Password Does Not Match!
+              </HelperText>
+            ) : null}
             <TextInput
-              onChangeText={(e) => setUserData({ ...userData, name: e })}
+              onChangeText={(e) => setUserData({ ...userData, password: e })}
               underlineColor="#696969"
               underlineColorAndroid="#696969"
               theme={{
@@ -73,12 +94,12 @@ const UpdatePassword = ({ navigation, route }) => {
               }}
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              defaultValue={userinfo && userinfo.name}
+              placeholder="New Password"
               style={styles.inputContainer}
             />
             <TextInput
-              label="Testt"
-              onChangeText={(e) => setUserData({ ...userData, username: e })}
+              placeholder="Confirm Password"
+              onChangeText={onConfirmPassword}
               underlineColor="#696969"
               underlineColorAndroid="#696969"
               theme={{
@@ -90,12 +111,22 @@ const UpdatePassword = ({ navigation, route }) => {
               }}
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              defaultValue={userinfo && userinfo.username}
               style={styles.inputContainer}
             />
-
+            {confirmMatch ? (
+              <HelperText
+                type="error"
+                style={{
+                  color: "#333",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
+              >
+                Password Does Not Match!
+              </HelperText>
+            ) : null}
             <Button
-              onPressHandler={() => updateProfile(userinfo, userData)}
+              onPressHandler={() => updatePassword(userinfo, userData)}
               style={styles.buttonContainer}
               title="Update Profile"
             />
@@ -157,7 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
-    width: 250,
   },
   buttonContainer: {
     marginTop: 10,

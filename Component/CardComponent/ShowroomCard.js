@@ -23,8 +23,8 @@ const ShowroomCard = () => {
   useEffect(() => {
     setLoading(true);
     fetchShowroomData().then((res) => {
+      setShowroomData(res.arr);
       setLoading(false);
-      setShowroomData(res);
     });
   }, []);
 

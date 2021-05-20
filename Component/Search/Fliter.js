@@ -6,13 +6,10 @@ import { Button } from "../../Component/Button/Index";
 import { StyleSheet } from "react-native";
 import { screenWidth } from "../../Global/Dimension";
 
-
-
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
-const Filter = ({ modalVisible,toggleModal, props }) => {
-  const items = ["1000 Km", "2000 Km", "3000 Km"];
+const Filter = ({ modalVisible, toggleModal, props }) => {
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
@@ -30,7 +27,12 @@ const Filter = ({ modalVisible,toggleModal, props }) => {
     mileage: "",
     price: "",
   });
-
+  const items = ["1000 Km", "2000 Km", "3000 Km"];
+  const color = ["red", "blue", "yellow"];
+  const city = ["Karachi", "Lahore", "Islamabad"];
+  const type = ["Automatic", "Manual"];
+  const year = ["2000", "2002", "2009 Km"];
+  const company = ["Suzuki", "Toyota", "Honda"];
   return (
     <View>
       <Modal visible={modalVisible} animationType={"slide"}>
@@ -44,92 +46,95 @@ const Filter = ({ modalVisible,toggleModal, props }) => {
           >
             <AppPicker
               placeholder={"Select Assembly"}
-              options={items} 
-              onChange={(index,value)=>setDropDownValues({...dropdownValues,Assemble:value})}
+              options={items}
+              onChange={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Assemble: value })
+              }
             />
-              <AppPicker
-          placeholder={"Select Engine Capacity"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, EngineCapacity: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Engine Type"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Engine: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Features"}
-          options={items}
-          onChangeHandler={(index, value) =>
-           console.log(value)
-          }
-          multipleSelect={true}
-        />
-        <AppPicker
-          placeholder={"Select City"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, City: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Company"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Make: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Model"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Model: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Year"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Year: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Version"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Version: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Registration City"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, registrationCity: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Interior Color"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, InteriorColor: value })
-          }
-        />
-        <AppPicker
-          placeholder={"Select Exterior Colour"}
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, ExteriorColor: value })
-          }
-        />
+            <AppPicker
+              placeholder={"Select Engine Capacity"}
+              options={items}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, EngineCapacity: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Engine Type"}
+              options={type}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Engine: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Features"}
+              options={items}
+              onChangeHandler={(index, value) => console.log(value)}
+              multipleSelect={true}
+            />
+            <AppPicker
+              placeholder={"Select City"}
+              options={city}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, City: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Company"}
+              options={company}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Make: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Model"}
+              options={items}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Model: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Year"}
+              options={year}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Year: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Version"}
+              options={items}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, Version: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Registration City"}
+              options={city}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({
+                  ...dropdownValues,
+                  registrationCity: value,
+                })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Interior Color"}
+              options={color}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, InteriorColor: value })
+              }
+            />
+            <AppPicker
+              placeholder={"Select Exterior Colour"}
+              options={color}
+              onChangeHandler={(index, value) =>
+                setDropDownValues({ ...dropdownValues, ExteriorColor: value })
+              }
+            />
           </View>
           <Button
             style={styles.background}
             title="Submit"
-             onPressHandler={()=>toggleModal(dropdownValues)}
+            onPressHandler={() => toggleModal(dropdownValues)}
           />
         </ScrollView>
       </Modal>

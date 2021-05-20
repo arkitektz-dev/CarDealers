@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "react-native";
 import { View } from "react-native";
 
-const About = () => {
+const Redirection = () => {
   return (
     <View>
       <Text>Testing</Text>
@@ -10,4 +10,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Redirection;

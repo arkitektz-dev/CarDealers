@@ -13,12 +13,14 @@ import { useNavigation } from "@react-navigation/core";
 import { fetchCarData } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
+import { searchCar } from "../../Data/FetchData";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
+  const [search, setSearch] = useState([]);
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -32,16 +34,18 @@ const ListingCars = () => {
       setLoading(false);
     });
   }, []);
+  // const onSearch = (text) => {
+  //   searchCar(text, dataCar).then((newData) => console.log(newData));
+  // };
 
-  const searchCar = (text) => {
+  const onSearch = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
-        return (
-          item.vehicle.information.make.toLowerCase(text).indexOf(text) >= 0 ||
-          item.vehicle.information.modelYear.toLowerCase(text).indexOf(text) >=
-            0 ||
-          item.vehicle.information.model.toLowerCase(text).indexOf(text) >= 0
-        );
+        const itemData = `${item.vehicle.information.make.toUpperCase()}
+        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+        const textData = text.toUpperCase();
+
+        return itemData.indexOf(textData) > -1;
       });
 
       setDataCar(newData);
@@ -49,9 +53,23 @@ const ListingCars = () => {
       setDataCar(filteredData);
     }
   };
+  const onFilter = (dropdownValues) => {
+    console.log(dropdownValues);
+    const newData = dataCar.filter((item) => {
+      const itemData = `${item.vehicle.information.make.toUpperCase()}   
+      ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+      const textData = dropdownValues.Make.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+
+    setDataCar(newData);
+  };
+
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
+
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
@@ -136,7 +154,7 @@ const ListingCars = () => {
 
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => searchCar(text)}
+          onChangeHandler={(text) => onSearch(text)}
         />
         <TouchableOpacity
           onPress={() => navigation.navigate("AddCar")}
@@ -169,10 +187,10 @@ const ListingCars = () => {
         </Text>
         <Filter
           modalVisible={shown}
-          // onChnage={(index, value) => console.log(value)}
           toggleModal={(dropdownValues) => {
             setShown(false);
-            console.log(dropdownValues);
+            setSearch(dropdownValues);
+            onFilter(dropdownValues);
           }}
         />
         <TouchableOpacity onPress={() => setShown(true)}>

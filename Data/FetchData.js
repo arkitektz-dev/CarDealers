@@ -73,18 +73,27 @@ export const updateProfile = async (userinfo, userData) => {
       alert("User updated!");
     });
 };
+export const updatePassword = async (userinfo, userData) => {
+  const { id } = userinfo;
+  firestore()
+    .collection("Users")
+    .doc(id)
+    .update(userData)
+    .then(() => {
+      alert("User updated!");
+    });
+};
 
-// export const searchDealer = (text, dealerdata) => {
-//   if (text) {
-//     const newData = dealerdata.filter((item) => {
-//       return (
-//         item.contactInformation[0].toLowerCase(text).indexOf(text) >= 0 ||
-//         item.name.toLowerCase(text).indexOf(text) >= 0
-//       );
-//     });
+// export const searchCar = (text, dataCar) => {
+//   const newData = dataCar.filter((item) => {
+//     const itemData = `${item.vehicle.information.make.toUpperCase()}
+//       ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+//     const textData = text.toUpperCase();
 
-//     return newData;
-//   } else {
-//     return filteredData;
-//   }
+//     itemData.indexOf(textData) > -1;
+//   });
+//   return newData;
+//   // setDataCar(newData);
+
+//   // setDataCar(filteredData);
 // };

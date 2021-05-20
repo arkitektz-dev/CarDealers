@@ -31,18 +31,18 @@ const ListingShowroom = ({ route }) => {
     });
   }, []);
   const navigation = useNavigation();
+
   const searchShowroom = (text) => {
     if (text) {
-      const newData = dataCar.filter((item) => {
-        return (
-          item.vehicle.information.make.toLowerCase(text).indexOf(text) >= 0 ||
-          item.vehicle.information.model.toLowerCase(text).indexOf(text) >= 0
-        );
+      const newData = showroomdata.filter((item) => {
+        const itemData = `${item.location.toUpperCase()}   
+         ${item.name.toUpperCase()}`;
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
       });
-
-      setDataCar(newData);
+      setShowroomData(newData);
     } else {
-      setDataCar(filteredData);
+      setShowroomData(filteredData);
     }
   };
 

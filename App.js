@@ -13,6 +13,8 @@ import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
+import LottieLoader from "./Screens/Lottie";
+import AppPicker from "./Component/Picker/Index";
 
 const MainStack = () => {
   const Stack = createStackNavigator();
@@ -48,9 +50,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <NavigationContainer>
+        {/* <NavigationContainer>
           <MainStack />
-        </NavigationContainer>
+        </NavigationContainer> */}
+        <AppPicker />
       </SafeAreaProvider>
     </Provider>
   );
