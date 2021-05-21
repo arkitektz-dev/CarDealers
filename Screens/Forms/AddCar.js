@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import AppPicker from "../../Component/Picker/Index";
 import { Button } from "../../Component/Button/Index";
@@ -7,15 +7,20 @@ import { ScrollView } from "react-native-gesture-handler";
 import firestore from "@react-native-firebase/firestore";
 import { screenWidth } from "../../Global/Dimension";
 import { TouchableOpacity } from "react-native";
+import AppCheckBox from "../../Component/AppCheckbox";
+import { Text, FlatList } from "react-native";
+import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
+  const [checkbox, setCheckbox] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("");
+
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
     Engine: "",
-    Features: "",
     City: "",
     Model: "",
     Make: "",
@@ -28,18 +33,70 @@ const AddCar = ({ navigation }) => {
     mileage: "",
     price: "",
   });
-  var index = 0;
   const items = [
-    { key: index++, label: "1000 Km" },
-    { key: index++, label: "2000 Km" },
-    { key: index++, label: "3000 Km" },
+    { label: "1000 Km", value: 1 },
+    { label: "2000 Km", value: 2 },
+    { label: "3000 Km", value: 3 },
   ];
-  // const color = ["red", "blue", "yellow"];
-  // const city = ["Karachi", "Lahore", "Islamabad"];
-  // const type = ["Automatic", "Manual"];
-  // const year = ["2000", "2002", "2009 Km"];
-  // const company = ["Suzuki", "Toyota", "Honda"];
-
+  const color = [
+    { label: "red", value: 1 },
+    { label: "blue", value: 2 },
+    { label: "yellow", value: 3 },
+  ];
+  const city = [
+    { label: "Karachi", value: 1 },
+    { label: "Lahore", value: 2 },
+    { label: "Islamabad", value: 3 },
+  ];
+  const type = [
+    { label: "Automatic", value: 1 },
+    { label: "Manual", value: 2 },
+  ];
+  const year = [
+    { label: "2000", value: 1 },
+    { label: "2002", value: 2 },
+    { label: "2009 ", value: 3 },
+  ];
+  const company = [
+    { label: "Suzuki", value: 1 },
+    { label: "Toyota", value: 2 },
+    { label: "Honda", value: 3 },
+  ];
+  const onChangeHandler = (item) => {
+    if (checkbox.includes(item)) {
+      const a = checkbox.filter((c) => c !== item);
+      setCheckbox(a);
+    } else {
+      setCheckbox([...checkbox, item]);
+    }
+  };
+  const checkboxData = ["ted", "asdas"];
+  const _renderItem = ({ item, index }) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
+        <AppCheckBox
+          status={checkbox.includes(item) ? "checked" : "unchecked"}
+          onPress={() => onChangeHandler(item)}
+        />
+        <Text
+          style={{
+            color: "#000",
+            fontSize: 18,
+            fontWeight: "800",
+          }}
+          key={(item, index) => index.toString()}
+        >
+          {item}
+        </Text>
+      </View>
+    );
+  };
   const onPressHandler = () => {
     firestore()
       .collection("Car")
@@ -59,7 +116,7 @@ const AddCar = ({ navigation }) => {
         width: "100%",
       }}
     >
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
           left: 10,
@@ -69,108 +126,141 @@ const AddCar = ({ navigation }) => {
           height: 35,
           borderRadius: 35 / 2,
         }}
-      ></TouchableOpacity>
+      ></TouchableOpacity> */}
       <ScrollView showsVerticalScrollIndicator={false}>
-        <AppPicker
-          // placeholder={"Select Assemble"}
-
-          options={items}
-          onChangeHandler={
-            (option) => console.log(option.label)
-
-            // setDropDownValues({ ...dropdownValues, Assemble: value })
-          }
-        />
-        {/* <AppPicker
-          //  placeholder={"Select Engine Capacity"}
-          
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, EngineCapacity: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select Engine Type"}
-          
-          options={type}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Engine: value })
-          }
-        />
-        <AppPicker
-          //  placeholder={"Select Features"}
-          
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Features: value })
-          }
-        />
-        <AppPicker
-          //  placeholder={"Select City"}
-          
-          options={city}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, City: value })
-          }
-        />
-        <AppPicker
-          //  placeholder={"Select Company"}
-          
-          options={company}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Make: value })
-          }
-        />
-        <AppPicker
-          //  placeholder={"Select Model"}
-          
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Model: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select Year"}
-          
-          options={year}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Year: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select Version"}
-          
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, Version: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select RegistrationCity"}
-          
-          options={items}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, registrationCity: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select InteriorColor"}
-          
-          options={color}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, InteriorColor: value })
-          }
-        />
-        <AppPicker
-          // placeholder={"Select ExteriorColor"}
-          
-          options={color}
-          onChangeHandler={(index, value) =>
-            setDropDownValues({ ...dropdownValues, ExteriorColor: value })
-          }
-        /> */}
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <View style={{ maxWidth: "70%" }}>
+            <AppPicker
+              items={items}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, Assemble: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Assemble"
+              selectedItem={dropdownValues.Assemble}
+              width="80%"
+            />
+            <FlatList
+              data={checkboxData}
+              renderItem={_renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={{
+                justifyContent: "center",
+                flex: 1,
+                flexDirection: "row",
+              }}
+            />
+            <AppPicker
+              items={type}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, EngineCapacity: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Engine Type"
+              selectedItem={dropdownValues.EngineCapacity}
+              width="80%"
+            />
+            <AppPicker
+              items={city}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, City: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select City"
+              selectedItem={dropdownValues.City}
+              width="80%"
+            />
+
+            <AppPicker
+              items={company}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, Make: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Company"
+              selectedItem={dropdownValues.Make}
+              width="80%"
+            />
+            <AppPicker
+              items={year}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, Model: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Model"
+              selectedItem={dropdownValues.Model}
+              width="80%"
+            />
+            <AppPicker
+              items={year}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, Version: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Year"
+              selectedItem={dropdownValues.Version}
+              width="80%"
+            />
+            <AppPicker
+              items={year}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, Year: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Version"
+              selectedItem={dropdownValues.Year}
+              width="80%"
+            />
+            <AppPicker
+              items={city}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, City: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select RegistrationCity"
+              selectedItem={dropdownValues.City}
+              width="80%"
+            />
+            <AppPicker
+              items={color}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, InteriorColor: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Interior Color"
+              selectedItem={dropdownValues.InteriorColor}
+              width="80%"
+            />
+            <AppPicker
+              items={color}
+              name="category"
+              onSelectItem={(item) =>
+                setDropDownValues({ ...dropdownValues, ExteriorColor: item })
+              }
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Exterior Color"
+              selectedItem={dropdownValues.ExteriorColor}
+              width="80%"
+            />
             <AppTextInput
               label={"Description"}
               multiline={true}
@@ -204,7 +294,7 @@ const AddCar = ({ navigation }) => {
     </View>
   );
 };
-export default AddCar;
+export default memo(AddCar);
 const styles = StyleSheet.create({
   background: {
     alignSelf: "center",

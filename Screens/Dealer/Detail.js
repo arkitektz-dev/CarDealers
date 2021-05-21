@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { memo, useEffect, useState } from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
@@ -14,11 +14,10 @@ import firestore from "@react-native-firebase/firestore";
 import BellIcon from "../../Assets/BellIcon.png";
 
 import Profile from "../../Assets/RedProfileLogo.png";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-
-const DealerDetailScreen = ({route}) => {
+const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -53,10 +52,10 @@ const DealerDetailScreen = ({route}) => {
   const arr = [];
 
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", {item});
+    navigation.navigate("DetailCarScreen", { item });
   };
 
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -68,14 +67,14 @@ const DealerDetailScreen = ({route}) => {
 
             borderRadius: 20,
             shadowColor: "#470000",
-            shadowOffset: {width: 0, height: 1},
+            shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.2,
             elevation: 2,
           }}
         >
           <View>
             <Image
-              source={{uri: item.images[0]}}
+              source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
@@ -159,7 +158,7 @@ const DealerDetailScreen = ({route}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <TouchableOpacity>
           <Image
             source={BellIcon}
@@ -187,8 +186,8 @@ const DealerDetailScreen = ({route}) => {
               height: 85,
             }}
           />
-          <View style={{width: 15}}></View>
-          <View style={{flexDirection: "column", justifyContent: "flex-end"}}>
+          <View style={{ width: 15 }}></View>
+          <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
             <View style={styles.DealerName}>
               <Text style={styles.carInfoText}>
                 {"\b"}
@@ -197,7 +196,7 @@ const DealerDetailScreen = ({route}) => {
                 {" \b"}
               </Text>
             </View>
-            <View style={{flexDirection: "column"}}>
+            <View style={{ flexDirection: "column" }}>
               {param.showrooms.map((item) => {
                 return <Text style={styles.h1}>{item.name}</Text>;
               })}
@@ -209,7 +208,7 @@ const DealerDetailScreen = ({route}) => {
             </View>
           </View>
         </View>
-        <View style={{height: 20}}></View>
+        <View style={{ height: 20 }}></View>
       </View>
       <View
         style={{
@@ -218,7 +217,7 @@ const DealerDetailScreen = ({route}) => {
           justifyContent: "space-evenly",
         }}
       >
-        <View style={{flexDirection: "column"}}>
+        <View style={{ flexDirection: "column" }}>
           <Text
             style={{
               fontSize: 35,
@@ -233,7 +232,7 @@ const DealerDetailScreen = ({route}) => {
             <Text style={styles.countText}> SHOWROOMS </Text>
           </TouchableOpacity>
         </View>
-        <View style={{flexDirection: "column"}}>
+        <View style={{ flexDirection: "column" }}>
           <Text
             style={{
               fontSize: 35,
@@ -250,7 +249,7 @@ const DealerDetailScreen = ({route}) => {
         </View>
       </View>
       <FlatList
-        contentContainerStyle={{alignSelf: "center"}}
+        contentContainerStyle={{ alignSelf: "center" }}
         numColumns={2}
         data={dataCar}
         renderItem={_renderItem}
@@ -259,9 +258,9 @@ const DealerDetailScreen = ({route}) => {
     </View>
   );
 };
-export default DealerDetailScreen;
+export default memo(DealerDetailScreen);
 const styles = StyleSheet.create({
-  Nav: {flexDirection: "row"},
+  Nav: { flexDirection: "row" },
   parent: {
     flexDirection: "column",
     flex: 1,

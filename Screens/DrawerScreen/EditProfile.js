@@ -1,6 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { Component, useEffect, useState } from "react";
-import firestore from "@react-native-firebase/firestore";
+import React, { Component, memo, useEffect, useState } from "react";
 
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-paper";
@@ -122,7 +120,7 @@ const EditProfile = ({ navigation, route }) => {
     </View>
   );
 };
-export default EditProfile;
+export default memo(EditProfile);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "red",

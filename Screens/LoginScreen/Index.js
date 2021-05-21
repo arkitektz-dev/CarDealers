@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  Dimensions,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 import BackgroundImage from "../../Assets/loginBackground.png";
@@ -18,8 +9,7 @@ import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
 import { HelperText, TextInput } from "react-native-paper";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-import { UserInfo } from "../../Redux/Reducer/UserInfo";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { storeData } from "../../Data/FetchData";
 
 const buttonWidth = screenWidth * 0.7;
@@ -35,11 +25,9 @@ export const LoginScreen = () => {
   const [user, setUser] = useState({ name: "", password: "" });
   const [auth, setAuth] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const Login = async () => {
-    // dispatch(UserInfo(user))
     const ref = firestore().collection("Users");
 
     if (user.name == "" || user.password == "") {

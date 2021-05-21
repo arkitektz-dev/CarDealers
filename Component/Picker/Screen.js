@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 
 function Screen({ children, style }) {
@@ -11,6 +11,7 @@ function Screen({ children, style }) {
 
 const styles = StyleSheet.create({
   screen: {
+    paddingTop: 15,
     flex: 1,
   },
   view: {
@@ -18,4 +19,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(Screen);
+export default Screen;

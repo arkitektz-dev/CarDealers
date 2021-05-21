@@ -1,5 +1,5 @@
-import {useNavigation} from "@react-navigation/core";
-import React from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { memo } from "react";
 import {
   Dimensions,
   FlatList,
@@ -16,10 +16,9 @@ import ShowRoom from "../../Assets/ShowroomImage.png";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 const CategoryCard = () => {
- 
   const naivgation = useNavigation();
   return (
-    <View style={{flexDirection: "row"}}>
+    <View style={{ flexDirection: "row" }}>
       <View
         style={{
           justifyContent: "space-evenly",
@@ -64,4 +63,4 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-export default CategoryCard;
+export default memo(CategoryCard);

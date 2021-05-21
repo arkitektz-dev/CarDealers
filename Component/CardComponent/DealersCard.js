@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -76,7 +76,7 @@ const DealerCard = () => {
   );
 };
 
-export default DealerCard;
+export default memo(DealerCard);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.5,

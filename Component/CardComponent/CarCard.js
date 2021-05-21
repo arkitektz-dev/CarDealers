@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
   Text,
@@ -89,7 +89,7 @@ const Card = () => {
   );
 };
 
-export default Card;
+export default memo(Card);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.5,

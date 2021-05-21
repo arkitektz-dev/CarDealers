@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Text } from "react-native";
 
 // import styles from "./styles";
@@ -13,4 +13,4 @@ function AppText({ children, style, ...otherProps }) {
   );
 }
 
-export default AppText;
+export default memo(AppText);

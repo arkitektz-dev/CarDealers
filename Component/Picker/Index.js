@@ -1,72 +1,83 @@
 import React, { useState } from "react";
-import { Button } from "react-native";
-import { SafeAreaView } from "react-native";
-
-import { ModalSelectList } from "react-native-modal-select-list";
-import { StyleSheet } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Modal,
+  FlatList,
+} from "react-native";
+import AppText from "../AppText";
+import PickerItem from "./PickerItem";
+import defaultStyles from "../../config/styles";
+import Screen from "./Screen";
 
 const AppPicker = ({
-  options,
+  icon,
+  items,
+  numberOfColumns = 1,
+  onSelectItem,
+  PickerItemComponent = PickerItem,
   placeholder,
-  multipleSelect,
-  keyExtractor,
-  onChangeHandler,
+  selectedItem,
+  width = "100%",
 }) => {
-  let modalRef;
-
-  const openModal = () => modalRef.show();
-  const saveModalRef = (ref) => (modalRef = ref);
-  const items = ["1000 Km", "2000 Km"];
-  const onSelectedOption = (value) => {
-    console.log(`You selected: ${value}`);
-  };
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-    // <ModalDropdown
-    // multipleSelect={multipleSelect}
-    //   options={options}
-    //   style={styles.Picker}
-    //   animated={true}
-    //   scrollEnabled={true}
-    //   isFullWidth={true}
-    //   defaultValue={placeholder}
-    //   textStyle={{ fontSize: 15 }}
-    //   dropdownStyle={styles.dropdown}
-    //   onSelect={onChangeHandler}
-    //   dropdownTextStyle={{ fontSize: 15 }}
-    //   dropdownTextHighlightStyle={{color:'#007bff'}}
-
-    // />
-
     <>
-      <SafeAreaView style={styles.container}>
-        <Button title="Open Modal" onPress={openModal} />
-      </SafeAreaView>
-      <ModalSelectList
-        placeholder={"Text something..."}
-        ref={saveModalRef}
-        closeButtonText={"Close"}
-        options={items}
-        onSelectedOption={onSelectedOption}
-        disableTextSearch={false}
-      />
+      <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
+        <View style={[styles.container, { width }]}>
+          {/* {icon && (
+            <MaterialCommunityIcons
+              name={icon}
+              size={20}
+              color={defaultStyles.colors.medium}
+              style={styles.icon}
+            />
+          )} */}
+          {selectedItem ? (
+            <AppText style={styles.text}>{selectedItem.label}</AppText>
+          ) : (
+            <AppText style={styles.placeholder}>{placeholder}</AppText>
+          )}
+
+          {/* <MaterialCommunityIcons
+            name="chevron-down"
+            size={20}
+            color={defaultStyles.colors.medium}
+          /> */}
+        </View>
+      </TouchableWithoutFeedback>
+
+      <Modal visible={modalVisible} animationType="slide">
+        <Screen>
+          <Button title="Close" onPress={() => setModalVisible(false)} />
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item.value.toString()}
+            numColumns={numberOfColumns}
+            renderItem={({ item }) => (
+              <PickerItemComponent
+                item={item}
+                label={item.label}
+                onPress={() => {
+                  setModalVisible(false);
+                  onSelectItem(item);
+                }}
+              />
+            )}
+          />
+        </Screen>
+      </Modal>
     </>
   );
 };
-const styles = StyleSheet.create({
-  // Picker: {
-  //   borderRadius: 25,
-  //   flexDirection: "row",
-  //   padding: 15,
-  //   marginVertical: 10,
-  //   backgroundColor: "#f8f4f4",
-  //   alignItems: "center",
-  //   alignSelf: "center",
-  //   width: screenWidth * 0.5,
-  //   justifyContent: "center",
-  // },
 
+export default AppPicker;
+
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: defaultStyles.colors.light,
     borderRadius: 25,
     flexDirection: "row",
     padding: 15,
@@ -76,12 +87,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   placeholder: {
-    color: "#333",
+    color: defaultStyles.colors.medium,
     flex: 1,
   },
   text: {
     flex: 1,
   },
 });
-
-export default AppPicker;

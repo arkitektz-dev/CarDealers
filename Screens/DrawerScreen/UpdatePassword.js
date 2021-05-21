@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { updatePassword } from "../../Data/FetchData";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
@@ -136,7 +136,7 @@ const UpdatePassword = ({ navigation, route }) => {
     </View>
   );
 };
-export default UpdatePassword;
+export default memo(UpdatePassword);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "red",

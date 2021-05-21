@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/core";
 
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import ProfileStack from "../HomeStack/ProfileStack";
+import AddShowroom from "../../Screens/Forms/AddShowroom";
 
 const Drawer = createDrawerNavigator();
 
@@ -67,6 +68,7 @@ const DrawerNav = () => {
         <>
           <Drawer.Screen name="Home" component={HomeStack} />
           <Drawer.Screen name="Profile" component={ProfileStack} />
+          <Drawer.Screen name="Add Showroom" component={AddShowroom} />
         </>
       ) : (
         <Drawer.Screen name="Home" component={HomeStack} />

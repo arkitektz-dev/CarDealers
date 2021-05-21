@@ -1,42 +1,22 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useSelector}from'react-redux'
-import React, {useEffect, useState} from "react";
-import {
-  FlatList,
-  Image,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  Dimensions,
-  ScrollView
-} from "react-native";
+import React, { memo, useEffect, useState } from "react";
+import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
 import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
-import {SearchComponent} from "../../Component/Search";
+import { SearchComponent } from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
-import {TouchableOpacity} from "react-native";
+import { TouchableOpacity } from "react-native";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
+import { getData } from "../../Data/FetchData";
 
-
-const HomeScreen = ({navigation}) => {
-  const [confirm, setConfirm] = useState(null);
-  const [code, setCode] = useState("");
-  const [data, setData] = useState([]);
-  const Logout = async () => {
-    navigation.navigate("Login");
-    // try {
-    //   const val = await AsyncStorage.removeItem("user");
-    //   navigation.navigate("LoginScreen");
-    // } catch (error) {
-  };
-  const user=useSelector((state) => state)
-  console.log(user)
+const HomeScreen = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useState(null);
+  useEffect(() => {
+    getData().then((data) => setUserInfo(data));
+  });
   return (
     <ScrollView>
       <View
@@ -49,15 +29,15 @@ const HomeScreen = ({navigation}) => {
         }}
       >
         <View style={styles.distance}></View>
-        <View style={{flexDirection: "row"}}>
-          <View style={{flexDirection: "column"}}>
-            <Text style={styles.welcome}> Hi, Ijaz hussain</Text>
-            <View style={{height: screenHeight * 0.02}}></View>
-            <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "column" }}>
+            <Text style={styles.welcome}> Hi,{userInfo && userInfo.name}</Text>
+            <View style={{ height: screenHeight * 0.02 }}></View>
+            <View style={{ flexDirection: "row" }}>
               <View
-                style={{backgroundColor: "red", width: 20, borderRadius: 50}}
+                style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}
               >
-                <Text style={{color: "red"}}>sd</Text>
+                <Text style={{ color: "red" }}>sd</Text>
               </View>
               <Text style={styles.location}> Karachi, Pakistan</Text>
             </View>
@@ -99,13 +79,11 @@ const HomeScreen = ({navigation}) => {
         <View style={styles.distance}></View>
 
         <ShowroomCard />
-
-        {/* <Button title="Logout" onLogin={Logout} /> */}
       </View>
     </ScrollView>
   );
 };
-export default HomeScreen;
+export default memo(HomeScreen);
 const styles = StyleSheet.create({
   border: {
     borderColor: "red",
@@ -137,7 +115,7 @@ const styles = StyleSheet.create({
     maxHeight: "72%",
 
     shadowColor: "#470000",
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     elevation: 6,
   },

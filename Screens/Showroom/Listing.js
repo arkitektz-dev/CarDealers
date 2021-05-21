@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
   StatusBar,
@@ -106,7 +106,7 @@ const ListingShowroom = ({ route }) => {
     </View>
   );
 };
-export default ListingShowroom;
+export default memo(ListingShowroom);
 const styles = StyleSheet.create({
   imageSize: {
     borderRadius: 15,

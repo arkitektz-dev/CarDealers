@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -218,7 +218,7 @@ const ListingCars = () => {
     </View>
   );
 };
-export default ListingCars;
+export default memo(ListingCars);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,

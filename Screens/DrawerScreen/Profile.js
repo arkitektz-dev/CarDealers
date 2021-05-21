@@ -1,16 +1,20 @@
 import firestore from "@react-native-firebase/firestore";
-import React, { Component, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
-import { getData, uploadImage } from "../../Data/FetchData";
+import { getData } from "../../Data/FetchData";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(
+    "https://bootdey.com/img/Content/avatar/avatar6.png"
+  );
 
   useEffect(() => {
-    getData().then((data) => setUserInfo(data));
+    getData().then((data) => {
+      setUserInfo(data);
+    });
   }, []);
   const setUploadImage = async () => {
     const options = {
@@ -22,28 +26,21 @@ const Profile = ({ navigation }) => {
       },
     };
     launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
+      if (response.error) {
+        alert("Error");
       } else {
-        const source = { uri: response.uri };
-        setImage(source);
+        const { id } = userinfo;
+
+        firestore()
+          .collection("Users")
+          .doc(id)
+          .update({ image: response.uri })
+          .then(() => {
+            alert("Picture Added");
+          });
+        setImage(response.uri);
       }
     });
-    const { uri } = image;
-    const filename = uri.substring(uri.lastIndexOf("/") + 1);
-    const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
-
-    firestore()
-      .collection("Users")
-      .doc("Image")
-      .set(uploadUri)
-      .then(() => {
-        console.log("User added!");
-      });
   };
   return (
     <View style={styles.container}>
@@ -64,7 +61,7 @@ const Profile = ({ navigation }) => {
         style={styles.avatar}
         accessibilityLabel="Pic"
         source={{
-          uri: image && image.uri,
+          uri: userinfo && userinfo.image,
         }}
       />
       <View style={styles.body}>
@@ -96,7 +93,7 @@ const Profile = ({ navigation }) => {
     </View>
   );
 };
-export default Profile;
+export default memo(Profile);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "red",

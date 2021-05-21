@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
   StatusBar,
@@ -106,7 +106,7 @@ const ListingDealer = () => {
     </View>
   );
 };
-export default ListingDealer;
+export default memo(ListingDealer);
 const styles = StyleSheet.create({
   imageSize: {
     width: "100%",

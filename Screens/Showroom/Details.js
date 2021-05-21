@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { memo, useEffect, useState } from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
@@ -12,12 +12,11 @@ import {
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import Profile from "../../Assets/RedProfileLogo.png";
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 import BellIcon from "../../Assets/BellIcon.png";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-
-const ShowroomDetailScreen = ({route}) => {
+const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
   const [dealerCount, setdealerCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -49,7 +48,7 @@ const ShowroomDetailScreen = ({route}) => {
       });
     fetchData();
   }, []);
-  const _renderItem = ({item}) => {
+  const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
@@ -60,14 +59,14 @@ const ShowroomDetailScreen = ({route}) => {
             margin: 8,
             borderRadius: 20,
             shadowColor: "#470000",
-            shadowOffset: {width: 0, height: 1},
+            shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.2,
             elevation: 2,
           }}
         >
           <View>
             <Image
-              source={{uri: item.images[0]}}
+              source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
             />
@@ -151,7 +150,7 @@ const ShowroomDetailScreen = ({route}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
+      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <TouchableOpacity>
           <Image
             source={BellIcon}
@@ -174,7 +173,7 @@ const ShowroomDetailScreen = ({route}) => {
           }}
         >
           <Image
-            source={{uri: item.images[0]}}
+            source={{ uri: item.images[0] }}
             onPress={() => navigation.goBack()}
             style={{
               width: 85,
@@ -182,12 +181,12 @@ const ShowroomDetailScreen = ({route}) => {
               borderRadius: 85 / 2,
             }}
           />
-          <View style={{width: 15}}></View>
-          <View style={{flexDirection: "column", justifyContent: "flex-end"}}>
+          <View style={{ width: 15 }}></View>
+          <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
             <View style={styles.DealerName}>
               <Text style={styles.carInfoText}> {item.name} </Text>
             </View>
-            <View style={{flexDirection: "column"}}>
+            <View style={{ flexDirection: "column" }}>
               <Text style={styles.h1}>{item.contactInformation}</Text>
               <Text style={styles.txt1}>{item.location}</Text>
             </View>
@@ -202,7 +201,7 @@ const ShowroomDetailScreen = ({route}) => {
           justifyContent: "space-evenly",
         }}
       >
-        <View style={{flexDirection: "column"}}>
+        <View style={{ flexDirection: "column" }}>
           <Text
             style={{
               fontSize: 35,
@@ -217,7 +216,7 @@ const ShowroomDetailScreen = ({route}) => {
             <Text style={styles.countText}> Dealers </Text>
           </TouchableOpacity>
         </View>
-        <View style={{flexDirection: "column"}}>
+        <View style={{ flexDirection: "column" }}>
           <Text
             style={{
               fontSize: 35,
@@ -234,7 +233,7 @@ const ShowroomDetailScreen = ({route}) => {
         </View>
       </View>
       <FlatList
-        contentContainerStyle={{alignSelf: "center"}}
+        contentContainerStyle={{ alignSelf: "center" }}
         numColumns={2}
         data={dataCar}
         renderItem={_renderItem}
@@ -243,9 +242,9 @@ const ShowroomDetailScreen = ({route}) => {
     </View>
   );
 };
-export default ShowroomDetailScreen;
+export default memo(ShowroomDetailScreen);
 const styles = StyleSheet.create({
-  Nav: {flexDirection: "row"},
+  Nav: { flexDirection: "row" },
   parent: {
     flexDirection: "column",
     flex: 1,
