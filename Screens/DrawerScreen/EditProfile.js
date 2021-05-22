@@ -37,44 +37,25 @@ const EditProfile = ({ navigation, route }) => {
       </View>
       <Image
         style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
+        source={{
+          uri: userinfo && userinfo.image,
+        }}
       />
       <View style={styles.body}>
         <View style={styles.bodyContent}>
           <ScrollView>
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, email: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
+            <View
+              style={{
+                flexDirection: "column",
+                alignSelf: "center",
               }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              defaultValue={userinfo && userinfo.email}
-              style={styles.inputContainer}
-            />
+            >
+              <Text style={styles.name}>{userinfo && userinfo.name}</Text>
+              <Text style={styles.info}>
+                Email: {userinfo && userinfo.email}
+              </Text>
+            </View>
 
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, name: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
-              }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              defaultValue={userinfo && userinfo.name}
-              style={styles.inputContainer}
-            />
             <TextInput
               onChangeText={(e) => setUserData({ ...userData, username: e })}
               underlineColor="#696969"
@@ -88,8 +69,8 @@ const EditProfile = ({ navigation, route }) => {
               }}
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              defaultValue={userinfo && userinfo.username}
               style={styles.inputContainer}
+              placeholder="Full Name"
             />
 
             <TextInput
@@ -105,8 +86,8 @@ const EditProfile = ({ navigation, route }) => {
               }}
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              defaultValue={userinfo && userinfo.phone}
               style={styles.inputContainer}
+              placeholder="Mobile Name"
             />
 
             <Button
@@ -172,7 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
-    width: 250,
   },
   buttonContainer: {
     marginTop: 10,

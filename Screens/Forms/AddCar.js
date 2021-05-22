@@ -14,6 +14,7 @@ const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
   const [checkbox, setCheckbox] = useState([]);
+  const [assemble, setAssemble] = useState(null);
   const [visible, setVisible] = useState(false);
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
@@ -71,13 +72,13 @@ const AddCar = ({ navigation }) => {
   const checkboxData = ["AC", "Radio", "Gli", "xli"];
 
   const onPressHandler = () => {
-    console.log(dropdownValues, checkbox);
-    firestore()
-      .collection("Car")
-      .add(dropdownValues && checkbox)
-      .then(() => {
-        alert("User Added");
-      });
+    console.log(assemble);
+    // firestore()
+    //   .collection("Car")
+    //   .add(dropdownValues && checkbox)
+    //   .then(() => {
+    //     alert("User Added");
+    //   });
   };
 
   return (
@@ -132,14 +133,13 @@ const AddCar = ({ navigation }) => {
           <View style={{ maxWidth: "70%" }}>
             <AppPicker
               items={items}
-              name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, Assemble: item.label })
-              }
-              numberOfColumns={3}
+              name="assemble"
+              onSelectItem={(item) => {
+                setAssemble(item.label);
+              }}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Assemble"
-              selectedItem={dropdownValues.Assemble}
+              selectedItem={assemble}
               width="80%"
             />
 
@@ -150,6 +150,7 @@ const AddCar = ({ navigation }) => {
                 flexDirection: "row",
                 padding: 15,
                 marginVertical: 10,
+                width: 220,
               }}
               onPress={() => setVisible(true)}
             >
@@ -157,7 +158,7 @@ const AddCar = ({ navigation }) => {
                 Select Features
               </Text>
             </TouchableOpacity>
-            <Modal visible={visible}>
+            <Modal visible={visible} animationType="slide">
               <Button
                 title="Close"
                 style={styles.buttonContainer}
@@ -193,7 +194,6 @@ const AddCar = ({ navigation }) => {
                   EngineCapacity: item.label,
                 })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Engine Type"
               selectedItem={dropdownValues.EngineCapacity}
@@ -205,7 +205,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, City: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select City"
               selectedItem={dropdownValues.City}
@@ -218,7 +217,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, Make: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Company"
               selectedItem={dropdownValues.Make}
@@ -230,7 +228,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, Model: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Model"
               selectedItem={dropdownValues.Model}
@@ -242,7 +239,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, Version: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Year"
               selectedItem={dropdownValues.Version}
@@ -254,7 +250,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, Year: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Version"
               selectedItem={dropdownValues.Year}
@@ -266,7 +261,6 @@ const AddCar = ({ navigation }) => {
               onSelectItem={(item) =>
                 setDropDownValues({ ...dropdownValues, City: item.label })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select RegistrationCity"
               selectedItem={dropdownValues.City}
@@ -281,7 +275,6 @@ const AddCar = ({ navigation }) => {
                   InteriorColor: item.label,
                 })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Interior Color"
               selectedItem={dropdownValues.InteriorColor}
@@ -296,7 +289,6 @@ const AddCar = ({ navigation }) => {
                   ExteriorColor: item.label,
                 })
               }
-              numberOfColumns={3}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Exterior Color"
               selectedItem={dropdownValues.ExteriorColor}

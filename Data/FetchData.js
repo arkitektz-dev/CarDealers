@@ -82,3 +82,12 @@ export const updatePassword = async (userinfo, userData) => {
       alert("User updated!");
     });
 };
+export const AddShowroom = ({ showroomData }) => {
+  // firestore()
+  //   .collection("Showrooms")
+  //   .add(showroomData)
+  //   .then(() => {
+  //     alert("Showroom Added");
+  //   });
+  console.log(showroomData);
+};

@@ -1,18 +1,53 @@
 import React, { memo, useState } from "react";
+import { Text } from "react-native";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { launchImageLibrary } from "react-native-image-picker";
 import { TextInput } from "react-native-paper";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
-const AddShowroom = () => {
+import firestore from "@react-native-firebase/firestore";
+
+const AddShowroom = ({ navigation }) => {
   const [showroomData, setShowroomData] = useState({
     name: "",
     Location: "",
+    address: "",
+    image: [],
   });
+  const setUploadImage = () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    launchImageLibrary(options, (response) => {
+      if (response.error) {
+        alert("Error");
+      } else {
+        const images = [];
+        images.push(response.uri);
+        setShowroomData({ ...showroomData, images: images });
+      }
+    });
+  };
+  const onSubmitHandler = () => {
+    firestore()
+      .collection("Showrooms")
+      .add(showroomData)
+      .then(() => {
+        alert("Showroom Added");
+      });
+  };
   return (
     <View style={styles.parent}>
-      <View style={styles.searchHolder}>
+      <View
+        style={{ backgroundColor: "red", flexDirection: "row", height: 49 }}
+      >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
@@ -24,19 +59,25 @@ const AddShowroom = () => {
             borderRadius: 35 / 2,
           }}
         ></TouchableOpacity>
-        <View style={styles.distance}></View>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("AddCar")}
+        <View
           style={{
-            right: 75,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "center",
           }}
-        ></TouchableOpacity>
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 18,
+              fontWeight: "bold",
+              textAlignVertical: "center",
+            }}
+          >
+            Add your Showroom
+          </Text>
+        </View>
       </View>
       <View style={styles.form}>
         <TextInput
@@ -44,7 +85,7 @@ const AddShowroom = () => {
           returnKeyType="next"
           placeholderTextColor="#000"
           mode="flat"
-          label="Username:"
+          label="Name of Showroom:"
           underlineColor="#000"
           underlineColorAndroid="$000"
           theme={{
@@ -83,10 +124,36 @@ const AddShowroom = () => {
             setShowroomData({ ...showroomData, Location: e })
           }
         />
+        <TextInput
+          renderToHardwareTextureAndroid
+          returnKeyType="next"
+          placeholderTextColor="#000"
+          mode="flat"
+          label="Address:"
+          underlineColor="#000"
+          underlineColorAndroid="$000"
+          theme={{
+            colors: {
+              primary: "#000",
+              placeholder: "#000",
+              text: "#000",
+            },
+          }}
+          style={{
+            backgroundColor: "transparent",
+            color: "#000",
+          }}
+          onChangeText={(e) => setShowroomData({ ...showroomData, address: e })}
+        />
 
         <Button
           title={"Upload Images"}
-          onPressHandler={() => alert("Okat")}
+          onPressHandler={setUploadImage}
+          style={styles.buttonContainer}
+        />
+        <Button
+          title={"Submit"}
+          onPressHandler={onSubmitHandler}
           style={styles.buttonContainer}
         />
       </View>
@@ -99,11 +166,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
     flexDirection: "column",
-    alignItems: "center",
   },
   form: {
-    justifyContent: "center",
     width: screenWidth * 0.7,
+    alignSelf: "center",
   },
   buttonContainer: {
     marginTop: 10,
@@ -116,11 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "red",
   },
-  searchHolder: {
-    backgroundColor: "red",
-    flexDirection: "row",
-    flex: 1,
-  },
+
   distance: {
     width: screenWidth * 0.09,
   },

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -7,43 +7,51 @@ import {
 
 import HomeStack from "../HomeStack/HomeStack";
 import { Image, StyleSheet, View } from "react-native";
-import { Caption, Title } from "react-native-paper";
 import { useNavigation } from "@react-navigation/core";
 
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import ProfileStack from "../HomeStack/ProfileStack";
 import AddShowroom from "../../Screens/Forms/AddShowroom";
+import AddCar from "../../Screens/Forms/AddCar";
+import { clearStorage, getData } from "../../Data/FetchData";
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
+  const [status, setStatus] = useState();
   const navigation = useNavigation();
+  useEffect(() => {
+    getData().then((data) => {
+      setStatus(data);
+    });
+  });
 
   const onPressHandler = async () => {
-    navigation.navigate("Login"), (global.user = false);
+    clearStorage();
+    navigation.replace("Login");
   };
   return (
     <>
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: "red",
+          backgroundColor: "black",
           justifyContent: "space-around",
           alignItems: "center",
-          height: screenHeight * 0.3,
+          height: screenHeight * 0.2,
         }}
       >
         <Image
-          source={require("../../Assets/RedProfileLogo.png")}
+          source={require("../../Assets/AppLogo.png")}
           style={styles.image}
         />
-        <View>
+        {/* <View>
           <Title style={styles.title}> Ijaz Hussain</Title>
           <Caption style={styles.caption}> @ijazhussain</Caption>
-        </View>
+        </View> */}
       </View>
       <DrawerItemList {...props} />
-      {global.user ? (
+      {status != undefined ? (
         <DrawerItem label="Sign Out" onPress={onPressHandler} />
       ) : (
         <DrawerItem
@@ -64,15 +72,10 @@ const DrawerNav = () => {
       drawerPosition="right"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      {global.user ? (
-        <>
-          <Drawer.Screen name="Home" component={HomeStack} />
-          <Drawer.Screen name="Profile" component={ProfileStack} />
-          <Drawer.Screen name="Add Showroom" component={AddShowroom} />
-        </>
-      ) : (
-        <Drawer.Screen name="Home" component={HomeStack} />
-      )}
+      <Drawer.Screen name="Home" component={HomeStack} />
+      <Drawer.Screen name="Profile" component={ProfileStack} />
+      <Drawer.Screen name="Add Showroom" component={AddShowroom} />
+      <Drawer.Screen name="Add Car" component={AddCar} />
     </Drawer.Navigator>
   );
 };
@@ -80,9 +83,8 @@ export default DrawerNav;
 
 const styles = StyleSheet.create({
   image: {
-    width: screenWidth * 0.3,
+    width: 250,
     resizeMode: "contain",
-    left: "10%",
   },
   userInfoSection: {
     margin: 0,
