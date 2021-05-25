@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { Text, Modal, View, StyleSheet } from "react-native";
-import AppPicker from "../../Component/Picker/Index";
+import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -13,29 +13,43 @@ import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
-  const [checkbox, setCheckbox] = useState([]);
-  const [assemble, setAssemble] = useState(null);
-  const [visible, setVisible] = useState(false);
-  const [dropdownValues, setDropDownValues] = useState({
-    Assemble: "",
-    EngineCapacity: "",
-    Engine: "",
-    City: "",
-    Model: "",
-    Make: "",
-    Year: "",
-    Version: "",
-    registrationCity: "",
-    ExteriorColor: "",
-    InteriorColor: "",
-    Description: "",
-    mileage: "",
-    price: "",
+  const [amount, setAmount] = useState("");
+  const [dealer, setDealer] = useState({
+    id: "Dealers/773Dfs4yCxLIjuABaKDo",
+    name: "Ijaz Hussain",
   });
+  const [showroom, setShowroom] = useState({
+    id: "Showrooms/2Bj5G6bG6F4KH6rtbNtW",
+    name: "HSKB Motors",
+  });
+  const [featured, setFeatured] = useState(false);
+  const [assembly, setAssembly] = useState("");
+  const [enginecapacity, setEngineCapacity] = useState("");
+  const [engineType, setEngineType] = useState("");
+  const [transmission, setTransmission] = useState("");
+  const [City, setCity] = useState("");
+  const [ExteriorColor, setExteriorColor] = useState("");
+  const [information, setInformation] = useState({
+    make: "",
+    model: "",
+    modelYear: "",
+    version: "",
+  });
+  const [registrationCity, setRegistrationCity] = useState("");
+  const [Description, setDescription] = useState("");
+  const [mileage, setMileage] = useState("");
+  const [checkbox, setCheckbox] = useState([]);
+  const [visible, setVisible] = useState(false);
+
   const items = [
     { label: "1000 Km", value: 1 },
     { label: "2000 Km", value: 2 },
     { label: "3000 Km", value: 3 },
+  ];
+
+  const assembleType = [
+    { label: "local", value: 1 },
+    { label: "manual", value: 2 },
   ];
   const color = [
     { label: "red", value: 1 },
@@ -61,6 +75,10 @@ const AddCar = ({ navigation }) => {
     { label: "Toyota", value: 2 },
     { label: "Honda", value: 3 },
   ];
+  const engineTypeData = [
+    { label: "Petrol", value: 1 },
+    { label: "Diesel", value: 2 },
+  ];
   const onChangeHandler = (item) => {
     if (checkbox.includes(item)) {
       const a = checkbox.filter((c) => c !== item);
@@ -72,13 +90,39 @@ const AddCar = ({ navigation }) => {
   const checkboxData = ["AC", "Radio", "Gli", "xli"];
 
   const onPressHandler = () => {
-    console.log(assemble);
-    // firestore()
-    //   .collection("Car")
-    //   .add(dropdownValues && checkbox)
-    //   .then(() => {
-    //     alert("User Added");
-    //   });
+    const obj = {
+      amount: amount,
+      dealer: dealer,
+      featured: featured,
+
+      images: [
+        "https://cache3.pakwheels.com/ad_pictures/5050/toyota-corolla-gli-vvti-automatic-2016-50503679.jpg",
+      ],
+      showroom: showroom,
+
+      vehicle: {
+        additionalInformation: {
+          assembly: assembly,
+          engineCapacity: enginecapacity,
+          engineType: engineType,
+          features: checkbox,
+          transmission: transmission,
+        },
+        city: City,
+        description: Description,
+        exteriorColor: ExteriorColor,
+        information: information,
+        mileage: mileage,
+        registrationCity: ExteriorColor,
+      },
+    };
+    console.log(obj);
+    firestore()
+      .collection("Advertisments")
+      .add(obj)
+      .then(() => {
+        alert("User Added");
+      });
   };
 
   return (
@@ -132,14 +176,12 @@ const AddCar = ({ navigation }) => {
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <View style={{ maxWidth: "70%" }}>
             <AppPicker
-              items={items}
-              name="assemble"
-              onSelectItem={(item) => {
-                setAssemble(item.label);
-              }}
+              items={assembleType}
+              name="category"
+              onSelectItem={(item) => setAssembly(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Assemble"
-              selectedItem={assemble}
+              placeholder="Select Assembly"
+              selectedItem={assembly}
               width="80%"
             />
 
@@ -186,28 +228,39 @@ const AddCar = ({ navigation }) => {
               })}
             </Modal>
             <AppPicker
-              items={type}
+              items={items}
               name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({
-                  ...dropdownValues,
-                  EngineCapacity: item.label,
-                })
-              }
+              onSelectItem={(item) => setEngineCapacity(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Engine Capacity"
+              selectedItem={enginecapacity}
+              width="80%"
+            />
+            <AppPicker
+              items={engineTypeData}
+              name="category"
+              onSelectItem={(item) => setEngineType(item)}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Engine Type"
-              selectedItem={dropdownValues.EngineCapacity}
+              selectedItem={engineType}
+              width="80%"
+            />
+            <AppPicker
+              items={type}
+              name="category"
+              onSelectItem={(item) => setTransmission(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Transmission"
+              selectedItem={transmission}
               width="80%"
             />
             <AppPicker
               items={city}
               name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, City: item.label })
-              }
+              onSelectItem={(item) => setCity(item)}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select City"
-              selectedItem={dropdownValues.City}
+              selectedItem={City}
               width="80%"
             />
 
@@ -215,105 +268,81 @@ const AddCar = ({ navigation }) => {
               items={company}
               name="category"
               onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, Make: item.label })
+                setInformation({ ...information, make: item })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Company"
-              selectedItem={dropdownValues.Make}
+              selectedItem={information.make}
               width="80%"
             />
             <AppPicker
               items={year}
               name="category"
               onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, Model: item.label })
+                setInformation({ ...information, model: item })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Model"
-              selectedItem={dropdownValues.Model}
+              selectedItem={information.model}
               width="80%"
             />
+
             <AppPicker
               items={year}
               name="category"
               onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, Version: item.label })
+                setInformation({ ...information, modelYear: item })
               }
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Year"
-              selectedItem={dropdownValues.Version}
+              placeholder="Select Model Year"
+              selectedItem={information.modelYear}
               width="80%"
             />
             <AppPicker
               items={year}
               name="category"
               onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, Year: item.label })
+                setInformation({ ...information, version: item })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder="Select Version"
-              selectedItem={dropdownValues.Year}
+              selectedItem={information.version}
               width="80%"
             />
+
+            <AppPicker
+              items={color}
+              name="category"
+              onSelectItem={(item) => setExteriorColor(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Exterior Color"
+              selectedItem={ExteriorColor}
+              width="80%"
+            />
+
             <AppPicker
               items={city}
               name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, City: item.label })
-              }
+              onSelectItem={(item) => setRegistrationCity(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select RegistrationCity"
-              selectedItem={dropdownValues.City}
-              width="80%"
-            />
-            <AppPicker
-              items={color}
-              name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({
-                  ...dropdownValues,
-                  InteriorColor: item.label,
-                })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Interior Color"
-              selectedItem={dropdownValues.InteriorColor}
-              width="80%"
-            />
-            <AppPicker
-              items={color}
-              name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({
-                  ...dropdownValues,
-                  ExteriorColor: item.label,
-                })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Exterior Color"
-              selectedItem={dropdownValues.ExteriorColor}
+              placeholder="Select Registration City"
+              selectedItem={registrationCity}
               width="80%"
             />
             <AppTextInput
               label={"Description"}
               multiline={true}
-              onChangeHandler={(e) =>
-                setDropDownValues({ ...dropdownValues, Description: e })
-              }
+              onChangeHandler={(e) => setDescription(e)}
             />
             <AppTextInput
               label={"Mileage"}
               keyboardType={"number-pad"}
-              onChangeHandler={(e) =>
-                setDropDownValues({ ...dropdownValues, mileage: e })
-              }
+              onChangeHandler={(e) => setMileage(e)}
             />
             <AppTextInput
               label={"Price"}
               keyboardType={"number-pad"}
-              onChangeHandler={(e) =>
-                setDropDownValues({ ...dropdownValues, price: e })
-              }
+              onChangeHandler={(e) => setAmount(e)}
             />
 
             <Button

@@ -14,15 +14,15 @@ import ProfileStack from "../HomeStack/ProfileStack";
 import AddShowroom from "../../Screens/Forms/AddShowroom";
 import AddCar from "../../Screens/Forms/AddCar";
 import { clearStorage, getData } from "../../Data/FetchData";
+import LottieLoader from "../../Component/Lottie";
 
 const Drawer = createDrawerNavigator();
-
+var status = [];
 function CustomDrawerContent(props) {
-  const [status, setStatus] = useState();
   const navigation = useNavigation();
   useEffect(() => {
     getData().then((data) => {
-      setStatus(data);
+      status = data;
     });
   });
 
@@ -66,16 +66,34 @@ function CustomDrawerContent(props) {
 }
 
 const DrawerNav = () => {
+  // const [status, setStatus] = useState();
+  // useEffect(() => {
+  //   getData().then((data) => {
+  //     setStatus(data);
+  //   });
+  // });
+
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawe}
       drawerPosition="right"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Home" component={HomeStack} />
-      <Drawer.Screen name="Profile" component={ProfileStack} />
-      <Drawer.Screen name="Add Showroom" component={AddShowroom} />
-      <Drawer.Screen name="Add Car" component={AddCar} />
+      {status != undefined ? (
+        <>
+          <Drawer.Screen name="Home" component={HomeStack} />
+          <Drawer.Screen name="Profile" component={ProfileStack} />
+          <Drawer.Screen name="Add Showroom" component={AddShowroom} />
+          <Drawer.Screen name="Add Car" component={AddCar} />
+        </>
+      ) : (
+        <>
+          <Drawer.Screen name="Home" component={HomeStack} />
+          <Drawer.Screen name="Profile" component={LottieLoader} />
+          <Drawer.Screen name="Add Showroom" component={LottieLoader} />
+          <Drawer.Screen name="Add Car" component={LottieLoader} />
+        </>
+      )}
     </Drawer.Navigator>
   );
 };
