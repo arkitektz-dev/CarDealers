@@ -4,14 +4,18 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchImageLibrary } from "react-native-image-picker";
-import { TextInput } from "react-native-paper";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
-import firestore from "@react-native-firebase/firestore";
+import AppTextInput from "../../Component/TextInput/Index";
+import { AddShowroomData } from "../../Data/FetchData";
 
 const AddShowroom = ({ navigation }) => {
   const [showroomData, setShowroomData] = useState({
     name: "",
+    website: "",
+    city: "",
+    contactInformation: "",
+    email: "",
     Location: "",
     address: "",
     image: [],
@@ -35,13 +39,9 @@ const AddShowroom = ({ navigation }) => {
       }
     });
   };
+
   const onSubmitHandler = () => {
-    firestore()
-      .collection("Showrooms")
-      .add(showroomData)
-      .then(() => {
-        alert("Showroom Added");
-      });
+    AddShowroomData(showroomData);
   };
   return (
     <View style={styles.parent}>
@@ -80,70 +80,50 @@ const AddShowroom = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.form}>
-        <TextInput
-          renderToHardwareTextureAndroid
-          returnKeyType="next"
-          placeholderTextColor="#000"
-          mode="flat"
+        <AppTextInput
+          onChangeHandler={(e) => setShowroomData({ ...showroomData, name: e })}
           label="Name of Showroom:"
-          underlineColor="#000"
-          underlineColorAndroid="$000"
-          theme={{
-            colors: {
-              primary: "#000",
-              placeholder: "#000",
-              text: "#000",
-            },
-          }}
-          style={{
-            backgroundColor: "transparent",
-            color: "#000",
-          }}
-          onChangeText={(e) => setShowroomData({ ...showroomData, name: e })}
-        />
-        <TextInput
-          renderToHardwareTextureAndroid
           returnKeyType="next"
-          placeholderTextColor="#000"
-          mode="flat"
-          label="Location:"
-          underlineColor="#000"
-          underlineColorAndroid="$000"
-          theme={{
-            colors: {
-              primary: "#000",
-              placeholder: "#000",
-              text: "#000",
-            },
-          }}
-          style={{
-            backgroundColor: "transparent",
-            color: "#000",
-          }}
-          onChangeText={(e) =>
+        />
+        <AppTextInput
+          onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, Location: e })
           }
-        />
-        <TextInput
-          renderToHardwareTextureAndroid
+          label="Location:"
           returnKeyType="next"
-          placeholderTextColor="#000"
-          mode="flat"
+        />
+        <AppTextInput
+          onChangeHandler={(e) =>
+            setShowroomData({ ...showroomData, address: e })
+          }
           label="Address:"
-          underlineColor="#000"
-          underlineColorAndroid="$000"
-          theme={{
-            colors: {
-              primary: "#000",
-              placeholder: "#000",
-              text: "#000",
-            },
-          }}
-          style={{
-            backgroundColor: "transparent",
-            color: "#000",
-          }}
-          onChangeText={(e) => setShowroomData({ ...showroomData, address: e })}
+          returnKeyType="next"
+        />
+        <AppTextInput
+          onChangeHandler={(e) => setShowroomData({ ...showroomData, city: e })}
+          label="City:"
+          returnKeyType="next"
+        />
+        <AppTextInput
+          onChangeHandler={(e) =>
+            setShowroomData({ ...showroomData, email: e })
+          }
+          label="Email:"
+          returnKeyType="next"
+        />
+        <AppTextInput
+          onChangeHandler={(e) =>
+            setShowroomData({ ...showroomData, contactInformation: e })
+          }
+          label="Contact information:"
+          returnKeyType="next"
+        />
+        <AppTextInput
+          onChangeHandler={(e) =>
+            setShowroomData({ ...showroomData, website: e })
+          }
+          label="Website:"
+          returnKeyType="done"
         />
 
         <Button

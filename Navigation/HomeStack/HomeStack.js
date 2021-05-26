@@ -25,7 +25,7 @@ const HomeStack = () => {
         component={CarStack}
         options={{ headerShown: false }}
       />
-     
+
       <Stack.Screen
         options={{ headerShown: false }}
         name="ShowroomDetailScreen"
@@ -65,7 +65,7 @@ const HomeStack = () => {
         name="Profile"
         component={ProfileStack}
         options={{ headerShown: false }}
-        />
+      />
     </Stack.Navigator>
   );
 };

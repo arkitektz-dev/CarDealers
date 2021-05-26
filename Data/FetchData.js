@@ -1,5 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
+import { string } from "yup";
 
 export const fetchCarData = async () => {
   const arr = [];
@@ -41,7 +43,7 @@ export const getData = async () => {
       return data;
     }
   } catch (e) {
-    console.log(e);
+    alert(e);
   }
 };
 
@@ -59,7 +61,7 @@ export const storeData = async (value) => {
     const data = JSON.stringify(value);
     return await AsyncStorage.setItem("userInfo", data);
   } catch (e) {
-    console.log(e);
+    alert(e);
   }
 };
 export const updateProfile = async (userinfo, userData) => {
@@ -82,12 +84,19 @@ export const updatePassword = async (userinfo, userData) => {
       alert("User updated!");
     });
 };
-export const AddShowroom = ({ showroomData }) => {
+export const AddShowroomData = (showroomData) => {
+  if (
+    showroomData.name == "" ||
+    showroomData.city == "" ||
+    showroomData.contactInformation == ""
+  )
+    console.log("validation error occured");
+  else console.log("no validation error found");
+
   // firestore()
   //   .collection("Showrooms")
   //   .add(showroomData)
   //   .then(() => {
   //     alert("Showroom Added");
   //   });
-  console.log(showroomData);
 };

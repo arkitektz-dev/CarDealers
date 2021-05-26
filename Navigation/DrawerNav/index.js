@@ -45,10 +45,6 @@ function CustomDrawerContent(props) {
           source={require("../../Assets/AppLogo.png")}
           style={styles.image}
         />
-        {/* <View>
-          <Title style={styles.title}> Ijaz Hussain</Title>
-          <Caption style={styles.caption}> @ijazhussain</Caption>
-        </View> */}
       </View>
       <DrawerItemList {...props} />
       {status != undefined ? (
@@ -66,13 +62,6 @@ function CustomDrawerContent(props) {
 }
 
 const DrawerNav = () => {
-  // const [status, setStatus] = useState();
-  // useEffect(() => {
-  //   getData().then((data) => {
-  //     setStatus(data);
-  //   });
-  // });
-
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawe}

@@ -116,7 +116,6 @@ const AddCar = ({ navigation }) => {
         registrationCity: ExteriorColor,
       },
     };
-    console.log(obj);
     firestore()
       .collection("Advertisments")
       .add(obj)

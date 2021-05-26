@@ -1,7 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Image } from "react-native";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 
 export const SearchComponent = ({ image, style, onChangeHandler }) => {
@@ -15,21 +13,13 @@ export const SearchComponent = ({ image, style, onChangeHandler }) => {
         autoCorrect={false}
         underlineColorAndroid="white"
       />
-      <Image
-        source={image}
-        resizeMode="contain"
-        style={{
-          width: 60,
-          height: 60,
-          bottom: "2.5%",
-        }}
-      />
     </View>
   );
 };
 const styles = StyleSheet.create({
   search: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    width: "90%",
+    paddingLeft: 10,
   },
 });

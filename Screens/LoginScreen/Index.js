@@ -40,19 +40,17 @@ export const LoginScreen = () => {
         .then((querySnapshot) => {
           if (querySnapshot.size == 0) {
             alert("Invalid Username or Password");
-          }
-          querySnapshot.forEach((doc) => {
-            const a = { ...doc.data() };
-            a.id = doc.id;
-            a.isSignedIn = true;
-            storeData(a);
-          });
-
-          global.user = true;
-          navigation.replace("Home");
+          } else
+            querySnapshot.forEach((doc) => {
+              const a = { ...doc.data() };
+              a.id = doc.id;
+              a.isSignedIn = true;
+              storeData(a);
+              navigation.replace("Home");
+            });
         })
         .catch((error) => {
-          console.log("Error getting documents: ", error);
+          alert("Error getting data: ", error);
         });
     }
   };

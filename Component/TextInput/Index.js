@@ -1,29 +1,37 @@
 import React from "react";
 import { HelperText, TextInput } from "react-native-paper";
 
-const AppTextInput = ({ onChangeHandler, keyboardType, label, multiline }) => {
+const AppTextInput = ({
+  onChangeHandler,
+  keyboardType,
+  placeholder,
+  label,
+  multiline,
+  returnKeyType,
+}) => {
   return (
     <>
       <TextInput
+        placeholder={placeholder}
         renderToHardwareTextureAndroid
-        returnKeyType="next"
-        placeholderTextColor="#333"
+        returnKeyType={returnKeyType}
+        placeholderTextColor="#000"
         mode="flat"
         keyboardType={keyboardType}
         multiline={multiline}
         label={label}
-        underlineColor="#333"
-        underlineColorAndroid="#333"
+        underlineColor="#000"
+        underlineColorAndroid="#000"
         theme={{
           colors: {
-            primary: "#333",
-            placeholder: "#333",
-            text: "#333",
+            primary: "#000",
+            placeholder: "#000",
+            text: "#000",
           },
         }}
         style={{
           backgroundColor: "transparent",
-          color: "#333",
+          color: "#000",
         }}
         onChangeText={onChangeHandler}
       />

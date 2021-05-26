@@ -33,7 +33,6 @@ const ShowroomDetailScreen = ({ route }) => {
   };
 
   useEffect(() => {
-    console.log(item.id);
     firestore()
       .collection("Dealers")
       .get()

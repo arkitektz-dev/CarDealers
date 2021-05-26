@@ -34,9 +34,6 @@ const ListingCars = () => {
       setLoading(false);
     });
   }, []);
-  // const onSearch = (text) => {
-  //   searchCar(text, dataCar).then((newData) => console.log(newData));
-  // };
 
   const onSearch = (text) => {
     if (text) {
@@ -54,11 +51,11 @@ const ListingCars = () => {
     }
   };
   const onFilter = (dropdownValues) => {
-    console.log(dropdownValues);
     const newData = dataCar.filter((item) => {
       const itemData = `${item.vehicle.information.make.toUpperCase()}   
       ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
-      const textData = dropdownValues.Make.toUpperCase();
+      const textData =
+        dropdownValues.Make.toUpperCase() || dropdownValues.Year.toUpperCase();
 
       return itemData.indexOf(textData) > -1;
     });
@@ -192,6 +189,7 @@ const ListingCars = () => {
             setSearch(dropdownValues);
             onFilter(dropdownValues);
           }}
+          Visibility={() => setShown(false)}
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text

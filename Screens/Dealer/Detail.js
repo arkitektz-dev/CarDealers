@@ -19,14 +19,16 @@ import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
+  console.log(param, "param");
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
-
   const [dataCar, setDataCar] = useState([]);
+
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
+        console.log(documentSnapshot.data(), "Testing");
         arr.push(documentSnapshot.data());
       });
       setDataCar(arr);
@@ -38,7 +40,10 @@ const DealerDetailScreen = ({ route }) => {
       .collection("Showrooms")
       .get()
       .then((querySnapshot) => {
-        setshowroomCount(querySnapshot.size);
+        querySnapshot.forEach((documentSnapshot) => {
+          console.log(documentSnapshot.data(), "Testing");
+        });
+        console.log(documentSnapshot.data(), "Testing"); // setshowroomCount(querySnapshot.size);
       });
     firestore()
       .collection("Advertisments")

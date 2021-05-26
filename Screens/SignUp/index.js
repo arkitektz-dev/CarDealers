@@ -19,7 +19,6 @@ import BackgroundImage from "../../Assets/loginBackground.png";
 import { Tooltip } from "react-native-elements";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
@@ -105,14 +104,14 @@ export const SignupScreen = () => {
           .then(() => {
             alert("User added!");
           })
-          .catch((err) => console.log(err));
+          .catch((err) => alert(err));
         alert("Registered Succesfully !");
         navigation.replace("Home");
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     } catch (error) {
-      console.log("Invalid code.");
+      alert("Invalid code.");
     }
   }
   const handleChangeConfirmPassowrd = (e) => {
@@ -128,7 +127,7 @@ export const SignupScreen = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(e) === false) {
       setEmailError(true);
-      console.log("Email is Not Correct");
+      alert("Email is Not Correct");
     } else {
       setEmailError(false);
     }
@@ -143,7 +142,7 @@ export const SignupScreen = () => {
       setUsernameError(false);
     } else {
       setUsernameError(true);
-      console.log("Username is Not Correct");
+      alert("Username is Not Correct");
     }
     await ref
       .where("username", "==", user.username)

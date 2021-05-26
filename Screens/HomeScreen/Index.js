@@ -1,12 +1,17 @@
 import React, { memo, useEffect, useState } from "react";
-import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 
-import BellIcon from "../../Assets/BellIcon.png";
 import Drawer from "../../Assets/Drawer.png";
 import { SearchComponent } from "../../Component/Search";
 import DealerCard from "../../Component/CardComponent/DealersCard";
-import { TouchableOpacity } from "react-native";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
@@ -25,48 +30,46 @@ const HomeScreen = ({ navigation }) => {
           flexDirection: "column",
           flex: 1,
           backgroundColor: "#fff",
-          padding: 10,
+          paddingTop: 10,
         }}
       >
-        <View style={styles.distance}></View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flexDirection: "column" }}>
-            <Text style={styles.welcome}> Hi,{userInfo && userInfo.name}</Text>
-            <View style={{ height: screenHeight * 0.02 }}></View>
-            <View style={{ flexDirection: "row" }}>
-              <View
-                style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}
-              >
-                <Text style={{ color: "red" }}>sd</Text>
-              </View>
-              <Text style={styles.location}> Karachi, Pakistan</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              justifyContent: "flex-end",
-              bottom: "10%",
-            }}
-          >
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Image
-                source={Drawer}
-                resizeMode="contain"
-                style={{
-                  width: 52,
-                  height: 52,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+        >
+          <SearchComponent style={styles.search} />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Image
+              source={Drawer}
+              style={{ bottom: 7, width: 52, height: 52 }}
+            />
+          </TouchableOpacity>
         </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            backgroundColor: "#f7f7f7",
+            flex: 1,
+            paddingLeft: 10,
+          }}
+        >
+          <Text style={styles.welcome}> Hi,{userInfo && userInfo.name}</Text>
+          <View style={{ height: screenHeight * 0.02 }}></View>
+        </View>
+        <View style={{ flexDirection: "row", paddingLeft: 10 }}>
+          <View style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}>
+            <Text style={{ color: "red" }}>sd</Text>
+          </View>
+          <Text style={styles.location}> Karachi, Pakistan</Text>
+        </View>
+
         <View style={styles.distance}></View>
 
-        <SearchComponent image={BellIcon} style={styles.search} />
-
-        <View style={styles.distance}></View>
         <CategoryCard />
 
         <View style={styles.distance}></View>
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   search: {
-    width: "80%",
+    width: "100%",
     borderRadius: 20,
     maxHeight: "72%",
 
