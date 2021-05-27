@@ -4,11 +4,11 @@ import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import firestore from "@react-native-firebase/firestore";
 import { screenWidth } from "../../Global/Dimension";
 import defaultStyles from "../../config/styles";
 import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
+import { AddCarData } from "../../Data/FetchData";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -35,6 +35,7 @@ const AddCar = ({ navigation }) => {
     modelYear: "",
     version: "",
   });
+
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
   const [mileage, setMileage] = useState("");
@@ -116,12 +117,7 @@ const AddCar = ({ navigation }) => {
         registrationCity: ExteriorColor,
       },
     };
-    firestore()
-      .collection("Advertisments")
-      .add(obj)
-      .then(() => {
-        alert("User Added");
-      });
+    AddCarData(obj);
   };
 
   return (

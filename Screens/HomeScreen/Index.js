@@ -16,12 +16,28 @@ import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
 import { getData } from "../../Data/FetchData";
+import Geolocation from "@react-native-community/geolocation";
+import Geocoder from "react-native-geocoding";
 
 const HomeScreen = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [location, setLocation] = useState(null);
   useEffect(() => {
+    Geolocation.getCurrentPosition((info) => {
+      setLatitude(info.coords.latitude), setLatitude(info.coords.longitude);
+    });
+    Geocoder.init("AIzaSyBlGABifFjFAm3j5HFQwPHai0PouGUQtbY");
+    Geocoder.from(41.89, 12.49)
+      .then((json) => {
+        console.log(json);
+      })
+      .catch((error) => console.warn(error));
     getData().then((data) => setUserInfo(data));
-  });
+    return () => console.log("CleanUp");
+  }, []);
+
   return (
     <ScrollView>
       <View
@@ -58,14 +74,16 @@ const HomeScreen = ({ navigation }) => {
             paddingLeft: 10,
           }}
         >
-          <Text style={styles.welcome}> Hi,{userInfo && userInfo.name}</Text>
+          <Text style={styles.welcome}>
+            Welcome, {userInfo && userInfo.name}
+          </Text>
           <View style={{ height: screenHeight * 0.02 }}></View>
         </View>
         <View style={{ flexDirection: "row", paddingLeft: 10 }}>
           <View style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}>
             <Text style={{ color: "red" }}>sd</Text>
           </View>
-          <Text style={styles.location}> Karachi, Pakistan</Text>
+          <Text style={styles.location}>{longitude}</Text>
         </View>
 
         <View style={styles.distance}></View>

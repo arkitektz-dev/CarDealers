@@ -29,6 +29,7 @@ const ListingCars = () => {
     setLoading(true);
     fetchCarData().then((res) => {
       setDataCar(res.arr);
+
       setfilteredData(res.arr);
       setcarCount(res.size);
       setLoading(false);
@@ -66,7 +67,15 @@ const ListingCars = () => {
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
-
+  const _renderFooter = () => {
+    return (
+      <ActivityIndicator
+        size="large"
+        color="red"
+        style={{ marginBottom: 10 }}
+      />
+    );
+  };
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
@@ -133,6 +142,9 @@ const ListingCars = () => {
       </TouchableOpacity>
     );
   };
+  // const onEndReached =()=>{
+
+  // }
   return (
     <View style={{ backgroundColor: "white" }}>
       <View style={styles.searchHolder}>
@@ -209,8 +221,11 @@ const ListingCars = () => {
       ) : (
         <FlatList
           data={dataCar}
+          contentContainerStyle={{ paddingBottom: 150 }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
+          ListFooterComponent={_renderFooter}
+          // onEndReached={_onEndReached}
         />
       )}
     </View>

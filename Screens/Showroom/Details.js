@@ -2,7 +2,6 @@ import React, { memo, useEffect, useState } from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
-  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -11,99 +10,72 @@ import {
   FlatList,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
-import BellIcon from "../../Assets/BellIcon.png";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import HomeCard from "../../Component/CardViews/HomeProductListCard";
 
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
+  const showroomId = route.params.item.id;
   const [dealerCount, setdealerCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const arr = [];
+  const dealerarr = [];
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        arr.push(documentSnapshot.data());
+        if (documentSnapshot.data().showroom.id.id.trim() == showroomId)
+          arr.push(documentSnapshot.data());
       });
       setDataCar(arr);
+      setcarCount(arr.length);
+    });
+  };
+  const fetchShowroomData = async () => {
+    let dealersCount = 0;
+    const ref = firestore().collection("Dealers");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        var a = documentSnapshot.data().showrooms.filter((s) => {
+          if (s.id.id.trim() == showroomId) {
+            return true;
+          }
+        });
+        if (a.length > 0) {
+          dealersCount++;
+        }
+      });
+      setdealerCount(dealersCount);
     });
   };
 
   useEffect(() => {
-    firestore()
-      .collection("Dealers")
-      .get()
-      .then((querySnapshot) => {
-        setdealerCount(querySnapshot.size);
-      });
-    firestore()
-      .collection("Advertisments")
-      .get()
-      .then((querySnapshot) => {
-        setcarCount(querySnapshot.size);
-      });
+    fetchShowroomData();
     fetchData();
   }, []);
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View
-          style={{
-            justifyContent: "space-between",
-            backgroundColor: "white",
-            padding: 10,
-            margin: 8,
-            borderRadius: 20,
-            shadowColor: "#470000",
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.2,
-            elevation: 2,
-          }}
-        >
-          <View>
-            <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.vehicle.information.make} {item.vehicle.information.model}{" "}
-              {item.vehicle.information.modelYear}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "red",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.amount}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 13,
-                fontWeight: "bold",
-              }}
-            >
-              {item.vehicle.city} | {item.vehicle.mileage} | {""}
-              {item.vehicle.additionalInformation.engineType}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <HomeCard
+        pressHandler={() => onPressHandler(item)}
+        title={`${
+          item.vehicle.information.make +
+          " " +
+          item.vehicle.information.model +
+          " " +
+          item.vehicle.information.modelYear
+        } `}
+        price={`${item.amount}`}
+        subtitle={`${
+          item.vehicle.city +
+          " " +
+          item.vehicle.mileage +
+          " " +
+          item.vehicle.additionalInformation.engineType
+        } `}
+        image={{ uri: item.images[0] }}
+      />
     );
   };
   const navigation = useNavigation();
@@ -149,20 +121,7 @@ const ShowroomDetailScreen = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <TouchableOpacity>
-          <Image
-            source={BellIcon}
-            resizeMode="contain"
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "flex-end",
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-
+      <View style={styles.distance}></View>
       <View style={styles.topDiv}>
         <View
           style={{
@@ -232,7 +191,9 @@ const ShowroomDetailScreen = ({ route }) => {
         </View>
       </View>
       <FlatList
-        contentContainerStyle={{ alignSelf: "center" }}
+        contentContainerStyle={{
+          alignSelf: "center",
+        }}
         numColumns={2}
         data={dataCar}
         renderItem={_renderItem}
@@ -264,13 +225,17 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e0e0e0",
   },
   imageSize: {
-    width: screenWidth * 0.35,
-    height: screenHeight * 0.15,
+    width: 130,
+    height: 90,
+    resizeMode: "contain",
   },
   h1: {
     color: "grey",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  distance: {
+    height: screenHeight * 0.035,
   },
   txt1: {
     color: "grey",

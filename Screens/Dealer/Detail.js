@@ -2,7 +2,6 @@ import React, { memo, useEffect, useState } from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
-  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -11,46 +10,32 @@ import {
   FlatList,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-import BellIcon from "../../Assets/BellIcon.png";
-
 import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import HomeCard from "../../Component/CardViews/HomeProductListCard";
 
 const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
-  console.log(param, "param");
+
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
-
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        console.log(documentSnapshot.data(), "Testing");
-        arr.push(documentSnapshot.data());
+        if (documentSnapshot.data().dealer.id.id.trim() == param.id) {
+          arr.push(documentSnapshot.data());
+        }
       });
       setDataCar(arr);
+      setcarCount(arr.length);
     });
   };
 
   useEffect(() => {
-    firestore()
-      .collection("Showrooms")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          console.log(documentSnapshot.data(), "Testing");
-        });
-        console.log(documentSnapshot.data(), "Testing"); // setshowroomCount(querySnapshot.size);
-      });
-    firestore()
-      .collection("Advertisments")
-      .get()
-      .then((querySnapshot) => {
-        setcarCount(querySnapshot.size);
-      });
+    setshowroomCount(param.showrooms.length);
     fetchData();
   }, []);
 
@@ -62,62 +47,25 @@ const DealerDetailScreen = ({ route }) => {
 
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
-        <View
-          style={{
-            justifyContent: "space-between",
-            backgroundColor: "white",
-            padding: 10,
-            margin: 8,
-
-            borderRadius: 20,
-            shadowColor: "#470000",
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.2,
-            elevation: 2,
-          }}
-        >
-          <View>
-            <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.vehicle.information.make} {item.vehicle.information.model}{" "}
-              {item.vehicle.information.modelYear}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "red",
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              {item.amount}
-            </Text>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 13,
-                fontWeight: "bold",
-              }}
-            >
-              {item.vehicle.city} | {item.vehicle.mileage} | {""}
-              {item.vehicle.additionalInformation.engineType}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <HomeCard
+        pressHandler={() => onPressHandler(item)}
+        title={`${
+          item.vehicle.information.make +
+          " " +
+          item.vehicle.information.model +
+          " " +
+          item.vehicle.information.modelYear
+        } `}
+        price={`${item.amount}`}
+        subtitle={`${
+          item.vehicle.city +
+          " " +
+          item.vehicle.mileage +
+          " " +
+          item.vehicle.additionalInformation.engineType
+        } `}
+        image={{ uri: item.images[0] }}
+      />
     );
   };
   const navigation = useNavigation();
@@ -163,19 +111,7 @@ const DealerDetailScreen = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <TouchableOpacity>
-          <Image
-            source={BellIcon}
-            resizeMode="contain"
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "flex-end",
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.distance}></View>
       <View style={styles.topDiv}>
         <View
           style={{
@@ -206,9 +142,6 @@ const DealerDetailScreen = ({ route }) => {
                 return <Text style={styles.h1}>{item.name}</Text>;
               })}
 
-              {/* {param.contactInformation.map((item) => {
-                return <Text style={styles.txt1}>{item}</Text>;
-              })} */}
               <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
             </View>
           </View>
@@ -266,6 +199,9 @@ const DealerDetailScreen = ({ route }) => {
 export default memo(DealerDetailScreen);
 const styles = StyleSheet.create({
   Nav: { flexDirection: "row" },
+  distance: {
+    height: screenHeight * 0.035,
+  },
   parent: {
     flexDirection: "column",
     flex: 1,

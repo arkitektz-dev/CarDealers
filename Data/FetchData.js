@@ -1,7 +1,5 @@
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/core";
-import { string } from "yup";
 
 export const fetchCarData = async () => {
   const arr = [];
@@ -21,7 +19,10 @@ export const fetchDealerData = async () => {
   const data = await ref.get();
   const size = data.size;
 
-  data.forEach((res) => arr.push(res.data()));
+  data.forEach((res) => {
+    const obj = { ...res.data(), id: res.id };
+    arr.push(obj);
+  });
   return { size, arr };
 };
 
@@ -31,7 +32,10 @@ export const fetchShowroomData = async () => {
   const data = await ref.get();
   const size = data.size;
 
-  data.forEach((res) => arr.push(res.data()));
+  data.forEach((res) => {
+    const obj = { ...res.data(), id: res.id };
+    arr.push(obj);
+  });
   return { size, arr };
 };
 
@@ -87,16 +91,33 @@ export const updatePassword = async (userinfo, userData) => {
 export const AddShowroomData = (showroomData) => {
   if (
     showroomData.name == "" ||
-    showroomData.city == "" ||
+    showroomData.Location == "" ||
     showroomData.contactInformation == ""
   )
-    console.log("validation error occured");
-  else console.log("no validation error found");
+    alert("Fields can not be empty");
+  else {
+    firestore()
+      .collection("Showrooms")
+      .add(showroomData)
+      .then(() => {
+        alert("Showroom Added");
+      });
+  }
+};
 
-  // firestore()
-  //   .collection("Showrooms")
-  //   .add(showroomData)
-  //   .then(() => {
-  //     alert("Showroom Added");
-  //   });
+export const AddCarData = (obj) => {
+  if (
+    obj.vehicle.information.make == "" ||
+    obj.vehicle.information.model == "" ||
+    obj.vehicle.information.modelYear == ""
+  ) {
+    alert("Fields Can not be empty");
+  } else {
+    firestore()
+      .collection("Advertisments")
+      .add(obj)
+      .then(() => {
+        alert("Car Added");
+      });
+  }
 };

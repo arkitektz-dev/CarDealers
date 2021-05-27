@@ -1,13 +1,13 @@
 import React, { memo, useState } from "react";
-import { Text } from "react-native";
-import { StyleSheet } from "react-native";
-import { View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
 import { AddShowroomData } from "../../Data/FetchData";
+import { HelperText } from "react-native-paper";
+import ErrorHandle from "../../Component/HelperText";
 
 const AddShowroom = ({ navigation }) => {
   const [showroomData, setShowroomData] = useState({
@@ -16,9 +16,16 @@ const AddShowroom = ({ navigation }) => {
     city: "",
     contactInformation: "",
     email: "",
-    Location: "",
+    location: "",
     address: "",
-    image: [],
+    images: [
+      "https://www.homelandtransportcompany.com/wp-content/uploads/2021/03/haggle-free.jpg",
+    ],
+  });
+  const [errorState, setErrorState] = useState({
+    name: false,
+    contactInformation: false,
+    location: false,
   });
   const setUploadImage = () => {
     const options = {
@@ -42,6 +49,30 @@ const AddShowroom = ({ navigation }) => {
 
   const onSubmitHandler = () => {
     AddShowroomData(showroomData);
+  };
+  const onChangeNameHandeler = (e) => {
+    if (e == "") {
+      setErrorState({ name: true });
+    } else {
+      setErrorState({ name: false });
+      setShowroomData({ ...showroomData, name: e });
+    }
+  };
+  const onChangeContactInformation = (e) => {
+    if (e == "") {
+      setErrorState({ contactInformation: true });
+    } else {
+      setErrorState({ contactInformation: false });
+      setShowroomData({ ...showroomData, contactInformation: e });
+    }
+  };
+  const onChangelocation = (e) => {
+    if (e == "") {
+      setErrorState({ location: true });
+    } else {
+      setErrorState({ location: false });
+      setShowroomData({ ...showroomData, Location: e });
+    }
   };
   return (
     <View style={styles.parent}>
@@ -81,17 +112,20 @@ const AddShowroom = ({ navigation }) => {
       </View>
       <View style={styles.form}>
         <AppTextInput
-          onChangeHandler={(e) => setShowroomData({ ...showroomData, name: e })}
+          onChangeHandler={(e) => onChangeNameHandeler(e)}
           label="Name of Showroom:"
           returnKeyType="next"
         />
+        {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
         <AppTextInput
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, Location: e })
-          }
+          onChangeHandler={(e) => onChangelocation(e)}
           label="Location:"
           returnKeyType="next"
         />
+        {errorState.location ? (
+          <ErrorHandle text="Field Can Not be empty" />
+        ) : null}
+
         <AppTextInput
           onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, address: e })
@@ -112,12 +146,14 @@ const AddShowroom = ({ navigation }) => {
           returnKeyType="next"
         />
         <AppTextInput
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, contactInformation: e })
-          }
+          onChangeHandler={(e) => onChangeContactInformation(e)}
           label="Contact information:"
           returnKeyType="next"
         />
+        {errorState.contactInformation ? (
+          <ErrorHandle text="Field Can Not be empty" />
+        ) : null}
+
         <AppTextInput
           onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, website: e })
@@ -144,8 +180,8 @@ export default memo(AddShowroom);
 const styles = StyleSheet.create({
   parent: {
     backgroundColor: "white",
-    flex: 1,
     flexDirection: "column",
+    flex: 1,
   },
   form: {
     width: screenWidth * 0.7,
