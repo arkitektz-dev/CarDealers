@@ -29,10 +29,11 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     price: "",
   });
   const items = [
-    { label: "1000 Km", value: 1 },
-    { label: "2000 Km", value: 2 },
-    { label: "3000 Km", value: 3 },
+    { label: "800cc", value: 1 },
+    { label: "1300cc", value: 2 },
+    { label: "1600cc", value: 3 },
   ];
+
   const color = [
     { label: "Red", value: 1 },
     { label: "Blue", value: 2 },
@@ -44,8 +45,8 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     { label: "Islamabad", value: 3 },
   ];
   const type = [
-    { label: "Automatic", value: 1 },
-    { label: "Manual", value: 2 },
+    { label: "local", value: 1 },
+    { label: "manual", value: 2 },
   ];
   const year = [
     { label: "2000", value: 1 },

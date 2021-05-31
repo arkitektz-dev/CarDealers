@@ -1,7 +1,6 @@
-import React, { Component, memo, useEffect, useState } from "react";
-
+import React, { memo, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import AppTextInput from "../../Component/TextInput/Index";
 import { Button } from "../../Component/Button/Index";
 import { updateProfile } from "../../Data/FetchData";
 import { ScrollView } from "react-native-gesture-handler";
@@ -10,12 +9,31 @@ const EditProfile = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
   const [userData, setUserData] = useState({
     email: "",
-    username: "",
+
     name: "",
-    phone: "",
+  });
+  const [error, setError] = useState({
+    name: false,
+    email: false,
   });
   const item = route.params.userinfo;
 
+  const onChangeEmail = (e) => {
+    if (e == "") {
+      setError({ ...error, email: true });
+    } else {
+      setError({ ...error, email: false });
+      setUserData({ ...userData, email: e });
+    }
+  };
+  const onChangeName = (e) => {
+    if (e == "") {
+      setError({ ...error, name: true });
+    } else {
+      setError({ ...error, name: false });
+      setUserData({ ...userData, name: e });
+    }
+  };
   useEffect(() => {
     setUserInfo(item);
   }, []);
@@ -50,46 +68,22 @@ const EditProfile = ({ navigation, route }) => {
                 alignSelf: "center",
               }}
             >
-              <Text style={styles.name}>{userinfo && userinfo.name}</Text>
+              <Text style={styles.name}>{userinfo && userinfo.username}</Text>
               <Text style={styles.info}>
                 Email: {userinfo && userinfo.email}
               </Text>
             </View>
 
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, username: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
-              }}
-              renderToHardwareTextureAndroid
+            <AppTextInput
+              label="Full Name"
               returnKeyType="next"
-              style={styles.inputContainer}
-              placeholder="Full Name"
+              onChangeHandler={(e) => onChangeName(e)}
             />
-
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, phone: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
-              }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              style={styles.inputContainer}
-              placeholder="Mobile Name"
+            <AppTextInput
+              label="Email"
+              returnKeyType="done"
+              onChangeHandler={(e) => onChangeEmail(e)}
             />
-
             <Button
               onPressHandler={() => updateProfile(userinfo, userData)}
               style={styles.buttonContainer}

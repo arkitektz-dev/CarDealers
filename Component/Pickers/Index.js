@@ -11,6 +11,7 @@ import AppText from "../AppText";
 import PickerItem from "./PickerItem";
 import defaultStyles from "../../config/styles";
 import Screen from "./Screen";
+import { screenWidth } from "../../Global/Dimension";
 
 const AppPicker = ({
   items,
@@ -60,11 +61,13 @@ const AppPicker = ({
 export default AppPicker;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: defaultStyles.colors.light,
     borderRadius: 25,
     flexDirection: "row",
     padding: 15,
+    width:screenWidth*0.8,
     marginVertical: 10,
+    borderBottomColor:'grey',
+    borderBottomWidth:1
   },
   icon: {
     marginRight: 10,

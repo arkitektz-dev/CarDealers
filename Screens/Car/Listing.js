@@ -10,10 +10,9 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import { fetchCarData } from "../../Data/FetchData";
+import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
-import { searchCar } from "../../Data/FetchData";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 const ListingCars = () => {
@@ -23,13 +22,15 @@ const ListingCars = () => {
   const [search, setSearch] = useState([]);
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [moreloading, setMoreLoading] = useState(false);
+  const [startAfter, setStartAfter] = useState(Object);
   const navigation = useNavigation();
 
   useEffect(() => {
     setLoading(true);
     fetchCarData().then((res) => {
       setDataCar(res.arr);
-
+      setStartAfter(res.lastVal);
       setfilteredData(res.arr);
       setcarCount(res.size);
       setLoading(false);
@@ -55,19 +56,21 @@ const ListingCars = () => {
     const newData = dataCar.filter((item) => {
       const itemData = `${item.vehicle.information.make.toUpperCase()}   
       ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
-      const textData =
-        dropdownValues.Make.toUpperCase() || dropdownValues.Year.toUpperCase();
+      const textData = dropdownValues.Make.toUpperCase();
 
       return itemData.indexOf(textData) > -1;
     });
 
     setDataCar(newData);
+    setcarCount(newData.length);
   };
 
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const _renderFooter = () => {
+    if (moreloading) return true;
+
     return (
       <ActivityIndicator
         size="large"
@@ -142,9 +145,15 @@ const ListingCars = () => {
       </TouchableOpacity>
     );
   };
-  // const onEndReached =()=>{
-
-  // }
+  const _onEndReached = () => {
+    setMoreLoading(true);
+    fetchMoreCar(startAfter).then((res) => {
+      setDataCar([...dataCar, ...res.arr]);
+      setcarCount(dataCar.length + res.arr.length);
+      setStartAfter(res.lastVal);
+      setMoreLoading(false);
+    });
+  };
   return (
     <View style={{ backgroundColor: "white" }}>
       <View style={styles.searchHolder}>
@@ -221,11 +230,13 @@ const ListingCars = () => {
       ) : (
         <FlatList
           data={dataCar}
-          contentContainerStyle={{ paddingBottom: 150 }}
+          contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={_renderFooter}
-          // onEndReached={_onEndReached}
+          onEndReached={_onEndReached}
+          onEndReachedThreshold={0.01}
+          scrollEventThrottle={150}
         />
       )}
     </View>

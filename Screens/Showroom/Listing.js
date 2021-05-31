@@ -12,19 +12,21 @@ import Card from "../../Component/CardViews/Card";
 import { SearchComponent } from "../../Component/Search";
 import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
-import { fetchShowroomData } from "../../Data/FetchData";
+import { fetchMoreShowroom, fetchShowroomData } from "../../Data/FetchData";
 
 const ListingShowroom = ({ route }) => {
   const [showroomdata, setShowroomData] = useState([]);
   const [showroomCount, setshowroomCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
-
+  const [moreloading, setMoreLoading] = useState(false);
+  const [startAfter, setStartAfter] = useState(Object);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     fetchShowroomData().then((data) => {
       setShowroomData(data.arr);
+      setStartAfter(data.lastVal);
       setfilteredData(data.arr);
       setshowroomCount(data.size);
       setLoading(false);
@@ -48,6 +50,26 @@ const ListingShowroom = ({ route }) => {
 
   const onPressHandler = (item) => {
     navigation.navigate("ShowroomDetailScreen", { item });
+  };
+  const _renderFooter = () => {
+    if (moreloading) return true;
+
+    return (
+      <ActivityIndicator
+        size="large"
+        color="red"
+        style={{ marginBottom: 10 }}
+      />
+    );
+  };
+  const _onEndReached = () => {
+    setMoreLoading(true);
+    fetchMoreShowroom(startAfter).then((res) => {
+      setShowroomData([...showroomdata, ...res.arr]);
+      setshowroomCount(showroomdata.length + res.arr.length);
+      setStartAfter(res.lastVal);
+      setMoreLoading(false);
+    });
   };
   const _renderItem = ({ item }) => {
     return (
@@ -101,6 +123,10 @@ const ListingShowroom = ({ route }) => {
           data={showroomdata}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
+          ListFooterComponent={_renderFooter}
+          onEndReached={_onEndReached}
+          onEndReachedThreshold={0.01}
+          scrollEventThrottle={150}
         />
       )}
     </View>
@@ -129,7 +155,7 @@ const styles = StyleSheet.create({
     width: "75%",
     borderRadius: 5,
     maxHeight: "72%",
-
+    textAlignVertical: "center",
     alignSelf: "center",
   },
   distance: {

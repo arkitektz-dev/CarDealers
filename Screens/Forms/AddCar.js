@@ -9,11 +9,17 @@ import defaultStyles from "../../config/styles";
 import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import { AddCarData } from "../../Data/FetchData";
+import storage from "@react-native-firebase/storage";
 
+import { launchImageLibrary } from "react-native-image-picker";
+import { Icon } from "react-native-vector-icons/Icon";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
   const [amount, setAmount] = useState("");
+  
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
   const [dealer, setDealer] = useState({
     id: "Dealers/773Dfs4yCxLIjuABaKDo",
     name: "Ijaz Hussain",
@@ -23,6 +29,7 @@ const AddCar = ({ navigation }) => {
     name: "HSKB Motors",
   });
   const [featured, setFeatured] = useState(false);
+  const [image,setImage]=useState();
   const [assembly, setAssembly] = useState("");
   const [enginecapacity, setEngineCapacity] = useState("");
   const [engineType, setEngineType] = useState("");
@@ -35,7 +42,7 @@ const AddCar = ({ navigation }) => {
     modelYear: "",
     version: "",
   });
-
+  const images=[]
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
   const [mileage, setMileage] = useState("");
@@ -43,14 +50,14 @@ const AddCar = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
 
   const items = [
-    { label: "1000 Km", value: 1 },
-    { label: "2000 Km", value: 2 },
-    { label: "3000 Km", value: 3 },
+    { label: "800cc", value: 1 },
+    { label: "1300cc", value: 2 },
+    { label: "1600cc", value: 3 },
   ];
 
   const assembleType = [
     { label: "local", value: 1 },
-    { label: "manual", value: 2 },
+    { label: "imported", value: 2 },
   ];
   const color = [
     { label: "red", value: 1 },
@@ -65,6 +72,16 @@ const AddCar = ({ navigation }) => {
   const type = [
     { label: "Automatic", value: 1 },
     { label: "Manual", value: 2 },
+  ];
+  const modelCar = [
+    { label: "Corolla", value: 1 },
+    { label: "Civic", value: 2 },
+    { label: "Reborn ", value: 3 },
+  ];
+  const versionCar = [
+    { label: "Gli", value: 1 },
+    { label: "Vti", value: 2 },
+    { label: "xli ", value: 3 },
   ];
   const year = [
     { label: "2000", value: 1 },
@@ -88,7 +105,52 @@ const AddCar = ({ navigation }) => {
       setCheckbox([...checkbox, item]);
     }
   };
-  const checkboxData = ["AC", "Radio", "Gli", "xli"];
+  const setUploadImage = async () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    launchImageLibrary(options, (response) => {
+      if (response.error) {
+        alert("Error");
+      } else {
+        setImage(response.uri);
+      }
+    });
+  };
+  // const imageURI = async () => {
+  //   const uploadImage = image.substring(image.lastIndexOf("/") + 1);
+  //   setUploading(true);
+  //   setTransferred(0);
+  //   const storageRef = storage().ref(`photos/${uploadImage}`);
+  //   const task = storageRef.putFile(image);
+  //   task.on("state_changed", (taskSnapshot) => {
+  //     console.log(
+  //       `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
+  //     );
+  //     setTransferred(
+  //       Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+  //         100
+  //     );
+  //   });
+  //   try {
+  //     await task;
+  //     const url = await storageRef.getDownloadURL();
+  //     setUploading(false);
+  //     setImage(null);
+  //     alert("Picture Added");
+  //     return url;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // const url =  imageURI();
+  //  images.push(url)
+  const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = () => {
     const obj = {
@@ -96,9 +158,7 @@ const AddCar = ({ navigation }) => {
       dealer: dealer,
       featured: featured,
 
-      images: [
-        "https://cache3.pakwheels.com/ad_pictures/5050/toyota-corolla-gli-vvti-automatic-2016-50503679.jpg",
-      ],
+      images:images,
       showroom: showroom,
 
       vehicle: {
@@ -117,7 +177,8 @@ const AddCar = ({ navigation }) => {
         registrationCity: ExteriorColor,
       },
     };
-    AddCarData(obj);
+    // AddCarData(obj);
+    console.log(obj)
   };
 
   return (
@@ -169,13 +230,25 @@ const AddCar = ({ navigation }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
-          <View style={{ maxWidth: "70%" }}>
+        <View style={{
+    borderStyle: 'dotted',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor:'blue',
+    width:screenWidth*0.8,
+    height:100,
+    margin:10,
+    justifyContent:'center',
+    alignItems:'center'
+  }}>
+    <Text style={{fontSize:15,fontWeight:'bold'}}>Add Photo</Text>
+</View>
             <AppPicker
               items={assembleType}
               name="category"
               onSelectItem={(item) => setAssembly(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Assembly"
+              placeholder=" Assembly"
               selectedItem={assembly}
               width="80%"
             />
@@ -196,6 +269,8 @@ const AddCar = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
             <Modal visible={visible} animationType="slide">
+
+ 
               <Button
                 title="Close"
                 style={styles.buttonContainer}
@@ -222,12 +297,13 @@ const AddCar = ({ navigation }) => {
                 );
               })}
             </Modal>
+        
             <AppPicker
               items={items}
               name="category"
               onSelectItem={(item) => setEngineCapacity(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Engine Capacity"
+              placeholder=" Engine Capacity"
               selectedItem={enginecapacity}
               width="80%"
             />
@@ -236,7 +312,7 @@ const AddCar = ({ navigation }) => {
               name="category"
               onSelectItem={(item) => setEngineType(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Engine Type"
+              placeholder=" Engine Type"
               selectedItem={engineType}
               width="80%"
             />
@@ -245,7 +321,7 @@ const AddCar = ({ navigation }) => {
               name="category"
               onSelectItem={(item) => setTransmission(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Transmission"
+              placeholder=" Transmission"
               selectedItem={transmission}
               width="80%"
             />
@@ -254,7 +330,7 @@ const AddCar = ({ navigation }) => {
               name="category"
               onSelectItem={(item) => setCity(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select City"
+              placeholder=" City"
               selectedItem={City}
               width="80%"
             />
@@ -266,18 +342,18 @@ const AddCar = ({ navigation }) => {
                 setInformation({ ...information, make: item })
               }
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Company"
+              placeholder=" Company"
               selectedItem={information.make}
               width="80%"
             />
             <AppPicker
-              items={year}
+              items={modelCar}
               name="category"
               onSelectItem={(item) =>
                 setInformation({ ...information, model: item })
               }
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Model"
+              placeholder=" Model"
               selectedItem={information.model}
               width="80%"
             />
@@ -289,18 +365,18 @@ const AddCar = ({ navigation }) => {
                 setInformation({ ...information, modelYear: item })
               }
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Model Year"
+              placeholder=" Model Year"
               selectedItem={information.modelYear}
               width="80%"
             />
             <AppPicker
-              items={year}
+              items={versionCar}
               name="category"
               onSelectItem={(item) =>
                 setInformation({ ...information, version: item })
               }
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Version"
+              placeholder=" Version"
               selectedItem={information.version}
               width="80%"
             />
@@ -310,7 +386,7 @@ const AddCar = ({ navigation }) => {
               name="category"
               onSelectItem={(item) => setExteriorColor(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Exterior Color"
+              placeholder=" Exterior Color"
               selectedItem={ExteriorColor}
               width="80%"
             />
@@ -320,7 +396,7 @@ const AddCar = ({ navigation }) => {
               name="category"
               onSelectItem={(item) => setRegistrationCity(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Registration City"
+              placeholder=" Registration City"
               selectedItem={registrationCity}
               width="80%"
             />
@@ -346,7 +422,6 @@ const AddCar = ({ navigation }) => {
               onPressHandler={onPressHandler}
             />
           </View>
-        </View>
       </ScrollView>
     </View>
   );

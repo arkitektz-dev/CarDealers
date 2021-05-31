@@ -71,7 +71,7 @@ const AddShowroom = ({ navigation }) => {
       setErrorState({ location: true });
     } else {
       setErrorState({ location: false });
-      setShowroomData({ ...showroomData, Location: e });
+      setShowroomData({ ...showroomData, location: e });
     }
   };
   return (

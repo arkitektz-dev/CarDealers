@@ -21,12 +21,22 @@ const ShowroomDetailScreen = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const arr = [];
-  const dealerarr = [];
+
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().showroom.id.id.trim() == showroomId)
+        let showroomDataId;
+        if (typeof documentSnapshot.data().showroom.id == "string") {
+          showroomDataId = documentSnapshot.data().showroom.id.split("/")[1];
+        } else {
+          showroomDataId = documentSnapshot
+            .data()
+            .showroom.id.id.toString()
+            .trim();
+        }
+        const paramShowroomId = showroomId.toString();
+        if (showroomDataId == paramShowroomId)
           arr.push(documentSnapshot.data());
       });
       setDataCar(arr);

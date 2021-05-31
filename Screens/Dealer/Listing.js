@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     borderRadius: 5,
     maxHeight: "72%",
+    textAlignVertical: "center",
 
     alignSelf: "center",
   },

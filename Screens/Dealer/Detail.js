@@ -25,7 +25,15 @@ const DealerDetailScreen = ({ route }) => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().dealer.id.id.trim() == param.id) {
+        let dealerId;
+        if (typeof documentSnapshot.data().dealer.id == "string") {
+          dealerId = documentSnapshot.data().dealer.id.split("/")[1];
+        } else {
+          dealerId = documentSnapshot.data().dealer.id.id.toString().trim();
+        }
+
+        const paramdealerId = param.id.toString();
+        if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
         }
       });

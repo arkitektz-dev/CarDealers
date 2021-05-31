@@ -1,21 +1,73 @@
 import firestore from "@react-native-firebase/firestore";
 import React, { memo, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import storage from "@react-native-firebase/storage";
+
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
-import { getData } from "../../Data/FetchData";
+import {  getData } from "../../Data/FetchData";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
-  const [image, setImage] = useState(
-    "https://bootdey.com/img/Content/avatar/avatar6.png"
-  );
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
   useEffect(() => {
     getData().then((data) => {
       setUserInfo(data);
+
+       firestore().collection('Users').doc(data.id).get().then((data)=>setImage(data.data().image))
     });
   }, []);
+
+  const imageURI = async () => {
+    const uploadImage = image.substring(image.lastIndexOf("/") + 1);
+    setUploading(true);
+    setTransferred(0);
+    const storageRef = storage().ref(`photos/${uploadImage}`);
+    const task = storageRef.putFile(image);
+    task.on("state_changed", (taskSnapshot) => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
+      );
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+          100
+      );
+    });
+    try {
+      await task;
+      const url = await storageRef.getDownloadURL();
+      setUploading(false);
+      setImage(null);
+      alert("Picture Added");
+      return url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitPost = async () => {
+    const url = await imageURI();
+    const { id } = userinfo;
+
+    firestore()
+      .collection("Users")
+      .doc(id)
+      .update({ image: url })
+      .then(() => {
+        setImage(url)
+      });
+  };
+
   const setUploadImage = async () => {
     const options = {
       maxWidth: 2000,
@@ -29,15 +81,6 @@ const Profile = ({ navigation }) => {
       if (response.error) {
         alert("Error");
       } else {
-        const { id } = userinfo;
-
-        firestore()
-          .collection("Users")
-          .doc(id)
-          .update({ image: response.uri })
-          .then(() => {
-            alert("Picture Added");
-          });
         setImage(response.uri);
       }
     });
@@ -61,7 +104,7 @@ const Profile = ({ navigation }) => {
         style={styles.avatar}
         accessibilityLabel="Pic"
         source={{
-          uri: userinfo && userinfo.image,
+          uri:image,
         }}
       />
       <View style={styles.body}>
@@ -87,6 +130,19 @@ const Profile = ({ navigation }) => {
             onPressHandler={setUploadImage}
             style={styles.buttonContainer}
             title="Upload Picture"
+          />
+          {uploading ? (
+            <>
+              <Text>{transferred} % Completed</Text>
+              <ActivityIndicator size="small" color="red" />
+            </>
+          ) : (
+            <Text>Done</Text>
+          )}
+          <Button
+            onPressHandler={submitPost}
+            style={styles.buttonContainer}
+            title="Submit"
           />
         </View>
       </View>

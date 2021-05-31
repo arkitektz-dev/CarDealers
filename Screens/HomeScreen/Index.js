@@ -16,26 +16,12 @@ import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
 import { getData } from "../../Data/FetchData";
-import Geolocation from "@react-native-community/geolocation";
-import Geocoder from "react-native-geocoding";
 
 const HomeScreen = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
-  const [location, setLocation] = useState(null);
+
   useEffect(() => {
-    Geolocation.getCurrentPosition((info) => {
-      setLatitude(info.coords.latitude), setLatitude(info.coords.longitude);
-    });
-    Geocoder.init("AIzaSyBlGABifFjFAm3j5HFQwPHai0PouGUQtbY");
-    Geocoder.from(41.89, 12.49)
-      .then((json) => {
-        console.log(json);
-      })
-      .catch((error) => console.warn(error));
     getData().then((data) => setUserInfo(data));
-    return () => console.log("CleanUp");
   }, []);
 
   return (
@@ -46,15 +32,13 @@ const HomeScreen = ({ navigation }) => {
           flexDirection: "column",
           flex: 1,
           backgroundColor: "#fff",
-          paddingTop: 10,
+          padding: 10,
         }}
       >
         <View
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            paddingLeft: 10,
-            paddingRight: 10,
           }}
         >
           <SearchComponent style={styles.search} />
@@ -75,15 +59,16 @@ const HomeScreen = ({ navigation }) => {
           }}
         >
           <Text style={styles.welcome}>
-            Welcome, {userInfo && userInfo.name}
+            Welcome {userInfo && userInfo.name}
           </Text>
-          <View style={{ height: screenHeight * 0.02 }}></View>
         </View>
+
+        <View style={{ height: screenHeight * 0.01 }}></View>
         <View style={{ flexDirection: "row", paddingLeft: 10 }}>
           <View style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}>
             <Text style={{ color: "red" }}>sd</Text>
           </View>
-          <Text style={styles.location}>{longitude}</Text>
+          <Text style={styles.location}>{"  "}Karachi, Pakistan</Text>
         </View>
 
         <View style={styles.distance}></View>
@@ -139,5 +124,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     elevation: 6,
+    textAlignVertical: "center",
   },
 });

@@ -4,6 +4,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const fetchCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
+  var data = await ref.limit(5).get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchCarList = async () => {
+  const arr = [];
+  const ref = firestore().collection("Advertisments");
   var data = await ref.get();
   const size = data.size;
   data.forEach((res) => {
@@ -11,6 +23,32 @@ export const fetchCarData = async () => {
   });
 
   return { size, arr };
+};
+
+//Fetch More Car Dealer Data
+export const fetchMoreCar = async (startAfter) => {
+  const arr = [];
+  const ref = firestore().collection("Advertisments");
+  var data = await ref.startAfter(startAfter).limit(5).get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchMoreShowroom = async (startAfter) => {
+  const ref = firestore().collection("Showrooms");
+  const arr = [];
+  var data = await ref.startAfter(startAfter).limit(5).get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
 };
 
 export const fetchDealerData = async () => {
@@ -29,14 +67,15 @@ export const fetchDealerData = async () => {
 export const fetchShowroomData = async () => {
   const ref = firestore().collection("Showrooms");
   const arr = [];
-  const data = await ref.get();
+  const data = await ref.limit(5).get();
   const size = data.size;
+  const lastVal = data.docs[data.docs.length - 1];
 
   data.forEach((res) => {
     const obj = { ...res.data(), id: res.id };
     arr.push(obj);
   });
-  return { size, arr };
+  return { size, arr, lastVal };
 };
 
 export const getData = async () => {
@@ -54,7 +93,7 @@ export const getData = async () => {
 export const clearStorage = async () => {
   try {
     await AsyncStorage.clear();
-    alert("Storage successfully cleared!");
+    alert("Signed Out");
   } catch (e) {
     alert("Failed to clear the async storage.");
   }
@@ -70,13 +109,17 @@ export const storeData = async (value) => {
 };
 export const updateProfile = async (userinfo, userData) => {
   const { id } = userinfo;
-  firestore()
-    .collection("Users")
-    .doc(id)
-    .update(userData)
-    .then(() => {
-      alert("User updated!");
-    });
+  if (userData.name == "" || userData.email == "") {
+    alert("Fields Cant be empty");
+  } else {
+    firestore()
+      .collection("Users")
+      .doc(id)
+      .update(userData)
+      .then(() => {
+        alert("User updated!");
+      });
+  }
 };
 export const updatePassword = async (userinfo, userData) => {
   const { id } = userinfo;
@@ -91,7 +134,7 @@ export const updatePassword = async (userinfo, userData) => {
 export const AddShowroomData = (showroomData) => {
   if (
     showroomData.name == "" ||
-    showroomData.Location == "" ||
+    showroomData.location == "" ||
     showroomData.contactInformation == ""
   )
     alert("Fields can not be empty");
@@ -105,7 +148,7 @@ export const AddShowroomData = (showroomData) => {
   }
 };
 
-export const AddCarData = (obj) => {
+export const AddCarData = async (obj) => {
   if (
     obj.vehicle.information.make == "" ||
     obj.vehicle.information.model == "" ||
