@@ -164,3 +164,17 @@ export const AddCarData = async (obj) => {
       });
   }
 };
+export const fetchSpecificDealer=async (dealerId) =>{
+  
+ return firestore()
+  .collection("Dealers")
+  .doc(dealerId).get()
+  
+
+}
+export const fetchShowroomCar=async()=>{
+  return  await firestore().collection('Showrooms').get()
+}
+export const fetchDealerCar=async()=>{
+  return  await firestore().collection('Dealers').get()
+}

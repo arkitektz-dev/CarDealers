@@ -6,6 +6,7 @@ function CategoryPickerItem({ item, onPress }) {
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
         <AppText style={styles.label}>{item.label}</AppText>
+
       </TouchableOpacity>
     </View>
   );

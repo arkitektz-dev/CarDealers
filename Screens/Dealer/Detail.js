@@ -136,6 +136,7 @@ const DealerDetailScreen = ({ route }) => {
             }}
           />
           <View style={{ width: 15 }}></View>
+          <View style={{flexDirection:'row'}}>
           <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
             <View style={styles.DealerName}>
               <Text style={styles.carInfoText}>
@@ -152,6 +153,8 @@ const DealerDetailScreen = ({ route }) => {
 
               <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
             </View>
+          </View>
+         
           </View>
         </View>
         <View style={{ height: 20 }}></View>

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Text, Modal, View, StyleSheet } from "react-native";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
@@ -8,11 +8,13 @@ import { screenWidth } from "../../Global/Dimension";
 import defaultStyles from "../../config/styles";
 import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
-import { AddCarData } from "../../Data/FetchData";
-import storage from "@react-native-firebase/storage";
-
+import { AddCarData, fetchShowroomCar,fetchDealerCar } from "../../Data/FetchData";
 import { launchImageLibrary } from "react-native-image-picker";
-import { Icon } from "react-native-vector-icons/Icon";
+import SliderData from "../../Component/SliderData/Index";
+import storage from "@react-native-firebase/storage";
+import { ActivityIndicator } from "react-native";
+
+
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
@@ -20,14 +22,14 @@ const AddCar = ({ navigation }) => {
   
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-  const [dealer, setDealer] = useState({
-    id: "Dealers/773Dfs4yCxLIjuABaKDo",
-    name: "Ijaz Hussain",
-  });
-  const [showroom, setShowroom] = useState({
-    id: "Showrooms/2Bj5G6bG6F4KH6rtbNtW",
-    name: "HSKB Motors",
-  });
+  // const [dealer, setDealer] = useState({
+  //   id: "Dealers/773Dfs4yCxLIjuABaKDo",
+  //   name: "Ijaz Hussain",
+  // });
+  // const [showroom, setShowroom] = useState({
+  //   id: "Showrooms/2Bj5G6bG6F4KH6rtbNtW",
+  //   name: "HSKB Motors",
+  // });
   const [featured, setFeatured] = useState(false);
   const [image,setImage]=useState();
   const [assembly, setAssembly] = useState("");
@@ -36,12 +38,17 @@ const AddCar = ({ navigation }) => {
   const [transmission, setTransmission] = useState("");
   const [City, setCity] = useState("");
   const [ExteriorColor, setExteriorColor] = useState("");
+  const [showroomPicker, setShowroomPicker] = useState("");
+  const [dealerPicker, setDealerPicker] = useState("");
+
   const [information, setInformation] = useState({
     make: "",
     model: "",
     modelYear: "",
     version: "",
   });
+  const showroomData=[]
+  const dealerData=[]
   const images=[]
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
@@ -49,6 +56,17 @@ const AddCar = ({ navigation }) => {
   const [checkbox, setCheckbox] = useState([]);
   const [visible, setVisible] = useState(false);
 
+  useEffect(()=>{
+    fetchShowroomCar().then((data)=>(data.forEach((querySnapshot)=>{
+      showroomData.push({value:querySnapshot.id,label:querySnapshot.data().name})
+  
+      
+    })))
+    fetchDealerCar().then((data)=>(data.forEach((querySnapshot)=>{
+      dealerData.push({value:querySnapshot.id,label:querySnapshot.data().name})
+    })))
+
+  },[])
   const items = [
     { label: "800cc", value: 1 },
     { label: "1300cc", value: 2 },
@@ -97,6 +115,8 @@ const AddCar = ({ navigation }) => {
     { label: "Petrol", value: 1 },
     { label: "Diesel", value: 2 },
   ];
+  
+
   const onChangeHandler = (item) => {
     if (checkbox.includes(item)) {
       const a = checkbox.filter((c) => c !== item);
@@ -122,44 +142,44 @@ const AddCar = ({ navigation }) => {
       }
     });
   };
-  // const imageURI = async () => {
-  //   const uploadImage = image.substring(image.lastIndexOf("/") + 1);
-  //   setUploading(true);
-  //   setTransferred(0);
-  //   const storageRef = storage().ref(`photos/${uploadImage}`);
-  //   const task = storageRef.putFile(image);
-  //   task.on("state_changed", (taskSnapshot) => {
-  //     console.log(
-  //       `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
-  //     );
-  //     setTransferred(
-  //       Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-  //         100
-  //     );
-  //   });
-  //   try {
-  //     await task;
-  //     const url = await storageRef.getDownloadURL();
-  //     setUploading(false);
-  //     setImage(null);
-  //     alert("Picture Added");
-  //     return url;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // const url =  imageURI();
-  //  images.push(url)
+  const imageURI = async () => {
+    const uploadImage = image.substring(image.lastIndexOf("/") + 1);
+    setUploading(true);
+    setTransferred(0);
+    const storageRef = storage().ref(`photos/${uploadImage}`);
+    const task = storageRef.putFile(image);
+    task.on("state_changed", (taskSnapshot) => {
+     
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+          100
+      );
+    });
+    try {
+      await task;
+      const url = await storageRef.getDownloadURL();
+      setUploading(false);
+      setImage(null);
+      alert("Picture Added");
+      return url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const submitPhotos= async()=>{
+    const url =await imageURI(); 
+console.log(url)  }
+
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = () => {
     const obj = {
       amount: amount,
-      dealer: dealer,
+      dealer: dealerPicker,
       featured: featured,
 
       images:images,
-      showroom: showroom,
+      showroom: showroomPicker,
 
       vehicle: {
         additionalInformation: {
@@ -187,8 +207,7 @@ const AddCar = ({ navigation }) => {
         flexDirection: "column",
         flex: 1,
         backgroundColor: "#fff",
-        width: "100%",
-      }}
+  }}
     >
       <View
         style={{
@@ -228,8 +247,8 @@ const AddCar = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flexDirection: "column", alignSelf: "center" }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:40}}>
+        <View style={{ flexDirection: "column",width:'100%' }}>
         <View style={{
     borderStyle: 'dotted',
     borderWidth: 1,
@@ -241,8 +260,18 @@ const AddCar = ({ navigation }) => {
     justifyContent:'center',
     alignItems:'center'
   }}>
+    <TouchableOpacity onPress={()=>setUploadImage()}>
     <Text style={{fontSize:15,fontWeight:'bold'}}>Add Photo</Text>
+    </TouchableOpacity>
 </View>
+{uploading ? (
+            <>
+              <Text>{transferred} % Completed</Text>
+              <ActivityIndicator size="small" color="red" />
+            </>
+          ) : (
+            <Text style={{textAlign:'center',marginRight:25}}>Done</Text>
+          )}
             <AppPicker
               items={assembleType}
               name="category"
@@ -380,7 +409,7 @@ const AddCar = ({ navigation }) => {
               selectedItem={information.version}
               width="80%"
             />
-
+ 
             <AppPicker
               items={color}
               name="category"
@@ -400,27 +429,57 @@ const AddCar = ({ navigation }) => {
               selectedItem={registrationCity}
               width="80%"
             />
+               <AppPicker
+              items={showroomData}
+              name="category"
+              onSelectItem={(item) => setShowroomPicker(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Showrooms"
+              selectedItem={showroomPicker}
+              width="80%"
+            />
+               <AppPicker
+              items={dealerData}
+              name="category"
+              onSelectItem={(item) => setDealerPicker(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Dealers"
+              selectedItem={dealerPicker}
+              width="80%"
+            />
+       
+
+
+
+             <View style={{width:'70%',marginLeft:25}}>
             <AppTextInput
               label={"Description"}
               multiline={true}
+            
               onChangeHandler={(e) => setDescription(e)}
             />
-            <AppTextInput
-              label={"Mileage"}
-              keyboardType={"number-pad"}
-              onChangeHandler={(e) => setMileage(e)}
-            />
-            <AppTextInput
-              label={"Price"}
-              keyboardType={"number-pad"}
-              onChangeHandler={(e) => setAmount(e)}
-            />
+         
+            <View style={{flexDirection:'column',margin:10}}>
+           <Text style={{color:'black',fontWeight:'bold',fontSize:16,marginBottom:10}}>Select Amount </Text>
+                          <SliderData    min={0}  max={100}
+          step={2}   onValueChange={(data)=>console.log(data)}/>
+                       
+         
+         
+        
+                          </View>
+            <View style={{flexDirection:'column',margin:10}}>
+           <Text style={{color:'black',fontWeight:'bold',fontSize:16,marginBottom:10}}>Select Mileage </Text>
+                          <SliderData min={0}  max={100}
+          step={2}   onValueChange={(data)=>console.log(data)}/>
+                          </View>
 
-            <Button
+ <Button
               style={styles.background}
               title="Submit"
               onPressHandler={onPressHandler}
             />
+          </View>
           </View>
       </ScrollView>
     </View>

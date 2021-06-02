@@ -12,6 +12,7 @@ import PickerItem from "./PickerItem";
 import defaultStyles from "../../config/styles";
 import Screen from "./Screen";
 import { screenWidth } from "../../Global/Dimension";
+import Feather  from "react-native-vector-icons/Feather";
 
 const AppPicker = ({
   items,
@@ -32,6 +33,8 @@ const AppPicker = ({
           ) : (
             <AppText style={styles.placeholder}>{placeholder}</AppText>
           )}
+                      <Feather name='chevron-down' size={25} color='#333' />
+
         </View>
       </TouchableWithoutFeedback>
       <Modal visible={modalVisible} animationType="slide">

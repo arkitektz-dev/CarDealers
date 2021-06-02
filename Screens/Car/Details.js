@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 import {
   Dimensions,
   Image,
@@ -6,16 +7,37 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Linking,
   View,
 } from "react-native";
 import ImageSlider from 'react-native-image-slider';
-
+import Icon from 'react-native-vector-icons/Feather';
 import Drawer from "../../Assets/Drawer.png";
 import { screenHeight } from "../../Global/Dimension";
+import { fetchSpecificDealer } from "../../Data/FetchData";
+
 
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
+  const [dealerData, setDealerData] = useState();
+  const dealerId=item.dealer.id.id
+  useEffect(()=>{
+  fetchSpecificDealer(dealerId).then(data=>setDealerData(data.data()))
+
+  },[])
+  
+  const makeCall = () => {
+    let phoneNumber = '';
+
+    if (Platform.OS === 'android') {
+      phoneNumber = `tel:${dealerData.contactInformation[0]}`;
+    } else {
+      phoneNumber = `telprompt:${dealerData.contactInformation[0]}`;
+    }
+
+    Linking.openURL(phoneNumber);
+  };
   return (
     <View style={styles.container}>
       <View
@@ -61,14 +83,22 @@ const DetailCarScreen = ({ route, navigation }) => {
       <View style={styles.imageHolder}>
       
             <ImageSlider
-            
+            style={styles.carousel}
             loop={true}
             loopBothSides
             autoPlayWithInterval={1000}
             images={images}/>
+            
           
       
       </View>
+      <View style={{flexDirection:'row',margin:10,width:'100%',justifyContent:'space-around'}}>
+      <TouchableOpacity style={styles.CarInfoTitle} onPress={()=>navigation.navigate('')}>
+        <Text style={styles.carInfoText}>View Dealer</Text>      
+        </TouchableOpacity>
+              <Icon name='phone-call' size={25} color='black'onPress={makeCall} />
+          </View>
+
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
           {item.vehicle.information.make} {item.vehicle.information.model}{" "}
@@ -262,7 +292,7 @@ const styles = StyleSheet.create({
     height: 200,
     justifyContent: "center",
     overflow: "hidden",
-    width: 300,
+    width: '100%',
   },
   container: {
     flex: 1,
@@ -274,5 +304,14 @@ const styles = StyleSheet.create({
     opacity: 2,
     shadowColor: "grey",
     shadowOpacity: 2,
+    
   },
+  carousel:{
+    width:'97%',
+    resizeMode:'contain',
+    alignSelf:'center',
+    
+  }
+
+  
 });
