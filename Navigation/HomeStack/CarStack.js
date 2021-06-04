@@ -2,7 +2,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import CarScreen from "../../Screens/Car";
 import DetailCarScreen from "../../Screens/Car/Details";
-import AddCar from '../../Screens/Forms/AddCar'
+import AddCar from "../../Screens/Forms/AddCar";
+import DemandCarList from "../../Screens/DemandCarlisting/index";
+import DemandCarlisting from "../../Screens/DemandCarlisting/index";
 const CarStack = () => {
   const Stack = createStackNavigator();
 
@@ -17,6 +19,7 @@ const CarStack = () => {
           title: "Car",
         }}
       />
+
       <Stack.Screen
         name="DetailCarScreen"
         component={DetailCarScreen}

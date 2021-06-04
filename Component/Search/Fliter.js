@@ -6,6 +6,7 @@ import { Button } from "../../Component/Button/Index";
 import { StyleSheet } from "react-native";
 import { screenWidth } from "../../Global/Dimension";
 import CategoryPickerItem from "../Picker/CategoryPickerItem";
+import { TouchableOpacity } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -28,6 +29,25 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     mileage: "",
     price: "",
   });
+  const clearFilter = () => {
+    setDropDownValues({
+      Assemble: "",
+      EngineCapacity: "",
+      Engine: "",
+      Features: [],
+      City: "",
+      Model: "",
+      Make: "",
+      Year: "",
+      Version: "",
+      registrationCity: "",
+      ExteriorColor: "",
+      InteriorColor: "",
+      Description: "",
+      mileage: "",
+      price: "",
+    });
+  };
   const items = [
     { label: "800cc", value: 1 },
     { label: "1300cc", value: 2 },
@@ -36,7 +56,7 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
 
   const color = [
     { label: "Red", value: 1 },
-    { label: "Blue", value: 2 },
+    { label: "Gold", value: 2 },
     { label: "Black", value: 3 },
   ];
   const city = [
@@ -45,12 +65,12 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     { label: "Islamabad", value: 3 },
   ];
   const type = [
-    { label: "local", value: 1 },
-    { label: "manual", value: 2 },
+    { label: "Local", value: 1 },
+    { label: "Imported", value: 2 },
   ];
   const year = [
-    { label: "2000", value: 1 },
-    { label: "2002", value: 2 },
+    { label: "2015", value: 1 },
+    { label: "2010", value: 2 },
     { label: "2016", value: 3 },
   ];
   const company = [
@@ -58,10 +78,21 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     { label: "Toyota", value: 2 },
     { label: "Honda", value: 3 },
   ];
-
   return (
     <View>
       <Modal visible={modalVisible} animationType={"slide"}>
+        <TouchableOpacity
+          onPress={clearFilter}
+          style={{
+            margin: 10,
+            flexDirection: "row",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
+            Clear Filter
+          </Text>
+        </TouchableOpacity>
         <ScrollView>
           <View
             style={{
@@ -81,7 +112,7 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
               selectedItem={dropdownValues.Assemble}
               width="80%"
             />
-            <AppPicker
+            {/* <AppPicker
               items={items}
               name="category"
               onSelectItem={(item) =>
@@ -91,7 +122,7 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
               placeholder="Select Mileage"
               selectedItem={dropdownValues.mileage}
               width="80%"
-            />
+            /> */}
             <AppPicker
               items={color}
               name="category"

@@ -14,6 +14,8 @@ import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import { BottomSheet } from "react-native-elements";
+import { Modal } from "react-native";
 
 const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
@@ -21,6 +23,8 @@ const DealerDetailScreen = ({ route }) => {
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
+  const [modalData, setModalData] = useState([]);
+  const [visible, setVisible] = useState(false);
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
@@ -29,7 +33,10 @@ const DealerDetailScreen = ({ route }) => {
         if (typeof documentSnapshot.data().dealer.id == "string") {
           dealerId = documentSnapshot.data().dealer.id.split("/")[1];
         } else {
-          dealerId = documentSnapshot.data().dealer.id.id.toString().trim();
+          dealerId = documentSnapshot
+            .data()
+            .dealer.id.id.toString()
+            .trim();
         }
 
         const paramdealerId = param.id.toString();
@@ -41,8 +48,16 @@ const DealerDetailScreen = ({ route }) => {
       setcarCount(arr.length);
     });
   };
-
+  const modalVisible = () => {
+    console.log(modalData);
+    if (visible == false) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
   useEffect(() => {
+    setModalData(param.showrooms);
     setshowroomCount(param.showrooms.length);
     fetchData();
   }, []);
@@ -52,26 +67,58 @@ const DealerDetailScreen = ({ route }) => {
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
-
+  const onPressHandler2 = (item) => {
+    navigation.navigate("ShowroomDetailScreen", { showroomData: item });
+  };
+  const render = ({ item }) => {
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          borderBottomWidth: 2,
+          borderBottomColor: "#e0e0e0",
+        }}
+      >
+        <View
+          style={{
+            left: "5%",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={onPressHandler2}
+            style={{ flexDirection: "column", margin: 15, top: 10 }}
+          >
+            <Text
+              style={{
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
         pressHandler={() => onPressHandler(item)}
-        title={`${
-          item.vehicle.information.make +
+        title={`${item.vehicle.information.make +
           " " +
           item.vehicle.information.model +
           " " +
-          item.vehicle.information.modelYear
-        } `}
+          item.vehicle.information.modelYear} `}
         price={`${item.amount}`}
-        subtitle={`${
-          item.vehicle.city +
+        subtitle={`${item.vehicle.city +
           " " +
           item.vehicle.mileage +
           " " +
-          item.vehicle.additionalInformation.engineType
-        } `}
+          item.vehicle.additionalInformation.engineType} `}
         image={{ uri: item.images[0] }}
       />
     );
@@ -79,6 +126,26 @@ const DealerDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.parent}>
+      <Modal
+        visible={visible}
+        containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+      >
+        <TouchableOpacity
+          onPress={modalVisible}
+          style={{
+            margin: 10,
+            flexDirection: "row",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
+            Close
+          </Text>
+        </TouchableOpacity>
+
+        <FlatList renderItem={render} data={modalData} />
+      </Modal>
+
       <View
         style={{
           flexDirection: "row",
@@ -136,25 +203,26 @@ const DealerDetailScreen = ({ route }) => {
             }}
           />
           <View style={{ width: 15 }}></View>
-          <View style={{flexDirection:'row'}}>
-          <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
-            <View style={styles.DealerName}>
-              <Text style={styles.carInfoText}>
-                {"\b"}
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ flexDirection: "column", justifyContent: "flex-end" }}
+            >
+              <View style={styles.DealerName}>
+                <Text style={styles.carInfoText}>
+                  {"\b"}
 
-                {param.name}
-                {" \b"}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "column" }}>
-              {param.showrooms.map((item) => {
-                return <Text style={styles.h1}>{item.name}</Text>;
-              })}
+                  {param.name}
+                  {" \b"}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                {param.showrooms.map((item) => {
+                  return <Text style={styles.h1}>{item.name}</Text>;
+                })}
 
-              <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
+                <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
+              </View>
             </View>
-          </View>
-         
           </View>
         </View>
         <View style={{ height: 20 }}></View>
@@ -177,7 +245,7 @@ const DealerDetailScreen = ({ route }) => {
           >
             {showroomCount}
           </Text>
-          <TouchableOpacity style={styles.CarInfoTitle}>
+          <TouchableOpacity style={styles.CarInfoTitle} onPress={modalVisible}>
             <Text style={styles.countText}> SHOWROOMS </Text>
           </TouchableOpacity>
         </View>

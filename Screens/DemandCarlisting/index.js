@@ -1,9 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
-import firestore from "@react-native-firebase/firestore";
-
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -12,27 +9,29 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
+import { fetchDemandCarData, fetchMoreDemandCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
 
-const ListingCars = () => {
+const DemandCarList = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
+
   const navigation = useNavigation();
 
   useEffect(() => {
-    setLoading(true);
-    fetchCarData().then((res) => {
+    fetchDemandCarData().then((res) => {
+      setLoading(true);
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
       setfilteredData(res.arr);
@@ -45,7 +44,7 @@ const ListingCars = () => {
     if (text) {
       const newData = dataCar.filter((item) => {
         const itemData = `${item.vehicle.information.make.toUpperCase()}
-        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+          ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
         const textData = text.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
@@ -56,55 +55,19 @@ const ListingCars = () => {
       setDataCar(filteredData);
     }
   };
+  const onFilter = (dropdownValues) => {
+    const newData = dataCar.filter((item) => {
+      const itemData = `${item.vehicle.information.make.toUpperCase()}   
+        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+      const textData = dropdownValues.Make.toUpperCase();
 
-  const onFilter = async (dropdownValues) => {
-    console.log(dropdownValues);
-    const arr = [];
-    let ref = firestore().collection("Advertisments");
-
-    if (dropdownValues.Year != "") {
-      ref = ref.where(
-        "vehicle.information.modelYear",
-        "==",
-        dropdownValues.Year
-      );
-    }
-
-    if (dropdownValues.Make != "") {
-      ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
-    }
-    // if (dropdownValues.mileage != "") {
-    //   ref = ref.where("vehicle.mileage", "==", dropdownValues.mileage);
-    // }
-    if (dropdownValues.City != "") {
-      ref = ref.where("vehicle.city", "==", dropdownValues.City);
-    }
-    if (dropdownValues.ExteriorColor != "") {
-      ref = ref.where(
-        "vehicle.exteriorColor",
-        "==",
-        dropdownValues.ExteriorColor
-      );
-    }
-    if (dropdownValues.Assemble != "") {
-      ref = ref.where(
-        "vehicle.additionalInformation.assembly",
-        "==",
-        "imported"
-      );
-    }
-
-    var a = await ref.get();
-    a.docs.forEach((data) => {
-      arr.push(data.data());
+      return itemData.indexOf(textData) > -1;
     });
-    setfilteredData(arr);
-    {
-      filteredData.length > 0
-        ? setcarCount(arr.length)
-        : setcarCount(dataCar.length);
-    }
+
+    setDataCar(newData);
+    setcarCount(newData.length);
   };
+
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
@@ -187,18 +150,19 @@ const ListingCars = () => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreCar(startAfter)
+    fetchMoreDemandCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
         setcarCount(dataCar.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch(() => alert("No more Data"));
+      .catch(alert("No more data"));
   };
+
   const onRefresh = () => {
     setRefreshing(true);
-    fetchCarData().then((res) => {
+    fetchDemandCarData().then((res) => {
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
       setfilteredData(res.arr);
@@ -251,9 +215,7 @@ const ListingCars = () => {
             setSearch(dropdownValues);
             onFilter(dropdownValues);
           }}
-          Visibility={() => {
-            setfilteredData([]), setShown(false);
-          }}
+          Visibility={() => setShown(false)}
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text
@@ -272,7 +234,7 @@ const ListingCars = () => {
         <ActivityIndicator color="red" size="large" />
       ) : (
         <FlatList
-          data={filteredData.length > 0 ? filteredData : dataCar}
+          data={dataCar}
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
@@ -288,7 +250,7 @@ const ListingCars = () => {
     </View>
   );
 };
-export default memo(ListingCars);
+export default memo(DemandCarList);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,

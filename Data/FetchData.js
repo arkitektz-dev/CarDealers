@@ -3,7 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const fetchCarData = async () => {
   const arr = [];
-  const ref = firestore().collection("Advertisments");
+  const ref = firestore()
+    .collection("Advertisments")
+    .where("featured", "==", true);
   var data = await ref.limit(5).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -13,23 +15,12 @@ export const fetchCarData = async () => {
 
   return { size, arr, lastVal };
 };
-export const fetchCarList = async () => {
+export const fetchDemandCarData = async () => {
   const arr = [];
-  const ref = firestore().collection("Advertisments");
-  var data = await ref.get();
-  const size = data.size;
-  data.forEach((res) => {
-    arr.push(res.data());
-  });
-
-  return { size, arr };
-};
-
-//Fetch More Car Dealer Data
-export const fetchMoreCar = async (startAfter) => {
-  const arr = [];
-  const ref = firestore().collection("Advertisments");
-  var data = await ref.startAfter(startAfter).limit(5).get();
+  const ref = firestore()
+    .collection("Advertisments")
+    .where("demand", "==", true);
+  var data = await ref.limit(5).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -38,10 +29,68 @@ export const fetchMoreCar = async (startAfter) => {
 
   return { size, arr, lastVal };
 };
-export const fetchMoreShowroom = async (startAfter) => {
-  const ref = firestore().collection("Showrooms");
+
+export const fetchMoreDemandCar = async (startAfter) => {
   const arr = [];
-  var data = await ref.startAfter(startAfter).limit(5).get();
+  const ref = firestore()
+    .collection("Advertisments")
+    .where("demand", "==", true);
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+
+// export const fetchCarList = async () => {
+//   const arr = [];
+//   const ref = firestore()
+//     .collection("Advertisments")
+//     .where("featured", "==", true);
+//   var data = await ref.get();
+//   const size = data.size;
+//   data.forEach((res) => {
+//     arr.push(res.data());
+//   });
+
+//   return { size, arr };
+// };
+
+//Fetch More Car Dealer Data
+export const fetchMoreCar = async (startAfter) => {
+  const arr = [];
+  const ref = firestore()
+    .collection("Advertisments")
+    .where("featured", "==", true);
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchMoreShowroom = async (startAfter) => {
+  const ref = firestore()
+    .collection("Showrooms")
+    .where("feature", "==", true);
+  const arr = [];
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -53,7 +102,9 @@ export const fetchMoreShowroom = async (startAfter) => {
 
 export const fetchDealerData = async () => {
   const arr = [];
-  const ref = firestore().collection("Dealers");
+  const ref = firestore()
+    .collection("Dealers")
+    .where("feature", "==", true);
   const data = await ref.get();
   const size = data.size;
 
@@ -65,7 +116,9 @@ export const fetchDealerData = async () => {
 };
 
 export const fetchShowroomData = async () => {
-  const ref = firestore().collection("Showrooms");
+  const ref = firestore()
+    .collection("Showrooms")
+    .where("feature", "==", true);
   const arr = [];
   const data = await ref.limit(5).get();
   const size = data.size;
@@ -164,17 +217,19 @@ export const AddCarData = async (obj) => {
       });
   }
 };
-export const fetchSpecificDealer=async (dealerId) =>{
-  
- return firestore()
-  .collection("Dealers")
-  .doc(dealerId).get()
-  
-
-}
-export const fetchShowroomCar=async()=>{
-  return  await firestore().collection('Showrooms').get()
-}
-export const fetchDealerCar=async()=>{
-  return  await firestore().collection('Dealers').get()
-}
+export const fetchSpecificDealer = async (dealerId) => {
+  return firestore()
+    .collection("Dealers")
+    .doc(dealerId)
+    .get();
+};
+export const fetchShowroomCar = async () => {
+  return await firestore()
+    .collection("Showrooms")
+    .get();
+};
+export const fetchDealerCar = async () => {
+  return await firestore()
+    .collection("Dealers")
+    .get();
+};

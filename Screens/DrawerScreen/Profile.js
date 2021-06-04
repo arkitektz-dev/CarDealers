@@ -12,7 +12,7 @@ import storage from "@react-native-firebase/storage";
 
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
-import {  getData } from "../../Data/FetchData";
+import { getData } from "../../Data/FetchData";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
@@ -24,7 +24,11 @@ const Profile = ({ navigation }) => {
     getData().then((data) => {
       setUserInfo(data);
 
-       firestore().collection('Users').doc(data.id).get().then((data)=>setImage(data.data().image))
+      firestore()
+        .collection("Users")
+        .doc(data.id)
+        .get()
+        .then((data) => setImage(data.data().image));
     });
   }, []);
 
@@ -64,7 +68,7 @@ const Profile = ({ navigation }) => {
       .doc(id)
       .update({ image: url })
       .then(() => {
-        setImage(url)
+        setImage(url);
       });
   };
 
@@ -104,7 +108,7 @@ const Profile = ({ navigation }) => {
         style={styles.avatar}
         accessibilityLabel="Pic"
         source={{
-          uri:image,
+          uri: image,
         }}
       />
       <View style={styles.body}>
@@ -126,7 +130,7 @@ const Profile = ({ navigation }) => {
             style={styles.buttonContainer}
             title="Update Password"
           />
-          <Button
+          {/* <Button
             onPressHandler={setUploadImage}
             style={styles.buttonContainer}
             title="Upload Picture"
@@ -143,7 +147,7 @@ const Profile = ({ navigation }) => {
             onPressHandler={submitPost}
             style={styles.buttonContainer}
             title="Submit"
-          />
+          /> */}
         </View>
       </View>
     </View>

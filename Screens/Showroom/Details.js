@@ -16,6 +16,7 @@ import HomeCard from "../../Component/CardViews/HomeProductListCard";
 
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
+  const data = route.params.showroomData;
   const showroomId = route.params.item.id;
   const [dealerCount, setdealerCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -69,21 +70,17 @@ const ShowroomDetailScreen = ({ route }) => {
     return (
       <HomeCard
         pressHandler={() => onPressHandler(item)}
-        title={`${
-          item.vehicle.information.make +
+        title={`${item.vehicle.information.make +
           " " +
           item.vehicle.information.model +
           " " +
-          item.vehicle.information.modelYear
-        } `}
+          item.vehicle.information.modelYear} `}
         price={`${item.amount}`}
-        subtitle={`${
-          item.vehicle.city +
+        subtitle={`${item.vehicle.city +
           " " +
           item.vehicle.mileage +
           " " +
-          item.vehicle.additionalInformation.engineType
-        } `}
+          item.vehicle.additionalInformation.engineType} `}
         image={{ uri: item.images[0] }}
       />
     );

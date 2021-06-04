@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
+import DemandCarCard from "../../Component/CardComponent/Demand Car";
 
 import Drawer from "../../Assets/Drawer.png";
 import { SearchComponent } from "../../Component/Search";
@@ -75,6 +76,8 @@ const HomeScreen = ({ navigation }) => {
 
         <CategoryCard />
 
+        <View style={styles.distance}></View>
+        <DemandCarCard />
         <View style={styles.distance}></View>
 
         <CarCard />

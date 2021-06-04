@@ -11,15 +11,15 @@ import ListItemSeparator from "../ItemSeperator/Index";
 import { useNavigation } from "@react-navigation/core";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-import { fetchCarData } from "../../Data/FetchData";
+import { fetchDemandCarData } from "../../Data/FetchData";
 
-const Card = () => {
+const DemandCarCard = () => {
   const [dataCar, setDataCar] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetchCarData().then((data) => {
+    fetchDemandCarData().then((data) => {
       setDataCar(data.arr), setLoading(false);
     });
   }, []);
@@ -51,7 +51,7 @@ const Card = () => {
   return (
     <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
       <View style={{ flexDirection: "row", marginBottom: 15 }}>
-        <Text style={styles.heading}> FEATURED CARS</Text>
+        <Text style={styles.heading}> DEMAND CARS</Text>
         <View
           style={{
             flexDirection: "row",
@@ -61,7 +61,7 @@ const Card = () => {
         >
           <TouchableOpacity
             style={styles.border}
-            onPress={() => navigation.navigate("CarStack")}
+            onPress={() => navigation.navigate("DemandCars")}
           >
             <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
               {" View More "}
@@ -85,7 +85,7 @@ const Card = () => {
   );
 };
 
-export default memo(Card);
+export default memo(DemandCarCard);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.5,

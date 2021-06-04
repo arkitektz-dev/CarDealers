@@ -8,8 +8,9 @@ import { getData } from "../../Data/FetchData";
 import DealerStack from "../HomeStack/DealerStack";
 
 import AddCar from "../../Screens/Forms/AddCar";
-import FontAwesome  from "react-native-vector-icons/FontAwesome";
-import FontAwesome5  from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Entypo from "react-native-vector-icons/Entypo";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AddFormButton from "../../Component/Button/AddFormButton";
 import Showroom from "../../Screens/Showroom";
 
@@ -25,15 +26,19 @@ function MyTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      tabBarOptions={{  elevation: 2,activeTintColor: "red",inactiveTintColor:'grey', showLabel: false }}
+      tabBarOptions={{
+        elevation: 2,
+        activeTintColor: "red",
+        inactiveTintColor: "grey",
+        showLabel: false,
+      }}
     >
       <Tab.Screen
         name="Home"
         component={DrawerNav}
         options={{
           tabBarIcon: ({ color }) => (
-           
-            <FontAwesome name='home' size={28} color={color} />
+            <FontAwesome name="home" size={28} color={color} />
           ),
         }}
       />
@@ -42,8 +47,7 @@ function MyTabs() {
         component={DealerStack}
         options={{
           tabBarIcon: ({ color }) => (
-           
-            <FontAwesome5 name='car-alt' size={28} color={color} />
+            <FontAwesome5 name="car-alt" size={28} color={color} />
           ),
         }}
       />
@@ -51,46 +55,37 @@ function MyTabs() {
         name="AddCarButton"
         component={AddCar}
         options={{
-          tabBarButton: (props) => (
-           
-            <AddFormButton {...props}/>
-          ),
-         
+          tabBarButton: (props) => <AddFormButton {...props} />,
         }}
       />
-      
- 
+
       {status != undefined ? (
         <Tab.Screen
           name="About"
           component={ProfileStack}
           options={{
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name='user-circle' size={26} color={color} />
-
+              <FontAwesome5 name="user-circle" size={26} color={color} />
             ),
           }}
         />
-        
       ) : (
         <Tab.Screen
           name="About"
           component={LottieLoader}
           options={{
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name='user-circle' size={26} color={color} />
+              <FontAwesome5 name="user-circle" size={26} color={color} />
             ),
           }}
         />
-        
       )}
-       <Tab.Screen
+      <Tab.Screen
         name="Showroom"
         component={Showroom}
         options={{
           tabBarIcon: ({ color }) => (
-           
-            <FontAwesome name='home' size={28} color={color} />
+            <Entypo name="location-pin" size={28} color={color} />
           ),
         }}
       />
@@ -98,4 +93,3 @@ function MyTabs() {
   );
 }
 export default MyTabs;
-

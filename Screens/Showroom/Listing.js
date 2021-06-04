@@ -12,7 +12,9 @@ import Card from "../../Component/CardViews/Card";
 import { SearchComponent } from "../../Component/Search";
 import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
+
 import { fetchMoreShowroom, fetchShowroomData } from "../../Data/FetchData";
+import { RefreshControl } from "react-native";
 
 const ListingShowroom = ({ route }) => {
   const [showroomdata, setShowroomData] = useState([]);
@@ -21,6 +23,7 @@ const ListingShowroom = ({ route }) => {
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -47,7 +50,16 @@ const ListingShowroom = ({ route }) => {
       setShowroomData(filteredData);
     }
   };
-
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchShowroomData().then((data) => {
+      setShowroomData(data.arr);
+      setStartAfter(data.lastVal);
+      setfilteredData(data.arr);
+      setshowroomCount(data.size);
+      setRefreshing(false);
+    });
+  };
   const onPressHandler = (item) => {
     navigation.navigate("ShowroomDetailScreen", { item });
   };
@@ -64,12 +76,14 @@ const ListingShowroom = ({ route }) => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreShowroom(startAfter).then((res) => {
-      setShowroomData([...showroomdata, ...res.arr]);
-      setshowroomCount(showroomdata.length + res.arr.length);
-      setStartAfter(res.lastVal);
-      setMoreLoading(false);
-    });
+    fetchMoreShowroom(startAfter)
+      .then((res) => {
+        setShowroomData([...showroomdata, ...res.arr]);
+        setshowroomCount(showroomdata.length + res.arr.length);
+        setStartAfter(res.lastVal);
+        setMoreLoading(false);
+      })
+      .catch(() => alert("No more data"));
   };
   const _renderItem = ({ item }) => {
     return (
@@ -127,6 +141,9 @@ const ListingShowroom = ({ route }) => {
           onEndReached={_onEndReached}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
     </View>
