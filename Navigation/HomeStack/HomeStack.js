@@ -10,6 +10,7 @@ import DealerDetailScreen from "../../Screens/Dealer/Detail";
 import ListingDealer from "../../Screens/Dealer/Listing";
 import ProfileStack from "./ProfileStack";
 import DemandCarlisting from "../../Screens/DemandCarlisting";
+import ShowroomProfile from "../../Screens/Showroom/Profile";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -31,6 +32,11 @@ const HomeStack = () => {
         options={{ headerShown: false }}
         name="ShowroomDetailScreen"
         component={ShowroomDetailScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShowroomProfile"
+        component={ShowroomProfile}
       />
       <Stack.Screen
         name="ShowroomStack"

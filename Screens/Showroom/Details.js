@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Modal,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/core";
@@ -16,11 +17,13 @@ import HomeCard from "../../Component/CardViews/HomeProductListCard";
 
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
-  const data = route.params.showroomData;
   const showroomId = route.params.item.id;
   const [dealerCount, setdealerCount] = useState(0);
+  const [modalData, setModalData] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
+  const [visible, setVisible] = useState(false);
+
   const arr = [];
 
   const fetchData = async () => {
@@ -61,8 +64,54 @@ const ShowroomDetailScreen = ({ route }) => {
       setdealerCount(dealersCount);
     });
   };
-
+  const modalVisible = () => {
+    if (visible == false) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
+  const onPressHandler2 = (item) => {
+    navigation.navigate("DealerProfile", { item });
+    setVisible(false);
+  };
+  const _renderDealerList = ({ item }) => {
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          borderBottomWidth: 2,
+          borderBottomColor: "#e0e0e0",
+        }}
+      >
+        <View
+          style={{
+            left: "5%",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => onPressHandler2(item)}
+            style={{ flexDirection: "column", margin: 15, top: 10 }}
+          >
+            <Text
+              style={{
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
   useEffect(() => {
+    console.log(item);
+    // setModalData(param.showrooms);
     fetchShowroomData();
     fetchData();
   }, []);
@@ -94,6 +143,29 @@ const ShowroomDetailScreen = ({ route }) => {
           justifyContent: "space-between",
         }}
       >
+        <Modal
+          visible={visible}
+          containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+        >
+          <TouchableOpacity
+            onPress={modalVisible}
+            style={{
+              margin: 10,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
+              Close
+            </Text>
+          </TouchableOpacity>
+
+          <FlatList
+            renderItem={_renderDealerList}
+            data={modalData}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </Modal>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{

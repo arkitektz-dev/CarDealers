@@ -3,7 +3,6 @@ import firestore from "@react-native-firebase/firestore";
 
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -11,6 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import LottieView from "lottie-react-native";
+
 import { useNavigation } from "@react-navigation/core";
 import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
@@ -112,10 +113,16 @@ const ListingCars = () => {
     if (moreloading) return true;
 
     return (
-      <ActivityIndicator
-        size="large"
-        color="red"
-        style={{ marginBottom: 10 }}
+      <LottieView
+        source={require("../../Assets/CarLoader.json")}
+        autoPlay
+        resizeMode="contain"
+        style={{
+          alignSelf: "center",
+          width: 140,
+          height: 140,
+        }}
+        hardwareAccelerationAndroid={true}
       />
     );
   };
@@ -190,6 +197,7 @@ const ListingCars = () => {
     fetchMoreCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
+        setfilteredData([...dataCar, ...res.arr]);
         setcarCount(dataCar.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);

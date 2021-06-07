@@ -1,7 +1,8 @@
 import React from "react";
-import {createStackNavigator} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import DealerScreen from "../../Screens/Dealer";
 import ListingDealer from "../../Screens/Dealer/Listing";
+import ShowroomProfile from "../../Screens/Showroom/Profile";
 
 const DealerStack = () => {
   const Stack = createStackNavigator();
@@ -11,8 +12,9 @@ const DealerStack = () => {
       <Stack.Screen
         name="ListingDealer"
         component={ListingDealer}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
+
       <Stack.Screen name="DealerScreen" component={DealerScreen} />
     </Stack.Navigator>
   );

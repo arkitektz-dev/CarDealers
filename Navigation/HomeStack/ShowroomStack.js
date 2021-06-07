@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ShowroomScreen from "../../Screens/Showroom";
 import ListingShowroom from "../../Screens/Showroom/Listing";
 import ShowroomDetailScreen from "../../Screens/Showroom/Details";
+import ShowroomProfile from "../../Screens/Showroom/Profile";
 
 const ShowroomStack = () => {
   const Stack = createStackNavigator();

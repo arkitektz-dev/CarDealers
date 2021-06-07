@@ -14,7 +14,6 @@ import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
-import { BottomSheet } from "react-native-elements";
 import { Modal } from "react-native";
 
 const DealerDetailScreen = ({ route }) => {
@@ -49,7 +48,6 @@ const DealerDetailScreen = ({ route }) => {
     });
   };
   const modalVisible = () => {
-    console.log(modalData);
     if (visible == false) {
       setVisible(true);
     } else {
@@ -68,9 +66,10 @@ const DealerDetailScreen = ({ route }) => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const onPressHandler2 = (item) => {
-    navigation.navigate("ShowroomDetailScreen", { showroomData: item });
+    navigation.navigate("ShowroomProfile", { item });
+    setVisible(false);
   };
-  const render = ({ item }) => {
+  const _renderShowroomList = ({ item }) => {
     return (
       <View
         style={{
@@ -86,7 +85,7 @@ const DealerDetailScreen = ({ route }) => {
           }}
         >
           <TouchableOpacity
-            onPress={onPressHandler2}
+            onPress={() => onPressHandler2(item)}
             style={{ flexDirection: "column", margin: 15, top: 10 }}
           >
             <Text
@@ -143,7 +142,11 @@ const DealerDetailScreen = ({ route }) => {
           </Text>
         </TouchableOpacity>
 
-        <FlatList renderItem={render} data={modalData} />
+        <FlatList
+          renderItem={_renderShowroomList}
+          data={modalData}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </Modal>
 
       <View

@@ -1,22 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
-import { Text, Modal, View, StyleSheet } from "react-native";
+import React, { memo, useEffect, useRef, useState } from "react";
+import {
+  Text,
+  Modal,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { screenWidth } from "../../Global/Dimension";
 import defaultStyles from "../../config/styles";
 import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
+import { BottomSheet } from "react-native-elements";
+import FontAwsome from "react-native-vector-icons/FontAwesome";
+import FontAwsome5 from "react-native-vector-icons/FontAwesome5";
 import {
   AddCarData,
   fetchShowroomCar,
   fetchDealerCar,
 } from "../../Data/FetchData";
-import { launchImageLibrary } from "react-native-image-picker";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
-import { ActivityIndicator } from "react-native";
+
+import Navbar from "../../Component/Navbar.js/Index";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -34,7 +44,8 @@ const AddCar = ({ navigation }) => {
   //   name: "HSKB Motors",
   // });
   const [featured, setFeatured] = useState(false);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState([]);
+  const [tempImage, setTempImage] = useState([]);
   const [assembly, setAssembly] = useState("");
   const [enginecapacity, setEngineCapacity] = useState("");
   const [engineType, setEngineType] = useState("");
@@ -52,12 +63,13 @@ const AddCar = ({ navigation }) => {
   });
   const showroomData = [];
   const dealerData = [];
-  const images = [];
+
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
   const [mileage, setMileage] = useState("");
   const [checkbox, setCheckbox] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetchShowroomCar().then((data) =>
@@ -77,6 +89,12 @@ const AddCar = ({ navigation }) => {
       })
     );
   }, []);
+  const bottomSheetHandeler = () => {
+    if (isVisible == true) {
+      setIsVisible(false);
+    } else setIsVisible(true);
+  };
+
   const items = [
     { label: "800cc", value: "800cc" },
     { label: "1300cc", value: "1300cc" },
@@ -135,6 +153,7 @@ const AddCar = ({ navigation }) => {
     }
   };
   const setUploadImage = async () => {
+    const arr = [];
     const options = {
       maxWidth: 2000,
       maxHeight: 2000,
@@ -147,46 +166,73 @@ const AddCar = ({ navigation }) => {
       if (response.error) {
         alert("Error");
       } else {
-        setImage(response.uri);
+        const uri = response.uri;
+        setTempImage([...tempImage, uri]);
+      }
+    });
+  };
+  const setUploadImageFromCamera = async () => {
+    let options = {
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    launchCamera(options, (response) => {
+      if (response.errorMessage) {
+        console.log("Facing Errors");
+      } else {
+        const uri = response.uri;
+        setTempImage([...tempImage, uri]);
       }
     });
   };
   const imageURI = async () => {
-    const uploadImage = image.substring(image.lastIndexOf("/") + 1);
-    setUploading(true);
-    setTransferred(0);
-    const storageRef = storage().ref(`photos/${uploadImage}`);
-    const task = storageRef.putFile(image);
-    task.on("state_changed", (taskSnapshot) => {
-      setTransferred(
-        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-          100
-      );
+    tempImage.map(async (pic, index) => {
+      const uploadImage = pic.substring(pic.lastIndexOf("/") + 1);
+      console.log(uploadImage);
+      setUploading(true);
+      setTransferred(0);
+      const storageRef = storage().ref(`photos/${uploadImage}`);
+      const task = storageRef.putFile(pic);
+
+      task.on("state_changed", (taskSnapshot) => {
+        setTransferred(
+          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            100
+        );
+      });
+      try {
+        await task;
+        const url = await storageRef.getDownloadURL();
+
+        setImage([...image, url]);
+        setUploading(false);
+      } catch (error) {
+        console.log(error);
+      }
     });
-    try {
-      await task;
-      const url = await storageRef.getDownloadURL();
-      setUploading(false);
-      setImage(null);
-      alert("Picture Added");
-      return url;
-    } catch (error) {
-      console.log(error);
-    }
   };
-  const submitPhotos = async () => {
-    const url = await imageURI();
-  };
+  // const submitPhotos = async () => {
+  //   const url = await imageURI();
+  //   try {
+  //     setImage(url);
+  //   } catch (error) {}
+  //   // const arr = [];
+  //   // arr.push(url);
+  //   // console.log(url);
+  // };
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = () => {
+    imageURI();
     const obj = {
       amount: amount,
       dealer: dealerPicker,
       featured: featured,
 
-      images: images,
+      images: image,
       showroom: showroomPicker,
 
       vehicle: {
@@ -205,7 +251,9 @@ const AddCar = ({ navigation }) => {
         registrationCity: ExteriorColor,
       },
     };
-    // AddCarData(obj);
+
+    AddCarData(obj);
+    // console.log(image);
     console.log(obj);
   };
 
@@ -217,44 +265,62 @@ const AddCar = ({ navigation }) => {
         backgroundColor: "#fff",
       }}
     >
-      <View
-        style={{
-          backgroundColor: "red",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          height: 49,
+      <Navbar Title="Add Your Car" />
+      <BottomSheet
+        isVisible={isVisible}
+        containerStyle={{
+          backgroundColor: "white",
+          marginTop: "90%",
+          borderTopStartRadius: 30,
+          borderTopEndRadius: 30,
+          flexDirection: "column",
+          flex: 1,
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <View
           style={{
             flexDirection: "row",
             flex: 1,
-            justifyContent: "center",
+            alignSelf: "flex-end",
+            margin: 20,
           }}
+          onPress={bottomSheetHandeler}
         >
           <Text
             style={{
-              color: "#fff",
+              color: "blue",
               fontSize: 18,
-              fontWeight: "bold",
-              textAlignVertical: "center",
+              textAlign: "center",
             }}
           >
-            Add your Car
+            Close
           </Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "grey",
+            fontSize: 25,
+            textAlign: "center",
+            margin: 20,
+          }}
+        >
+          Select the following
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <FontAwsome
+            name="camera"
+            color="grey"
+            size={50}
+            onPress={setUploadImageFromCamera}
+          />
+          <FontAwsome5
+            name="images"
+            color="grey"
+            size={50}
+            onPress={setUploadImage}
+          />
         </View>
-      </View>
+      </BottomSheet>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -273,7 +339,7 @@ const AddCar = ({ navigation }) => {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={bottomSheetHandeler}>
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 Add Photo
               </Text>

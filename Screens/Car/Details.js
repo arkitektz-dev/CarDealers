@@ -10,27 +10,26 @@ import {
   Linking,
   View,
 } from "react-native";
-import ImageSlider from 'react-native-image-slider';
-import Icon from 'react-native-vector-icons/Feather';
+import ImageSlider from "react-native-image-slider";
+import Icon from "react-native-vector-icons/Feather";
 import Drawer from "../../Assets/Drawer.png";
 import { screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";
-
 
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
   const [dealerData, setDealerData] = useState();
-  const dealerId=item.dealer.id.id
-  useEffect(()=>{
-  fetchSpecificDealer(dealerId).then(data=>setDealerData(data.data()))
+  const dealerId = item.dealer.id.id;
 
-  },[])
-  
+  useEffect(() => {
+    fetchSpecificDealer(dealerId).then((data) => setDealerData(data.data()));
+  }, []);
+
   const makeCall = () => {
-    let phoneNumber = '';
+    let phoneNumber = "";
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       phoneNumber = `tel:${dealerData.contactInformation[0]}`;
     } else {
       phoneNumber = `telprompt:${dealerData.contactInformation[0]}`;
@@ -81,23 +80,14 @@ const DetailCarScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.imageHolder}>
-      
-            <ImageSlider
-            style={styles.carousel}
-            loop={true}
-            loopBothSides
-            autoPlayWithInterval={1000}
-            images={images}/>
-            
-          
-      
+        <ImageSlider
+          style={styles.carousel}
+          loop={true}
+          loopBothSides
+          autoPlayWithInterval={3000}
+          images={images}
+        />
       </View>
-      <View style={{flexDirection:'row',margin:10,width:'100%',justifyContent:'space-around'}}>
-      <TouchableOpacity style={styles.CarInfoTitle} onPress={()=>navigation.navigate('')}>
-        <Text style={styles.carInfoText}>View Dealer</Text>      
-        </TouchableOpacity>
-              <Icon name='phone-call' size={25} color='black'onPress={makeCall} />
-          </View>
 
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
@@ -221,6 +211,37 @@ const DetailCarScreen = ({ route, navigation }) => {
               </View>
             </View>
           </View>
+          <View
+            style={{
+              flexDirection: "row",
+              margin: 10,
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "grey",
+                borderRadius: 50,
+                width: 40,
+                height: 40,
+              }}
+            >
+              <Icon
+                style={{ top: 5, left: 5 }}
+                name="phone-call"
+                size={25}
+                color="black"
+                onPress={makeCall}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.CarInfoTitle}
+              onPress={() => navigation.navigate("")}
+            >
+              <Text style={styles.carInfoText}>Call Dealer</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -256,6 +277,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 21,
     color: "white",
+    textAlignVertical: "center",
     marginBottom: 5,
   },
   CarInfoTitle: {
@@ -263,6 +285,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     width: "50%",
     justifyContent: "center",
+    borderRadius: 10,
   },
   detailView: {
     flexDirection: "column",
@@ -292,7 +315,7 @@ const styles = StyleSheet.create({
     height: 200,
     justifyContent: "center",
     overflow: "hidden",
-    width: '100%',
+    width: "100%",
   },
   container: {
     flex: 1,
@@ -304,14 +327,10 @@ const styles = StyleSheet.create({
     opacity: 2,
     shadowColor: "grey",
     shadowOpacity: 2,
-    
   },
-  carousel:{
-    width:'97%',
-    resizeMode:'contain',
-    alignSelf:'center',
-    
-  }
-
-  
+  carousel: {
+    width: "97%",
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
 });
