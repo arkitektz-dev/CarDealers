@@ -7,6 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import LottieView from "lottie-react-native";
+
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import { useNavigation } from "@react-navigation/core";
 import Card from "../../Component/CardViews/Card";
 import { SearchComponent } from "../../Component/Search";
@@ -61,20 +65,14 @@ const ListingDealer = () => {
 
   return (
     <View style={{ backgroundColor: "#fff" }}>
-      <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
-        <TouchableOpacity
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <View style={styles.distance}></View>
+        />
 
         <SearchComponent
           style={styles.search}
@@ -94,7 +92,17 @@ const ListingDealer = () => {
         </Text>
       </View>
       {loading ? (
-        <ActivityIndicator color="red" size="small" />
+        <LottieView
+          source={require("../../Assets/CarLoader.json")}
+          autoPlay
+          resizeMode="contain"
+          style={{
+            alignSelf: "center",
+            width: 140,
+            height: 140,
+          }}
+          hardwareAccelerationAndroid={true}
+        />
       ) : (
         <FlatList
           contentContainerStyle={{ paddingBottom: "30%" }}
@@ -119,7 +127,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   searchHolder: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     flexDirection: "row",
     flexGrow: 1,
   },

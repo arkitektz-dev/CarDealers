@@ -3,7 +3,10 @@ import { updatePassword } from "../../Data/FetchData";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 import { Button } from "../../Component/Button/Index";
-import { ScrollView } from "react-native-gesture-handler";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
+import { screenHeight } from "../../Global/Dimension";
 
 const UpdatePassword = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
@@ -11,6 +14,7 @@ const UpdatePassword = ({ navigation, route }) => {
   const [confirmMatch, setConfirmMatch] = useState(false);
   const [userData, setUserData] = useState({
     password: "",
+    image: null,
   });
   const item = route.params.userinfo;
   const onChangeHandeler = (text) => {
@@ -34,103 +38,166 @@ const UpdatePassword = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
+        <IonIcon
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          style={{ margin: 10 }}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
+        />
       </View>
       <Image
         style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
+        source={{ uri: userinfo && userinfo.image }}
       />
-      <View style={styles.body}>
-        <View style={styles.bodyContent}>
-          <ScrollView>
-            <TextInput
-              placeholder="Old Password"
-              onChangeText={onChangeHandeler}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
+
+      {/* <ScrollView>
+          
+           
+           
+            
+          </ScrollView> */}
+      <View style={styles.distance}></View>
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 0.8,
+          width: "90%",
+          alignSelf: "center",
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: "#333",
+          backgroundColor: "#fff",
+        }}
+      >
+        <View
+          style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
+        >
+          <EvilIcons name="pencil" size={30} />
+        </View>
+        <View
+          style={{
+            width: "80%",
+            alignSelf: "center",
+          }}
+        >
+          <TextInput
+            placeholder="Old Password"
+            label="Old Password"
+            placeholderTextColor="#000000"
+            mode="flat"
+            renderToHardwareTextureAndroid
+            onChangeText={onChangeHandeler}
+            returnKeyType="next"
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            style={{
+              backgroundColor: "transparent",
+              color: "#000000",
+            }}
+          />
+          {passwordMatch ? (
+            <HelperText
+              type="error"
+              style={{
+                color: "#333",
+                fontWeight: "500",
+                textAlign: "center",
               }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              style={styles.inputContainer}
-            />
-            {passwordMatch ? (
-              <HelperText
-                type="error"
-                style={{
-                  color: "#333",
-                  fontWeight: "500",
-                  textAlign: "center",
-                }}
-              >
-                Password Does Not Match!
-              </HelperText>
-            ) : null}
-            <TextInput
-              onChangeText={(e) => setUserData({ ...userData, password: e })}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
+            >
+              Password Does Not Match!
+            </HelperText>
+          ) : null}
+        </View>
+        <View
+          style={{
+            width: "80%",
+            alignSelf: "center",
+          }}
+        >
+          <TextInput
+            onChangeText={(e) => setUserData({ ...userData, password: e })}
+            returnKeyType="next"
+            placeholder="New Password"
+            placeholderTextColor="#000000"
+            mode="flat"
+            label="New Password"
+            renderToHardwareTextureAndroid
+            returnKeyType="next"
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            style={{
+              backgroundColor: "transparent",
+              color: "#000000",
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: "80%",
+            alignSelf: "center",
+          }}
+        >
+          <TextInput
+            onChangeText={onConfirmPassword}
+            returnKeyType="done"
+            placeholder="Confirm Password"
+            placeholderTextColor="#000000"
+            mode="flat"
+            label="Confirm Password"
+            renderToHardwareTextureAndroid
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            style={{
+              backgroundColor: "transparent",
+              color: "#000000",
+            }}
+          />
+          {confirmMatch ? (
+            <HelperText
+              type="error"
+              style={{
+                color: "#333",
+                fontWeight: "500",
+                textAlign: "center",
               }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              placeholder="New Password"
-              style={styles.inputContainer}
-            />
-            <TextInput
-              placeholder="Confirm Password"
-              onChangeText={onConfirmPassword}
-              underlineColor="#696969"
-              underlineColorAndroid="#696969"
-              theme={{
-                colors: {
-                  primary: "#696969",
-                  placeholder: "#696969",
-                  text: "#696969",
-                },
-              }}
-              renderToHardwareTextureAndroid
-              returnKeyType="next"
-              style={styles.inputContainer}
-            />
-            {confirmMatch ? (
-              <HelperText
-                type="error"
-                style={{
-                  color: "#333",
-                  fontWeight: "500",
-                  textAlign: "center",
-                }}
-              >
-                Password Does Not Match!
-              </HelperText>
-            ) : null}
-            <Button
-              onPressHandler={() => updatePassword(userinfo, userData)}
-              style={styles.buttonContainer}
-              title="Update Profile"
-            />
-          </ScrollView>
+            >
+              Password Does Not Match!
+            </HelperText>
+          ) : null}
+        </View>
+        <View
+          style={{
+            margin: 10,
+            alignSelf: "center",
+          }}
+        >
+          <Button
+            onPressHandler={() => updatePassword(userinfo, userData)}
+            style={styles.buttonContainer}
+            title="Update Password"
+          />
         </View>
       </View>
     </View>
@@ -139,8 +206,14 @@ const UpdatePassword = ({ navigation, route }) => {
 export default memo(UpdatePassword);
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     height: 200,
+  },
+  distance: { height: screenHeight * 0.09 },
+
+  container: {
+    flex: 1,
+    flexDirection: "column",
   },
   avatar: {
     width: 130,
@@ -189,6 +262,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+  info: {
+    fontSize: 16,
+    color: "#000000",
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  value: {
+    fontSize: 16,
+    color: "#818589",
+    fontWeight: "bold",
+    marginTop: 10,
+  },
   buttonContainer: {
     marginTop: 10,
     height: 45,
@@ -198,6 +283,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
   },
 });

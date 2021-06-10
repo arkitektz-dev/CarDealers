@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
-import BackgroundImage from "../../Assets/loginBackground.png";
-import AppLogo from "../../Assets/AppLogo.png";
+import Back from "../../Assets/NewAsset/backButton.png";
 
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
@@ -11,6 +10,7 @@ import { HelperText, TextInput } from "react-native-paper";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 import { storeData } from "../../Data/FetchData";
+import Navbar from "../../Component/Navbar.js/Index";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -24,6 +24,7 @@ const logoWidth = screenWidth * 0.5;
 export const LoginScreen = () => {
   const [user, setUser] = useState({ name: "", password: "" });
   const [auth, setAuth] = useState(false);
+  const [secure, setSecure] = useState(true);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const navigation = useNavigation();
 
@@ -56,46 +57,39 @@ export const LoginScreen = () => {
   };
 
   return (
-    <ImageBackground
-      blurRadius={2}
-      source={BackgroundImage}
-      style={styles.imageBackground}
-    >
+    <View style={styles.imageBackground}>
+      <Navbar
+        style={styles.nav}
+        Title="Sign in"
+        source={Back}
+        backStyle={styles.back}
+        goBack={() => navigation.goBack()}
+      />
       <View style={styles.logoContainer}>
-        <Image
-          source={AppLogo}
-          resizeMode="contain"
-          style={{ width: 300, height: 300, alignSelf: "center" }}
-        />
+        <Text style={styles.headText}>Sign in to Car Dealer</Text>
       </View>
 
-      <View style={styles.titleContainer}>
-        <View style={{ height: screenWidth * 0.07 }}></View>
-
-        <Text style={styles.header}>Welcome Back</Text>
-        <Text style={styles.text_h2}>Signin to Continue</Text>
-      </View>
-      <View style={{ height: screenWidth * 0.07 }}></View>
       <View style={styles.inputContainer}>
         <View>
           <TextInput
             renderToHardwareTextureAndroid
             returnKeyType="next"
-            placeholderTextColor="white"
+            placeholderTextColor="#000000"
             mode="flat"
             label="Username:"
-            underlineColor="#fff"
-            underlineColorAndroid="#fff"
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            placeholder="Username"
             theme={{
               colors: {
-                primary: "white",
-                placeholder: "#ffffff",
-                text: "white",
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
               },
             }}
             style={{
               backgroundColor: "transparent",
-              color: "#fff",
+              color: "#000000",
             }}
             onChangeText={(e) => {
               setEmptyFieldError(false), setUser({ ...user, name: e });
@@ -104,14 +98,20 @@ export const LoginScreen = () => {
         </View>
         <View style={styles.distance}></View>
         <TextInput
-          secureTextEntry
-          placeholderTextColor="white"
+          right={<TextInput.Icon name="eye" onPress={() => setSecure(false)} />}
+          secureTextEntry={secure}
+          placeholderTextColor="#000000"
+          placeholder="Password"
           label="Password:"
           theme={{
-            colors: { primary: "white", placeholder: "#ffffff", text: "white" },
+            colors: {
+              primary: "#000000",
+              placeholder: "#000000",
+              text: "#000000",
+            },
           }}
-          underlineColor="#fff"
-          underlineColorAndroid="#fff"
+          underlineColor="#000000"
+          underlineColorAndroid="#000000"
           style={{ backgroundColor: "transparent" }}
           onChangeText={(e) => {
             setEmptyFieldError(false), setUser({ ...user, password: e });
@@ -122,7 +122,6 @@ export const LoginScreen = () => {
         <Text style={styles.forgotpassText}>Forgot Password?</Text>
         <View style={{ width: "15%" }}></View>
       </View>
-      <View style={styles.distance}></View>
       {emptyFieldError ? (
         <HelperText
           type="error"
@@ -131,6 +130,19 @@ export const LoginScreen = () => {
           Field can not be empty!
         </HelperText>
       ) : null}
+
+      <View style={styles.signupContainer}>
+        <Text style={styles.signupText}>Signup for an account? </Text>
+        <Text
+          style={styles.signupButtonText}
+          onPress={() => {
+            navigation.navigate("SignupScreen");
+          }}
+        >
+          {" "}
+          Signup
+        </Text>
+      </View>
       <View style={styles.buttonContainer}>
         <Button
           title="Login"
@@ -143,24 +155,13 @@ export const LoginScreen = () => {
         <Text
           style={styles.signupText}
           onPress={() => {
-            navigation.navigate("SignupScreen");
-          }}
-        >
-          Signup for an account?
-        </Text>
-      </View>
-      <View style={styles.distance}></View>
-      <View style={styles.signupContainer}>
-        <Text
-          style={styles.signupText}
-          onPress={() => {
             navigation.navigate("Home");
           }}
         >
           SKIP
         </Text>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -172,10 +173,11 @@ const styles = StyleSheet.create({
   },
   background: {
     alignSelf: "center",
-    backgroundColor: "red",
+    backgroundColor: "#1e2d64",
     width: buttonWidth,
     height: buttonHeight,
     justifyContent: "center",
+    borderRadius: 5,
   },
   errorSpace: {
     top: "3%",
@@ -189,8 +191,8 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     flex: 1,
-    height: null,
-    width: null,
+    flexDirection: "column",
+    backgroundColor: "#fff",
   },
   distance: {
     height: screenHeight * 0.02,
@@ -198,14 +200,15 @@ const styles = StyleSheet.create({
   inputContainer: { width: screenWidth * 0.7, alignSelf: "center" },
   forgotpassContainer: {
     flexDirection: "row",
-    flex: 0.1,
     top: 15,
-    alignSelf: "flex-end",
+    alignSelf: "center",
+    right: 50,
   },
   forgotpassText: {
-    color: "#fff",
+    color: "#000000",
     fontWeight: "700",
     fontSize: 14,
+    textDecorationLine: "underline",
   },
   signupContainer: {
     flexDirection: "row",
@@ -214,15 +217,28 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signupText: {
-    color: "#fff",
+    color: "#000000",
     fontWeight: "700",
     fontSize: 14,
+  },
+  signupButtonText: {
+    color: "#000000",
+    fontWeight: "700",
+    fontSize: 14,
+    textDecorationLine: "underline",
   },
   container: {
     flex: 1,
     flexDirection: "column",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
+  nav: {
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    height: 49,
+  },
+  back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
   buttonContainer: {
     flexDirection: "row",
     flex: 0.2,
@@ -230,15 +246,16 @@ const styles = StyleSheet.create({
     top: 15,
   },
   logoContainer: {
-    height: logoHeight,
-    width: logoWidth,
-    justifyContent: "center",
-    marginTop: 10,
-    alignSelf: "center",
+    margin: 20,
   },
   titleContainer: {
     alignSelf: "center",
     height: titleHeight,
     width: titleWidth,
+  },
+  headText: {
+    fontSize: 20,
+    fontWeight: "900",
+    color: "#000000",
   },
 });

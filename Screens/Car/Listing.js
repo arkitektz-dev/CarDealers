@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import LottieView from "lottie-react-native";
 
 import { useNavigation } from "@react-navigation/core";
@@ -29,6 +31,8 @@ const ListingCars = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
+  const [noData, setNoData] = useState(false);
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -164,7 +168,7 @@ const ListingCars = () => {
               <View style={{ height: 10 }}></View>
               <Text
                 style={{
-                  color: "red",
+                  color: "#1c2e65",
                   fontSize: 14,
                   fontWeight: "bold",
                   textAlign: "left",
@@ -202,7 +206,7 @@ const ListingCars = () => {
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch(() => alert("No more Data"));
+      .catch(setNoData(true));
   };
   const onRefresh = () => {
     setRefreshing(true);
@@ -217,18 +221,13 @@ const ListingCars = () => {
   return (
     <View style={{ backgroundColor: "white" }}>
       <View style={styles.searchHolder}>
-        <TouchableOpacity
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <View style={styles.distance}></View>
+        />
 
         <SearchComponent
           style={styles.search}
@@ -272,12 +271,27 @@ const ListingCars = () => {
               fontSize: 18,
             }}
           >
-            Filter
+            Filter{"   "}
+            <Image
+              source={require("../../Assets/NewAsset/filter.png")}
+              style={{ width: 20, height: 15, resizeMode: "contain" }}
+              resizeMode="contain"
+            />
           </Text>
         </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator color="red" size="large" />
+        <LottieView
+          source={require("../../Assets/CarLoader.json")}
+          autoPlay
+          resizeMode="contain"
+          style={{
+            alignSelf: "center",
+            width: 140,
+            height: 140,
+          }}
+          hardwareAccelerationAndroid={true}
+        />
       ) : (
         <FlatList
           data={filteredData.length > 0 ? filteredData : dataCar}
@@ -303,7 +317,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.2,
   },
   searchHolder: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     flexDirection: "row",
     flexGrow: 1,
   },

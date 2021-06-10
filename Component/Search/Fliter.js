@@ -82,6 +82,7 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
     <View>
       <Modal visible={modalVisible} animationType={"slide"}>
         <TouchableOpacity
+          activeOpacity={0}
           onPress={clearFilter}
           style={{
             margin: 10,
@@ -187,7 +188,7 @@ export default Filter;
 const styles = StyleSheet.create({
   background: {
     alignSelf: "center",
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     width: buttonWidth,
     height: buttonHeight,
     justifyContent: "center",

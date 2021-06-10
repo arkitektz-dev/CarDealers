@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import LottieView from "lottie-react-native";
 import { fetchDemandCarData, fetchMoreDemandCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
@@ -75,10 +77,16 @@ const DemandCarList = () => {
     if (moreloading) return true;
 
     return (
-      <ActivityIndicator
-        size="large"
-        color="red"
-        style={{ marginBottom: 10 }}
+      <LottieView
+        source={require("../../Assets/CarLoader.json")}
+        autoPlay
+        resizeMode="contain"
+        style={{
+          alignSelf: "center",
+          width: 140,
+          height: 140,
+        }}
+        hardwareAccelerationAndroid={true}
       />
     );
   };
@@ -120,7 +128,7 @@ const DemandCarList = () => {
               <View style={{ height: 10 }}></View>
               <Text
                 style={{
-                  color: "red",
+                  color: "#1c2e65",
                   fontSize: 14,
                   fontWeight: "bold",
                   textAlign: "left",
@@ -150,14 +158,12 @@ const DemandCarList = () => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreDemandCar(startAfter)
-      .then((res) => {
-        setDataCar([...dataCar, ...res.arr]);
-        setcarCount(dataCar.length + res.arr.length);
-        setStartAfter(res.lastVal);
-        setMoreLoading(false);
-      })
-      .catch(alert("No more data"));
+    fetchMoreDemandCar(startAfter).then((res) => {
+      setDataCar([...dataCar, ...res.arr]);
+      setcarCount(dataCar.length + res.arr.length);
+      setStartAfter(res.lastVal);
+      setMoreLoading(false);
+    });
   };
 
   const onRefresh = () => {
@@ -173,17 +179,13 @@ const DemandCarList = () => {
   return (
     <View style={{ backgroundColor: "white" }}>
       <View style={styles.searchHolder}>
-        <TouchableOpacity
+        <IonIcon
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          style={{ margin: 10 }}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
+        />
         <View style={styles.distance}></View>
 
         <SearchComponent
@@ -231,7 +233,7 @@ const DemandCarList = () => {
         </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator color="red" size="large" />
+        <ActivityIndicator color="#1c2e65" size="large" />
       ) : (
         <FlatList
           data={dataCar}
@@ -257,7 +259,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.2,
   },
   searchHolder: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     flexDirection: "row",
     flexGrow: 1,
   },

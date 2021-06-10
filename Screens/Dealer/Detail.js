@@ -160,7 +160,7 @@ const DealerDetailScreen = ({ route }) => {
           style={{
             left: 10,
             top: 10,
-            backgroundColor: "red",
+            backgroundColor: "#1c2e65",
             width: 35,
             height: 35,
             borderRadius: 35 / 2,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.15,
   },
   h1: {
-    color: "red",
+    color: "#1c2e65",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -331,11 +331,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   DealerName: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     justifyContent: "center",
   },
   CarInfoTitle: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     justifyContent: "center",
     width: screenWidth * 0.35,
   },
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     left: "5%",
   },
   border: {
-    borderColor: "red",
+    borderColor: "#1c2e65",
     borderWidth: 2,
     right: "13%",
   },

@@ -10,13 +10,14 @@ import {
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
 import DemandCarCard from "../../Component/CardComponent/Demand Car";
 
-import Drawer from "../../Assets/Drawer.png";
-import { SearchComponent } from "../../Component/Search";
+import Drawer from "../../Assets/NewAsset/Drawer.png";
+import HomeLogo from "../../Assets/NewAsset/homelog.png";
 import DealerCard from "../../Component/CardComponent/DealersCard";
 import ShowroomCard from "../../Component/CardComponent/ShowroomCard";
 import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
 import { getData } from "../../Data/FetchData";
+import NavHome from "../../Component/HomeNav";
 
 const HomeScreen = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -33,44 +34,30 @@ const HomeScreen = ({ navigation }) => {
           flexDirection: "column",
           flex: 1,
           backgroundColor: "#fff",
-          padding: 10,
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <SearchComponent style={styles.search} />
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <Image
-              source={Drawer}
-              style={{ bottom: 7, width: 52, height: 52 }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            backgroundColor: "#f7f7f7",
-            flex: 1,
-            paddingLeft: 10,
-          }}
-        >
-          <Text style={styles.welcome}>
-            Welcome {userInfo && userInfo.name}
-          </Text>
-        </View>
-
-        <View style={{ height: screenHeight * 0.01 }}></View>
-        <View style={{ flexDirection: "row", paddingLeft: 10 }}>
-          <View style={{ backgroundColor: "red", width: 20, borderRadius: 50 }}>
-            <Text style={{ color: "red" }}>sd</Text>
-          </View>
-          <Text style={styles.location}>{"  "}Karachi, Pakistan</Text>
-        </View>
+        <NavHome
+          leftComponent={
+            <TouchableOpacity
+              activeOpacity={0}
+              onPress={() => navigation.openDrawer()}
+            >
+              <Image
+                source={Drawer}
+                style={{
+                  width: 23,
+                  height: 23,
+                  top: 16,
+                  alignSelf: "flex-start",
+                }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          }
+          centerComponent={
+            <Image source={HomeLogo} style={styles.logo} resizeMode="contain" />
+          }
+        />
 
         <View style={styles.distance}></View>
 
@@ -98,6 +85,10 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 2,
     right: "13%",
+  },
+  logo: {
+    width: 170,
+    height: 40,
   },
   distance: {
     height: screenHeight * 0.035,

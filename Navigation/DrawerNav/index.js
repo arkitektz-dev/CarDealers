@@ -4,6 +4,8 @@ import {
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
+import FontAwsome5 from "react-native-vector-icons/FontAwesome5";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 import HomeStack from "../HomeStack/HomeStack";
 import { Image, StyleSheet, View } from "react-native";
@@ -35,22 +37,31 @@ function CustomDrawerContent(props) {
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: "black",
+          backgroundColor: "white",
           justifyContent: "space-around",
           alignItems: "center",
           height: screenHeight * 0.2,
         }}
       >
         <Image
-          source={require("../../Assets/AppLogo.png")}
+          source={require("../../Assets/NewAsset/DrawerLogo.png")}
           style={styles.image}
         />
       </View>
       <DrawerItemList {...props} />
       {status != undefined ? (
-        <DrawerItem label="Sign Out" onPress={onPressHandler} />
+        <DrawerItem
+          label="Sign Out"
+          onPress={onPressHandler}
+          icon={({ color, focused }) => (
+            <MaterialIcons name="login" color={color} size={29} />
+          )}
+        />
       ) : (
         <DrawerItem
+          icon={({ color, focused }) => (
+            <MaterialIcons name="login" color={color} size={29} />
+          )}
           label="Sign In"
           onPress={() => {
             navigation.navigate("Login");
@@ -65,22 +76,86 @@ const DrawerNav = () => {
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawe}
-      drawerPosition="right"
+      drawerPosition="left"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       {status != undefined ? (
         <>
-          <Drawer.Screen name="Home" component={HomeStack} />
-          <Drawer.Screen name="Profile" component={ProfileStack} />
-          <Drawer.Screen name="Add Showroom" component={AddShowroom} />
-          <Drawer.Screen name="Add Car" component={AddCar} />
+          <Drawer.Screen
+            name="Home"
+            component={HomeStack}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="car" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Profile"
+            component={ProfileStack}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="user-alt" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Add Showroom"
+            component={AddShowroom}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="building" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Post An Add"
+            component={AddCar}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <MaterialIcons name="post-add" color={color} size={29} />
+              ),
+            }}
+          />
         </>
       ) : (
         <>
-          <Drawer.Screen name="Home" component={HomeStack} />
-          <Drawer.Screen name="Profile" component={LottieLoader} />
-          <Drawer.Screen name="Add Showroom" component={LottieLoader} />
-          <Drawer.Screen name="Add Car" component={LottieLoader} />
+          <Drawer.Screen
+            name="Home"
+            component={HomeStack}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="car" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Profile"
+            component={LottieLoader}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="user-alt" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Add Showroom"
+            component={LottieLoader}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="building" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Add Car"
+            component={LottieLoader}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <MaterialIcons name="post-add" color={color} size={29} />
+              ),
+            }}
+          />
         </>
       )}
     </Drawer.Navigator>
@@ -93,6 +168,7 @@ const styles = StyleSheet.create({
     width: 250,
     resizeMode: "contain",
   },
+
   userInfoSection: {
     margin: 0,
     paddingTop: 80,
@@ -115,6 +191,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  icon: { width: 25, height: 25, resizeMode: "contain" },
+
   section: {
     flexDirection: "row",
     alignItems: "center",

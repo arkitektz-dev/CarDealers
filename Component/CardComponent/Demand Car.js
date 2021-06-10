@@ -49,8 +49,15 @@ const DemandCarCard = () => {
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
-      <View style={{ flexDirection: "row", marginBottom: 15 }}>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "column",
+        alignContent: "center",
+        padding: 10,
+      }}
+    >
+      <View style={{ flexDirection: "row", marginBottom: 5 }}>
         <Text style={styles.heading}> DEMAND CARS</Text>
         <View
           style={{
@@ -63,8 +70,10 @@ const DemandCarCard = () => {
             style={styles.border}
             onPress={() => navigation.navigate("DemandCars")}
           >
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-              {" View More "}
+            <Text
+              style={{ fontSize: 15, fontWeight: "bold", color: "#828a9f" }}
+            >
+              {" View All "}
             </Text>
           </TouchableOpacity>
         </View>
@@ -98,8 +107,6 @@ const styles = StyleSheet.create({
     left: "5%",
   },
   border: {
-    borderColor: "red",
-    borderWidth: 2,
     right: "13%",
   },
 });

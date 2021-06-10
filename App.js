@@ -6,6 +6,8 @@ import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
+import { Platform } from "react-native";
+import { StatusBar } from "react-native";
 
 const MainStack = () => {
   const Stack = createStackNavigator();
@@ -38,6 +40,7 @@ function App() {
   }
   return (
     <SafeAreaProvider>
+      <StatusBar hidden />
       <NavigationContainer>
         <MainStack />
       </NavigationContainer>

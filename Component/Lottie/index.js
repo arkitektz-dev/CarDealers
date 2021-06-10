@@ -1,24 +1,21 @@
 import React from "react";
 import LottieView from "lottie-react-native";
-import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 const LottieLoader = () => {
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.searchHolder}>
-        <TouchableOpacity
+        <IonIcon
+          style={{ margin: 5 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
+        />
         <View style={styles.distance}></View>
       </View>
       <LottieView
@@ -43,11 +40,11 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 24,
-    color: "red",
+    color: "#1c2e65",
     fontWeight: "bold",
   },
   searchHolder: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     flexDirection: "row",
     height: 49,
   },

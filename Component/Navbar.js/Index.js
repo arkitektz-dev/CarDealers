@@ -1,45 +1,24 @@
 import React from "react";
+import { Image } from "react-native";
 import { Text, View, TouchableOpacity } from "react-native";
 
-const Navbar = ({ Title, goBack }) => {
+const Navbar = ({ Title, goBack, style, source, backStyle }) => {
   return (
-    <View
-      style={{
-        backgroundColor: "red",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        height: 49,
-      }}
-    >
-      <TouchableOpacity
-        onPress={goBack}
+    <View style={style}>
+      <TouchableOpacity activeOpacity={0} onPress={goBack}>
+        <Image source={source} style={backStyle} />
+      </TouchableOpacity>
+
+      <Text
         style={{
-          left: 10,
-          top: 10,
-          backgroundColor: "#fff",
-          width: 35,
-          height: 35,
-          borderRadius: 35 / 2,
-        }}
-      ></TouchableOpacity>
-      <View
-        style={{
-          flexDirection: "row",
-          flex: 1,
-          justifyContent: "center",
+          color: "#000000",
+          fontSize: 15,
+          fontWeight: "900",
+          textAlignVertical: "center",
         }}
       >
-        <Text
-          style={{
-            color: "#fff",
-            fontSize: 18,
-            fontWeight: "bold",
-            textAlignVertical: "center",
-          }}
-        >
-          {Title}
-        </Text>
-      </View>
+        {Title}
+      </Text>
     </View>
   );
 };

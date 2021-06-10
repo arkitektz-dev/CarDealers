@@ -44,9 +44,16 @@ const ShowroomCard = () => {
     );
   };
   return (
-    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
-      <View style={{ flexDirection: "row", marginBottom: 15 }}>
-        <Text style={styles.heading}> FEATURED SHOWROOMS</Text>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "column",
+        alignContent: "center",
+        padding: 10,
+      }}
+    >
+      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+        <Text style={styles.heading}> OUR SHOWROOMS</Text>
         <View
           style={{
             flexDirection: "row",
@@ -62,8 +69,10 @@ const ShowroomCard = () => {
               })
             }
           >
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-              {" View More "}
+            <Text
+              style={{ fontSize: 15, fontWeight: "bold", color: "#828a9f" }}
+            >
+              {" View All "}
             </Text>
           </TouchableOpacity>
         </View>
@@ -91,12 +100,10 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
   },
   border: {
-    borderColor: "red",
-    borderWidth: 2,
     right: "13%",
   },
   heading: {
-    color: "#565656",
+    color: "#333",
     fontSize: 16,
     fontWeight: "bold",
     left: "5%",

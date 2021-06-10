@@ -1,17 +1,19 @@
 import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import { useNavigation } from "@react-navigation/core";
 import Card from "../../Component/CardViews/Card";
 import { SearchComponent } from "../../Component/Search";
 import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
+import LottieView from "lottie-react-native";
 
 import { fetchMoreShowroom, fetchShowroomData } from "../../Data/FetchData";
 import { RefreshControl } from "react-native";
@@ -24,7 +26,7 @@ const ListingShowroom = ({ route }) => {
   const [startAfter, setStartAfter] = useState(Object);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [noData, setNoData] = useState(false);
   useEffect(() => {
     setLoading(true);
     fetchShowroomData().then((data) => {
@@ -65,25 +67,28 @@ const ListingShowroom = ({ route }) => {
   };
   const _renderFooter = () => {
     if (moreloading) return true;
-
     return (
-      <ActivityIndicator
-        size="large"
-        color="red"
-        style={{ marginBottom: 10 }}
+      <LottieView
+        source={require("../../Assets/CarLoader.json")}
+        autoPlay
+        resizeMode="contain"
+        style={{
+          alignSelf: "center",
+          width: 140,
+          height: 140,
+        }}
+        hardwareAccelerationAndroid={true}
       />
     );
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreShowroom(startAfter)
-      .then((res) => {
-        setShowroomData([...showroomdata, ...res.arr]);
-        setshowroomCount(showroomdata.length + res.arr.length);
-        setStartAfter(res.lastVal);
-        setMoreLoading(false);
-      })
-      .catch(() => alert("No more data"));
+    fetchMoreShowroom(startAfter).then((res) => {
+      setShowroomData([...showroomdata, ...res.arr]);
+      setshowroomCount(showroomdata.length + res.arr.length);
+      setStartAfter(res.lastVal);
+      setMoreLoading(false);
+    });
   };
   const _renderItem = ({ item }) => {
     return (
@@ -97,20 +102,14 @@ const ListingShowroom = ({ route }) => {
   };
   return (
     <View style={{ backgroundColor: "#fff" }}>
-      <StatusBar hidden={false} animated={true} />
       <View style={styles.searchHolder}>
-        <TouchableOpacity
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <View style={styles.distance}></View>
+        />
 
         <SearchComponent
           style={styles.search}
@@ -130,7 +129,17 @@ const ListingShowroom = ({ route }) => {
         </Text>
       </View>
       {loading ? (
-        <ActivityIndicator color="red" size="small" />
+        <LottieView
+          source={require("../../Assets/CarLoader.json")}
+          autoPlay
+          resizeMode="contain"
+          style={{
+            alignSelf: "center",
+            width: 140,
+            height: 140,
+          }}
+          hardwareAccelerationAndroid={true}
+        />
       ) : (
         <FlatList
           contentContainerStyle={{ paddingBottom: "30%" }}
@@ -146,6 +155,7 @@ const ListingShowroom = ({ route }) => {
           }
         />
       )}
+      {noData ? <Text>No More Data</Text> : null}
     </View>
   );
 };
@@ -164,7 +174,7 @@ const styles = StyleSheet.create({
     width: 400,
   },
   searchHolder: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     flexDirection: "row",
     flexGrow: 1,
   },

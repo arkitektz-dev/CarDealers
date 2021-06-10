@@ -7,6 +7,8 @@ import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
 import { AddShowroomData } from "../../Data/FetchData";
 import { HelperText } from "react-native-paper";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import ErrorHandle from "../../Component/HelperText";
 
 const AddShowroom = ({ navigation }) => {
@@ -77,19 +79,15 @@ const AddShowroom = ({ navigation }) => {
   return (
     <View style={styles.parent}>
       <View
-        style={{ backgroundColor: "red", flexDirection: "row", height: 49 }}
+        style={{ backgroundColor: "#1e2d64", flexDirection: "row", height: 50 }}
       >
-        <TouchableOpacity
+        <IonIcon
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          style={{ margin: 5 }}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
+        />
 
         <View
           style={{
@@ -162,11 +160,11 @@ const AddShowroom = ({ navigation }) => {
           returnKeyType="done"
         />
 
-        <Button
+        {/* <Button
           title={"Upload Images"}
           onPressHandler={setUploadImage}
           style={styles.buttonContainer}
-        />
+        /> */}
         <Button
           title={"Submit"}
           onPressHandler={onSubmitHandler}
@@ -196,7 +194,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: "red",
+    backgroundColor: "#1e2d64",
   },
 
   distance: {

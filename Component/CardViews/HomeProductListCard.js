@@ -9,61 +9,57 @@ import {
 } from "react-native";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-
-const HomeCard = ({image, title,price, subtitle, pressHandler}) => {
+const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
   return (
-    <TouchableOpacity onPress={pressHandler}>
-      <View
-        style={{
-          justifyContent: "space-between",
-          backgroundColor: "white",
-          margin: 5,
-          borderRadius: 20,
-          shadowColor: "#470000",
-          shadowOffset: {width: 0, height: 1},
-          shadowOpacity: 0.2,
-          elevation: 2,
-        }}
-      >
-        <Image source={image} style={styles.imageSize} resizeMode={"contain"} />
-        <View style={{padding: 10}}>
-          <Text
-            style={{
-              textAlign: "left",
-              color: "#565656",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          >
-           
-            {title}
-          </Text>
-          <Text
-              style={{
-                color: "red",
-                fontSize: 12,
-                fontWeight: "bold",
-                textAlign: "left",
-              }}
-            >
-             
-
-              {price}
-            </Text>
-          <Text
-            style={{
-              textAlign: "left",
-              color: "#565656",
-              fontSize: 10,
-              fontWeight: "bold",
-            }}
-          >
-           
-            {subtitle}
-          </Text>
-        </View>
+    <View
+      style={{
+        justifyContent: "space-between",
+        backgroundColor: "white",
+        margin: 5,
+        borderColor: "#b3b5b8",
+        borderWidth: 1,
+        shadowColor: "#470000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        elevation: 2,
+      }}
+    >
+      <TouchableOpacity onPress={pressHandler}>
+        <Image source={image} style={styles.imageSize} resizeMode={"cover"} />
+      </TouchableOpacity>
+      <View style={{ padding: 10 }}>
+        <Text
+          style={{
+            textAlign: "left",
+            color: "#828a9f",
+            fontSize: 14,
+            fontWeight: "bold",
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          style={{
+            color: "black",
+            fontSize: 12,
+            fontWeight: "bold",
+            textAlign: "left",
+          }}
+        >
+          {price}
+        </Text>
+        <Text
+          style={{
+            textAlign: "left",
+            color: "#828a9f",
+            fontSize: 10,
+            fontWeight: "800",
+          }}
+        >
+          {subtitle}
+        </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 export default HomeCard;

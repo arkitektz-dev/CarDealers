@@ -146,7 +146,6 @@ export const getData = async () => {
 export const clearStorage = async () => {
   try {
     await AsyncStorage.clear();
-    alert("Signed Out");
   } catch (e) {
     alert("Failed to clear the async storage.");
   }

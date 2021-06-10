@@ -4,9 +4,8 @@ import AppText from "../AppText";
 function CategoryPickerItem({ item, onPress }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0}>
         <AppText style={styles.label}>{item.label}</AppText>
-
       </TouchableOpacity>
     </View>
   );

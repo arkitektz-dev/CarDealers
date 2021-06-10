@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import Location from "../../Assets/NewAsset/location.png";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
@@ -25,8 +26,9 @@ import {
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
-
-import Navbar from "../../Component/Navbar.js/Index";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Image } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -253,7 +255,6 @@ const AddCar = ({ navigation }) => {
     };
 
     AddCarData(obj);
-    // console.log(image);
     console.log(obj);
   };
 
@@ -263,9 +264,16 @@ const AddCar = ({ navigation }) => {
         flexDirection: "column",
         flex: 1,
         backgroundColor: "#fff",
+        padding: 10,
       }}
     >
-      <Navbar Title="Add Your Car" />
+      <IonIcon
+        name="chevron-back-circle-sharp"
+        color="grey"
+        size={35}
+        onPress={() => navigation.goBack()}
+      />
+
       <BottomSheet
         isVisible={isVisible}
         containerStyle={{
@@ -328,22 +336,42 @@ const AddCar = ({ navigation }) => {
         <View style={{ flexDirection: "column", width: "100%" }}>
           <View
             style={{
-              borderStyle: "dotted",
-              borderWidth: 1,
-              borderRadius: 1,
-              borderColor: "blue",
-              width: screenWidth * 0.8,
-              height: 100,
-              margin: 10,
+              flexDirection: "row",
+              flex: 0.7,
+              borderBottomWidth: 1,
               justifyContent: "center",
-              alignItems: "center",
             }}
           >
-            <TouchableOpacity onPress={bottomSheetHandeler}>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                Add Photo
-              </Text>
-            </TouchableOpacity>
+            <View
+              style={{
+                borderStyle: "dotted",
+                borderWidth: 1,
+                borderRadius: 1,
+                borderColor: "blue",
+                width: screenWidth * 0.93,
+                height: 100,
+                marginBottom: 15,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity onPress={bottomSheetHandeler}>
+                <MaterialCommunityIcons
+                  name="camera-plus-outline"
+                  color="#333"
+                  size={28}
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    color: "#1e2d64",
+                  }}
+                >
+                  Add Photo
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {/* {uploading ? (
             <>
@@ -431,16 +459,23 @@ const AddCar = ({ navigation }) => {
             selectedItem={transmission}
             width="80%"
           />
-          <AppPicker
-            items={city}
-            name="category"
-            onSelectItem={(item) => setCity(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" City"
-            selectedItem={City}
-            width="80%"
-          />
-
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            {/* <Image source={Location} style={styles.img} /> */}
+            <AppPicker
+              items={city}
+              name="category"
+              onSelectItem={(item) => setCity(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" City"
+              selectedItem={City}
+              width="80%"
+            />
+          </View>
           <AppPicker
             items={company}
             name="category"
@@ -584,7 +619,7 @@ export default memo(AddCar);
 const styles = StyleSheet.create({
   background: {
     alignSelf: "center",
-    backgroundColor: "red",
+    backgroundColor: "#1e2d64",
     width: buttonWidth,
     height: buttonHeight,
     justifyContent: "center",
@@ -594,6 +629,7 @@ const styles = StyleSheet.create({
   distance: {
     width: screenWidth * 0.09,
   },
+  img: { width: 80, height: 45, resizeMode: "contain" },
   Picker: {
     borderRadius: 25,
 

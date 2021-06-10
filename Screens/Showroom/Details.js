@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import Drawer from "../../Assets/Drawer.png";
+import Back from "../../Assets/NewAsset/backButton.png";
 
 import {
   Image,
@@ -91,6 +91,7 @@ const ShowroomDetailScreen = ({ route }) => {
           }}
         >
           <TouchableOpacity
+            activeOpacity={0}
             onPress={() => onPressHandler2(item)}
             style={{ flexDirection: "column", margin: 15, top: 10 }}
           >
@@ -148,6 +149,7 @@ const ShowroomDetailScreen = ({ route }) => {
           containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
         >
           <TouchableOpacity
+            activeOpacity={0}
             onPress={modalVisible}
             style={{
               margin: 10,
@@ -166,35 +168,14 @@ const ShowroomDetailScreen = ({ route }) => {
             keyExtractor={(item, index) => index.toString()}
           />
         </Modal>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "red",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <Text
-          style={{
-            color: "grey",
-            fontWeight: "bold",
-            fontSize: 22,
-            alignItems: "center",
-            textAlignVertical: "center",
-          }}
-        >
-          PROFILE
-        </Text>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={Drawer}
+            source={Back}
             resizeMode="contain"
             style={{
-              width: 60,
-              height: 60,
+              top: 10,
+              width: 30,
+              height: 30,
               alignSelf: "flex-end",
             }}
           />
@@ -249,7 +230,7 @@ const ShowroomDetailScreen = ({ route }) => {
           >
             {dealerCount}
           </Text>
-          <TouchableOpacity style={styles.CarInfoTitle}>
+          <TouchableOpacity activeOpacity={0} style={styles.CarInfoTitle}>
             <Text style={styles.countText}> Dealers </Text>
           </TouchableOpacity>
         </View>
@@ -328,7 +309,7 @@ const styles = StyleSheet.create({
     left: "5%",
   },
   DealerName: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     justifyContent: "center",
   },
   countText: {
@@ -339,7 +320,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   CarInfoTitle: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     justifyContent: "center",
     width: screenWidth * 0.35,
   },

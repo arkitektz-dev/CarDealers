@@ -4,19 +4,21 @@ import AppTextInput from "../../Component/TextInput/Index";
 import { Button } from "../../Component/Button/Index";
 import { updateProfile } from "../../Data/FetchData";
 import { ScrollView } from "react-native-gesture-handler";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
+
+import { screenHeight } from "../../Global/Dimension";
 
 const EditProfile = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
   const [userData, setUserData] = useState({
     email: "",
-
     name: "",
   });
   const [error, setError] = useState({
     name: false,
     email: false,
   });
-  const item = route.params.userinfo;
 
   const onChangeEmail = (e) => {
     if (e == "") {
@@ -35,23 +37,20 @@ const EditProfile = ({ navigation, route }) => {
     }
   };
   useEffect(() => {
-    setUserInfo(item);
+    setUserInfo(route.params.userinfo);
+    setUserData({});
   }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
+        <IonIcon
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          style={{ margin: 10 }}
           onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#fff",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
+        />
       </View>
       <Image
         style={styles.avatar}
@@ -59,37 +58,60 @@ const EditProfile = ({ navigation, route }) => {
           uri: userinfo && userinfo.image,
         }}
       />
-      <View style={styles.body}>
-        <View style={styles.bodyContent}>
-          <ScrollView>
-            <View
-              style={{
-                flexDirection: "column",
-                alignSelf: "center",
-              }}
-            >
-              <Text style={styles.name}>{userinfo && userinfo.username}</Text>
-              <Text style={styles.info}>
-                Email: {userinfo && userinfo.email}
-              </Text>
-            </View>
 
-            <AppTextInput
-              label="Full Name"
-              returnKeyType="next"
-              onChangeHandler={(e) => onChangeName(e)}
-            />
-            <AppTextInput
-              label="Email"
-              returnKeyType="done"
-              onChangeHandler={(e) => onChangeEmail(e)}
-            />
-            <Button
-              onPressHandler={() => updateProfile(userinfo, userData)}
-              style={styles.buttonContainer}
-              title="Update Profile"
-            />
-          </ScrollView>
+      <View style={styles.distance}></View>
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 0.8,
+          width: "90%",
+          alignSelf: "center",
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: "#333",
+          backgroundColor: "#fff",
+        }}
+      >
+        <View
+          style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
+        >
+          <EvilIcons name="pencil" size={30} />
+        </View>
+        <View
+          style={{
+            width: "80%",
+            alignSelf: "center",
+          }}
+        >
+          <AppTextInput
+            label="Full Name"
+            returnKeyType="next"
+            onChangeHandler={(e) => onChangeName(e)}
+          />
+        </View>
+        <View
+          style={{
+            width: "80%",
+            alignSelf: "center",
+          }}
+        >
+          <AppTextInput
+            label="Email"
+            returnKeyType="done"
+            onChangeHandler={(e) => onChangeEmail(e)}
+          />
+        </View>
+        <View
+          style={{
+            margin: 10,
+            alignSelf: "center",
+          }}
+        >
+          <Button
+            onPressHandler={() => updateProfile(userinfo, userData)}
+            style={styles.buttonContainer}
+            title="Update Profile"
+          />
         </View>
       </View>
     </View>
@@ -98,8 +120,25 @@ const EditProfile = ({ navigation, route }) => {
 export default memo(EditProfile);
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     height: 200,
+  },
+  distance: { height: screenHeight * 0.09 },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  info: {
+    fontSize: 16,
+    color: "#000000",
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  value: {
+    fontSize: 16,
+    color: "#818589",
+    fontWeight: "bold",
+    marginTop: 10,
   },
   avatar: {
     width: 130,
@@ -157,6 +196,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
   },
 });

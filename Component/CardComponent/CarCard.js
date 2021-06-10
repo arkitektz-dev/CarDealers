@@ -49,9 +49,16 @@ const Card = () => {
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column", alignContent: "center" }}>
-      <View style={{ flexDirection: "row", marginBottom: 15 }}>
-        <Text style={styles.heading}> FEATURED CARS</Text>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "column",
+        alignContent: "center",
+        padding: 10,
+      }}
+    >
+      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+        <Text style={styles.heading}> OUR CARS</Text>
         <View
           style={{
             flexDirection: "row",
@@ -63,8 +70,10 @@ const Card = () => {
             style={styles.border}
             onPress={() => navigation.navigate("CarStack")}
           >
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-              {" View More "}
+            <Text
+              style={{ fontSize: 15, fontWeight: "bold", color: "#828a9f" }}
+            >
+              {" View All "}
             </Text>
           </TouchableOpacity>
         </View>
@@ -92,14 +101,12 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.15,
   },
   heading: {
-    color: "#565656",
+    color: "#333",
     fontSize: 16,
     fontWeight: "bold",
     left: "5%",
   },
   border: {
-    borderColor: "red",
-    borderWidth: 2,
     right: "13%",
   },
 });

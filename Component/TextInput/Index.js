@@ -15,24 +15,23 @@ const AppTextInput = ({
         placeholder={placeholder}
         renderToHardwareTextureAndroid
         returnKeyType={returnKeyType}
-        placeholderTextColor="#000"
+        placeholderTextColor="#000000"
         mode="flat"
         keyboardType={keyboardType}
         multiline={multiline}
         label={label}
-        underlineColor="#000"
-        underlineColorAndroid="#000"
+        underlineColor="#000000"
+        underlineColorAndroid="#000000"
         theme={{
           colors: {
-            primary: "#000",
-            placeholder: "#000",
-            text: "#000",
+            primary: "#000000",
+            placeholder: "#000000",
+            text: "#000000",
           },
         }}
         style={{
           backgroundColor: "transparent",
-          color: "#000",
-          
+          color: "#000000",
         }}
         onChangeText={onChangeHandler}
       />
