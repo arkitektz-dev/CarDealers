@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 import Back from "../../Assets/NewAsset/backButton.png";
-
 import {
   Image,
   StyleSheet,
@@ -10,6 +9,8 @@ import {
   FlatList,
   Modal,
 } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
@@ -25,6 +26,12 @@ const ShowroomDetailScreen = ({ route }) => {
   const [visible, setVisible] = useState(false);
 
   const arr = [];
+
+  useEffect(() => {
+    // setModalData(param.showrooms);
+    fetchShowroomData();
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
@@ -110,12 +117,7 @@ const ShowroomDetailScreen = ({ route }) => {
       </View>
     );
   };
-  useEffect(() => {
-    console.log(item);
-    // setModalData(param.showrooms);
-    fetchShowroomData();
-    fetchData();
-  }, []);
+
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
@@ -144,6 +146,15 @@ const ShowroomDetailScreen = ({ route }) => {
           justifyContent: "space-between",
         }}
       >
+        <View style={styles.searchHolder}>
+          <IonIcon
+            style={{ margin: 10 }}
+            name="chevron-back-circle-sharp"
+            color="white"
+            size={35}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
         <Modal
           visible={visible}
           containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
@@ -168,18 +179,6 @@ const ShowroomDetailScreen = ({ route }) => {
             keyExtractor={(item, index) => index.toString()}
           />
         </Modal>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={Back}
-            resizeMode="contain"
-            style={{
-              top: 10,
-              width: 30,
-              height: 30,
-              alignSelf: "flex-end",
-            }}
-          />
-        </TouchableOpacity>
       </View>
       <View style={styles.distance}></View>
       <View style={styles.topDiv}>
@@ -269,6 +268,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     backgroundColor: "#fff",
+  },
+  searchHolder: {
+    backgroundColor: "#1c2e65",
+    flexDirection: "row",
+    flexGrow: 1,
   },
   navTxt: {
     textAlign: "center",

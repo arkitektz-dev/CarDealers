@@ -208,10 +208,10 @@ const AddCar = ({ navigation }) => {
         await task;
         const url = await storageRef.getDownloadURL();
 
-        setImage([...image, url]);
+        await  setImage([...image, url]);
         setUploading(false);
       } catch (error) {
-        console.log(error);
+          console.log(error);
       }
     });
   };
@@ -227,8 +227,8 @@ const AddCar = ({ navigation }) => {
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
-  const onPressHandler = () => {
-    imageURI();
+  const onPressHandler = async() => {
+    await imageURI();
     const obj = {
       amount: amount,
       dealer: dealerPicker,

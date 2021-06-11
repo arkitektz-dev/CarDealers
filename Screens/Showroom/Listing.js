@@ -66,19 +66,26 @@ const ListingShowroom = ({ route }) => {
     navigation.navigate("ShowroomDetailScreen", { item });
   };
   const _renderFooter = () => {
-    if (moreloading) return true;
     return (
-      <LottieView
-        source={require("../../Assets/CarLoader.json")}
-        autoPlay
-        resizeMode="contain"
+      <View
         style={{
-          alignSelf: "center",
-          width: 140,
-          height: 140,
+          padding: 10,
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
         }}
-        hardwareAccelerationAndroid={true}
-      />
+      >
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={_onEndReached}
+          style={styles.loadMoreBtn}
+        >
+          <Text style={styles.btnText}>Load More</Text>
+          {moreloading ? (
+            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
     );
   };
   const _onEndReached = () => {
@@ -147,7 +154,6 @@ const ListingShowroom = ({ route }) => {
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={_renderFooter}
-          onEndReached={_onEndReached}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
           refreshControl={
@@ -177,6 +183,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#1c2e65",
     flexDirection: "row",
     flexGrow: 1,
+  },
+  loadMoreBtn: {
+    padding: 10,
+    borderColor: "#1c2e65",
+    borderWidth: 1,
+    borderRadius: 4,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   search: {
     width: "75%",

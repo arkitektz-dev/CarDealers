@@ -140,6 +140,15 @@ const styles = StyleSheet.create({
 
     alignSelf: "center",
   },
+  loadMoreBtn: {
+    padding: 10,
+    borderColor: "#1c2e65",
+    borderWidth: 1,
+    borderRadius: 4,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   distance: {
     width: screenWidth * 0.09,
   },

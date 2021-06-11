@@ -9,8 +9,9 @@ import {
   View,
 } from "react-native";
 import { Button } from "../../Component/Button/Index";
-
 import Calendar from "../../Assets/NewAsset/Calendar.png";
+import Radio from "../../Assets/NewAsset/radio.png";
+
 import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
@@ -90,33 +91,57 @@ const DetailCarScreen = ({ route, navigation }) => {
         <Text style={styles.location}> {item.vehicle.city} </Text>
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-        <View style={styles.detailView}>
-          <View style={styles.CarInfoTitle}>
-            <View style={{ flexDirection: "column" }}>
-              <Image source={Calendar} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.information.modelYear}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "column" }}>
-              <Image source={Speedometer} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.mileage}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "column" }}>
-              <Image source={Petrol} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.engineType}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "column" }}>
-              <Image source={Arrow} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.transmission}
-              </Text>
-            </View>
+        <View style={styles.CarInfoTitle}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Image source={Calendar} style={styles.img} />
+            <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              {item.vehicle.information.modelYear}
+            </Text>
           </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Image source={Speedometer} style={styles.img} />
+            <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              {item.vehicle.mileage}
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Image source={Petrol} style={styles.img} />
+            <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              {item.vehicle.additionalInformation.engineType}
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Image source={Arrow} style={styles.img} />
+            <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              {item.vehicle.additionalInformation.transmission}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.detailView}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
@@ -137,7 +162,7 @@ const DetailCarScreen = ({ route, navigation }) => {
                   {item.vehicle.additionalInformation.assembly}
                 </Text>
               </View>
-              <View style={styles.otherData}>
+              <View style={styles.lastData}>
                 <Text style={styles.text}>Engine Capacity</Text>
                 <Text style={styles.text2}>
                   {item.vehicle.additionalInformation.engineCapacity}
@@ -155,14 +180,20 @@ const DetailCarScreen = ({ route, navigation }) => {
           >
             Features
           </Text>
-          {/* {item.vehicle.additionalInformation.features.map((item) => (
-            <View style={{ flexDirection: "column", flex: 1 }}>
-              <View style={{ flexDirection: "row" }}>
+          {item.vehicle.additionalInformation.features.map((item) => (
+            <View style={{ flexDirection: "column" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginHorizontal: 10,
+                }}
+              >
                 <Image source={Radio} style={styles.img} />
-                <Text>{item}</Text>
+
+                <Text style={styles.feature}>{item}</Text>
               </View>
             </View>
-          ))} */}
+          ))}
           <Text
             style={{
               marginLeft: 20,
@@ -322,8 +353,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 20,
+    margin: 10,
     resizeMode: "contain",
   },
   carInfoText: {
@@ -336,7 +368,7 @@ const styles = StyleSheet.create({
   CarInfoTitle: {
     flexDirection: "row",
     justifyContent: "space-around",
-    flex: 1,
+    height: 70,
   },
   detailView: {
     flexDirection: "column",
@@ -367,6 +399,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlignVertical: "center",
   },
+  feature: {
+    color: "#A9A9A9",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlignVertical: "center",
+    margin: 10,
+  },
   propertyBorder: {
     flexDirection: "row",
     borderBottomColor: "#000000",
@@ -383,6 +422,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000000",
     width: "90%",
     borderBottomWidth: 1,
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  lastData: {
+    flexDirection: "row",
+    width: "90%",
     justifyContent: "space-between",
     marginTop: 10,
   },

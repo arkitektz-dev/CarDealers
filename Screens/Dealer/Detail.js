@@ -10,6 +10,8 @@ import {
   FlatList,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
+import IonIcon from "react-native-vector-icons/Ionicons";
+
 import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
@@ -66,7 +68,7 @@ const DealerDetailScreen = ({ route }) => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const onPressHandler2 = (item) => {
-    navigation.navigate("ShowroomProfile", { item });
+    navigation.navigate("ShowroomDetailScreen", { item });
     setVisible(false);
   };
   const _renderShowroomList = ({ item }) => {
@@ -125,6 +127,15 @@ const DealerDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.parent}>
+      <View style={styles.searchHolder}>
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          onPress={() => navigation.goBack()}
+        />
+      </View>
       <Modal
         visible={visible}
         containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
@@ -149,46 +160,6 @@ const DealerDetailScreen = ({ route }) => {
         />
       </Modal>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            left: 10,
-            top: 10,
-            backgroundColor: "#1c2e65",
-            width: 35,
-            height: 35,
-            borderRadius: 35 / 2,
-          }}
-        ></TouchableOpacity>
-        <Text
-          style={{
-            color: "grey",
-            fontWeight: "bold",
-            fontSize: 22,
-            alignItems: "center",
-            textAlignVertical: "center",
-          }}
-        >
-          PROFILE
-        </Text>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <Image
-            source={Drawer}
-            resizeMode="contain"
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "flex-end",
-            }}
-          />
-        </TouchableOpacity>
-      </View>
       <View style={styles.distance}></View>
       <View style={styles.topDiv}>
         <View
@@ -322,6 +293,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "white",
     marginBottom: 5,
+  },
+  searchHolder: {
+    backgroundColor: "#1c2e65",
+    flexDirection: "row",
+    flexGrow: 1,
   },
   countText: {
     fontWeight: "bold",

@@ -74,20 +74,26 @@ const DemandCarList = () => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const _renderFooter = () => {
-    if (moreloading) return true;
-
     return (
-      <LottieView
-        source={require("../../Assets/CarLoader.json")}
-        autoPlay
-        resizeMode="contain"
+      <View
         style={{
-          alignSelf: "center",
-          width: 140,
-          height: 140,
+          padding: 10,
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
         }}
-        hardwareAccelerationAndroid={true}
-      />
+      >
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={_onEndReached}
+          style={styles.loadMoreBtn}
+        >
+          <Text style={styles.btnText}>Load More</Text>
+          {moreloading ? (
+            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
     );
   };
   const _renderItem = ({ item }) => {
@@ -186,7 +192,6 @@ const DemandCarList = () => {
           style={{ margin: 10 }}
           onPress={() => navigation.goBack()}
         />
-        <View style={styles.distance}></View>
 
         <SearchComponent
           style={styles.search}
@@ -233,7 +238,17 @@ const DemandCarList = () => {
         </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator color="#1c2e65" size="large" />
+        <LottieView
+          source={require("../../Assets/CarLoader.json")}
+          autoPlay
+          resizeMode="contain"
+          style={{
+            alignSelf: "center",
+            width: 140,
+            height: 140,
+          }}
+          hardwareAccelerationAndroid={true}
+        />
       ) : (
         <FlatList
           data={dataCar}
@@ -241,7 +256,6 @@ const DemandCarList = () => {
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={_renderFooter}
-          onEndReached={_onEndReached}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
           refreshControl={
@@ -257,6 +271,15 @@ const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,
     height: screenHeight * 0.2,
+  },
+  loadMoreBtn: {
+    padding: 10,
+    borderColor: "#1c2e65",
+    borderWidth: 1,
+    borderRadius: 4,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   searchHolder: {
     backgroundColor: "#1c2e65",
