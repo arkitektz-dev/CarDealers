@@ -17,6 +17,7 @@ import Showroom from "../../Screens/Showroom";
 import { Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ShowroomStack from "../HomeStack/ShowroomStack";
+import Dealer from "../../Screens/Dealer";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,8 +47,9 @@ function MyTabs() {
           ),
         }}
       />
+
       <Tab.Screen
-        name="Dealer"
+        name="Showroom"
         component={ShowroomStack}
         options={{
           tabBarIcon: ({ color }) => (
@@ -55,6 +57,7 @@ function MyTabs() {
           ),
         }}
       />
+
       <Tab.Screen
         name="AddCarButton"
         component={AddCar}
@@ -84,9 +87,10 @@ function MyTabs() {
           }}
         />
       )}
+
       <Tab.Screen
-        name="Showroom"
-        component={Showroom}
+        name="Dealer"
+        component={Dealer}
         options={{
           tabBarIcon: ({ color }) => (
             <Entypo name="location-pin" size={28} color={color} />

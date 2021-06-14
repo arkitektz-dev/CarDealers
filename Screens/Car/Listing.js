@@ -63,7 +63,6 @@ const ListingCars = () => {
   };
 
   const onFilter = async (dropdownValues) => {
-    console.log(dropdownValues);
     const arr = [];
     let ref = firestore().collection("Advertisments");
 
@@ -259,6 +258,9 @@ const ListingCars = () => {
         </Text>
         <Filter
           modalVisible={shown}
+          toggleModalView={() => {
+            setShown(false);
+          }}
           toggleModal={(dropdownValues) => {
             setShown(false);
             setSearch(dropdownValues);

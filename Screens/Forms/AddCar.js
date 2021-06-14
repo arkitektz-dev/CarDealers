@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 import {
   Text,
   Modal,
@@ -28,7 +29,6 @@ import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { Image } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -76,6 +76,8 @@ const AddCar = ({ navigation }) => {
   useEffect(() => {
     fetchShowroomCar().then((data) =>
       data.forEach((querySnapshot) => {
+        console.log(typeof querySnapshot.id, "Showroom");
+
         showroomData.push({
           value: querySnapshot.id,
           label: querySnapshot.data().name,
@@ -84,9 +86,10 @@ const AddCar = ({ navigation }) => {
     );
     fetchDealerCar().then((data) =>
       data.forEach((querySnapshot) => {
+        console.log(typeof querySnapshot.id);
         dealerData.push({
           value: querySnapshot.id,
-          label: querySnapshot.data().name,
+          label: querySnapshot.id,
         });
       })
     );
@@ -208,10 +211,10 @@ const AddCar = ({ navigation }) => {
         await task;
         const url = await storageRef.getDownloadURL();
 
-        await  setImage([...image, url]);
+        await setImage([...image, url]);
         setUploading(false);
       } catch (error) {
-          console.log(error);
+        console.log(error);
       }
     });
   };
@@ -227,11 +230,21 @@ const AddCar = ({ navigation }) => {
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
-  const onPressHandler = async() => {
+  const onPressHandler = async () => {
+    const userRef = firestore()
+      .collection("Dealers")
+      .doc(dealerPicker);
+    console.log(userRef);
+
+    const dealerObj = {
+      id: userRef,
+      name: "Ijaz Hussain",
+    };
+
     await imageURI();
     const obj = {
       amount: amount,
-      dealer: dealerPicker,
+      dealer: dealerObj,
       featured: featured,
 
       images: image,
@@ -264,15 +277,17 @@ const AddCar = ({ navigation }) => {
         flexDirection: "column",
         flex: 1,
         backgroundColor: "#fff",
-        padding: 10,
       }}
     >
-      <IonIcon
-        name="chevron-back-circle-sharp"
-        color="grey"
-        size={35}
-        onPress={() => navigation.goBack()}
-      />
+      <View style={styles.searchHolder}>
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          onPress={() => navigation.goBack()}
+        />
+      </View>
 
       <BottomSheet
         isVisible={isVisible}
@@ -541,7 +556,7 @@ const AddCar = ({ navigation }) => {
             selectedItem={registrationCity}
             width="80%"
           />
-          <AppPicker
+          {/* <AppPicker
             items={showroomData}
             name="category"
             onSelectItem={(item) => setShowroomPicker(item)}
@@ -549,11 +564,11 @@ const AddCar = ({ navigation }) => {
             placeholder="Showrooms"
             selectedItem={showroomPicker}
             width="80%"
-          />
+          /> */}
           <AppPicker
             items={dealerData}
             name="category"
-            onSelectItem={(item) => console.log(typeof item)}
+            onSelectItem={(item) => setDealerPicker(item)}
             PickerItemComponent={CategoryPickerItem}
             placeholder="Dealers"
             selectedItem={dealerPicker}
@@ -628,6 +643,12 @@ const styles = StyleSheet.create({
   },
   distance: {
     width: screenWidth * 0.09,
+  },
+  searchHolder: {
+    backgroundColor: "#1c2e65",
+    flexDirection: "row",
+    flexGrow: 1,
+    marginBottom: 10,
   },
   img: { width: 80, height: 45, resizeMode: "contain" },
   Picker: {

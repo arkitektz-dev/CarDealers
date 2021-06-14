@@ -1,69 +1,72 @@
 import React from "react";
-import { TouchableWithoutFeedback } from "react-native";
+import Navbar from "../../Component/Navbar.js/Index";
 import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { Text } from "react-native";
 import { StyleSheet, View } from "react-native";
+import Back from "../../Assets/NewAsset/backButton.png";
 
 const MainScreen = ({ navigation }) => {
   return (
-    <View style={styles.parent}>
-      <View
-        style={{
-          justifyContent: "center",
-          height: "15%",
-        }}
-      >
-        <Text style={styles.head}>Sign In To Contine</Text>
-      </View>
-
-      <View>
-        <Image
-          source={require("../../Assets/NewAsset/DrawerLogo.png")}
-          style={styles.image}
+    <>
+      <View style={styles.parent}>
+        <Navbar
+          style={styles.nav}
+          Title="HomeScreen"
+          source={Back}
+          backStyle={styles.back}
+          goBack={() => navigation.goBack()}
         />
-      </View>
-      <View>
-        <View style={{ height: 25 }}></View>
-        <TouchableOpacity
-          activeOpacity={0}
-          style={styles.border}
-          onPress={() => navigation.navigate("LoginScreen")}
-        >
+        <View>
           <Image
-            source={require("../../Assets/NewAsset/Email.png")}
-            style={styles.icon}
+            source={require("../../Assets/NewAsset/DrawerLogo.png")}
+            style={styles.image}
           />
-          <Text
-            style={{
-              color: "#000000",
-              fontWeight: "900",
-              textAlign: "center",
-              textAlignVertical: "center",
-            }}
+        </View>
+        <View>
+          <View style={{ height: 25 }}></View>
+          <TouchableOpacity
+            activeOpacity={0}
+            style={styles.border}
+            onPress={() => navigation.navigate("LoginScreen")}
           >
-            Continue with Username
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: "column",
-          flex: 1,
-          justifyContent: "flex-end",
-          bottom: "5%",
-        }}
-      >
-        <Text style={{ fontSize: 18 }}>By Continuning you agree to our </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Terms of use</Text>
-          <Text style={{ fontSize: 18 }}> and </Text>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Privacy Policy
-          </Text>
+            <Image
+              source={require("../../Assets/NewAsset/Email.png")}
+              style={styles.icon}
+            />
+            <Text
+              style={{
+                color: "#000000",
+                fontWeight: "900",
+                textAlign: "center",
+                textAlignVertical: "center",
+              }}
+            >
+              Continue with Username
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 1,
+            justifyContent: "flex-end",
+            bottom: "5%",
+          }}
+        >
+          <Text style={{ fontSize: 18 }}>By Continuning you agree to our </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Terms of use
+            </Text>
+            <Text style={{ fontSize: 18 }}> and </Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Privacy Policy
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -91,6 +94,15 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     margin: 5,
   },
+  nav: {
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-start",
+    height: 49,
+  },
+  back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
+
   head: {
     fontSize: 19,
     fontWeight: "bold",

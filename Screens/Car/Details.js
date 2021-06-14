@@ -54,7 +54,7 @@ const DetailCarScreen = ({ route, navigation }) => {
         style={{
           flexDirection: "row",
           backgroundColor: "#1e2d64",
-          marginBottom: 2,
+          height: 50,
         }}
       >
         <IonIcon
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
   },
   imageHolder: {
     alignSelf: "center",
-    height: 200,
+    height: 300,
     justifyContent: "center",
     overflow: "hidden",
     width: "100%",

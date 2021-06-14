@@ -87,7 +87,7 @@ const DealerDetailScreen = ({ route }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => onPressHandler2(item)}
+            // onPress={() => onPressHandler2(item)}
             style={{ flexDirection: "column", margin: 15, top: 10 }}
           >
             <Text

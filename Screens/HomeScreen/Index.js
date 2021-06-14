@@ -39,18 +39,22 @@ const HomeScreen = ({ navigation }) => {
         <NavHome
           leftComponent={
             <TouchableOpacity
-              activeOpacity={0}
+              style={{
+                flex: 1,
+                width: 47,
+              }}
               onPress={() => navigation.openDrawer()}
             >
               <Image
                 source={Drawer}
                 style={{
                   width: 23,
-                  height: 23,
-                  top: 16,
+                  height: 21,
+                  top: 10,
+                  left: 7,
                   alignSelf: "flex-start",
+                  resizeMode: "contain",
                 }}
-                resizeMode="contain"
               />
             </TouchableOpacity>
           }

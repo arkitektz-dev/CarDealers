@@ -70,6 +70,7 @@ export const SignupScreen = () => {
         try {
           const confirmation = await auth().signInWithPhoneNumber(user.phone);
           setConfirm(confirmation);
+          console.log(confirmation);
         } catch (error) {
           alert("Invalid Number");
         }
@@ -88,6 +89,8 @@ export const SignupScreen = () => {
   const ref = firestore().collection("Users");
 
   async function confirmCode() {
+    console.log("Start");
+
     try {
       await confirm.confirm(
         otpInput.pin1 +
@@ -127,7 +130,6 @@ export const SignupScreen = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(e) === false) {
       setEmailError(true);
-      alert("Email is Not Correct");
     } else {
       setEmailError(false);
     }
@@ -155,372 +157,356 @@ export const SignupScreen = () => {
 
   return (
     <DismissKeyboard>
-      <ImageBackground
-        blurRadius={2}
-        source={BackgroundImage}
-        style={styles.imageBackground}
-      >
-        <View style={styles.form_container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Register User</Text>
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              autoCapitalize="none"
-              placeholderTextColor="white"
-              label="Name"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, name: e })}
-            />
-            <View style={styles.distance}></View>
+      <View style={styles.form_container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Register User</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            autoCapitalize="none"
+            placeholderTextColor="#000000"
+            label="Name"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            style={styles.textInput}
+            style={{ backgroundColor: "transparent" }}
+            onChangeText={(e) => setUser({ ...user, name: e })}
+          />
+          <View style={styles.distance}></View>
 
-            <TextInput
-              autoCapitalize="none"
-              placeholderTextColor="white"
-              label="Username"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={handleChangeUsername}
-            />
-            {usernameError ? (
-              <Text style={{ color: "#fff" }}>Username is Not Correct</Text>
-            ) : null}
-            {alreadyExit ? (
-              <Text style={{ color: "#fff" }}>Username Already Exist</Text>
-            ) : null}
-            <View style={styles.distance}></View>
-
-            <TextInput
-              autoCapitalize="none"
-              keyboardType="number-pad"
-              maxLength={14}
-              label="Phone"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, phone: e })}
-            />
-            {/* <TextInputMask
-              // type={"cel-phone"}
-              // options={{
-              //   maskType: "BRL",
-              //   withDDD: true,
-              //   dddMask: "(99) ",
-              // }}
-              type={"datetime"}
-              options={{
-                format: "YYYY/MM/DD",
-              }}
-              style={{
-                color: "white",
-                borderBottomColor: "#fff",
-                borderBottomWidth: 1,
-              }}
-              placeholder="Phone"
-              placeholderTextColor="#fff"
-              onChangeText={(text) => {
-              }}
-            /> */}
-
-            <View style={styles.distance}></View>
-
-            <TextInput
-              autoCapitalize="none"
-              placeholderTextColor="white"
-              maxLength={40}
-              // style={styles.textInput}
-              keyboardType="email-address"
-              mode="flat"
-              label="Email"
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              style={{ backgroundColor: "transparent", color: "#fff" }}
-              onChangeText={handleChangeEmail}
-            />
-            {emaiError ? (
-              <Text style={{ color: "#fff" }}>Email is Not Correct</Text>
-            ) : null}
-
-            <View style={styles.distance}></View>
-            <TextInput
-              autoCapitalize="none"
-              maxLength={20}
-              secureTextEntry
-              placeholderTextColor="white"
-              label="Password"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={(e) => setUser({ ...user, password: e })}
-            />
-            <Tooltip popover={<Text>Info here</Text>}>
-              <Text style={{ color: "white" }}>Press me</Text>
-            </Tooltip>
-            {/* <View style={styles.distance}></View> */}
-            <TextInput
-              autoCapitalize="none"
-              maxLength={20}
-              secureTextEntry
-              placeholderTextColor="white"
-              label="Confirm Password"
-              theme={{
-                colors: {
-                  primary: "white",
-                  placeholder: "#ffffff",
-                  text: "white",
-                },
-              }}
-              underlineColor="#fff"
-              underlineColorAndroid="#fff"
-              style={styles.textInput}
-              style={{ backgroundColor: "transparent" }}
-              onChangeText={handleChangeConfirmPassowrd}
-            />
-            {confirmPasswordError ? (
-              <HelperText
-                type="error"
-                style={{
-                  color: "#fff",
-                  fontWeight: "500",
-                  textAlign: "center",
-                }}
-              >
-                Passwords Do Not Match
-              </HelperText>
-            ) : null}
-          </View>
-          {emptyFieldError ? (
-            <HelperText
-              type="error"
-              style={{ color: "#fff", fontWeight: "500", textAlign: "center" }}
-            >
-              Field can not be empty!
-            </HelperText>
+          <TextInput
+            autoCapitalize="none"
+            placeholderTextColor="#000000"
+            label="Username"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            style={styles.textInput}
+            style={{ backgroundColor: "transparent" }}
+            onChangeText={handleChangeUsername}
+          />
+          {usernameError ? (
+            <Text style={{ color: "#000000" }}>Username is Not Correct</Text>
+          ) : null}
+          {alreadyExit ? (
+            <Text style={{ color: "#000000" }}>Username Already Exist</Text>
           ) : null}
           <View style={styles.distance}></View>
 
-          <View style={styles.buttonContainer}>
-            <Button
-              title="Register"
-              style={styles.background}
-              onPressHandler={Signup}
-            />
-          </View>
-          <View style={styles.signupContainer}>
+          <TextInput
+            autoCapitalize="none"
+            keyboardType="number-pad"
+            maxLength={14}
+            label="Phone"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            style={{ backgroundColor: "transparent" }}
+            onChangeText={(e) => setUser({ ...user, phone: e })}
+          />
+          <Tooltip
+            popover={<Text style={{ color: "#000000" }}>Start with +92</Text>}
+          >
             <Text
-              style={styles.signupText}
-              onPress={() => navigation.navigate("LoginScreen")}
+              style={{
+                color: "#000000",
+                fontStyle: "italic",
+                fontWeight: "bold",
+              }}
             >
-              Already have a account ?
+              Number Format Please Check
             </Text>
-          </View>
-          <Modal visible={modalVisible} animationType={"slide"}>
+          </Tooltip>
+
+          <View style={styles.distance}></View>
+
+          <TextInput
+            autoCapitalize="none"
+            placeholderTextColor="#000000"
+            maxLength={40}
+            // style={styles.textInput}
+            keyboardType="email-address"
+            mode="flat"
+            label="Email"
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            style={{ backgroundColor: "transparent", color: "#000000" }}
+            onChangeText={handleChangeEmail}
+          />
+          {emaiError ? (
+            <Text style={{ color: "#000000" }}>Email is Not Correct</Text>
+          ) : null}
+
+          <View style={styles.distance}></View>
+          <TextInput
+            autoCapitalize="none"
+            maxLength={20}
+            secureTextEntry
+            placeholderTextColor="#000000"
+            label="Password"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            underlineColor="#000000"
+            underlineColorAndroid="#000000"
+            style={styles.textInput}
+            style={{ backgroundColor: "transparent" }}
+            onChangeText={(e) => setUser({ ...user, password: e })}
+          />
+
+          {/* <View style={styles.distance}></View> */}
+          <TextInput
+            autoCapitalize="none"
+            maxLength={20}
+            secureTextEntry
+            placeholderTextColor="#000000"
+            label="Confirm Password"
+            theme={{
+              colors: {
+                primary: "#000000",
+                placeholder: "#000000",
+                text: "#000000",
+              },
+            }}
+            underlineColor="#000000"
+            underlineColorAndroid="000000"
+            style={styles.textInput}
+            style={{ backgroundColor: "transparent" }}
+            onChangeText={handleChangeConfirmPassowrd}
+          />
+          {confirmPasswordError ? (
+            <HelperText
+              type="error"
+              style={{
+                color: "#000000",
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Passwords Do Not Match
+            </HelperText>
+          ) : null}
+        </View>
+        {emptyFieldError ? (
+          <HelperText
+            type="error"
+            style={{ color: "#000000", fontWeight: "500", textAlign: "center" }}
+          >
+            Field can not be empty!
+          </HelperText>
+        ) : null}
+        <View style={styles.distance}></View>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Register"
+            style={styles.background}
+            onPressHandler={Signup}
+          />
+        </View>
+        <View style={styles.signupContainer}>
+          <Text
+            style={styles.signupText}
+            onPress={() => navigation.navigate("LoginScreen")}
+          >
+            Already have a account ?
+          </Text>
+        </View>
+        <Modal visible={modalVisible} animationType={"slide"}>
+          <View
+            style={{
+              flexDirection: "column",
+              flex: 1,
+              justifyContent: "center",
+            }}
+          >
             <View
               style={{
-                flexDirection: "column",
-                flex: 1,
+                flexDirection: "row",
                 justifyContent: "center",
               }}
             >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
+              <TextInput
+                autoFocus={true}
+                blurOnSubmit={false}
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin1: e })}
+                returnKeyType={"next"}
+                maxLength={1}
+                placeholder="-"
+                keyboardType="number-pad"
+                textAlign="center"
+                style={styles.OTP_text}
+                value={otpInput.first}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
                 }}
-              >
-                <TextInput
-                  autoFocus={true}
-                  blurOnSubmit={false}
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin1: e })}
-                  returnKeyType={"next"}
-                  maxLength={1}
-                  placeholder="-"
-                  keyboardType="number-pad"
-                  textAlign="center"
-                  style={styles.OTP_text}
-                  value={otpInput.first}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-                <View style={styles.space} />
-                <TextInput
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin2: e })}
-                  maxLength={1}
-                  placeholder="-"
-                  keyboardType="number-pad"
-                  style={styles.OTP_text}
-                  value={otpInput.second}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-                <View style={styles.space} />
-
-                <TextInput
-                  maxLength={1}
-                  placeholder="-"
-                  keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin3: e })}
-                  style={styles.OTP_text}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-                <View style={styles.space} />
-
-                <TextInput
-                  maxLength={1}
-                  placeholder="-"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin4: e })}
-                  keyboardType="number-pad"
-                  style={styles.OTP_text}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-                <View style={styles.space} />
-
-                <TextInput
-                  maxLength={1}
-                  placeholder="-"
-                  keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin5: e })}
-                  style={styles.OTP_text}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-                <View style={styles.space} />
-
-                <TextInput
-                  maxLength={1}
-                  placeholder="-"
-                  keyboardType="number-pad"
-                  onChangeText={(e) => setOTPInput({ ...otpInput, pin6: e })}
-                  style={styles.OTP_text}
-                  theme={{
-                    colors: {
-                      primary: "red",
-                      placeholder: "red",
-                      text: "red",
-                    },
-                  }}
-                  underlineColor="red"
-                  underlineColorAndroid="red"
-                />
-              </View>
-              <View style={styles.distance}></View>
-
-              <Button
-                style={styles.background}
-                title="Verify"
-                onPressHandler={confirmCode}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
               />
-              <View style={styles.distance}></View>
-              <TouchableOpacity
-                onPress={() => {
-                  setConfirm(null), setModalVisible(false);
+              <View style={styles.space} />
+              <TextInput
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin2: e })}
+                maxLength={1}
+                placeholder="-"
+                keyboardType="number-pad"
+                style={styles.OTP_text}
+                value={otpInput.second}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
                 }}
-                style={{ justifyContent: "center" }}
-              >
-                <Text
-                  style={{
-                    color: "#333",
-                    alignSelf: "center",
-                    fontSize: 24,
-                    fontWeight: "600",
-                  }}
-                >
-                  Resend Code
-                </Text>
-              </TouchableOpacity>
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
+                }}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+              />
+              <View style={styles.space} />
+
+              <TextInput
+                maxLength={1}
+                placeholder="-"
+                keyboardType="number-pad"
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin3: e })}
+                style={styles.OTP_text}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
+                }}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+              />
+              <View style={styles.space} />
+
+              <TextInput
+                maxLength={1}
+                placeholder="-"
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin4: e })}
+                keyboardType="number-pad"
+                style={styles.OTP_text}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
+                }}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+              />
+              <View style={styles.space} />
+
+              <TextInput
+                maxLength={1}
+                placeholder="-"
+                keyboardType="number-pad"
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin5: e })}
+                style={styles.OTP_text}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
+                }}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+              />
+              <View style={styles.space} />
+
+              <TextInput
+                maxLength={1}
+                placeholder="-"
+                keyboardType="number-pad"
+                onChangeText={(e) => setOTPInput({ ...otpInput, pin6: e })}
+                style={styles.OTP_text}
+                theme={{
+                  colors: {
+                    primary: "#1c2e65",
+                    placeholder: "#1c2e65",
+                    text: "#1c2e65",
+                  },
+                }}
+                underlineColor="#1c2e65"
+                underlineColorAndroid="#1c2e65"
+              />
             </View>
-          </Modal>
-        </View>
-      </ImageBackground>
+            <View style={styles.distance}></View>
+
+            <Button
+              style={styles.background}
+              title="Verify"
+              onPressHandler={confirmCode}
+            />
+            <View style={styles.distance}></View>
+            <TouchableOpacity
+              onPress={() => {
+                setConfirm(null), setModalVisible(false);
+              }}
+              style={{ justifyContent: "center" }}
+            >
+              <Text
+                style={{
+                  color: "#333",
+                  alignSelf: "center",
+                  fontSize: 24,
+                  fontWeight: "600",
+                }}
+              >
+                Resend Code
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
     </DismissKeyboard>
   );
 };
@@ -541,23 +527,24 @@ const styles = StyleSheet.create({
   },
   background: {
     alignSelf: "center",
-    backgroundColor: "red",
+    backgroundColor: "#1c2e65",
     width: buttonWidth,
     height: buttonHeight,
     justifyContent: "center",
   },
   titleText: {
-    color: "white",
+    color: "#000000",
     fontSize: 25,
     fontWeight: "700",
     textAlign: "center",
   },
   form_container: {
-    height: screenHeight * 0.7,
+    height: screenHeight,
+    backgroundColor: "#fff",
   },
   textInput: {
-    borderBottomColor: "#fff",
-    color: "#fff",
+    borderBottomColor: "#000000",
+    color: "#000000",
     borderBottomWidth: 1,
   },
   imageBackground: {
@@ -577,7 +564,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   forgotpassText: {
-    color: "#fff",
+    color: "#000000",
     fontWeight: "700",
     fontSize: 14,
   },
@@ -588,7 +575,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signupText: {
-    color: "#fff",
+    color: "#000000",
     fontWeight: "700",
     fontSize: 14,
   },

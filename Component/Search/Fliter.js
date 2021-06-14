@@ -11,7 +11,7 @@ import { TouchableOpacity } from "react-native";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
-const Filter = ({ modalVisible, toggleModal, Visibility }) => {
+const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
@@ -81,19 +81,38 @@ const Filter = ({ modalVisible, toggleModal, Visibility }) => {
   return (
     <View>
       <Modal visible={modalVisible} animationType={"slide"}>
-        <TouchableOpacity
-          activeOpacity={0}
-          onPress={clearFilter}
+        <View
           style={{
-            margin: 10,
+            justifyContent: "space-between",
             flexDirection: "row",
-            justifyContent: "flex-end",
+            flex: 1,
           }}
         >
-          <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
-            Clear Filter
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={clearFilter}
+            style={{
+              margin: 10,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
+              Clear Filter
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPressHandler={() => toggleModalView(modalVisible)}
+            style={{
+              margin: 10,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
+              Close
+            </Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView>
           <View
             style={{

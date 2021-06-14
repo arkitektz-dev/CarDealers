@@ -5,7 +5,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 const Navbar = ({ Title, goBack, style, source, backStyle }) => {
   return (
     <View style={style}>
-      <TouchableOpacity activeOpacity={0} onPress={goBack}>
+      <TouchableOpacity onPress={goBack}>
         <Image source={source} style={backStyle} />
       </TouchableOpacity>
 

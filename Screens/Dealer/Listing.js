@@ -64,7 +64,7 @@ const ListingDealer = () => {
   };
 
   return (
-    <View style={{ backgroundColor: "#fff" }}>
+    <View style={{ backgroundColor: "#fff", flex: 1, flexDirection: "column" }}>
       <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 10 }}
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
-    flexGrow: 1,
   },
   search: {
     width: "75%",

@@ -28,6 +28,7 @@ const ShowroomDetailScreen = ({ route }) => {
   const arr = [];
 
   useEffect(() => {
+    console.log(route);
     // setModalData(param.showrooms);
     fetchShowroomData();
     fetchData();
@@ -116,6 +117,9 @@ const ShowroomDetailScreen = ({ route }) => {
         </View>
       </View>
     );
+  };
+  const onPressHandler = (item) => {
+    navigation.navigate("DetailCarScreen", { item });
   };
 
   const _renderItem = ({ item }) => {
