@@ -211,7 +211,7 @@ const ListingCars = () => {
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch(setNoData(true));
+      .catch();
   };
   const onRefresh = () => {
     setRefreshing(true);
@@ -258,17 +258,12 @@ const ListingCars = () => {
         </Text>
         <Filter
           modalVisible={shown}
-          toggleModalView={() => {
-            setShown(false);
-          }}
           toggleModal={(dropdownValues) => {
             setShown(false);
             setSearch(dropdownValues);
             onFilter(dropdownValues);
           }}
-          Visibility={() => {
-            setfilteredData([]), setShown(false);
-          }}
+          Visibility={() => setShown(false)}
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text
@@ -288,6 +283,9 @@ const ListingCars = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      {noData ? (
+        <Text style={{ color: "black", textAlign: "center" }}>No Data</Text>
+      ) : null}
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}

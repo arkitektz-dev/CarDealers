@@ -85,7 +85,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
           style={{
             justifyContent: "space-between",
             flexDirection: "row",
-            flex: 1,
+            marginBottom: 20,
           }}
         >
           <TouchableOpacity
@@ -101,7 +101,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPressHandler={() => toggleModalView(modalVisible)}
+            onPress={Visibility}
             style={{
               margin: 10,
               flexDirection: "row",
@@ -132,17 +132,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               selectedItem={dropdownValues.Assemble}
               width="80%"
             />
-            {/* <AppPicker
-              items={items}
-              name="category"
-              onSelectItem={(item) =>
-                setDropDownValues({ ...dropdownValues, mileage: item })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Mileage"
-              selectedItem={dropdownValues.mileage}
-              width="80%"
-            /> */}
+
             <AppPicker
               items={color}
               name="category"
@@ -193,11 +183,11 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             title="Submit"
             onPressHandler={() => toggleModal(dropdownValues)}
           />
-          <Button
+          {/* <Button
             style={styles.background}
             title="Cancel"
             onPressHandler={Visibility}
-          />
+          /> */}
         </ScrollView>
       </Modal>
     </View>

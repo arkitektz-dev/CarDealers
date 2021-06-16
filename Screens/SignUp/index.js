@@ -2,20 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { HelperText, TextInput } from "react-native-paper";
-import {
-  Dimensions,
-  ImageBackground,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "../../Component/Button/Index";
 import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { useNavigation } from "@react-navigation/core";
 
-import BackgroundImage from "../../Assets/loginBackground.png";
 import { Tooltip } from "react-native-elements";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 

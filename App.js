@@ -1,13 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Platform, StatusBar, Text, View } from "react-native";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
+import NetInfo from "@react-native-community/netinfo";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
-import { Platform } from "react-native";
-import { StatusBar } from "react-native";
+import { Alert } from "react-native";
+import OfflineNotice from "./Component/Offline";
 
 const MainStack = () => {
   const Stack = createStackNavigator();
@@ -24,6 +25,7 @@ const MainStack = () => {
 };
 
 function App() {
+  const [connectionStatus, setConnectionStatus] = useState(true);
   var firebaseConfig = {
     apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
     authDomain: "cardealer-41e38.firebaseapp.com",
@@ -35,13 +37,55 @@ function App() {
     measurementId: "G-E240F5VSHS",
   };
 
+  const CheckConnectivity = () => {
+    if (Platform.OS === "android") {
+      NetInfo.fetch().then((isConnected) => {
+        setConnectionStatus(isConnected.isConnected);
+      });
+    } else {
+      NetInfo.isConnected.addEventListener(
+        "connectionChange",
+        handleFirstConnectivityChange
+      );
+    }
+  };
+  useEffect(() => {
+    CheckConnectivity();
+  }, []);
+
+  // const handleFirstConnectivityChange = (isConnected) => {
+  //   NetInfo.isConnected.removeEventListener(
+  //     "connectionChange",
+  //     this.handleFirstConnectivityChange
+  //   );
+
+  //   if (isConnected === false) {
+  //     Alert.alert("You are offline!");
+  //   } else {
+  //     Alert.alert("You are online!");
+  //   }
+  // };
+
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
+
   return (
     <SafeAreaProvider>
       <StatusBar hidden />
+
       <NavigationContainer>
+        <Text
+          style={{
+            fontSize: 18,
+            textAlign: "center",
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
+          {connectionStatus ? null : "Offline"}
+        </Text>
+
         <MainStack />
       </NavigationContainer>
     </SafeAreaProvider>

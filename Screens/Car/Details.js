@@ -21,6 +21,7 @@ import { screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
+import { FlatList } from "react-native-gesture-handler";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
@@ -48,6 +49,7 @@ const DetailCarScreen = ({ route, navigation }) => {
       setIsVisible(false);
     } else setIsVisible(true);
   };
+
   return (
     <View style={styles.container}>
       <View
@@ -180,20 +182,27 @@ const DetailCarScreen = ({ route, navigation }) => {
           >
             Features
           </Text>
-          {item.vehicle.additionalInformation.features.map((item) => (
-            <View style={{ flexDirection: "column" }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginHorizontal: 10,
-                }}
-              >
-                <Image source={Radio} style={styles.img} />
+          <FlatList
+            contentContainerStyle={{}}
+            numColumns={2}
+            data={item.vehicle.additionalInformation.features}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flex: 0.5,
+                    // justifyContent: "space-around",
+                  }}
+                >
+                  <Image source={Radio} style={styles.img} />
 
-                <Text style={styles.feature}>{item}</Text>
-              </View>
-            </View>
-          ))}
+                  <Text style={styles.feature}>{item}</Text>
+                </View>
+              );
+            }}
+          />
+          <View style={{ height: screenHeight * 0.04 }}></View>
           <Text
             style={{
               marginLeft: 20,
@@ -456,7 +465,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   titleContainer: {
-    margin: 10,
+    padding: 15,
     borderBottomWidth: 0.4,
     opacity: 2,
     shadowColor: "grey",

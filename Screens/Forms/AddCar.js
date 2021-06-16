@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import Location from "../../Assets/NewAsset/location.png";
+import { Tooltip } from "react-native-elements";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
@@ -46,6 +46,8 @@ const AddCar = ({ navigation }) => {
   //   name: "HSKB Motors",
   // });
   const [featured, setFeatured] = useState(false);
+  const [rangePriceData, setRangePriceData] = useState(0);
+  const [rangeMileageData, setRangeMileageData] = useState(0);
   const [image, setImage] = useState([]);
   const [tempImage, setTempImage] = useState([]);
   const [assembly, setAssembly] = useState("");
@@ -55,7 +57,9 @@ const AddCar = ({ navigation }) => {
   const [City, setCity] = useState("");
   const [ExteriorColor, setExteriorColor] = useState("");
   const [showroomPicker, setShowroomPicker] = useState("");
+  const [dealerState, setDealerState] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
+  const [dealerPickerID, setDealerPickerID] = useState("");
 
   const [information, setInformation] = useState({
     make: "",
@@ -68,7 +72,6 @@ const AddCar = ({ navigation }) => {
 
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
-  const [mileage, setMileage] = useState("");
   const [checkbox, setCheckbox] = useState([]);
   const [visible, setVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -76,22 +79,21 @@ const AddCar = ({ navigation }) => {
   useEffect(() => {
     fetchShowroomCar().then((data) =>
       data.forEach((querySnapshot) => {
-        console.log(typeof querySnapshot.id, "Showroom");
-
         showroomData.push({
           value: querySnapshot.id,
           label: querySnapshot.data().name,
         });
       })
     );
-    fetchDealerCar().then((data) =>
-      data.forEach((querySnapshot) => {
-        console.log(typeof querySnapshot.id);
-        dealerData.push({
-          value: querySnapshot.id,
-          label: querySnapshot.id,
-        });
-      })
+    fetchDealerCar().then(
+      (data) =>
+        data.forEach((querySnapshot) => {
+          dealerData.push({
+            value: querySnapshot.id,
+            label: querySnapshot.data().name,
+          });
+        }),
+      setDealerState(dealerData)
     );
   }, []);
   const bottomSheetHandeler = () => {
@@ -233,17 +235,16 @@ const AddCar = ({ navigation }) => {
   const onPressHandler = async () => {
     const userRef = firestore()
       .collection("Dealers")
-      .doc(dealerPicker);
-    console.log(userRef);
+      .doc(dealerPickerID);
 
     const dealerObj = {
       id: userRef,
-      name: "Ijaz Hussain",
+      name: dealerPicker,
     };
 
     await imageURI();
     const obj = {
-      amount: amount,
+      amount: ` Rs ${rangePriceData} Lacs`,
       dealer: dealerObj,
       featured: featured,
 
@@ -262,8 +263,8 @@ const AddCar = ({ navigation }) => {
         description: Description,
         exteriorColor: ExteriorColor,
         information: information,
-        mileage: mileage,
-        registrationCity: ExteriorColor,
+        mileage: `${rangeMileageData} KM`,
+        registrationCity: registrationCity,
       },
     };
 
@@ -388,175 +389,171 @@ const AddCar = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/* {uploading ? (
-            <>
-              <Text>{transferred} % Completed</Text>
-              <ActivityIndicator size="small" color="red" />
-            </>
-          ) : (
-            <Text style={{textAlign:'center',marginRight:25}}>Done</Text>
-          )} */}
-          <AppPicker
-            items={assembleType}
-            name="category"
-            onSelectItem={(item) => setAssembly(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Assembly"
-            selectedItem={assembly}
-            width="80%"
-          />
 
-          <TouchableOpacity
-            style={{
-              backgroundColor: defaultStyles.colors.light,
-              borderRadius: 25,
-              flexDirection: "row",
-              padding: 15,
-              marginVertical: 10,
-              width: 220,
-            }}
-            onPress={() => setVisible(true)}
-          >
-            <Text style={{ color: "#333", fontSize: 17 }}>Select Features</Text>
-          </TouchableOpacity>
-          <Modal visible={visible} animationType="slide">
-            <Button
-              title="Close"
-              style={styles.buttonContainer}
-              onPressHandler={() => setVisible(false)}
+          <View style={{ padding: 10 }}>
+            <AppPicker
+              items={assembleType}
+              name="category"
+              onSelectItem={(item) => setAssembly(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Assembly"
+              selectedItem={assembly}
+              width="80%"
             />
-            {checkboxData.map((item) => {
-              return (
-                <View style={{ flexDirection: "row" }}>
-                  <AppCheckBox
-                    status={checkbox.includes(item) ? "checked" : "unchecked"}
-                    onPress={() => onChangeHandler(item)}
-                  />
-                  <Text
-                    style={{
-                      color: "#000",
-                      fontSize: 18,
-                      fontWeight: "800",
-                    }}
-                    key={(item, index) => index.toString()}
-                  >
-                    {item}
-                  </Text>
-                </View>
-              );
-            })}
-          </Modal>
 
-          <AppPicker
-            items={items}
-            name="category"
-            onSelectItem={(item) => setEngineCapacity(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Engine Capacity"
-            selectedItem={enginecapacity}
-            width="80%"
-          />
-          <AppPicker
-            items={engineTypeData}
-            name="category"
-            onSelectItem={(item) => setEngineType(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Engine Type"
-            selectedItem={engineType}
-            width="80%"
-          />
-          <AppPicker
-            items={type}
-            name="category"
-            onSelectItem={(item) => setTransmission(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Transmission"
-            selectedItem={transmission}
-            width="80%"
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            {/* <Image source={Location} style={styles.img} /> */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: defaultStyles.colors.light,
+                borderRadius: 25,
+                flexDirection: "row",
+                padding: 15,
+                marginVertical: 10,
+                width: 220,
+              }}
+              onPress={() => setVisible(true)}
+            >
+              <Text style={{ color: "#333", fontSize: 17 }}>
+                Select Features
+              </Text>
+            </TouchableOpacity>
+            <Modal visible={visible} animationType="slide">
+              <Button
+                title="Close"
+                style={styles.buttonContainer}
+                onPressHandler={() => setVisible(false)}
+              />
+              {checkboxData.map((item) => {
+                return (
+                  <View style={{ flexDirection: "row" }}>
+                    <AppCheckBox
+                      status={checkbox.includes(item) ? "checked" : "unchecked"}
+                      onPress={() => onChangeHandler(item)}
+                    />
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 18,
+                        fontWeight: "800",
+                      }}
+                      key={(item, index) => index.toString()}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </Modal>
+
+            <AppPicker
+              items={items}
+              name="category"
+              onSelectItem={(item) => setEngineCapacity(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Engine Capacity"
+              selectedItem={enginecapacity}
+              width="80%"
+            />
+            <AppPicker
+              items={engineTypeData}
+              name="category"
+              onSelectItem={(item) => setEngineType(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Engine Type"
+              selectedItem={engineType}
+              width="80%"
+            />
+            <AppPicker
+              items={type}
+              name="category"
+              onSelectItem={(item) => setTransmission(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Transmission"
+              selectedItem={transmission}
+              width="80%"
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {/* <Image source={Location} style={styles.img} /> */}
+              <AppPicker
+                items={city}
+                name="category"
+                onSelectItem={(item) => setCity(item)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" City"
+                selectedItem={City}
+                width="80%"
+              />
+            </View>
+            <AppPicker
+              items={company}
+              name="category"
+              onSelectItem={(item) =>
+                setInformation({ ...information, make: item })
+              }
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Company"
+              selectedItem={information.make}
+              width="80%"
+            />
+            <AppPicker
+              items={modelCar}
+              name="category"
+              onSelectItem={(item) =>
+                setInformation({ ...information, model: item })
+              }
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Model"
+              selectedItem={information.model}
+              width="80%"
+            />
+
+            <AppPicker
+              items={year}
+              name="category"
+              onSelectItem={(item) =>
+                setInformation({ ...information, modelYear: item })
+              }
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Model Year"
+              selectedItem={information.modelYear}
+              width="80%"
+            />
+            <AppPicker
+              items={versionCar}
+              name="category"
+              onSelectItem={(item) =>
+                setInformation({ ...information, version: item })
+              }
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Version"
+              selectedItem={information.version}
+              width="80%"
+            />
+
+            <AppPicker
+              items={color}
+              name="category"
+              onSelectItem={(item) => setExteriorColor(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder=" Exterior Color"
+              selectedItem={ExteriorColor}
+              width="80%"
+            />
+
             <AppPicker
               items={city}
               name="category"
-              onSelectItem={(item) => setCity(item)}
+              onSelectItem={(item) => setRegistrationCity(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder=" City"
-              selectedItem={City}
+              placeholder=" Registration City"
+              selectedItem={registrationCity}
               width="80%"
             />
-          </View>
-          <AppPicker
-            items={company}
-            name="category"
-            onSelectItem={(item) =>
-              setInformation({ ...information, make: item })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Company"
-            selectedItem={information.make}
-            width="80%"
-          />
-          <AppPicker
-            items={modelCar}
-            name="category"
-            onSelectItem={(item) =>
-              setInformation({ ...information, model: item })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Model"
-            selectedItem={information.model}
-            width="80%"
-          />
-
-          <AppPicker
-            items={year}
-            name="category"
-            onSelectItem={(item) =>
-              setInformation({ ...information, modelYear: item })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Model Year"
-            selectedItem={information.modelYear}
-            width="80%"
-          />
-          <AppPicker
-            items={versionCar}
-            name="category"
-            onSelectItem={(item) =>
-              setInformation({ ...information, version: item })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Version"
-            selectedItem={information.version}
-            width="80%"
-          />
-
-          <AppPicker
-            items={color}
-            name="category"
-            onSelectItem={(item) => setExteriorColor(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Exterior Color"
-            selectedItem={ExteriorColor}
-            width="80%"
-          />
-
-          <AppPicker
-            items={city}
-            name="category"
-            onSelectItem={(item) => setRegistrationCity(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder=" Registration City"
-            selectedItem={registrationCity}
-            width="80%"
-          />
-          {/* <AppPicker
+            {/* <AppPicker
             items={showroomData}
             name="category"
             onSelectItem={(item) => setShowroomPicker(item)}
@@ -565,65 +562,71 @@ const AddCar = ({ navigation }) => {
             selectedItem={showroomPicker}
             width="80%"
           /> */}
-          <AppPicker
-            items={dealerData}
-            name="category"
-            onSelectItem={(item) => setDealerPicker(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Dealers"
-            selectedItem={dealerPicker}
-            width="80%"
-          />
-
-          <View style={{ width: "70%", marginLeft: 25 }}>
-            <AppTextInput
-              label={"Description"}
-              multiline={true}
-              onChangeHandler={(e) => setDescription(e)}
+            <AppPicker
+              items={dealerState}
+              name="category"
+              onSelectItem={(item) => {
+                let dealerO = dealerState.filter(
+                  (dealer) => item == dealer.label
+                );
+                setDealerPickerID(dealerO[0].value);
+                setDealerPicker(dealerO[0].label);
+              }}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Dealers"
+              selectedItem={dealerPicker}
+              width="80%"
             />
 
-            <View style={{ flexDirection: "column", margin: 10 }}>
-              <Text
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  marginBottom: 10,
-                }}
-              >
-                Select Amount{" "}
-              </Text>
-              <SliderData
-                min={0}
-                max={100}
-                step={2}
-                onValueChange={(data) => console.log(data)}
+            <View style={{ width: "70%", marginLeft: 25 }}>
+              <AppTextInput
+                label={"Description"}
+                multiline={true}
+                onChangeHandler={(e) => setDescription(e)}
               />
-            </View>
-            <View style={{ flexDirection: "column", margin: 10 }}>
-              <Text
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  marginBottom: 10,
-                }}
-              >
-                Select Mileage{" "}
-              </Text>
-              <SliderData
-                min={0}
-                max={100}
-                step={2}
-                onValueChange={(data) => console.log(data)}
-              />
-            </View>
+              <View style={{ flexDirection: "column", margin: 10 }}>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    marginBottom: 10,
+                  }}
+                >
+                  Select Amount: Rs {rangePriceData} Lacs
+                </Text>
+                <SliderData
+                  min={0}
+                  max={100}
+                  onValueChange={(data) => setRangePriceData(data)}
+                />
+              </View>
 
-            <Button
-              style={styles.background}
-              title="Submit"
-              onPressHandler={onPressHandler}
-            />
+              <View style={{ flexDirection: "column", margin: 10 }}>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    marginBottom: 10,
+                  }}
+                >
+                  Select Mileage: {rangeMileageData}KM
+                </Text>
+                <SliderData
+                  min={0}
+                  max={10000}
+                  step={1}
+                  onValueChange={(data) => setRangeMileageData(data)}
+                />
+              </View>
+
+              <Button
+                style={styles.background}
+                title="Submit"
+                onPressHandler={onPressHandler}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
