@@ -1,14 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { HelperText, TextInput } from "react-native-paper";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import { Button } from "../../Component/Button/Index";
 import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { useNavigation } from "@react-navigation/core";
 
 import { Tooltip } from "react-native-elements";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import Back from "../../Assets/NewAsset/backButton.png";
+import Navbar from "../../Component/Navbar.js/Index";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -28,6 +37,11 @@ export const SignupScreen = () => {
     password: "",
     confirmPassowrd: "",
   });
+  const inputTwo = useRef();
+  const inputThree = useRef();
+  const inputFour = useRef();
+  const inputFive = useRef();
+  const inputSix = useRef();
   const [confirm, setConfirm] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
@@ -68,13 +82,6 @@ export const SignupScreen = () => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setTimeoutButton;
-  //   }, 30000);
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   const navigation = useNavigation();
   const ref = firestore().collection("Users");
@@ -148,7 +155,14 @@ export const SignupScreen = () => {
 
   return (
     <DismissKeyboard>
-      <View style={styles.form_container}>
+      <ScrollView style={styles.form_container}>
+        <Navbar
+          style={styles.nav}
+          Title="Back"
+          source={Back}
+          backStyle={styles.back}
+          goBack={() => navigation.goBack()}
+        />
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>Register User</Text>
         </View>
@@ -311,12 +325,15 @@ export const SignupScreen = () => {
         {emptyFieldError ? (
           <HelperText
             type="error"
-            style={{ color: "#000000", fontWeight: "500", textAlign: "center" }}
+            style={{
+              color: "#000000",
+              fontWeight: "500",
+              textAlign: "center",
+            }}
           >
             Field can not be empty!
           </HelperText>
         ) : null}
-        <View style={styles.distance}></View>
 
         <View style={styles.buttonContainer}>
           <Button
@@ -325,14 +342,7 @@ export const SignupScreen = () => {
             onPressHandler={Signup}
           />
         </View>
-        <View style={styles.signupContainer}>
-          <Text
-            style={styles.signupText}
-            onPress={() => navigation.navigate("LoginScreen")}
-          >
-            Already have a account ?
-          </Text>
-        </View>
+
         <Modal visible={modalVisible} animationType={"slide"}>
           <View
             style={{
@@ -350,7 +360,10 @@ export const SignupScreen = () => {
               <TextInput
                 autoFocus={true}
                 blurOnSubmit={false}
-                onChangeText={(e) => setOTPInput({ ...otpInput, pin1: e })}
+                onChangeText={(e) => {
+                  if (e.length === 1) inputTwo.current.focus();
+                  setOTPInput({ ...otpInput, pin1: e });
+                }}
                 returnKeyType={"next"}
                 maxLength={1}
                 placeholder="-"
@@ -370,9 +383,14 @@ export const SignupScreen = () => {
               />
               <View style={styles.space} />
               <TextInput
+                ref={inputTwo}
                 returnKeyType="next"
                 blurOnSubmit={false}
-                onChangeText={(e) => setOTPInput({ ...otpInput, pin2: e })}
+                onChangeText={(e) => {
+                  if (e.length === 1)
+                    inputThree.current.focus(),
+                      setOTPInput({ ...otpInput, pin2: e });
+                }}
                 maxLength={1}
                 placeholder="-"
                 keyboardType="number-pad"
@@ -400,10 +418,14 @@ export const SignupScreen = () => {
               <View style={styles.space} />
 
               <TextInput
+                ref={inputThree}
                 maxLength={1}
                 placeholder="-"
                 keyboardType="number-pad"
-                onChangeText={(e) => setOTPInput({ ...otpInput, pin3: e })}
+                onChangeText={(e) => {
+                  if (e.length === 1) inputFour.current.focus();
+                  setOTPInput({ ...otpInput, pin3: e });
+                }}
                 style={styles.OTP_text}
                 theme={{
                   colors: {
@@ -418,9 +440,13 @@ export const SignupScreen = () => {
               <View style={styles.space} />
 
               <TextInput
+                ref={inputFour}
                 maxLength={1}
                 placeholder="-"
-                onChangeText={(e) => setOTPInput({ ...otpInput, pin4: e })}
+                onChangeText={(e) => {
+                  if (e.length === 1) inputFive.current.focus();
+                  setOTPInput({ ...otpInput, pin4: e });
+                }}
                 keyboardType="number-pad"
                 style={styles.OTP_text}
                 theme={{
@@ -436,10 +462,14 @@ export const SignupScreen = () => {
               <View style={styles.space} />
 
               <TextInput
+                ref={inputFive}
                 maxLength={1}
                 placeholder="-"
                 keyboardType="number-pad"
-                onChangeText={(e) => setOTPInput({ ...otpInput, pin5: e })}
+                onChangeText={(e) => {
+                  if (e.length === 1) inputSix.current.focus();
+                  setOTPInput({ ...otpInput, pin5: e });
+                }}
                 style={styles.OTP_text}
                 theme={{
                   colors: {
@@ -454,6 +484,7 @@ export const SignupScreen = () => {
               <View style={styles.space} />
 
               <TextInput
+                ref={inputSix}
                 maxLength={1}
                 placeholder="-"
                 keyboardType="number-pad"
@@ -497,7 +528,15 @@ export const SignupScreen = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-      </View>
+        <View style={styles.signupContainer}>
+          <Text
+            style={styles.signupText}
+            onPress={() => navigation.navigate("LoginScreen")}
+          >
+            Already have a account ?
+          </Text>
+        </View>
+      </ScrollView>
     </DismissKeyboard>
   );
 };
@@ -506,6 +545,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
   },
+  nav: {
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-start",
+    height: 49,
+  },
+  back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
+
   space: {
     width: screenWidth * 0.04,
   },
@@ -560,9 +608,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signupContainer: {
+    paddingBottom: 50,
     flexDirection: "row",
-    flex: 0.1,
-    top: "15%",
+    top: "10%",
     alignSelf: "center",
   },
   signupText: {
@@ -576,10 +624,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   buttonContainer: {
+    top: "5%",
     flexDirection: "row",
-    flex: 0.2,
     justifyContent: "center",
-    top: 15,
   },
   logoContainer: {
     backgroundColor: "yellow",

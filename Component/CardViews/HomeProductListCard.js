@@ -31,8 +31,8 @@ const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
         <Text
           style={{
             textAlign: "left",
-            color: "#828a9f",
-            fontSize: 14,
+            color: "#1e2d64",
+            fontSize: 17,
             fontWeight: "bold",
           }}
         >
@@ -40,9 +40,9 @@ const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
         </Text>
         <Text
           style={{
-            color: "black",
-            fontSize: 12,
-            fontWeight: "bold",
+            color: "#1e2d64",
+            fontSize: 14,
+            fontWeight: "700",
             textAlign: "left",
           }}
         >
@@ -51,9 +51,9 @@ const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
         <Text
           style={{
             textAlign: "left",
-            color: "#828a9f",
-            fontSize: 10,
-            fontWeight: "800",
+            color: "#1e2d64",
+            fontSize: 13,
+            fontWeight: "600",
           }}
         >
           {subtitle}

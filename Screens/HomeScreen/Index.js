@@ -68,8 +68,7 @@ const HomeScreen = ({ navigation }) => {
         <CategoryCard />
 
         <View style={styles.distance}></View>
-        <DemandCarCard />
-        <View style={styles.distance}></View>
+        {/* <DemandCarCard /> */}
 
         <CarCard />
 

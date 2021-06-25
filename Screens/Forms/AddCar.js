@@ -210,25 +210,16 @@ const AddCar = ({ navigation }) => {
         );
       });
       try {
-        await task;
-        const url = await storageRef.getDownloadURL();
+        task;
+        const url = storageRef.getDownloadURL();
 
-        await setImage([...image, url]);
+        setImage([...image, url]);
         setUploading(false);
       } catch (error) {
         console.log(error);
       }
     });
   };
-  // const submitPhotos = async () => {
-  //   const url = await imageURI();
-  //   try {
-  //     setImage(url);
-  //   } catch (error) {}
-  //   // const arr = [];
-  //   // arr.push(url);
-  //   // console.log(url);
-  // };
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
@@ -242,7 +233,7 @@ const AddCar = ({ navigation }) => {
       name: dealerPicker,
     };
 
-    await imageURI();
+    imageURI();
     const obj = {
       amount: ` Rs ${rangePriceData} Lacs`,
       dealer: dealerObj,

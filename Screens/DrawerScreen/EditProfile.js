@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import AppTextInput from "../../Component/TextInput/Index";
 import { Button } from "../../Component/Button/Index";
 import { updateProfile } from "../../Data/FetchData";
-import { ScrollView } from "react-native-gesture-handler";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 

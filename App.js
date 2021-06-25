@@ -49,22 +49,6 @@ function App() {
       );
     }
   };
-  useEffect(() => {
-    CheckConnectivity();
-  }, []);
-
-  // const handleFirstConnectivityChange = (isConnected) => {
-  //   NetInfo.isConnected.removeEventListener(
-  //     "connectionChange",
-  //     this.handleFirstConnectivityChange
-  //   );
-
-  //   if (isConnected === false) {
-  //     Alert.alert("You are offline!");
-  //   } else {
-  //     Alert.alert("You are online!");
-  //   }
-  // };
 
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -75,17 +59,6 @@ function App() {
       <StatusBar hidden />
 
       <NavigationContainer>
-        <Text
-          style={{
-            fontSize: 18,
-            textAlign: "center",
-            fontWeight: "bold",
-            color: "white",
-          }}
-        >
-          {connectionStatus ? null : "Offline"}
-        </Text>
-
         <MainStack />
       </NavigationContainer>
     </SafeAreaProvider>

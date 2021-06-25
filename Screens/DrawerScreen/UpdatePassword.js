@@ -51,12 +51,6 @@ const UpdatePassword = ({ navigation, route }) => {
         source={{ uri: userinfo && userinfo.image }}
       />
 
-      {/* <ScrollView>
-          
-           
-           
-            
-          </ScrollView> */}
       <View style={styles.distance}></View>
       <View
         style={{

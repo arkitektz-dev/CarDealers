@@ -233,12 +233,12 @@ const ListingCars = () => {
           size={35}
           onPress={() => navigation.goBack()}
         />
-
         <SearchComponent
           style={styles.search}
           onChangeHandler={(text) => onSearch(text)}
         />
       </View>
+
       <View
         style={{
           justifyContent: "space-between",

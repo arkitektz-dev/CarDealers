@@ -18,6 +18,7 @@ import { Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ShowroomStack from "../HomeStack/ShowroomStack";
 import Dealer from "../../Screens/Dealer";
+import DemandCarlisting from "../../Screens/DemandCarlisting";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +44,7 @@ function MyTabs() {
         component={DrawerNav}
         options={{
           tabBarIcon: ({ color }) => (
-            <IonIcon name="car-sport-sharp" color={color} size={28} />
+            <IonIcon name="home-outline" color={color} size={28} />
           ),
         }}
       />
@@ -53,19 +54,38 @@ function MyTabs() {
         component={ShowroomStack}
         options={{
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="building" size={26} color={color} />
+            <IonIcon name="search-outline" size={26} color={color} />
           ),
         }}
       />
 
+      {status != undefined ? (
+        <Tab.Screen
+          name="AddCarButton"
+          component={DemandCarlisting}
+          options={{
+            tabBarButton: (props) => <AddFormButton {...props} />,
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="AddCarButton"
+          component={LottieLoader}
+          options={{
+            tabBarButton: (props) => <AddFormButton {...props} />,
+          }}
+        />
+      )}
+
       <Tab.Screen
-        name="AddCarButton"
-        component={AddCar}
+        name="Dealer"
+        component={Dealer}
         options={{
-          tabBarButton: (props) => <AddFormButton {...props} />,
+          tabBarIcon: ({ color }) => (
+            <Entypo name="news" size={28} color={color} />
+          ),
         }}
       />
-
       {status != undefined ? (
         <Tab.Screen
           name="About"
@@ -87,16 +107,6 @@ function MyTabs() {
           }}
         />
       )}
-
-      <Tab.Screen
-        name="Dealer"
-        component={Dealer}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Entypo name="location-pin" size={28} color={color} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
