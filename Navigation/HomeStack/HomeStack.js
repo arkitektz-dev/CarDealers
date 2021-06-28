@@ -11,6 +11,7 @@ import ListingDealer from "../../Screens/Dealer/Listing";
 import ProfileStack from "./ProfileStack";
 import DemandCarlisting from "../../Screens/DemandCarlisting";
 import ShowroomProfile from "../../Screens/Showroom/Profile";
+import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -66,6 +67,15 @@ const HomeStack = () => {
       <Stack.Screen
         name="DemandCars"
         component={DemandCarlisting}
+        options={{
+          headerShown: false,
+          headerTitleAlign: "center",
+          title: "Car",
+        }}
+      />
+      <Stack.Screen
+        name="AddDemandCar"
+        component={AddDemandCar}
         options={{
           headerShown: false,
           headerTitleAlign: "center",

@@ -17,9 +17,7 @@ export const fetchCarData = async () => {
 };
 export const fetchDemandCarData = async () => {
   const arr = [];
-  const ref = firestore()
-    .collection("Advertisments")
-    .where("demand", "==", true);
+  const ref = firestore().collection("Demand");
   var data = await ref.limit(5).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -32,9 +30,7 @@ export const fetchDemandCarData = async () => {
 
 export const fetchMoreDemandCar = async (startAfter) => {
   const arr = [];
-  const ref = firestore()
-    .collection("Advertisments")
-    .where("demand", "==", true);
+  const ref = firestore().collection("Demand");
   var data = await ref
     .startAfter(startAfter)
     .limit(5)
@@ -197,6 +193,19 @@ export const AddShowroomData = (showroomData) => {
       .then(() => {
         alert("Showroom Added");
       });
+  }
+};
+export const AddDemand = (obj) => {
+  if (obj.Make == "" || obj.Model == "" || obj.Year == "")
+    alert("Fields can not be empty");
+  else {
+    firestore()
+      .collection("Demand")
+      .add(obj)
+      .then(() => {
+        alert("Demand Added");
+      });
+    console.log(obj);
   }
 };
 

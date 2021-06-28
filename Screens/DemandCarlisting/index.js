@@ -112,11 +112,11 @@ const DemandCarList = () => {
               flexDirection: "row",
             }}
           >
-            <Image
+            {/* <Image
               source={{ uri: item.images[0] }}
               style={styles.imageSize}
               resizeMode={"contain"}
-            />
+            /> */}
 
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
@@ -127,9 +127,8 @@ const DemandCarList = () => {
                   fontWeight: "bold",
                 }}
               >
-                {item.vehicle.information.make} {item.vehicle.information.model}{" "}
-                {"\b"}
-                {item.vehicle.information.modelYear}
+                {item.Make} {item.Model} {"\b"}
+                {item.Year}
               </Text>
               <View style={{ height: 10 }}></View>
               <Text
@@ -140,7 +139,7 @@ const DemandCarList = () => {
                   textAlign: "left",
                 }}
               >
-                {item.amount}
+                {item.Price}
               </Text>
               <View style={{ height: 10 }}></View>
 
@@ -152,9 +151,7 @@ const DemandCarList = () => {
                   textAlign: "left",
                 }}
               >
-                {item.vehicle.city} | {""}
-                {item.vehicle.mileage} | {""}
-                {item.vehicle.additionalInformation.engineType}
+                {item.Dealer.Name}
               </Text>
             </View>
           </View>
@@ -224,7 +221,7 @@ const DemandCarList = () => {
           }}
           Visibility={() => setShown(false)}
         />
-        <TouchableOpacity onPress={() => setShown(true)}>
+        <TouchableOpacity onPress={() => navigation.navigate("AddDemandCar")}>
           <Text
             style={{
               color: "#333",
@@ -233,7 +230,7 @@ const DemandCarList = () => {
               fontSize: 18,
             }}
           >
-            Filter
+            Add Demand Car
           </Text>
         </TouchableOpacity>
       </View>

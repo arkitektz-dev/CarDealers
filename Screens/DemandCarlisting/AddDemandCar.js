@@ -1,31 +1,31 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
-import { AddShowroomData } from "../../Data/FetchData";
+import { AddDemand, fetchDealerCar } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
-
+import AppPicker from "../../Component/Pickers/Index";
 import ErrorHandle from "../../Component/HelperText";
+import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
+import firestore from "@react-native-firebase/firestore";
 
-const AddShowroom = ({ navigation }) => {
+const AddDemandCar = ({ navigation }) => {
+  const [dealerState, setDealerState] = useState("");
+  const [dealerPicker, setDealerPicker] = useState("");
+  const [dealerPickerID, setDealerPickerID] = useState("");
+
   const [showroomData, setShowroomData] = useState({
-    name: "",
-    website: "",
-    city: "",
-    contactInformation: "",
-    email: "",
-    location: "",
-    address: "",
-    images: [
-      "https://www.homelandtransportcompany.com/wp-content/uploads/2021/03/haggle-free.jpg",
-    ],
+    Make: "",
+    Model: "",
+    Price: "",
+    Year: "",
   });
   const [errorState, setErrorState] = useState({
-    name: false,
-    contactInformation: false,
-    location: false,
+    Make: false,
+    Model: false,
+    Year: false,
   });
   const setUploadImage = () => {
     const options = {
@@ -46,32 +46,56 @@ const AddShowroom = ({ navigation }) => {
       }
     });
   };
-
+  var dealerData = [];
+  useEffect(() => {
+    fetchDealerCar().then(
+      (data) =>
+        data.forEach((querySnapshot) => {
+          dealerData.push({
+            value: querySnapshot.id,
+            label: querySnapshot.data().name,
+          });
+        }),
+      setDealerState(dealerData)
+    );
+  }, []);
   const onSubmitHandler = () => {
-    AddShowroomData(showroomData);
+    const userRef = firestore()
+      .collection("Dealers")
+      .doc(dealerPickerID);
+
+    const Dealer = {
+      id: userRef,
+      Name: dealerPicker,
+    };
+    const obj = {
+      Dealer,
+      ...showroomData,
+    };
+    AddDemand(obj);
   };
-  const onChangeNameHandeler = (e) => {
+  const onChangeMake = (e) => {
     if (e == "") {
-      setErrorState({ name: true });
+      setErrorState({ Make: true });
     } else {
-      setErrorState({ name: false });
-      setShowroomData({ ...showroomData, name: e });
+      setErrorState({ Make: false });
+      setShowroomData({ ...showroomData, Make: e });
     }
   };
-  const onChangeContactInformation = (e) => {
+  const onChangeModel = (e) => {
     if (e == "") {
-      setErrorState({ contactInformation: true });
+      setErrorState({ Model: true });
     } else {
-      setErrorState({ contactInformation: false });
-      setShowroomData({ ...showroomData, contactInformation: e });
+      setErrorState({ Model: false });
+      setShowroomData({ ...showroomData, Model: e });
     }
   };
-  const onChangelocation = (e) => {
+  const onChangeYear = (e) => {
     if (e == "") {
-      setErrorState({ location: true });
+      setErrorState({ Year: true });
     } else {
-      setErrorState({ location: false });
-      setShowroomData({ ...showroomData, location: e });
+      setErrorState({ Year: false });
+      setShowroomData({ ...showroomData, Year: e });
     }
   };
   return (
@@ -102,48 +126,28 @@ const AddShowroom = ({ navigation }) => {
               textAlignVertical: "center",
             }}
           >
-            Add your Showroom
+            Add Demand Car
           </Text>
         </View>
       </View>
       <View style={styles.form}>
         <AppTextInput
-          onChangeHandler={(e) => onChangeNameHandeler(e)}
-          label="Name of Showroom:"
+          onChangeHandler={(e) => onChangeMake(e)}
+          label="Make:"
           returnKeyType="next"
         />
         {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
         <AppTextInput
-          onChangeHandler={(e) => onChangelocation(e)}
-          label="Location:"
+          onChangeHandler={(e) => onChangeModel(e)}
+          label="Model:"
           returnKeyType="next"
         />
         {errorState.location ? (
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
-
         <AppTextInput
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, address: e })
-          }
-          label="Address:"
-          returnKeyType="next"
-        />
-        <AppTextInput
-          onChangeHandler={(e) => setShowroomData({ ...showroomData, city: e })}
-          label="City:"
-          returnKeyType="next"
-        />
-        <AppTextInput
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, email: e })
-          }
-          label="Email:"
-          returnKeyType="next"
-        />
-        <AppTextInput
-          onChangeHandler={(e) => onChangeContactInformation(e)}
-          label="Contact information:"
+          onChangeHandler={(e) => onChangeYear(e)}
+          label="Year:"
           returnKeyType="next"
         />
         {errorState.contactInformation ? (
@@ -152,17 +156,24 @@ const AddShowroom = ({ navigation }) => {
 
         <AppTextInput
           onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, website: e })
+            setShowroomData({ ...showroomData, Price: e })
           }
-          label="Website:"
-          returnKeyType="done"
+          label="Price:"
+          returnKeyType="next"
         />
-
-        {/* <Button
-          title={"Upload Images"}
-          onPressHandler={setUploadImage}
-          style={styles.buttonContainer}
-        /> */}
+        <AppPicker
+          items={dealerState}
+          name="category"
+          onSelectItem={(item) => {
+            let dealerO = dealerState.filter((dealer) => item == dealer.label);
+            setDealerPickerID(dealerO[0].value);
+            setDealerPicker(dealerO[0].label);
+          }}
+          PickerItemComponent={CategoryPickerItem}
+          placeholder="Dealers"
+          selectedItem={dealerPicker}
+          width="80%"
+        />
         <Button
           title={"Submit"}
           onPressHandler={onSubmitHandler}
@@ -172,7 +183,7 @@ const AddShowroom = ({ navigation }) => {
     </View>
   );
 };
-export default memo(AddShowroom);
+export default memo(AddDemandCar);
 const styles = StyleSheet.create({
   parent: {
     backgroundColor: "white",
