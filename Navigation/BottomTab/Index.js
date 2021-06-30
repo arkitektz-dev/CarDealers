@@ -18,7 +18,8 @@ import { Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ShowroomStack from "../HomeStack/ShowroomStack";
 import Dealer from "../../Screens/Dealer";
-import DemandCarlisting from "../../Screens/DemandCarlisting";
+import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
+import MyAd from "../../Screens/MyAd";
 
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +63,7 @@ function MyTabs() {
       {status != undefined ? (
         <Tab.Screen
           name="AddCarButton"
-          component={DemandCarlisting}
+          component={AddDemandCar}
           options={{
             tabBarButton: (props) => <AddFormButton {...props} />,
           }}
@@ -78,8 +79,8 @@ function MyTabs() {
       )}
 
       <Tab.Screen
-        name="Dealer"
-        component={Dealer}
+        name="My Ad"
+        component={MyAd}
         options={{
           tabBarIcon: ({ color }) => (
             <Entypo name="news" size={28} color={color} />
