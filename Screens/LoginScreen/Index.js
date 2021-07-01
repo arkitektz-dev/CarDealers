@@ -46,7 +46,18 @@ export const LoginScreen = () => {
               const a = { ...doc.data() };
               a.id = doc.id;
               a.isSignedIn = true;
-              storeData(a);
+              const b = {
+                id: a.id,
+                email: a.email,
+                image: a.image,
+                name: a.name,
+                isSignedIn: a.isSignedIn,
+                password: a.password,
+                phone: a.phone,
+                username: a.username,
+                DealerId: `${a.DealerId._documentPath._parts[1]}`,
+              };
+              storeData(b);
               navigation.replace("Home");
             });
         })

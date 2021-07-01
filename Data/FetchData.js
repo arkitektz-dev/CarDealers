@@ -152,7 +152,7 @@ export const storeData = async (value) => {
     const data = JSON.stringify(value);
     return await AsyncStorage.setItem("userInfo", data);
   } catch (e) {
-    alert(e);
+    console.log(e);
   }
 };
 export const updateProfile = async (userinfo, userData) => {

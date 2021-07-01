@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
 import { Alert } from "react-native";
 import OfflineNotice from "./Component/Offline";
+import { getData } from "./Data/FetchData";
 
 const MainStack = () => {
   const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ const MainStack = () => {
 
 function App() {
   const [connectionStatus, setConnectionStatus] = useState(true);
+
   var firebaseConfig = {
     apiKey: "AIzaSyBNXgxKzRo4EUHHHRNiyPyQTC5kbt6_BHw",
     authDomain: "cardealer-41e38.firebaseapp.com",
@@ -37,18 +39,18 @@ function App() {
     measurementId: "G-E240F5VSHS",
   };
 
-  const CheckConnectivity = () => {
-    if (Platform.OS === "android") {
-      NetInfo.fetch().then((isConnected) => {
-        setConnectionStatus(isConnected.isConnected);
-      });
-    } else {
-      NetInfo.isConnected.addEventListener(
-        "connectionChange",
-        handleFirstConnectivityChange
-      );
-    }
-  };
+  // const CheckConnectivity = () => {
+  //   if (Platform.OS === "android") {
+  //     NetInfo.fetch().then((isConnected) => {
+  //       setConnectionStatus(isConnected.isConnected);
+  //     });
+  //   } else {
+  //     NetInfo.isConnected.addEventListener(
+  //       "connectionChange",
+  //       handleFirstConnectivityChange
+  //     );
+  //   }
+  // };
 
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);

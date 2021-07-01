@@ -15,7 +15,12 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
 
 import { useNavigation } from "@react-navigation/core";
-import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
+import {
+  fetchCarData,
+  fetchDealerCar,
+  fetchMoreCar,
+  getData,
+} from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
@@ -32,18 +37,51 @@ const ListingCars = () => {
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
   const [noData, setNoData] = useState(false);
-
+  var value;
+  const adArr = [];
   const navigation = useNavigation();
+  const convertData = async () => {
+    value = await getData().then((res) => res.DealerId);
+  };
+  const compare = async () => {
+    const ref = firestore().collection("Advertisments");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        let dealerId;
+        if (typeof documentSnapshot.data().dealer.id == "string") {
+          dealerId = documentSnapshot.data().dealer.id.split("/")[1];
+        } else {
+          dealerId = documentSnapshot
+            .data()
+            .dealer.id.id.toString()
+            .trim();
+        }
 
-  useEffect(() => {
-    setLoading(true);
-    fetchCarData().then((res) => {
-      setDataCar(res.arr);
-      setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
-      setcarCount(res.size);
-      setLoading(false);
+        console.log(value, "Val");
+        const paramdealerId = value;
+
+        if (dealerId == paramdealerId) {
+          adArr.push(documentSnapshot.data());
+        }
+      });
+      setDataCar(adArr);
+      setcarCount(adArr.length);
     });
+  };
+  useEffect(async () => {
+    setLoading(true);
+    convertData();
+    compare();
+    //  .then((res) => console.log(res))
+    //   .catch((err) => console.log(err));
+    // // fetchDealerCar().then((data) => console.log(data));
+    // fetchCarData().then((res) => {
+    // setDataCar(res.arr);
+    // setStartAfter(res.lastVal);
+    // setfilteredData(res.arr);
+    // setcarCount(res.size);
+    setLoading(false);
+    //   });
   }, []);
 
   const onSearch = (text) => {

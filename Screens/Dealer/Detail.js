@@ -26,6 +26,7 @@ const DealerDetailScreen = ({ route }) => {
   const [dataCar, setDataCar] = useState([]);
   const [modalData, setModalData] = useState([]);
   const [visible, setVisible] = useState(false);
+
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {

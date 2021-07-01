@@ -17,6 +17,7 @@ import AddShowroom from "../../Screens/Forms/AddShowroom";
 import AddCar from "../../Screens/Forms/AddCar";
 import { clearStorage, getData } from "../../Data/FetchData";
 import LottieLoader from "../../Component/Lottie";
+import Listing from "../../Screens/MyAd/Listing";
 
 const Drawer = createDrawerNavigator();
 var status = [];
@@ -111,6 +112,15 @@ const DrawerNav = () => {
           <Drawer.Screen
             name="Post An Add"
             component={AddCar}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <MaterialIcons name="post-add" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="My Ads"
+            component={Listing}
             options={{
               drawerIcon: ({ color, focused }) => (
                 <MaterialIcons name="post-add" color={color} size={29} />
