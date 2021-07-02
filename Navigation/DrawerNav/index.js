@@ -18,7 +18,8 @@ import AddCar from "../../Screens/Forms/AddCar";
 import { clearStorage, getData } from "../../Data/FetchData";
 import LottieLoader from "../../Component/Lottie";
 import Listing from "../../Screens/MyAd/Listing";
-
+import { Form } from "formik";
+import MyDemand from "../../Screens/MyDemands/index";
 const Drawer = createDrawerNavigator();
 var status = [];
 function CustomDrawerContent(props) {
@@ -121,6 +122,15 @@ const DrawerNav = () => {
           <Drawer.Screen
             name="My Ads"
             component={Listing}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <MaterialIcons name="post-add" color={color} size={29} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="My Demands"
+            component={MyDemand}
             options={{
               drawerIcon: ({ color, focused }) => (
                 <MaterialIcons name="post-add" color={color} size={29} />

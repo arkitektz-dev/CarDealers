@@ -4,7 +4,7 @@ import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
-import { AddDemand, fetchDealerCar } from "../../Data/FetchData";
+import { AddDemand, fetchDealerCar, getData } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import AppPicker from "../../Component/Pickers/Index";
 import ErrorHandle from "../../Component/HelperText";
@@ -46,18 +46,11 @@ const AddDemandCar = ({ navigation }) => {
       }
     });
   };
-  var dealerData = [];
   useEffect(() => {
-    fetchDealerCar().then(
-      (data) =>
-        data.forEach((querySnapshot) => {
-          dealerData.push({
-            value: querySnapshot.id,
-            label: querySnapshot.data().name,
-          });
-        }),
-      setDealerState(dealerData)
-    );
+    getData().then((res) => {
+      setDealerPickerID(res.DealerId);
+      setDealerPicker(res.name);
+    });
   }, []);
   const onSubmitHandler = () => {
     const userRef = firestore()
@@ -161,7 +154,7 @@ const AddDemandCar = ({ navigation }) => {
           label="Price:"
           returnKeyType="next"
         />
-        <AppPicker
+        {/* <AppPicker
           items={dealerState}
           name="category"
           onSelectItem={(item) => {
@@ -173,7 +166,7 @@ const AddDemandCar = ({ navigation }) => {
           placeholder="Dealers"
           selectedItem={dealerPicker}
           width="80%"
-        />
+        /> */}
         <Button
           title={"Submit"}
           onPressHandler={onSubmitHandler}

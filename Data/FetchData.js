@@ -18,6 +18,7 @@ export const fetchCarData = async () => {
 export const fetchDemandCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Demand");
+
   var data = await ref.limit(5).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
