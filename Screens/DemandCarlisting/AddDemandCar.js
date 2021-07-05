@@ -10,11 +10,13 @@ import AppPicker from "../../Component/Pickers/Index";
 import ErrorHandle from "../../Component/HelperText";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import firestore from "@react-native-firebase/firestore";
+import SliderData from "../../Component/SliderData/Index";
 
 const AddDemandCar = ({ navigation }) => {
   const [dealerState, setDealerState] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
+  const [rangePriceData, setRangePriceData] = useState();
 
   const [showroomData, setShowroomData] = useState({
     Make: "",
@@ -46,6 +48,7 @@ const AddDemandCar = ({ navigation }) => {
       }
     });
   };
+  var d;
   useEffect(() => {
     getData().then((res) => {
       setDealerPickerID(res.DealerId);
@@ -53,6 +56,13 @@ const AddDemandCar = ({ navigation }) => {
     });
   }, []);
   const onSubmitHandler = () => {
+    // if (showroomData.price.substring(1, 6) == "00000") {
+    //   d = showroomData.price.substring(0, s.length - 5);
+    //   const c = `${d}lacs`;
+    // } else {
+    //   console.log("Sorry");
+    // }
+
     const userRef = firestore()
       .collection("Dealers")
       .doc(dealerPickerID);
@@ -61,11 +71,22 @@ const AddDemandCar = ({ navigation }) => {
       id: userRef,
       Name: dealerPicker,
     };
-    const obj = {
-      Dealer,
-      ...showroomData,
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    const data = {
+      Make: showroomData.Make,
+      Model: showroomData.Model,
+      Year: showroomData.Year,
+      Price: `Rs.${numberWithCommas(showroomData.Price)}`,
     };
-    AddDemand(obj);
+    const obj = {
+      ...data,
+      Dealer,
+
+      // `Rs.${showroomData.Price}`
+    };
+    AddDemand(obj, navigation);
   };
   const onChangeMake = (e) => {
     if (e == "") {
@@ -146,14 +167,31 @@ const AddDemandCar = ({ navigation }) => {
         {errorState.contactInformation ? (
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
-
         <AppTextInput
+          keyboardType={"number-pad"}
           onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, Price: e })
           }
           label="Price:"
           returnKeyType="next"
         />
+        {/* <View
+          style={{
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 15, color: "#000000", top: 15 }}>
+            Select Amount: Rs {rangePriceData} Lacs
+          </Text>
+          <View style={{ height: 20 }}></View>
+          <SliderData
+            min={0}
+            max={100}
+            onValueChange={(data) => setRangePriceData(data)}
+          />
+        </View> */}
         {/* <AppPicker
           items={dealerState}
           name="category"

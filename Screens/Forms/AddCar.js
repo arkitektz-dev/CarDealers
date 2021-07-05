@@ -584,7 +584,7 @@ const AddCar = ({ navigation }) => {
                     marginBottom: 10,
                   }}
                 >
-                  Select Amount: Rs {rangePriceData} Lacs
+                  Selected Amount: Rs {rangePriceData} Lacs
                 </Text>
                 <SliderData
                   min={0}

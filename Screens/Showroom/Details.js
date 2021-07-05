@@ -158,6 +158,7 @@ const ShowroomDetailScreen = ({ route }) => {
             size={35}
             onPress={() => navigation.goBack()}
           />
+          <Text style={styles.headingText}> Showroom Profile</Text>
         </View>
         <Modal
           visible={visible}
@@ -326,6 +327,13 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 5,
     textAlign: "center",
+  },
+  headingText: {
+    fontWeight: "bold",
+    fontSize: 19,
+    color: "white",
+    marginLeft: "12%",
+    textAlignVertical: "center",
   },
   CarInfoTitle: {
     backgroundColor: "#1c2e65",

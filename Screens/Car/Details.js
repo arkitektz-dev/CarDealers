@@ -52,13 +52,7 @@ const DetailCarScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: "#1e2d64",
-          height: 50,
-        }}
-      >
+      <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 5 }}
           name="chevron-back-circle-sharp"
@@ -66,6 +60,7 @@ const DetailCarScreen = ({ route, navigation }) => {
           size={31}
           onPress={() => navigation.goBack()}
         />
+        <Text style={styles.headingText}>Car Profile</Text>
       </View>
       <View style={styles.imageHolder}>
         <ImageSlider
@@ -328,6 +323,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
   },
+  searchHolder: {
+    backgroundColor: "#1c2e65",
+    flexDirection: "row",
+    flexGrow: 1,
+  },
   dealerName: {
     fontSize: 18,
     fontWeight: "bold",
@@ -475,5 +475,12 @@ const styles = StyleSheet.create({
     width: "100%",
     resizeMode: "contain",
     alignSelf: "center",
+  },
+  headingText: {
+    fontWeight: "bold",
+    fontSize: 19,
+    color: "white",
+    marginLeft: "25%",
+    textAlignVertical: "center",
   },
 });

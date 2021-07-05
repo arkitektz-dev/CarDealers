@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
-import { Modal, Text, View, Dimensions } from "react-native";
+import {
+  Modal,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import AppPicker from "../Pickers/Index";
 import { Button } from "../../Component/Button/Index";
-import { StyleSheet } from "react-native";
 import { screenWidth } from "../../Global/Dimension";
 import CategoryPickerItem from "../Picker/CategoryPickerItem";
-import { TouchableOpacity } from "react-native";
-
+import SliderData from "../SliderData/Index";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
@@ -29,6 +34,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
     mileage: "",
     price: "",
   });
+  const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
     setDropDownValues({
       Assemble: "",
@@ -53,7 +59,10 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
     { label: "1300cc", value: 2 },
     { label: "1600cc", value: 3 },
   ];
-
+  const Model = [
+    { label: "City", value: 1 },
+    { label: "Corolla", value: 2 },
+  ];
   const color = [
     { label: "Red", value: 1 },
     { label: "Gold", value: 2 },
@@ -177,17 +186,19 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               selectedItem={dropdownValues.Make}
               width="80%"
             />
+
+            {/* <SliderData
+              min={0}
+              max={100}
+              onValueChange={(data) => setRangePriceData(data)}
+            /> */}
           </View>
+
           <Button
             style={styles.background}
             title="Submit"
             onPressHandler={() => toggleModal(dropdownValues)}
           />
-          {/* <Button
-            style={styles.background}
-            title="Cancel"
-            onPressHandler={Visibility}
-          /> */}
         </ScrollView>
       </Modal>
     </View>

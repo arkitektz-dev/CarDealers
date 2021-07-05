@@ -105,39 +105,33 @@ const MyDemandListing = () => {
 
   const onFilter = async (dropdownValues) => {
     const arr = [];
-    let ref = firestore().collection("Advertisments");
-
-    if (dropdownValues.Year != "") {
-      ref = ref.where(
-        "vehicle.information.modelYear",
-        "==",
-        dropdownValues.Year
-      );
-    }
+    let ref = firestore().collection("Demand");
 
     if (dropdownValues.Make != "") {
-      ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
+      ref = ref.where("Make", "==", dropdownValues.Make);
     }
-    // if (dropdownValues.mileage != "") {
-    //   ref = ref.where("vehicle.mileage", "==", dropdownValues.mileage);
+
+    if (dropdownValues.Year != "") {
+      ref = ref.where("Year", "==", dropdownValues.Year);
+    }
+
+    // if (dropdownValues.City != "") {
+    //   ref = ref.where("vehicle.city", "==", dropdownValues.City);
     // }
-    if (dropdownValues.City != "") {
-      ref = ref.where("vehicle.city", "==", dropdownValues.City);
-    }
-    if (dropdownValues.ExteriorColor != "") {
-      ref = ref.where(
-        "vehicle.exteriorColor",
-        "==",
-        dropdownValues.ExteriorColor
-      );
-    }
-    if (dropdownValues.Assemble != "") {
-      ref = ref.where(
-        "vehicle.additionalInformation.assembly",
-        "==",
-        "imported"
-      );
-    }
+    // if (dropdownValues.ExteriorColor != "") {
+    //   ref = ref.where(
+    //     "vehicle.exteriorColor",
+    //     "==",
+    //     dropdownValues.ExteriorColor
+    //   );
+    // }
+    // if (dropdownValues.Assemble != "") {
+    //   ref = ref.where(
+    //     "vehicle.additionalInformation.assembly",
+    //     "==",
+    //     "imported"
+    //   );
+    // }
 
     var a = await ref.get();
     a.docs.forEach((data) => {
@@ -149,7 +143,21 @@ const MyDemandListing = () => {
         ? setcarCount(arr.length)
         : setcarCount(dataCar.length);
     }
+
+    // const newData = dataCar.filter((item) => {
+    //   const itemData = `${item.Make.toUpperCase()}
+    //   ${item.Year} ${item.Model.toUpperCase()}`;
+    //   const textData = text.toUpperCase();
+
+    //   const textData = dropdownValues.Make.toUpperCase();
+
+    //   return itemData.indexOf(textData) > -1;
+    // });
+
+    // setDataCar(newData);
+    // setcarCount(newData.length);
   };
+
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };

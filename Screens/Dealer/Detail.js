@@ -136,6 +136,7 @@ const DealerDetailScreen = ({ route }) => {
           size={35}
           onPress={() => navigation.goBack()}
         />
+        <Text style={styles.headingText}>Dealer Profile</Text>
       </View>
       <Modal
         visible={visible}
@@ -326,5 +327,12 @@ const styles = StyleSheet.create({
     borderColor: "#1c2e65",
     borderWidth: 2,
     right: "13%",
+  },
+  headingText: {
+    fontWeight: "bold",
+    fontSize: 19,
+    color: "white",
+    marginLeft: "20%",
+    textAlignVertical: "center",
   },
 });

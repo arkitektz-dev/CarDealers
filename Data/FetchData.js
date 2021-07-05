@@ -196,7 +196,7 @@ export const AddShowroomData = (showroomData) => {
       });
   }
 };
-export const AddDemand = (obj) => {
+export const AddDemand = (obj, navigation) => {
   if (obj.Make == "" || obj.Model == "" || obj.Year == "")
     alert("Fields can not be empty");
   else {
@@ -204,7 +204,7 @@ export const AddDemand = (obj) => {
       .collection("Demand")
       .add(obj)
       .then(() => {
-        alert("Demand Added");
+        navigation.navigate("DemandCars");
       });
     console.log(obj);
   }

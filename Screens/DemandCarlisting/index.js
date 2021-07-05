@@ -7,23 +7,29 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
-import { fetchDemandCarData, fetchMoreDemandCar } from "../../Data/FetchData";
+import {
+  fetchDemandCarData,
+  fetchMoreDemandCar,
+  fetchSpecificDealer,
+} from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-import { RefreshControl } from "react-native";
+import CallSeller from "../../Assets/NewAsset/CallSeller.png";
+import { Linking } from "react-native";
 
 const DemandCarList = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
-  const [filteredData, setfilteredData] = useState([]);
+  // const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [dealerCallData, setDealerCallData] = useState();
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [moreloading, setMoreLoading] = useState(false);
@@ -36,17 +42,33 @@ const DemandCarList = () => {
       setLoading(true);
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
+      // setfilteredData(res.arr);
       setcarCount(res.size);
       setLoading(false);
     });
   }, []);
 
+  const makeCall = (x) => {
+    let phoneNumber = "";
+
+    const dealerId = x.id.toString();
+    fetchSpecificDealer(dealerId)
+      .then((data) => setDealerCallData(data.data().contactInformation[0]))
+      .catch((err) => console.log(err));
+
+    if (Platform.OS === "android") {
+      phoneNumber = `tel:${dealerCallData}`;
+    } else {
+      phoneNumber = `telprompt:${dealerCallData}`;
+    }
+
+    Linking.openURL(phoneNumber);
+  };
   const onSearch = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
-        const itemData = `${item.vehicle.information.make.toUpperCase()}
-          ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+        const itemData = `${item.Make.toUpperCase()}
+        ${item.Year} ${item.Model.toUpperCase()}`;
         const textData = text.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
@@ -54,21 +76,63 @@ const DemandCarList = () => {
 
       setDataCar(newData);
     } else {
-      setDataCar(filteredData);
+      setDataCar(dataCar);
     }
   };
-  const onFilter = (dropdownValues) => {
-    const newData = dataCar.filter((item) => {
-      const itemData = `${item.vehicle.information.make.toUpperCase()}   
-        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
-      const textData = dropdownValues.Make.toUpperCase();
+  // const onFilter = async (dropdownValues) => {
+  //   const arr = [];
+  //   let ref = firestore().collection("Demand");
 
-      return itemData.indexOf(textData) > -1;
-    });
+  //   if (dropdownValues.Make != "") {
+  //     ref = ref.where("Make", "==", dropdownValues.Make);
+  //   }
 
-    setDataCar(newData);
-    setcarCount(newData.length);
-  };
+  //   // if (dropdownValues.Make != "") {
+  //   //   ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
+  //   // }
+
+  //   // if (dropdownValues.City != "") {
+  //   //   ref = ref.where("vehicle.city", "==", dropdownValues.City);
+  //   // }
+  //   // if (dropdownValues.ExteriorColor != "") {
+  //   //   ref = ref.where(
+  //   //     "vehicle.exteriorColor",
+  //   //     "==",
+  //   //     dropdownValues.ExteriorColor
+  //   //   );
+  //   // }
+  //   // if (dropdownValues.Assemble != "") {
+  //   //   ref = ref.where(
+  //   //     "vehicle.additionalInformation.assembly",
+  //   //     "==",
+  //   //     "imported"
+  //   //   );
+  //   // }
+
+  //   var a = await ref.get();
+  //   a.docs.forEach((data) => {
+  //     arr.push(data.data());
+  //   });
+  //   setfilteredData(arr);
+  //   {
+  //     filteredData.length > 0
+  //       ? setcarCount(arr.length)
+  //       : setcarCount(dataCar.length);
+  //   }
+
+  //   // const newData = dataCar.filter((item) => {
+  //   //   const itemData = `${item.Make.toUpperCase()}
+  //   //   ${item.Year} ${item.Model.toUpperCase()}`;
+  //   //   const textData = text.toUpperCase();
+
+  //   //   const textData = dropdownValues.Make.toUpperCase();
+
+  //   //   return itemData.indexOf(textData) > -1;
+  //   // });
+
+  //   // setDataCar(newData);
+  //   // setcarCount(newData.length);
+  // };
 
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
@@ -155,6 +219,26 @@ const DemandCarList = () => {
               </Text>
             </View>
           </View>
+          <TouchableOpacity
+            activeOpacity={0}
+            onPress={() => makeCall(item.Dealer.id)}
+            style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              height: 70,
+            }}
+          >
+            <Image
+              source={CallSeller}
+              style={{
+                width: 150,
+                left: 21,
+                height: 50,
+                resizeMode: "contain",
+                alignSelf: "flex-start",
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -163,6 +247,7 @@ const DemandCarList = () => {
     setMoreLoading(true);
     fetchMoreDemandCar(startAfter).then((res) => {
       setDataCar([...dataCar, ...res.arr]);
+      // setfilteredData([...dataCar, ...res.arr]);
       setcarCount(dataCar.length + res.arr.length);
       setStartAfter(res.lastVal);
       setMoreLoading(false);
@@ -174,7 +259,7 @@ const DemandCarList = () => {
     fetchDemandCarData().then((res) => {
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
+      // setfilteredData(res.arr);
       setcarCount(res.size);
       setRefreshing(false);
     });

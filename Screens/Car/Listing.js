@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
-
 import {
   ActivityIndicator,
   FlatList,
@@ -9,17 +8,16 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
-
 import LottieView from "lottie-react-native";
-
 import { useNavigation } from "@react-navigation/core";
+
 import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-import { RefreshControl } from "react-native";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
