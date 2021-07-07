@@ -18,7 +18,6 @@ import AddCar from "../../Screens/Forms/AddCar";
 import { clearStorage, getData } from "../../Data/FetchData";
 import LottieLoader from "../../Component/Lottie";
 import Listing from "../../Screens/MyAd/Listing";
-import { Form } from "formik";
 import MyDemand from "../../Screens/MyDemands/index";
 const Drawer = createDrawerNavigator();
 var status = [];

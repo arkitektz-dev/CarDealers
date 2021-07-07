@@ -20,6 +20,7 @@ import ShowroomStack from "../HomeStack/ShowroomStack";
 import Dealer from "../../Screens/Dealer";
 import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
 import MyAd from "../../Screens/MyAd";
+import DemandTabs from "../TopTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -77,16 +78,27 @@ function MyTabs() {
           }}
         />
       )}
-
-      <Tab.Screen
-        name="My Ad"
-        component={MyAd}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Entypo name="news" size={28} color={color} />
-          ),
-        }}
-      />
+      {status != undefined ? (
+        <Tab.Screen
+          name="DemandTabs"
+          component={DemandTabs}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Entypo name="news" size={28} color={color} />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="DemandTabs"
+          component={LottieLoader}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Entypo name="news" size={28} color={color} />
+            ),
+          }}
+        />
+      )}
       {status != undefined ? (
         <Tab.Screen
           name="About"

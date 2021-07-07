@@ -130,7 +130,12 @@ export const LoginScreen = () => {
         />
       </View>
       <View style={styles.forgotpassContainer}>
-        <Text style={styles.forgotpassText}>Forgot Password?</Text>
+        <Text
+          style={styles.forgotpassText}
+          onPress={() => navigation.navigate("ForgotPassword")}
+        >
+          Forgot Password?
+        </Text>
         <View style={{ width: "15%" }}></View>
       </View>
       {emptyFieldError ? (
@@ -162,9 +167,9 @@ export const LoginScreen = () => {
         />
       </View>
 
-      <View style={styles.signupContainer}>
+      <View style={styles.buttonContainer}>
         <Text
-          style={styles.signupText}
+          style={styles.skipButton}
           onPress={() => {
             navigation.navigate("Home");
           }}
@@ -237,6 +242,16 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     textDecorationLine: "underline",
+  },
+  skipButton: {
+    color: "#fff",
+    textAlignVertical: "center",
+    textAlign: "center",
+    backgroundColor: "#1e2d64",
+    width: buttonWidth,
+    height: buttonHeight,
+    justifyContent: "center",
+    borderRadius: 5,
   },
   container: {
     flex: 1,

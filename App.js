@@ -4,12 +4,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Platform, StatusBar, Text, View } from "react-native";
 import LoginStack from "./Navigation/LoginStack/Login";
 import firebase from "firebase";
-import NetInfo from "@react-native-community/netinfo";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
-import { Alert } from "react-native";
-import OfflineNotice from "./Component/Offline";
-import { getData } from "./Data/FetchData";
 
 const MainStack = () => {
   const Stack = createStackNavigator();

@@ -15,6 +15,7 @@ export const fetchCarData = async () => {
 
   return { size, arr, lastVal };
 };
+
 export const fetchDemandCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Demand");
@@ -206,7 +207,6 @@ export const AddDemand = (obj, navigation) => {
       .then(() => {
         navigation.navigate("DemandCars");
       });
-    console.log(obj);
   }
 };
 
@@ -241,4 +241,26 @@ export const fetchDealerCar = async () => {
   return await firestore()
     .collection("Dealers")
     .get();
+};
+export const passwordReset = async (value, pass, navigation) => {
+  console.log(pass);
+  const obj = { password: pass };
+  const ref = firestore()
+    .collection("Users")
+    .where("phone", "==", value);
+  ref
+    .get()
+    .then((res) => {
+      res.forEach((doc) =>
+        firestore()
+          .collection("Users")
+          .doc(doc.id)
+          .update(obj)
+          .then(() => {
+            alert("User updated!");
+            navigation.replace("Home");
+          })
+      );
+    })
+    .catch((err) => console.log(err));
 };
