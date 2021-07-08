@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
@@ -11,6 +11,7 @@ import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 import { storeData } from "../../Data/FetchData";
 import Navbar from "../../Component/Navbar.js/Index";
+import AuthContext from "../../Component/Authcontext";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -27,7 +28,7 @@ export const LoginScreen = () => {
   const [secure, setSecure] = useState(true);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const navigation = useNavigation();
-
+  const authContext = useContext(AuthContext);
   const Login = async () => {
     const ref = firestore().collection("Users");
 
@@ -57,6 +58,8 @@ export const LoginScreen = () => {
                 username: a.username,
                 DealerId: `${a.DealerId._documentPath._parts[1]}`,
               };
+              authContext.setUser(b.DealerId);
+
               storeData(b);
               navigation.replace("Home");
             });

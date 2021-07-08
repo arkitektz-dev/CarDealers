@@ -12,8 +12,6 @@ import AppPicker from "../Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import CategoryPickerItem from "../Picker/CategoryPickerItem";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import SliderData from "../SliderData/Index";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
@@ -142,7 +140,6 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               selectedItem={dropdownValues.Assemble}
               width="80%"
             />
-
             <AppPicker
               items={color}
               name="category"
@@ -187,15 +184,6 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               selectedItem={dropdownValues.Make}
               width="80%"
             />
-
-            {/* <MultiSlider
-              containerStyle={{ alignSelf: "center" }}
-              enabledTwo={true}
-              onToggleTwo={(e) => console.log(e)}
-              onValuesChangeStart={(e) => console.log(e)}
-              onValuesChangeFinish={(e) => console.log(e)}
-            /> */}
-            {/* <SliderData  /> */}
           </View>
 
           <Button

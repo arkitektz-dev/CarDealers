@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -19,10 +19,12 @@ import { clearStorage, getData } from "../../Data/FetchData";
 import LottieLoader from "../../Component/Lottie";
 import Listing from "../../Screens/MyAd/Listing";
 import MyDemand from "../../Screens/MyDemands/index";
+import AuthContext from "../../Component/Authcontext";
 const Drawer = createDrawerNavigator();
 var status = [];
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
+  const authContext = useContext(AuthContext);
   useEffect(() => {
     getData().then((data) => {
       status = data;
@@ -31,6 +33,7 @@ function CustomDrawerContent(props) {
 
   const onPressHandler = async () => {
     clearStorage();
+    authContext.setUser(undefined);
     navigation.replace("Login");
   };
   return (

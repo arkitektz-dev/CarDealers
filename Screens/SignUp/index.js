@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { HelperText, TextInput } from "react-native-paper";
@@ -10,14 +10,16 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { Button } from "../../Component/Button/Index";
-import { DismissKeyboard } from "../../Component/KeyboardDismiss";
+import { Tooltip } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
 
-import { Tooltip } from "react-native-elements";
+import { Button } from "../../Component/Button/Index";
+import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import Back from "../../Assets/NewAsset/backButton.png";
 import Navbar from "../../Component/Navbar.js/Index";
+import AppPicker from "../../Component/Pickers/Index";
+import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -43,9 +45,10 @@ export const SignupScreen = () => {
   const inputFive = useRef();
   const inputSix = useRef();
   const [confirm, setConfirm] = useState(null);
+  const [showroom, setShowroom] = useState();
   const [modalVisible, setModalVisible] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-  const [timeoutButton, setTimeoutButton] = useState(false);
+  const [showroomData, setShowroomData] = useState([]);
   const [emaiError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
@@ -58,6 +61,22 @@ export const SignupScreen = () => {
     pin5: "",
     pin6: "",
   });
+  const showroomArr = [];
+
+  useEffect(() => {
+    firestore()
+      .collection("Showrooms")
+      .get()
+      .then((res) => {
+        res.docs.forEach((item) =>
+          showroomArr.push({
+            value: item.id,
+            label: item.data().name,
+          })
+        );
+      });
+    setShowroomData(showroomArr);
+  }, []);
 
   const Signup = async () => {
     if (
@@ -87,8 +106,10 @@ export const SignupScreen = () => {
   const ref = firestore().collection("Users");
 
   async function confirmCode() {
-    console.log("Start");
-
+    const ShowroomId = firestore()
+      .collection("Showrooms")
+      .doc(showroom.id);
+    // const obj = { ...user, ...ShowroomId };
     try {
       await confirm.confirm(
         otpInput.pin1 +
@@ -100,8 +121,9 @@ export const SignupScreen = () => {
       );
 
       try {
+        const obj = { ...user, ShowroomId };
         await ref
-          .add(user)
+          .add(obj)
           .then(() => {
             alert("User added!");
           })
@@ -309,6 +331,17 @@ export const SignupScreen = () => {
             style={{ backgroundColor: "transparent" }}
             onChangeText={handleChangeConfirmPassowrd}
           />
+          <View style={{ alignSelf: "center" }}>
+            <AppPicker
+              items={showroomData}
+              name="category"
+              onSelectItem={(item) => setShowroom(item)}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Select Showroom"
+              selectedItem={showroom}
+              width="110%"
+            />
+          </View>
           {confirmPasswordError ? (
             <HelperText
               type="error"
@@ -528,6 +561,7 @@ export const SignupScreen = () => {
             </TouchableOpacity>
           </View>
         </Modal>
+
         <View style={styles.signupContainer}>
           <Text
             style={styles.signupText}
@@ -578,7 +612,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   form_container: {
-    height: screenHeight,
+    paddingBottom: "20%",
     backgroundColor: "#fff",
   },
   textInput: {

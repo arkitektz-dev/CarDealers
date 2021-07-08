@@ -172,14 +172,20 @@ export const updateProfile = async (userinfo, userData) => {
   }
 };
 export const updatePassword = async (userinfo, userData) => {
-  const { id } = userinfo;
-  firestore()
-    .collection("Users")
-    .doc(id)
-    .update(userData)
-    .then(() => {
-      alert("User updated!");
-    });
+  console.log("Hey");
+  if (userData.password != "" && userData.confirmPassword != "") {
+    const { id } = userinfo;
+    const obj = { password: userData.password };
+    firestore()
+      .collection("Users")
+      .doc(id)
+      .update(obj)
+      .then(() => {
+        alert("User updated!");
+      });
+  } else {
+    alert("Fields can not be empty");
+  }
 };
 export const AddShowroomData = (showroomData) => {
   if (

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import Back from "../../Assets/NewAsset/backButton.png";
 import {
   Image,
@@ -15,6 +15,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import AuthContext from "../../Component/Authcontext";
 
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
@@ -24,16 +25,34 @@ const ShowroomDetailScreen = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
+  const authContext = useContext(AuthContext);
 
   const arr = [];
 
   useEffect(() => {
-    console.log(route);
-    // setModalData(param.showrooms);
     fetchShowroomData();
     fetchData();
+    // console.log(route);
+    // console.log(authContext.user);
   }, []);
 
+  // const AssociateShowroom = () => {
+  //   const userRef = firestore()
+  //     .collection("Users")
+  //     .doc(route.params.item.id);
+
+  //   const obj = {
+  //     id: userRef,
+  //     Name: route.params.item.name,
+  //   };
+  //   firestore()
+  //     .collection("Users")
+  //     .doc(authContext.user)
+  //     .update(obj)
+  //     .then(() => {
+  //       alert("Showroom Associated!");
+  //     });
+  // };
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
@@ -213,6 +232,12 @@ const ShowroomDetailScreen = ({ route }) => {
               <Text style={styles.txt1}>{item.location}</Text>
             </View>
           </View>
+          {/* <Text onPress={AssociateShowroom}> ID </Text> 
+       {authContext.user != undefined ? (
+            <Text>Hey</Text>
+          ) : (
+            <Text>Not Signed IN</Text>
+          )} */}
         </View>
       </View>
 
