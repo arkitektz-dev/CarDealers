@@ -18,6 +18,7 @@ import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import changeNumberFormat from "../../Component/Converter";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -88,13 +89,19 @@ const ListingCars = () => {
         dropdownValues.ExteriorColor
       );
     }
-    if (dropdownValues.Assemble != "") {
-      ref = ref.where(
-        "vehicle.additionalInformation.assembly",
-        "==",
-        "imported"
-      );
+
+    if (dropdownValues.price.init > 0) {
+      ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
+      ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
     }
+
+    // if (dropdownValues.Assemble != "") {
+    //   ref = ref.where(
+    //     "vehicle.additionalInformation.assembly",
+    //     "==",
+    //     "imported"
+    //   );
+    // }
 
     var a = await ref.get();
     a.docs.forEach((data) => {
@@ -103,7 +110,7 @@ const ListingCars = () => {
     setfilteredData(arr);
     {
       filteredData.length > 0
-        ? setcarCount(arr.length)
+        ? setcarCount(filteredData.length)
         : setcarCount(dataCar.length);
     }
   };
@@ -177,7 +184,7 @@ const ListingCars = () => {
                   textAlign: "left",
                 }}
               >
-                {item.amount}
+                {changeNumberFormat(item.amount)}
               </Text>
               <View style={{ height: 10 }}></View>
 
@@ -204,7 +211,9 @@ const ListingCars = () => {
     fetchMoreCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
-        setfilteredData([...dataCar, ...res.arr]);
+        // if (filteredData.length > 0) {
+        //   setfilteredData([...dataCar, ...res.arr]);
+        // }
         setcarCount(dataCar.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);
@@ -302,7 +311,7 @@ const ListingCars = () => {
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={_renderFooter}
+          ListFooterComponent={filteredData.length > 0 ? _renderFooter : null}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
           refreshControl={

@@ -11,10 +11,9 @@ import {
   View,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
-
 import LottieView from "lottie-react-native";
-
 import { useNavigation } from "@react-navigation/core";
+
 import {
   fetchCarData,
   fetchDealerCar,
@@ -25,6 +24,7 @@ import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
+import changeNumberFormat from "../../Component/Converter";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -72,16 +72,8 @@ const ListingCars = () => {
     setLoading(true);
     convertData();
     compare();
-    //  .then((res) => console.log(res))
-    //   .catch((err) => console.log(err));
-    // // fetchDealerCar().then((data) => console.log(data));
-    // fetchCarData().then((res) => {
-    // setDataCar(res.arr);
-    // setStartAfter(res.lastVal);
-    // setfilteredData(res.arr);
-    // setcarCount(res.size);
+
     setLoading(false);
-    //   });
   }, []);
 
   const onSearch = (text) => {
@@ -94,9 +86,9 @@ const ListingCars = () => {
         return itemData.indexOf(textData) > -1;
       });
 
-      setDataCar(newData);
+      setfilteredData(newData);
     } else {
-      setDataCar(filteredData);
+      setfilteredData(dataCar);
     }
   };
 
@@ -112,6 +104,10 @@ const ListingCars = () => {
       );
     }
 
+    if (dropdownValues.price.init > 0) {
+      ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
+      ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
+    }
     if (dropdownValues.Make != "") {
       ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
     }
@@ -217,7 +213,7 @@ const ListingCars = () => {
                   textAlign: "left",
                 }}
               >
-                {item.amount}
+                {changeNumberFormat(item.amount)}
               </Text>
               <View style={{ height: 10 }}></View>
 

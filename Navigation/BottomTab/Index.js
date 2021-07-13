@@ -21,11 +21,14 @@ import Dealer from "../../Screens/Dealer";
 import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
 import MyAd from "../../Screens/MyAd";
 import DemandTabs from "../TopTab";
+import Choice from "../../Component/AddTabs";
+import AddTabs from "../../Component/AddTabs";
 
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   const [status, setStatus] = useState();
+  const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
     getData().then((data) => {
       setStatus(data);
@@ -64,7 +67,7 @@ function MyTabs() {
       {status != undefined ? (
         <Tab.Screen
           name="AddCarButton"
-          component={AddDemandCar}
+          component={AddTabs}
           options={{
             tabBarButton: (props) => <AddFormButton {...props} />,
           }}

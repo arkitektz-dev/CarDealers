@@ -56,13 +56,6 @@ const AddDemandCar = ({ navigation }) => {
     });
   }, []);
   const onSubmitHandler = () => {
-    // if (showroomData.price.substring(1, 6) == "00000") {
-    //   d = showroomData.price.substring(0, s.length - 5);
-    //   const c = `${d}lacs`;
-    // } else {
-    //   console.log("Sorry");
-    // }
-
     const userRef = firestore()
       .collection("Dealers")
       .doc(dealerPickerID);
@@ -147,21 +140,22 @@ const AddDemandCar = ({ navigation }) => {
       <View style={styles.form}>
         <AppTextInput
           onChangeHandler={(e) => onChangeMake(e)}
-          label="Make:"
+          label="Make"
           returnKeyType="next"
         />
         {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
         <AppTextInput
           onChangeHandler={(e) => onChangeModel(e)}
-          label="Model:"
+          label="Model"
           returnKeyType="next"
         />
         {errorState.location ? (
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
         <AppTextInput
+          keyboardType={"number-pad"}
           onChangeHandler={(e) => onChangeYear(e)}
-          label="Year:"
+          label="Year"
           returnKeyType="next"
         />
         {errorState.contactInformation ? (
@@ -169,10 +163,11 @@ const AddDemandCar = ({ navigation }) => {
         ) : null}
         <AppTextInput
           keyboardType={"number-pad"}
+          maxLength={10}
           onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, Price: e })
           }
-          label="Price:"
+          label="Price"
           returnKeyType="next"
         />
         {/* <View

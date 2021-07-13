@@ -1,4 +1,10 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import firestore from "@react-native-firebase/firestore";
 import {
   Text,
@@ -8,7 +14,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Tooltip } from "react-native-elements";
+import AuthContext from "../../Component/Authcontext";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import AppTextInput from "../../Component/TextInput/Index";
@@ -23,31 +29,25 @@ import {
   AddCarData,
   fetchShowroomCar,
   fetchDealerCar,
+  getData,
 } from "../../Data/FetchData";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import changeNumberFormat from "../../Component/Converter";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
   const [amount, setAmount] = useState("");
 
+  const [indicator, setIndicator] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-  // const [dealer, setDealer] = useState({
-  //   id: "Dealers/773Dfs4yCxLIjuABaKDo",
-  //   name: "Ijaz Hussain",
-  // });
-  // const [showroom, setShowroom] = useState({
-  //   id: "Showrooms/2Bj5G6bG6F4KH6rtbNtW",
-  //   name: "HSKB Motors",
-  // });
+
   const [featured, setFeatured] = useState(false);
-  const [rangePriceData, setRangePriceData] = useState(0);
-  const [rangeMileageData, setRangeMileageData] = useState(0);
   const [image, setImage] = useState([]);
   const [tempImage, setTempImage] = useState([]);
   const [assembly, setAssembly] = useState("");
@@ -58,8 +58,8 @@ const AddCar = ({ navigation }) => {
   const [ExteriorColor, setExteriorColor] = useState("");
   const [showroomPicker, setShowroomPicker] = useState("");
   const [dealerState, setDealerState] = useState("");
-  const [dealerPicker, setDealerPicker] = useState("");
-  const [dealerPickerID, setDealerPickerID] = useState("");
+  const [priceRange, setPriceRange] = useState({ init: "", final: "" });
+  const [mileage, setRangeMileageData] = useState({ init: "", final: "" });
 
   const [information, setInformation] = useState({
     make: "",
@@ -73,18 +73,20 @@ const AddCar = ({ navigation }) => {
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
   const [checkbox, setCheckbox] = useState([]);
+  const [showroomStateData, setShowroomStateData] = useState("");
   const [visible, setVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
+  const authContext = useContext(AuthContext);
   useEffect(() => {
-    fetchShowroomCar().then((data) =>
+    fetchShowroomCar().then((data) => {
       data.forEach((querySnapshot) => {
         showroomData.push({
           value: querySnapshot.id,
           label: querySnapshot.data().name,
         });
-      })
-    );
+      }),
+        setShowroomStateData(showroomData);
+    });
     fetchDealerCar().then(
       (data) =>
         data.forEach((querySnapshot) => {
@@ -95,12 +97,20 @@ const AddCar = ({ navigation }) => {
         }),
       setDealerState(dealerData)
     );
+    getData().then((res) => authContext.setUser(res.DealerId));
   }, []);
   const bottomSheetHandeler = () => {
     if (isVisible == true) {
       setIsVisible(false);
     } else setIsVisible(true);
   };
+
+  const handleValueChange = useCallback((low, high) => {
+    setPriceRange({ init: low });
+  }, []);
+  const handleMileageChange = useCallback((low, high) => {
+    setRangeMileageData({ init: low });
+  }, []);
 
   const items = [
     { label: "800cc", value: "800cc" },
@@ -224,24 +234,21 @@ const AddCar = ({ navigation }) => {
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = async () => {
+    setIndicator(true);
     const userRef = firestore()
       .collection("Dealers")
-      .doc(dealerPickerID);
-
+      .doc(authContext.user);
     const dealerObj = {
       id: userRef,
-      name: dealerPicker,
     };
-
     imageURI();
     const obj = {
-      amount: ` Rs ${rangePriceData} Lacs`,
+      amount: `${priceRange.init}`,
       dealer: dealerObj,
+      showroom: showroomPicker,
       featured: featured,
-
       images: image,
       showroom: showroomPicker,
-
       vehicle: {
         additionalInformation: {
           assembly: assembly,
@@ -254,13 +261,13 @@ const AddCar = ({ navigation }) => {
         description: Description,
         exteriorColor: ExteriorColor,
         information: information,
-        mileage: `${rangeMileageData} KM`,
+        mileage: `${mileage.init} KM`,
         registrationCity: registrationCity,
       },
     };
 
     AddCarData(obj);
-    console.log(obj);
+    setIndicator(false);
   };
 
   return (
@@ -340,7 +347,12 @@ const AddCar = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
       >
-        <View style={{ flexDirection: "column", width: "100%" }}>
+        <View
+          style={{
+            flexDirection: "column",
+            width: "100%",
+          }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -381,7 +393,15 @@ const AddCar = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={{ padding: 10 }}>
+          <View
+            style={{
+              flexDirection: "column",
+              flex: 1,
+              padding: 10,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
             <AppPicker
               items={assembleType}
               name="category"
@@ -544,75 +564,57 @@ const AddCar = ({ navigation }) => {
               selectedItem={registrationCity}
               width="80%"
             />
-            {/* <AppPicker
-            items={showroomData}
-            name="category"
-            onSelectItem={(item) => setShowroomPicker(item)}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Showrooms"
-            selectedItem={showroomPicker}
-            width="80%"
-          /> */}
             <AppPicker
-              items={dealerState}
+              items={showroomStateData}
               name="category"
-              onSelectItem={(item) => {
-                let dealerO = dealerState.filter(
-                  (dealer) => item == dealer.label
-                );
-                setDealerPickerID(dealerO[0].value);
-                setDealerPicker(dealerO[0].label);
-              }}
+              onSelectItem={(item) => setShowroomPicker(item)}
               PickerItemComponent={CategoryPickerItem}
-              placeholder="Dealers"
-              selectedItem={dealerPicker}
+              placeholder="Showrooms"
+              selectedItem={showroomPicker}
               width="80%"
             />
-
-            <View style={{ width: "70%", marginLeft: 25 }}>
+            <View style={{ width: "70%", marginBottom: 10, bottom: 5 }}>
               <AppTextInput
                 label={"Description"}
-                multiline={true}
                 onChangeHandler={(e) => setDescription(e)}
               />
-              <View style={{ flexDirection: "column", margin: 10 }}>
+            </View>
+            <View style={{ width: "100%" }}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  width: "100%",
+                }}
+              >
                 <Text
                   style={{
                     color: "black",
                     fontWeight: "bold",
                     fontSize: 16,
-                    marginBottom: 10,
+                    textAlign: "center",
                   }}
                 >
-                  Selected Amount: Rs {rangePriceData} Lacs
+                  Selected Amount: Rs {changeNumberFormat(priceRange.init)}
                 </Text>
-                <SliderData
-                  min={0}
-                  max={100}
-                  onValueChange={(data) => setRangePriceData(data)}
-                />
+                <SliderData onValueChanged={handleValueChange} />
               </View>
 
-              <View style={{ flexDirection: "column", margin: 10 }}>
+              <View style={{ flexDirection: "column" }}>
                 <Text
                   style={{
                     color: "black",
                     fontWeight: "bold",
                     fontSize: 16,
-                    marginBottom: 10,
+                    textAlign: "center",
                   }}
                 >
-                  Select Mileage: {rangeMileageData}KM
+                  Select Mileage: {mileage.init}KM
                 </Text>
-                <SliderData
-                  min={0}
-                  max={10000}
-                  step={1}
-                  onValueChange={(data) => setRangeMileageData(data)}
-                />
+                <SliderData onValueChanged={handleMileageChange} />
               </View>
 
               <Button
+                loading={indicator}
                 style={styles.background}
                 title="Submit"
                 onPressHandler={onPressHandler}

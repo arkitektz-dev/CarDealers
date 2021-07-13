@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Modal,
   Text,
@@ -12,6 +12,8 @@ import AppPicker from "../Pickers/Index";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import CategoryPickerItem from "../Picker/CategoryPickerItem";
+import SliderData from "../SliderData/Index";
+import changeNumberFormat from "../Converter";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
@@ -31,7 +33,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
     InteriorColor: "",
     Description: "",
     mileage: "",
-    price: "",
+    price: { init: "", final: "" },
   });
   const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
@@ -53,6 +55,11 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
       price: "",
     });
   };
+  const data = 0;
+  const handleValueChange = useCallback((low, high) => {
+    setDropDownValues({ ...dropdownValues, price: { init: low, final: high } });
+  }, []);
+
   const items = [
     { label: "800cc", value: 1 },
     { label: "1300cc", value: 2 },
@@ -184,6 +191,21 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               selectedItem={dropdownValues.Make}
               width="80%"
             />
+            <View style={styles.priceNum}>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>
+                  {changeNumberFormat(dropdownValues.price.init)}
+                </Text>
+              </View>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>
+                  {changeNumberFormat(dropdownValues.price.final)}
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <SliderData onValueChanged={handleValueChange} />
+            </View>
           </View>
 
           <Button
@@ -206,5 +228,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 20,
     margin: 10,
+  },
+  priceNum: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    height: "10%",
+    alignItems: "center",
+  },
+  priceHolder: {
+    borderRadius: 20,
+    backgroundColor: "#d3d3d3",
+    width: "30%",
+    height: "80%",
+    padding: 10,
+  },
+  txt: {
+    textAlign: "center",
+    color: "#000000",
+    fontWeight: "bold",
   },
 });

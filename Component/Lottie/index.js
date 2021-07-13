@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   searchHolder: {
-    backgroundColor: "#1c2e65",
     flexDirection: "row",
     height: 49,
   },

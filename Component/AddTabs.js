@@ -1,10 +1,10 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import MyDemand from "../../Screens/MyDemands";
-import MyAds from "../../Screens/MyAd";
+import MyDemand from "../Screens/DemandCarlisting/AddDemandCar";
+import MyAds from "../Screens/Forms/AddCar";
 const Tab = createMaterialTopTabNavigator();
 
-function DemandTabs() {
+function AddTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="My Ads" component={MyAds} />
@@ -12,4 +12,4 @@ function DemandTabs() {
     </Tab.Navigator>
   );
 }
-export default DemandTabs;
+export default AddTabs;

@@ -25,6 +25,7 @@ import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
+import changeNumberFormat from "../../Component/Converter";
 
 const MyDemandListing = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -68,6 +69,7 @@ const MyDemandListing = () => {
       });
       setDataCar(adArr);
       setcarCount(adArr.length);
+      // setfilteredData(adArr);
     });
   };
   useEffect(async () => {
@@ -97,9 +99,9 @@ const MyDemandListing = () => {
         return itemData.indexOf(textData) > -1;
       });
 
-      setDataCar(newData);
+      setfilteredData(newData);
     } else {
-      setDataCar(dataCar);
+      setfilteredData(dataCar);
     }
   };
 
@@ -115,6 +117,10 @@ const MyDemandListing = () => {
       ref = ref.where("Year", "==", dropdownValues.Year);
     }
 
+    if (dropdownValues.price.init > 0) {
+      ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
+      ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
+    }
     // if (dropdownValues.City != "") {
     //   ref = ref.where("vehicle.city", "==", dropdownValues.City);
     // }
@@ -143,19 +149,6 @@ const MyDemandListing = () => {
         ? setcarCount(arr.length)
         : setcarCount(dataCar.length);
     }
-
-    // const newData = dataCar.filter((item) => {
-    //   const itemData = `${item.Make.toUpperCase()}
-    //   ${item.Year} ${item.Model.toUpperCase()}`;
-    //   const textData = text.toUpperCase();
-
-    //   const textData = dropdownValues.Make.toUpperCase();
-
-    //   return itemData.indexOf(textData) > -1;
-    // });
-
-    // setDataCar(newData);
-    // setcarCount(newData.length);
   };
 
   const onPressHandler = (item) => {
@@ -227,7 +220,7 @@ const MyDemandListing = () => {
                   textAlign: "left",
                 }}
               >
-                {item.Price}
+                {changeNumberFormat(item.Price)}
               </Text>
               <View style={{ height: 10 }}></View>
 
@@ -260,14 +253,16 @@ const MyDemandListing = () => {
       .catch();
   };
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchCarData().then((res) => {
-      setDataCar(res.arr);
-      setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
-      setcarCount(res.size);
-      setRefreshing(false);
-    });
+    // setRefreshing(true);
+    // fetchCarData().then((res) => {
+    //   setDataCar(res.arr);
+    //   setStartAfter(res.lastVal);
+    //   setfilteredData(res.arr);
+    //   setcarCount(res.size);
+    //   setRefreshing(false);
+    // });
+    convertData();
+    compare();
   };
   return (
     <View style={{ backgroundColor: "white" }}>

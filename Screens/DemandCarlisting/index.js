@@ -12,6 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/core";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
+import numberWithCommas from "../../Component/Converter";
 import {
   fetchDemandCarData,
   fetchMoreDemandCar,
@@ -26,7 +27,7 @@ import { Linking } from "react-native";
 const DemandCarList = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
-  // const [filteredData, setfilteredData] = useState([]);
+  const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [dealerCallData, setDealerCallData] = useState();
@@ -47,7 +48,6 @@ const DemandCarList = () => {
       setLoading(false);
     });
   }, []);
-
   const makeCall = (x) => {
     let phoneNumber = "";
 
@@ -74,9 +74,9 @@ const DemandCarList = () => {
         return itemData.indexOf(textData) > -1;
       });
 
-      setDataCar(newData);
+      setfilteredData(newData);
     } else {
-      setDataCar(dataCar);
+      setfilteredData(dataCar);
     }
   };
   // const onFilter = async (dropdownValues) => {
@@ -176,12 +176,6 @@ const DemandCarList = () => {
               flexDirection: "row",
             }}
           >
-            {/* <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            /> */}
-
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
                 style={{
@@ -203,7 +197,7 @@ const DemandCarList = () => {
                   textAlign: "left",
                 }}
               >
-                {item.Price}
+                {numberWithCommas(item.Price)}
               </Text>
               <View style={{ height: 10 }}></View>
 
@@ -311,7 +305,7 @@ const DemandCarList = () => {
             style={{
               color: "#333",
               display: "flex",
-              fontWeight: "800",
+              fontWeight: "bold",
               fontSize: 18,
             }}
           >
@@ -333,7 +327,7 @@ const DemandCarList = () => {
         />
       ) : (
         <FlatList
-          data={dataCar}
+          data={filteredData.length > 0 ? filteredData : dataCar}
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}

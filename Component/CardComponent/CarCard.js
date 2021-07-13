@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/core";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { fetchCarData } from "../../Data/FetchData";
+import changeNumberFormat from "../Converter";
 
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -36,7 +37,7 @@ const Card = () => {
           item.vehicle.information.model +
           " " +
           item.vehicle.information.modelYear} `}
-        price={`${item.amount}`}
+        price={changeNumberFormat(item.amount)}
         subtitle={`${item.vehicle.city +
           " " +
           item.vehicle.mileage +
