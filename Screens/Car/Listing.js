@@ -156,12 +156,22 @@ const ListingCars = () => {
               flexDirection: "row",
             }}
           >
-            <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
-
+            {item.images[0] != undefined ? (
+              <Image
+                source={{ uri: item.images[0] }}
+                style={styles.imageSize}
+                resizeMode={"contain"}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri:
+                    "https://firebasestorage.googleapis.com/v0/b/cardealer-41e38.appspot.com/o/photos%2FNoImage.jpg?alt=media&token=5c584571-f6f7-4579-9096-08b50eb639ff",
+                }}
+                style={styles.imageSize}
+                resizeMode={"contain"}
+              />
+            )}
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
                 style={{
@@ -211,9 +221,9 @@ const ListingCars = () => {
     fetchMoreCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
-        // if (filteredData.length > 0) {
-        //   setfilteredData([...dataCar, ...res.arr]);
-        // }
+        if (filteredData.length > 0) {
+          setfilteredData([...dataCar, ...res.arr]);
+        }
         setcarCount(dataCar.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);

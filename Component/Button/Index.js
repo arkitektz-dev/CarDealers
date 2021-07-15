@@ -1,19 +1,16 @@
-import React from "react";
-import { ActivityIndicator } from "react-native";
+import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export const Button = ({ title, style, onPressHandler, loading }) => {
+  const [loader, setLoader] = useState(false);
+
   return (
     <TouchableOpacity
       style={style}
       activeOpacity={0.5}
       onPress={onPressHandler}
     >
-      {loading ? (
-        <ActivityIndicator color="white" size="small" />
-      ) : (
-        <Text style={styles.text}>{title}</Text>
-      )}
+      <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
 };

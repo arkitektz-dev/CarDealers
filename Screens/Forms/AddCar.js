@@ -37,13 +37,14 @@ import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import changeNumberFormat from "../../Component/Converter";
+import { ActivityIndicator } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
   const [amount, setAmount] = useState("");
 
-  const [indicator, setIndicator] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
 
@@ -58,6 +59,7 @@ const AddCar = ({ navigation }) => {
   const [ExteriorColor, setExteriorColor] = useState("");
   const [showroomPicker, setShowroomPicker] = useState("");
   const [dealerState, setDealerState] = useState("");
+  const [showroomId, setShowroomId] = useState("");
   const [priceRange, setPriceRange] = useState({ init: "", final: "" });
   const [mileage, setRangeMileageData] = useState({ init: "", final: "" });
 
@@ -207,7 +209,6 @@ const AddCar = ({ navigation }) => {
   const imageURI = async () => {
     tempImage.map(async (pic, index) => {
       const uploadImage = pic.substring(pic.lastIndexOf("/") + 1);
-      console.log(uploadImage);
       setUploading(true);
       setTransferred(0);
       const storageRef = storage().ref(`photos/${uploadImage}`);
@@ -234,21 +235,28 @@ const AddCar = ({ navigation }) => {
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = async () => {
-    setIndicator(true);
+    setLoader(true);
+    const showroomRef = firestore()
+      .collection("Showrooms")
+      .doc(showroomId);
     const userRef = firestore()
       .collection("Dealers")
       .doc(authContext.user);
     const dealerObj = {
       id: userRef,
     };
+    const showroomObj = {
+      id: showroomRef,
+      name: showroomPicker,
+    };
+
     imageURI();
     const obj = {
       amount: `${priceRange.init}`,
       dealer: dealerObj,
-      showroom: showroomPicker,
       featured: featured,
       images: image,
-      showroom: showroomPicker,
+      showroom: showroomObj,
       vehicle: {
         additionalInformation: {
           assembly: assembly,
@@ -265,9 +273,9 @@ const AddCar = ({ navigation }) => {
         registrationCity: registrationCity,
       },
     };
+    await AddCarData(obj);
 
-    AddCarData(obj);
-    setIndicator(false);
+    setLoader(false);
   };
 
   return (
@@ -405,7 +413,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={assembleType}
               name="category"
-              onSelectItem={(item) => setAssembly(item)}
+              onSelectItem={(item) => setAssembly(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Assembly"
               selectedItem={assembly}
@@ -458,7 +466,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={items}
               name="category"
-              onSelectItem={(item) => setEngineCapacity(item)}
+              onSelectItem={(item) => setEngineCapacity(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Engine Capacity"
               selectedItem={enginecapacity}
@@ -467,7 +475,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={engineTypeData}
               name="category"
-              onSelectItem={(item) => setEngineType(item)}
+              onSelectItem={(item) => setEngineType(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Engine Type"
               selectedItem={engineType}
@@ -476,7 +484,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={type}
               name="category"
-              onSelectItem={(item) => setTransmission(item)}
+              onSelectItem={(item) => setTransmission(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Transmission"
               selectedItem={transmission}
@@ -492,7 +500,7 @@ const AddCar = ({ navigation }) => {
               <AppPicker
                 items={city}
                 name="category"
-                onSelectItem={(item) => setCity(item)}
+                onSelectItem={(item) => setCity(item.label)}
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" City"
                 selectedItem={City}
@@ -503,7 +511,7 @@ const AddCar = ({ navigation }) => {
               items={company}
               name="category"
               onSelectItem={(item) =>
-                setInformation({ ...information, make: item })
+                setInformation({ ...information, make: item.label })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Company"
@@ -514,7 +522,7 @@ const AddCar = ({ navigation }) => {
               items={modelCar}
               name="category"
               onSelectItem={(item) =>
-                setInformation({ ...information, model: item })
+                setInformation({ ...information, model: item.label })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Model"
@@ -526,7 +534,7 @@ const AddCar = ({ navigation }) => {
               items={year}
               name="category"
               onSelectItem={(item) =>
-                setInformation({ ...information, modelYear: item })
+                setInformation({ ...information, modelYear: item.label })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Model Year"
@@ -537,7 +545,7 @@ const AddCar = ({ navigation }) => {
               items={versionCar}
               name="category"
               onSelectItem={(item) =>
-                setInformation({ ...information, version: item })
+                setInformation({ ...information, version: item.label })
               }
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Version"
@@ -548,7 +556,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={color}
               name="category"
-              onSelectItem={(item) => setExteriorColor(item)}
+              onSelectItem={(item) => setExteriorColor(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Exterior Color"
               selectedItem={ExteriorColor}
@@ -558,7 +566,7 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={city}
               name="category"
-              onSelectItem={(item) => setRegistrationCity(item)}
+              onSelectItem={(item) => setRegistrationCity(item.label)}
               PickerItemComponent={CategoryPickerItem}
               placeholder=" Registration City"
               selectedItem={registrationCity}
@@ -567,7 +575,9 @@ const AddCar = ({ navigation }) => {
             <AppPicker
               items={showroomStateData}
               name="category"
-              onSelectItem={(item) => setShowroomPicker(item)}
+              onSelectItem={(item) => {
+                setShowroomPicker(item.label), setShowroomId(item.value);
+              }}
               PickerItemComponent={CategoryPickerItem}
               placeholder="Showrooms"
               selectedItem={showroomPicker}
@@ -614,9 +624,14 @@ const AddCar = ({ navigation }) => {
               </View>
 
               <Button
-                loading={indicator}
                 style={styles.background}
-                title="Submit"
+                title={
+                  loader ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    "Submit"
+                  )
+                }
                 onPressHandler={onPressHandler}
               />
             </View>

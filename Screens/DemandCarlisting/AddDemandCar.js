@@ -11,12 +11,14 @@ import ErrorHandle from "../../Component/HelperText";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import firestore from "@react-native-firebase/firestore";
 import SliderData from "../../Component/SliderData/Index";
+import { ActivityIndicator } from "react-native";
 
 const AddDemandCar = ({ navigation }) => {
   const [dealerState, setDealerState] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
   const [rangePriceData, setRangePriceData] = useState();
+  const [loader, setLoader] = useState(false);
 
   const [showroomData, setShowroomData] = useState({
     Make: "",
@@ -55,7 +57,8 @@ const AddDemandCar = ({ navigation }) => {
       setDealerPicker(res.name);
     });
   }, []);
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async () => {
+    setLoader(true);
     const userRef = firestore()
       .collection("Dealers")
       .doc(dealerPickerID);
@@ -71,7 +74,7 @@ const AddDemandCar = ({ navigation }) => {
       Make: showroomData.Make,
       Model: showroomData.Model,
       Year: showroomData.Year,
-      Price: `Rs.${numberWithCommas(showroomData.Price)}`,
+      Price: `${numberWithCommas(showroomData.Price)}`,
     };
     const obj = {
       ...data,
@@ -79,7 +82,13 @@ const AddDemandCar = ({ navigation }) => {
 
       // `Rs.${showroomData.Price}`
     };
-    AddDemand(obj, navigation);
+    await AddDemand(obj)
+      .then(() => {
+        setLoader(false);
+        navigation.navigate("DemandCars");
+      })
+      .catch(() => setLoader(false));
+    setLoader(false);
   };
   const onChangeMake = (e) => {
     if (e == "") {
@@ -153,6 +162,7 @@ const AddDemandCar = ({ navigation }) => {
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
         <AppTextInput
+          maxLength={4}
           keyboardType={"number-pad"}
           onChangeHandler={(e) => onChangeYear(e)}
           label="Year"
@@ -200,8 +210,11 @@ const AddDemandCar = ({ navigation }) => {
           selectedItem={dealerPicker}
           width="80%"
         /> */}
+
         <Button
-          title={"Submit"}
+          title={
+            loader ? <ActivityIndicator size="small" color="#fff" /> : "Submit"
+          }
           onPressHandler={onSubmitHandler}
           style={styles.buttonContainer}
         />

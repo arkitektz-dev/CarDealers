@@ -172,19 +172,16 @@ export const updateProfile = async (userinfo, userData) => {
   }
 };
 export const updatePassword = async (userinfo, userData) => {
-  console.log("Hey");
-  if (userData.password != "" && userData.confirmPassword != "") {
+  console.log(userinfo, userData.confirmPassword);
+  if (userData.password == "" && userData.confirmPassword == "") {
+    alert("Fields can not be empty");
+  } else {
     const { id } = userinfo;
-    const obj = { password: userData.password };
-    firestore()
+    const obj = { password: userData.confirmPassword };
+    return firestore()
       .collection("Users")
       .doc(id)
-      .update(obj)
-      .then(() => {
-        alert("User updated!");
-      });
-  } else {
-    alert("Fields can not be empty");
+      .update(obj);
   }
 };
 export const AddShowroomData = (showroomData) => {
@@ -207,12 +204,9 @@ export const AddDemand = (obj, navigation) => {
   if (obj.Make == "" || obj.Model == "" || obj.Year == "")
     alert("Fields can not be empty");
   else {
-    firestore()
+    return firestore()
       .collection("Demand")
-      .add(obj)
-      .then(() => {
-        navigation.navigate("DemandCars");
-      });
+      .add(obj);
   }
 };
 
@@ -224,12 +218,9 @@ export const AddCarData = async (obj) => {
   ) {
     alert("Fields Can not be empty");
   } else {
-    firestore()
+    return firestore()
       .collection("Advertisments")
-      .add(obj)
-      .then(() => {
-        alert("Car Added");
-      });
+      .add(obj);
   }
 };
 export const fetchSpecificDealer = async (dealerId) => {

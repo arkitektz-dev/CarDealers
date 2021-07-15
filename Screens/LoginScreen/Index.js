@@ -12,6 +12,7 @@ import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { storeData } from "../../Data/FetchData";
 import Navbar from "../../Component/Navbar.js/Index";
 import AuthContext from "../../Component/Authcontext";
+import { ActivityIndicator } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -27,15 +28,18 @@ export const LoginScreen = () => {
   const [auth, setAuth] = useState(false);
   const [secure, setSecure] = useState(true);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
+  const [loader, setLoader] = useState(false);
+
   const navigation = useNavigation();
   const authContext = useContext(AuthContext);
   const Login = async () => {
+    setLoader(true);
     const ref = firestore().collection("Users");
 
     if (user.name == "" || user.password == "") {
       setEmptyFieldError(true);
     } else {
-      ref
+      await ref
         .where("username", "==", user.name)
         .where("password", "==", user.password)
         .get()
@@ -61,13 +65,18 @@ export const LoginScreen = () => {
               authContext.setUser(b.DealerId);
 
               storeData(b);
+
               navigation.replace("Home");
+              setLoader(false);
             });
         })
         .catch((error) => {
+          setLoader(false);
+
           alert("Error getting data: ", error);
         });
     }
+    setLoader(false);
   };
 
   return (
@@ -164,7 +173,9 @@ export const LoginScreen = () => {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Login"
+          title={
+            loader ? <ActivityIndicator size="small" color="#fff" /> : "Login"
+          }
           onPressHandler={Login}
           style={styles.background}
         />

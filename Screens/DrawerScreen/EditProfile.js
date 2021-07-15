@@ -7,6 +7,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 import { screenHeight } from "../../Global/Dimension";
+import { HelperText } from "react-native-paper";
 
 const EditProfile = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
@@ -20,11 +21,12 @@ const EditProfile = ({ navigation, route }) => {
   });
 
   const onChangeEmail = (e) => {
-    if (e == "") {
+    setUserData({ ...userData, email: e });
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(e) === false) {
       setError({ ...error, email: true });
     } else {
       setError({ ...error, email: false });
-      setUserData({ ...userData, email: e });
     }
   };
   const onChangeName = (e) => {
@@ -35,9 +37,19 @@ const EditProfile = ({ navigation, route }) => {
       setUserData({ ...userData, name: e });
     }
   };
+  const onSubmitHandler = () => {
+    if (error.email) {
+      alert("Format is not Correct");
+    }
+    if (userData == {}) {
+      alert("Fields Can Not be Empty");
+    }
+    if (!error.email && userData != {}) {
+      updateProfile(userinfo, userData);
+    }
+  };
   useEffect(() => {
     setUserInfo(route.params.userinfo);
-    setUserData({});
   }, []);
 
   return (
@@ -100,6 +112,18 @@ const EditProfile = ({ navigation, route }) => {
             onChangeHandler={(e) => onChangeEmail(e)}
           />
         </View>
+        {error.email ? (
+          <HelperText
+            type="error"
+            style={{
+              color: "red",
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            Email is not valid!
+          </HelperText>
+        ) : null}
         <View
           style={{
             margin: 10,
@@ -107,7 +131,7 @@ const EditProfile = ({ navigation, route }) => {
           }}
         >
           <Button
-            onPressHandler={() => updateProfile(userinfo, userData)}
+            onPressHandler={onSubmitHandler}
             style={styles.buttonContainer}
             title="Update Profile"
           />
