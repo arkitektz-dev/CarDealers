@@ -7,6 +7,7 @@ import firebase from "firebase";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MyTabs from "./Navigation/BottomTab/Index";
 import AuthContext from "./Component/Authcontext";
+import { SignupScreen } from "./Screens/SignUp";
 
 const MainStack = () => {
   const Stack = createStackNavigator();

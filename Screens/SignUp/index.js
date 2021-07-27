@@ -18,7 +18,7 @@ import { DismissKeyboard } from "../../Component/KeyboardDismiss";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import Back from "../../Assets/NewAsset/backButton.png";
 import Navbar from "../../Component/Navbar.js/Index";
-import AppPicker from "../../Component/Pickers/Index";
+import AppCheckBox from "../../Component/AppCheckbox/index";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 
 const buttonWidth = screenWidth * 0.7;
@@ -47,12 +47,15 @@ export const SignupScreen = () => {
   const [confirm, setConfirm] = useState(null);
   const [showroom, setShowroom] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const [showroomData, setShowroomData] = useState([]);
   const [emaiError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [alreadyExit, setAlreadyExit] = useState(false);
+  const [checkbox, setCheckbox] = useState([]);
+
   const [otpInput, setOTPInput] = useState({
     pin1: "",
     pin2: "",
@@ -174,7 +177,23 @@ export const SignupScreen = () => {
         }
       });
   };
-
+  const onModalHandler = () => {
+    if (visible == false) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
+  const onChangeHandler = (e) => {
+    const arr = [];
+    arr.push({ ...arr, e });
+    // const id = firestore()
+    //   .collection("Dealers")
+    //   .doc(e.value);
+    // const obj = { name: e.label, id: id };
+    // setCheckbox({ ...e });
+    console.log(arr);
+  };
   return (
     <DismissKeyboard>
       <ScrollView style={styles.form_container}>
@@ -332,7 +351,35 @@ export const SignupScreen = () => {
             onChangeText={handleChangeConfirmPassowrd}
           />
           <View style={{ alignSelf: "center" }}>
-            <AppPicker
+            <Text onPress={onModalHandler}>Select Showroom</Text>
+            <Modal visible={visible} animationType="slide">
+              <Button
+                title="Close"
+                style={styles.buttonContainer}
+                onPressHandler={onModalHandler}
+              />
+              {showroomData.map((item) => {
+                return (
+                  <View style={{ flexDirection: "row" }}>
+                    <AppCheckBox
+                      // status={checkbox.includes(item) ? "checked" : "unchecked"}
+                      onPress={() => onChangeHandler(item)}
+                    />
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 18,
+                        fontWeight: "800",
+                      }}
+                      key={(item, index) => index.toString()}
+                    >
+                      {item.label}
+                    </Text>
+                  </View>
+                );
+              })}
+            </Modal>
+            {/* <AppPicker
               items={showroomData}
               name="category"
               onSelectItem={(item) => setShowroom(item)}
@@ -340,7 +387,7 @@ export const SignupScreen = () => {
               placeholder="Select Showroom"
               selectedItem={showroom}
               width="110%"
-            />
+            /> */}
           </View>
           {confirmPasswordError ? (
             <HelperText
@@ -658,9 +705,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   buttonContainer: {
-    top: "5%",
+    marginTop: 10,
+    height: 35,
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: "#1c2e65",
+    alignSelf: "center",
   },
   logoContainer: {
     backgroundColor: "yellow",

@@ -23,6 +23,7 @@ import MyAd from "../../Screens/MyAd";
 import DemandTabs from "../TopTab";
 import Choice from "../../Component/AddTabs";
 import AddTabs from "../../Component/AddTabs";
+import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -105,7 +106,7 @@ function MyTabs() {
       {status != undefined ? (
         <Tab.Screen
           name="About"
-          component={ProfileStack}
+          component={BottomProfileScreen}
           options={{
             tabBarIcon: ({ color }) => (
               <FontAwesome5 name="user-circle" size={26} color={color} />

@@ -4,9 +4,9 @@ import { Checkbox } from "react-native-paper";
 const AppCheckBox = ({ status, onPress }) => {
   return (
     <Checkbox
-      color="red"
+      color="#1e2d64"
       status={status}
-      uncheckedColor={"red"}
+      uncheckedColor={"#1e2d64"}
       onPress={onPress}
     />
   );
