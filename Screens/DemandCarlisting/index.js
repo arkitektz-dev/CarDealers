@@ -21,7 +21,7 @@ import {
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
-import CallSeller from "../../Assets/NewAsset/CallSeller.png";
+import CallSeller from "../../Assets/NewAsset/Call.png";
 import { Linking } from "react-native";
 
 const DemandCarList = () => {

@@ -72,21 +72,11 @@ const MyDemandListing = () => {
       // setfilteredData(adArr);
     });
   };
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
     convertData();
     compare();
-
-    //  .then((res) => console.log(res))
-    //   .catch((err) => console.log(err));
-    // // fetchDealerCar().then((data) => console.log(data));
-    // fetchCarData().then((res) => {
-    // setDataCar(res.arr);
-    // setStartAfter(res.lastVal);
-    // setfilteredData(res.arr);
-    // setcarCount(res.size);
     setLoading(false);
-    //   });
   }, []);
 
   const onSearch = (text) => {
@@ -224,7 +214,7 @@ const MyDemandListing = () => {
               </Text>
               <View style={{ height: 10 }}></View>
 
-              <Text
+              {/* <Text
                 style={{
                   color: "#565656",
                   fontSize: 14,
@@ -233,7 +223,7 @@ const MyDemandListing = () => {
                 }}
               >
                 {item.Dealer.Name}
-              </Text>
+              </Text> */}
             </View>
           </View>
         </View>
@@ -387,3 +377,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+//  .then((res) => console.log(res))
+//   .catch((err) => console.log(err));
+// // fetchDealerCar().then((data) => console.log(data));
+// fetchCarData().then((res) => {
+// setDataCar(res.arr);
+// setStartAfter(res.lastVal);
+// setfilteredData(res.arr);
+// setcarCount(res.size);});

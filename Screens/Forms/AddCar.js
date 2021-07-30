@@ -80,15 +80,17 @@ const AddCar = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(false);
   const authContext = useContext(AuthContext);
   useEffect(() => {
-    fetchShowroomCar().then((data) => {
-      data.forEach((querySnapshot) => {
+    getData().then((res) => authContext.setUser(res.DealerId));
+    fetchShowroomCar(authContext).then((res) => {
+      res.data().showrooms.forEach((data) => {
         showroomData.push({
-          value: querySnapshot.id,
-          label: querySnapshot.data().name,
+          value: data.id,
+          label: data.name,
         });
       }),
         setShowroomStateData(showroomData);
     });
+
     fetchDealerCar().then(
       (data) =>
         data.forEach((querySnapshot) => {
@@ -99,7 +101,6 @@ const AddCar = ({ navigation }) => {
         }),
       setDealerState(dealerData)
     );
-    getData().then((res) => authContext.setUser(res.DealerId));
   }, []);
   const bottomSheetHandeler = () => {
     if (isVisible == true) {
@@ -583,7 +584,14 @@ const AddCar = ({ navigation }) => {
               selectedItem={showroomPicker}
               width="80%"
             />
-            <View style={{ width: "70%", marginBottom: 10, bottom: 5 }}>
+            <View
+              style={{
+                width: "85%",
+                alignItems: "center",
+                marginBottom: 10,
+                bottom: 5,
+              }}
+            >
               <AppTextInput
                 label={"Description"}
                 onChangeHandler={(e) => setDescription(e)}

@@ -15,7 +15,7 @@ import Radio from "../../Assets/NewAsset/radio.png";
 import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
-import CallSeller from "../../Assets/NewAsset/CallSeller.png";
+import CallSeller from "../../Assets/NewAsset/Call.png";
 import ImageSlider from "react-native-image-slider";
 import { screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";

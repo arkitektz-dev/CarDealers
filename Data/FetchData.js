@@ -61,6 +61,17 @@ export const fetchMoreDemandCar = async (startAfter) => {
 //   return { size, arr };
 // };
 
+export const AddDealer = async (data) => {
+  const obj = {
+    name: data.name,
+    contactInformation: data.phone,
+    showrooms: data.showrooms,
+  };
+  return firestore()
+    .collection("Dealers")
+    .add(obj);
+};
+
 //Fetch More Car Dealer Data
 export const fetchMoreCar = async (startAfter) => {
   const arr = [];
@@ -229,9 +240,10 @@ export const fetchSpecificDealer = async (dealerId) => {
     .doc(dealerId)
     .get();
 };
-export const fetchShowroomCar = async () => {
+export const fetchShowroomCar = async (value) => {
   return await firestore()
-    .collection("Showrooms")
+    .collection("Dealers")
+    .doc(value.user)
     .get();
 };
 export const fetchDealerCar = async () => {
@@ -240,7 +252,6 @@ export const fetchDealerCar = async () => {
     .get();
 };
 export const passwordReset = async (value, pass, navigation) => {
-  console.log(pass);
   const obj = { password: pass };
   const ref = firestore()
     .collection("Users")
@@ -260,4 +271,14 @@ export const passwordReset = async (value, pass, navigation) => {
       );
     })
     .catch((err) => console.log(err));
+};
+export const AddUser = (obj, id) => {
+  const DealerId = firestore()
+    .collection("Dealers")
+    .doc(id);
+  const data = { ...obj, DealerId };
+
+  return firestore()
+    .collection("Users")
+    .add(data);
 };

@@ -9,7 +9,7 @@ import { screenWidth } from "../../Global/Dimension";
 import { ScrollView } from "react-native";
 import Slider from "rn-range-slider";
 
-const SliderData = ({ onValueChanged, min, max, step }) => {
+const YearSliderData = ({ onValueChanged }) => {
   const [allowScroll, setAllowScroll] = useState(true);
   const renderThumb = useCallback(() => <Thumb />, []);
   const renderRail = useCallback(() => <Rail />, []);
@@ -35,9 +35,9 @@ const SliderData = ({ onValueChanged, min, max, step }) => {
           width: screenWidth * 0.8,
         }}
         gravity={"center"}
-        min={0}
-        max={50000000}
-        step={1000}
+        min={1990}
+        max={2024}
+        step={1}
         selectionColor="#3df"
         blankColor="#f618"
         onValueChanged={onValueChanged}
@@ -51,4 +51,4 @@ const SliderData = ({ onValueChanged, min, max, step }) => {
     </ScrollView>
   );
 };
-export default SliderData;
+export default YearSliderData;

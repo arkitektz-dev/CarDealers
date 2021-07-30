@@ -27,26 +27,26 @@ const CategoryCard = () => {
       >
         <TouchableOpacity onPress={() => naivgation.navigate("CarStack")}>
           <View style={styles.container}>
-            <FontAwsome name="car" size={30} color="#1e2d64" />
+            <FontAwsome name="car" size={35} color="#1e2d64" />
             <Text style={styles.text}>CAR</Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => naivgation.navigate("DealerStack")}>
           <View style={styles.container}>
-            <FontAwsome name="user" size={30} color="#1e2d64" />
+            <FontAwsome name="user" size={35} color="#1e2d64" />
             <Text style={styles.text}>DEALER</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => naivgation.navigate("ShowroomStack")}>
           <View style={styles.container}>
-            <FontAwsome name="building" size={30} color="#1e2d64" />
+            <FontAwsome name="building" size={35} color="#1e2d64" />
             <Text style={styles.text}>SHOWROOM</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => naivgation.navigate("DemandCars")}>
           <View style={styles.container}>
-            <FontAwsome name="building" size={30} color="#1e2d64" />
+            <FontAwsome name="building" size={35} color="#1e2d64" />
             <Text style={styles.text}>Demand</Text>
           </View>
         </TouchableOpacity>
@@ -57,17 +57,16 @@ const CategoryCard = () => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-evenly",
-    backgroundColor: "white",
-    padding: 5,
+    padding: 15,
     width: 85,
     alignItems: "center",
     borderColor: "#b3b5b8",
     borderWidth: 0.3,
-    borderRadius: 10,
     shadowColor: "#470000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     elevation: 3,
+    borderRadius: 10,
   },
   image: {
     width: "100%",
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#000000",
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "900",
     textAlignVertical: "center",
     textAlign: "center",

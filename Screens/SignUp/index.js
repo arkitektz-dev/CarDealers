@@ -19,7 +19,8 @@ import { screenHeight, screenWidth } from "../../Global/Dimension";
 import Back from "../../Assets/NewAsset/backButton.png";
 import Navbar from "../../Component/Navbar.js/Index";
 import AppCheckBox from "../../Component/AppCheckbox/index";
-import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
+import defaultStyles from "../../config/styles";
+import { AddDealer, AddUser } from "../../Data/FetchData";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -64,6 +65,8 @@ export const SignupScreen = () => {
     pin5: "",
     pin6: "",
   });
+  const showrooms = [];
+
   const showroomArr = [];
 
   useEffect(() => {
@@ -97,22 +100,22 @@ export const SignupScreen = () => {
         try {
           const confirmation = await auth().signInWithPhoneNumber(user.phone);
           setConfirm(confirmation);
-          console.log(confirmation);
         } catch (error) {
           alert("Invalid Number");
         }
       }
     }
   };
-
   const navigation = useNavigation();
   const ref = firestore().collection("Users");
 
   async function confirmCode() {
-    const ShowroomId = firestore()
-      .collection("Showrooms")
-      .doc(showroom.id);
-    // const obj = { ...user, ...ShowroomId };
+    checkbox.forEach((item) => {
+      const id = firestore()
+        .collection("Showrooms")
+        .doc(item.value);
+      showrooms.push({ id, name: item.label });
+    });
     try {
       await confirm.confirm(
         otpInput.pin1 +
@@ -122,16 +125,15 @@ export const SignupScreen = () => {
           otpInput.pin5 +
           otpInput.pin6
       );
-
       try {
-        const obj = { ...user, ShowroomId };
-        await ref
-          .add(obj)
-          .then(() => {
-            alert("User added!");
-          })
-          .catch((err) => alert(err));
-        alert("Registered Succesfully !");
+        const obj = { ...user, showrooms };
+
+        await AddDealer(obj)
+          .then((res) =>
+            AddUser(obj, res.id).then(() => alert("User Registered"))
+          )
+          .catch((err) => console.log(err));
+
         navigation.replace("Home");
       } catch (error) {
         alert(error);
@@ -185,14 +187,7 @@ export const SignupScreen = () => {
     }
   };
   const onChangeHandler = (e) => {
-    const arr = [];
-    arr.push({ ...arr, e });
-    // const id = firestore()
-    //   .collection("Dealers")
-    //   .doc(e.value);
-    // const obj = { name: e.label, id: id };
-    // setCheckbox({ ...e });
-    console.log(arr);
+    setCheckbox([...checkbox, e]);
   };
   return (
     <DismissKeyboard>
@@ -254,7 +249,7 @@ export const SignupScreen = () => {
 
           <TextInput
             autoCapitalize="none"
-            keyboardType="number-pad"
+            keyboardType="phone-pad"
             maxLength={14}
             label="Phone"
             theme={{
@@ -270,7 +265,9 @@ export const SignupScreen = () => {
             onChangeText={(e) => setUser({ ...user, phone: e })}
           />
           <Tooltip
-            popover={<Text style={{ color: "#000000" }}>Start with +92</Text>}
+            popover={
+              <Text style={{ color: "#000000" }}>Start with +921234567890</Text>
+            }
           >
             <Text
               style={{
@@ -330,7 +327,7 @@ export const SignupScreen = () => {
             onChangeText={(e) => setUser({ ...user, password: e })}
           />
 
-          {/* <View style={styles.distance}></View> */}
+          <View style={styles.distance}></View>
           <TextInput
             autoCapitalize="none"
             maxLength={20}
@@ -351,7 +348,25 @@ export const SignupScreen = () => {
             onChangeText={handleChangeConfirmPassowrd}
           />
           <View style={{ alignSelf: "center" }}>
-            <Text onPress={onModalHandler}>Select Showroom</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: defaultStyles.colors.light,
+                borderRadius: 25,
+                flexDirection: "row",
+                padding: 15,
+                margin: 10,
+                width: screenWidth * 0.71,
+                justifyContent: "center",
+              }}
+              onPress={() => setVisible(true)}
+            >
+              <Text
+                style={{ color: "#333", fontSize: 17 }}
+                onPress={onModalHandler}
+              >
+                Select Showroom
+              </Text>
+            </TouchableOpacity>
             <Modal visible={visible} animationType="slide">
               <Button
                 title="Close"
@@ -362,7 +377,7 @@ export const SignupScreen = () => {
                 return (
                   <View style={{ flexDirection: "row" }}>
                     <AppCheckBox
-                      // status={checkbox.includes(item) ? "checked" : "unchecked"}
+                      status={checkbox.includes(item) ? "checked" : "unchecked"}
                       onPress={() => onChangeHandler(item)}
                     />
                     <Text
@@ -379,15 +394,6 @@ export const SignupScreen = () => {
                 );
               })}
             </Modal>
-            {/* <AppPicker
-              items={showroomData}
-              name="category"
-              onSelectItem={(item) => setShowroom(item)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder="Select Showroom"
-              selectedItem={showroom}
-              width="110%"
-            /> */}
           </View>
           {confirmPasswordError ? (
             <HelperText

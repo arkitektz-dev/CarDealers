@@ -35,6 +35,7 @@ const AppTextInput = ({
         style={{
           backgroundColor: "transparent",
           color: "#000000",
+          width: "80%",
         }}
         onChangeText={onChangeHandler}
       />

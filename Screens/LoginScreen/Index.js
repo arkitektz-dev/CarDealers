@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
@@ -31,7 +31,7 @@ export const LoginScreen = () => {
   const [loader, setLoader] = useState(false);
 
   const navigation = useNavigation();
-  const authContext = useContext(AuthContext);
+
   const Login = async () => {
     setLoader(true);
     const ref = firestore().collection("Users");
@@ -62,7 +62,6 @@ export const LoginScreen = () => {
                 username: a.username,
                 DealerId: `${a.DealerId._documentPath._parts[1]}`,
               };
-              authContext.setUser(b.DealerId);
 
               storeData(b);
 
@@ -73,7 +72,7 @@ export const LoginScreen = () => {
         .catch((error) => {
           setLoader(false);
 
-          alert("Error getting data: ", error);
+          console.log("Error getting data:", error);
         });
     }
     setLoader(false);

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
@@ -6,25 +6,26 @@ import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
 import { AddDemand, fetchDealerCar, getData } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import AppPicker from "../../Component/Pickers/Index";
+import changeNumberFormat from "../../Component/Converter";
 import ErrorHandle from "../../Component/HelperText";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import firestore from "@react-native-firebase/firestore";
 import SliderData from "../../Component/SliderData/Index";
 import { ActivityIndicator } from "react-native";
+import YearSliderData from "../../Component/SliderData/YearSliderData";
 
 const AddDemandCar = ({ navigation }) => {
   const [dealerState, setDealerState] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
-  const [rangePriceData, setRangePriceData] = useState();
+  const [rangePriceData, setRangePriceData] = useState({ init: "", final: "" });
+  const [yearRange, setYearRange] = useState({ init: "", final: "" });
+
   const [loader, setLoader] = useState(false);
 
   const [showroomData, setShowroomData] = useState({
     Make: "",
     Model: "",
-    Price: "",
-    Year: "",
   });
   const [errorState, setErrorState] = useState({
     Make: false,
@@ -73,14 +74,12 @@ const AddDemandCar = ({ navigation }) => {
     const data = {
       Make: showroomData.Make,
       Model: showroomData.Model,
-      Year: showroomData.Year,
-      Price: `${numberWithCommas(showroomData.Price)}`,
+      Year: yearRange.init,
+      Price: `${numberWithCommas(rangePriceData.init)}`,
     };
     const obj = {
       ...data,
       Dealer,
-
-      // `Rs.${showroomData.Price}`
     };
     await AddDemand(obj)
       .then(() => {
@@ -114,6 +113,15 @@ const AddDemandCar = ({ navigation }) => {
       setShowroomData({ ...showroomData, Year: e });
     }
   };
+
+  const handleValueYearChange = useCallback((low, high) => {
+    setYearRange({ init: low });
+  }, []);
+
+  const handleValuePriceChange = useCallback((low, high) => {
+    setRangePriceData({ init: low });
+  }, []);
+
   return (
     <View style={styles.parent}>
       <View
@@ -161,55 +169,47 @@ const AddDemandCar = ({ navigation }) => {
         {errorState.location ? (
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
-        <AppTextInput
-          maxLength={4}
-          keyboardType={"number-pad"}
-          onChangeHandler={(e) => onChangeYear(e)}
-          label="Year"
-          returnKeyType="next"
-        />
-        {errorState.contactInformation ? (
-          <ErrorHandle text="Field Can Not be empty" />
-        ) : null}
-        <AppTextInput
-          keyboardType={"number-pad"}
-          maxLength={10}
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, Price: e })
-          }
-          label="Price"
-          returnKeyType="next"
-        />
-        {/* <View
-          style={{
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 15, color: "#000000", top: 15 }}>
-            Select Amount: Rs {rangePriceData} Lacs
-          </Text>
-          <View style={{ height: 20 }}></View>
-          <SliderData
-            min={0}
-            max={100}
-            onValueChange={(data) => setRangePriceData(data)}
-          />
-        </View> */}
-        {/* <AppPicker
-          items={dealerState}
-          name="category"
-          onSelectItem={(item) => {
-            let dealerO = dealerState.filter((dealer) => item == dealer.label);
-            setDealerPickerID(dealerO[0].value);
-            setDealerPicker(dealerO[0].label);
-          }}
-          PickerItemComponent={CategoryPickerItem}
-          placeholder="Dealers"
-          selectedItem={dealerPicker}
-          width="80%"
-        /> */}
+
+        <View style={{ width: "100%" }}>
+          <View
+            style={{
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontWeight: "bold",
+                fontSize: 16,
+                left: 35,
+                top: 10,
+              }}
+            >
+              Selected Amount: Rs {changeNumberFormat(rangePriceData.init)}
+            </Text>
+            <SliderData
+              min={0}
+              max={100000000}
+              step={1000}
+              onValueChanged={handleValuePriceChange}
+            />
+          </View>
+
+          <View style={{ flexDirection: "column" }}>
+            <Text
+              style={{
+                color: "black",
+                fontWeight: "bold",
+                fontSize: 16,
+                left: 35,
+              }}
+            >
+              Select Year: {yearRange.init}
+            </Text>
+            <YearSliderData onValueChanged={handleValueYearChange} />
+          </View>
+        </View>
 
         <Button
           title={
@@ -230,8 +230,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   form: {
-    width: screenWidth * 0.7,
-    alignSelf: "center",
+    flex: 1,
+    width: screenWidth,
+    alignItems: "center",
   },
   buttonContainer: {
     marginTop: 10,
@@ -239,6 +240,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     marginBottom: 20,
     width: 250,
     borderRadius: 30,

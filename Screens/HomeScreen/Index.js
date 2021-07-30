@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import {
   Image,
   Text,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CategoryCard from "../../Component/CardComponent/CategoryCard";
-import DemandCarCard from "../../Component/CardComponent/Demand Car";
 
 import Drawer from "../../Assets/NewAsset/Drawer.png";
 import HomeLogo from "../../Assets/NewAsset/homelog.png";
@@ -18,12 +17,18 @@ import CarCard from "../../Component/CardComponent/CarCard";
 import { screenHeight } from "../../Global/Dimension";
 import { getData } from "../../Data/FetchData";
 import NavHome from "../../Component/HomeNav";
+import AuthContext from "../../Component/Authcontext";
 
 const HomeScreen = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    getData().then((data) => setUserInfo(data));
+    getData().then((data) => {
+      authContext.setUser(data.DealerId);
+
+      setUserInfo(data);
+    });
   }, []);
 
   return (

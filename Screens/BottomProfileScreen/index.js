@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import Drawer from "../../Assets/Drawer.png";
 
 import {
@@ -17,17 +17,17 @@ import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import { Modal } from "react-native";
-import { getData } from "../../Data/FetchData";
+import { fetchSpecificDealer, getData } from "../../Data/FetchData";
+import AuthContext from "../../Component/Authcontext";
 
 const BottomProfileScreen = ({ route }) => {
-  //   const param = route.params.item;
-
-  const [showroomCount, setshowroomCount] = useState(0);
+  const authContext = useContext(AuthContext);
+  const [param, setParam] = useState();
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [modalData, setModalData] = useState([]);
   const [visible, setVisible] = useState(false);
-
+  const dealer = authContext.user;
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
@@ -42,7 +42,7 @@ const BottomProfileScreen = ({ route }) => {
             .trim();
         }
 
-        const paramdealerId = param.id.toString();
+        const paramdealerId = authContext.user.toString();
         if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
         }
@@ -59,9 +59,10 @@ const BottomProfileScreen = ({ route }) => {
     }
   };
   useEffect(() => {
-    getData().then((res) => console.log(res));
-    // setModalData(param.showrooms);
-    // setshowroomCount(param.showrooms.length);
+    fetchSpecificDealer(dealer).then((res) => {
+      console.log(res, "@3"), setParam(res.data());
+    });
+
     fetchData();
   }, []);
 
@@ -189,16 +190,19 @@ const BottomProfileScreen = ({ route }) => {
                 <Text style={styles.carInfoText}>
                   {"\b"}
 
-                  {param.name}
+                  {param && param.name}
                   {" \b"}
                 </Text>
               </View>
               <View style={{ flexDirection: "column" }}>
-                {param.showrooms.map((item) => {
-                  return <Text style={styles.h1}>{item.name}</Text>;
-                })}
+                {param &&
+                  param.showrooms.map((item) => {
+                    return <Text style={styles.h1}>{item.name}</Text>;
+                  })}
 
-                <Text style={styles.txt1}>{param.contactInformation[0]}</Text>
+                <Text style={styles.txt1}>
+                  {param && param.contactInformation[0]}
+                </Text>
               </View>
             </View>
           </View>
@@ -221,7 +225,7 @@ const BottomProfileScreen = ({ route }) => {
               textAlign: "center",
             }}
           >
-            {showroomCount}
+            {param && param.showrooms.length}
           </Text>
           <TouchableOpacity style={styles.CarInfoTitle} onPress={modalVisible}>
             <Text style={styles.countText}> SHOWROOMS </Text>
