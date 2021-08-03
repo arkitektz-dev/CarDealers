@@ -74,8 +74,10 @@ const AddDemandCar = ({ navigation }) => {
     const data = {
       Make: showroomData.Make,
       Model: showroomData.Model,
-      Year: yearRange.init,
-      Price: `${numberWithCommas(rangePriceData.init)}`,
+      minYear: yearRange.init,
+      maxYear: yearRange.final,
+      minPrice: `${numberWithCommas(rangePriceData.init)}`,
+      maxPrice: `${numberWithCommas(rangePriceData.final)}`,
     };
     const obj = {
       ...data,
@@ -208,7 +210,7 @@ const AddDemandCar = ({ navigation }) => {
                   style={styles.int}
                 />
                 <Text style={{ color: "#000000", top: 6 }}>
-                  {changeNumberFormat(rangePriceData.init.toString())}
+                  {changeNumberFormat(rangePriceData.init.toString(), 2)}
                 </Text>
               </View>
               <View style={{ flexDirection: "column" }}>
@@ -217,7 +219,7 @@ const AddDemandCar = ({ navigation }) => {
                   style={styles.int}
                 />
                 <Text style={{ color: "#000000", top: 6 }}>
-                  {changeNumberFormat(rangePriceData.final.toString())}
+                  {changeNumberFormat(rangePriceData.final.toString(), 2)}
                 </Text>
               </View>
             </View>

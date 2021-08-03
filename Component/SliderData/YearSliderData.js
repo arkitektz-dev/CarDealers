@@ -35,7 +35,7 @@ const YearSliderData = ({ onValueChanged }) => {
           marginTop: "5%",
         }}
         gravity={"center"}
-        min={1990}
+        min={1980}
         max={2024}
         step={1}
         selectionColor="#3df"

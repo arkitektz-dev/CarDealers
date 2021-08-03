@@ -36,9 +36,9 @@ const SliderData = ({ onValueChanged, min, max, step }) => {
           marginTop: "5%",
         }}
         gravity={"center"}
-        min={100000}
-        max={50000000}
-        step={1000}
+        min={0}
+        max={5000000}
+        step={25000}
         selectionColor="#3df"
         blankColor="#f618"
         onValueChanged={onValueChanged}

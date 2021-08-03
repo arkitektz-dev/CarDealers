@@ -15,7 +15,7 @@ export default function changeNumberFormat(number, decimals, recursiveCall) {
   if (noOfLakhs >= 1 && noOfLakhs <= 99) {
     const lakhs = roundOf(noOfLakhs);
     isPlural = lakhs > 1 && !recursiveCall;
-    displayStr = `${lakhs} Lakh${isPlural ? "s" : ""}`;
+    displayStr = `${lakhs} Lac${isPlural ? "s" : ""}`;
   } else if (noOfLakhs >= 100) {
     const crores = roundOf(noOfLakhs / 100);
     const crorePrefix =
