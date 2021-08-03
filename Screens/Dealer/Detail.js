@@ -1,6 +1,4 @@
 import React, { memo, useEffect, useState } from "react";
-import Drawer from "../../Assets/Drawer.png";
-
 import {
   Image,
   StyleSheet,
@@ -8,10 +6,11 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
-
+import LottieView from "lottie-react-native";
 import Profile from "../../Assets/RedProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
@@ -26,6 +25,7 @@ const DealerDetailScreen = ({ route }) => {
   const [dataCar, setDataCar] = useState([]);
   const [modalData, setModalData] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
@@ -58,9 +58,10 @@ const DealerDetailScreen = ({ route }) => {
     }
   };
   useEffect(() => {
+    setLoading(true);
     setModalData(param.showrooms);
     setshowroomCount(param.showrooms.length);
-    fetchData();
+    fetchData().then(() => setLoading(false));
   }, []);
 
   const arr = [];
@@ -181,7 +182,10 @@ const DealerDetailScreen = ({ route }) => {
           <View style={{ width: 15 }}></View>
           <View style={{ flexDirection: "row" }}>
             <View
-              style={{ flexDirection: "column", justifyContent: "flex-end" }}
+              style={{
+                flexDirection: "column",
+                justifyContent: "flex-end",
+              }}
             >
               <View style={styles.DealerName}>
                 <Text style={styles.carInfoText}>
@@ -241,13 +245,17 @@ const DealerDetailScreen = ({ route }) => {
           </View>
         </View>
       </View>
-      <FlatList
-        contentContainerStyle={{ alignSelf: "center" }}
-        numColumns={2}
-        data={dataCar}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#1c2e65" style={{ top: 150 }} />
+      ) : (
+        <FlatList
+          contentContainerStyle={{ alignSelf: "center" }}
+          numColumns={2}
+          data={dataCar}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -259,7 +267,6 @@ const styles = StyleSheet.create({
   },
   parent: {
     flexDirection: "column",
-    flex: 1,
     backgroundColor: "#fff",
   },
   navTxt: {

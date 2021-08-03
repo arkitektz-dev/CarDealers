@@ -169,7 +169,6 @@ export const SignupScreen = () => {
       setUsernameError(false);
     } else {
       setUsernameError(true);
-      alert("Username is Not Correct");
     }
     await ref
       .where("username", "==", user.username)

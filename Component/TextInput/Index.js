@@ -1,5 +1,4 @@
 import React from "react";
-import { ActivityIndicator } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
 const AppTextInput = ({
@@ -9,11 +8,13 @@ const AppTextInput = ({
   label,
   multiline,
   returnKeyType,
+  value,
   maxLength,
 }) => {
   return (
     <>
       <TextInput
+      value={value}
         maxLength={maxLength}
         placeholder={placeholder}
         renderToHardwareTextureAndroid

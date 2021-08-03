@@ -141,9 +141,6 @@ const MyDemandListing = () => {
     }
   };
 
-  const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
-  };
   const _renderFooter = () => {
     return (
       <View
@@ -169,7 +166,7 @@ const MyDemandListing = () => {
   };
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
+      <TouchableOpacity>
         <View
           style={{
             flexDirection: "column",
@@ -183,12 +180,6 @@ const MyDemandListing = () => {
               flexDirection: "row",
             }}
           >
-            {/* <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            /> */}
-
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
                 style={{

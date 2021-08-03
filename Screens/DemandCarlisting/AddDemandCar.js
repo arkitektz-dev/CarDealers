@@ -13,6 +13,7 @@ import firestore from "@react-native-firebase/firestore";
 import SliderData from "../../Component/SliderData/Index";
 import { ActivityIndicator } from "react-native";
 import YearSliderData from "../../Component/SliderData/YearSliderData";
+import { TextInput } from "react-native-gesture-handler";
 
 const AddDemandCar = ({ navigation }) => {
   const [dealerState, setDealerState] = useState("");
@@ -59,7 +60,6 @@ const AddDemandCar = ({ navigation }) => {
     });
   }, []);
   const onSubmitHandler = async () => {
-    setLoader(true);
     const userRef = firestore()
       .collection("Dealers")
       .doc(dealerPickerID);
@@ -81,13 +81,20 @@ const AddDemandCar = ({ navigation }) => {
       ...data,
       Dealer,
     };
-    await AddDemand(obj)
-      .then(() => {
-        setLoader(false);
-        navigation.navigate("DemandCars");
-      })
-      .catch(() => setLoader(false));
-    setLoader(false);
+    if (showroomData.Make != "" && showroomData.Model != "") {
+      setLoader(true);
+      await AddDemand(obj)
+        .then(() => {
+          setLoader(false);
+          navigation.navigate("DemandCars");
+        })
+        .catch(() => setLoader(false));
+      setLoader(false);
+    } else {
+      setLoader(false);
+
+      alert("Fields can not be empty");
+    }
   };
   const onChangeMake = (e) => {
     if (e == "") {
@@ -115,11 +122,11 @@ const AddDemandCar = ({ navigation }) => {
   };
 
   const handleValueYearChange = useCallback((low, high) => {
-    setYearRange({ init: low });
+    setYearRange({ init: low, final: high });
   }, []);
 
   const handleValuePriceChange = useCallback((low, high) => {
-    setRangePriceData({ init: low });
+    setRangePriceData({ init: low, final: high });
   }, []);
 
   return (
@@ -170,7 +177,7 @@ const AddDemandCar = ({ navigation }) => {
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
 
-        <View style={{ width: "100%" }}>
+        <View style={{ width: "100%", top: 15, flex: 1 }}>
           <View
             style={{
               flexDirection: "column",
@@ -183,20 +190,46 @@ const AddDemandCar = ({ navigation }) => {
                 fontWeight: "bold",
                 fontSize: 16,
                 left: 35,
-                top: 10,
+                marginTop: 10,
               }}
             >
-              Selected Amount: Rs {changeNumberFormat(rangePriceData.init)}
+              Selected Amount:
             </Text>
-            <SliderData
-              min={0}
-              max={100000000}
-              step={1000}
-              onValueChanged={handleValuePriceChange}
-            />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginTop: 10,
+              }}
+            >
+              <View style={{ flexDirection: "column" }}>
+                <TextInput
+                  value={rangePriceData.init.toString()}
+                  style={styles.int}
+                />
+                <Text style={{ color: "#000000", top: 6 }}>
+                  {changeNumberFormat(rangePriceData.init.toString())}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <TextInput
+                  value={rangePriceData.final.toString()}
+                  style={styles.int}
+                />
+                <Text style={{ color: "#000000", top: 6 }}>
+                  {changeNumberFormat(rangePriceData.final.toString())}
+                </Text>
+              </View>
+            </View>
+            <SliderData onValueChanged={handleValuePriceChange} />
           </View>
 
-          <View style={{ flexDirection: "column" }}>
+          <View
+            style={{
+              flexDirection: "column",
+              marginTop: 10,
+            }}
+          >
             <Text
               style={{
                 color: "black",
@@ -205,8 +238,22 @@ const AddDemandCar = ({ navigation }) => {
                 left: 35,
               }}
             >
-              Select Year: {yearRange.init}
+              Select Year:
             </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginTop: 15,
+              }}
+            >
+              <TextInput value={yearRange.init.toString()} style={styles.int} />
+
+              <TextInput
+                value={yearRange.final.toString()}
+                style={styles.int}
+              />
+            </View>
             <YearSliderData onValueChanged={handleValueYearChange} />
           </View>
         </View>
@@ -249,5 +296,11 @@ const styles = StyleSheet.create({
 
   distance: {
     width: screenWidth * 0.09,
+  },
+  int: {
+    borderWidth: 1,
+    borderColor: "#000000",
+    width: screenWidth * 0.4,
+    color: "#000000",
   },
 });

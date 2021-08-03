@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import AuthContext from "../../Component/Authcontext";
+import { ActivityIndicator } from "react-native";
 
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
@@ -25,34 +26,17 @@ const ShowroomDetailScreen = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const authContext = useContext(AuthContext);
 
   const arr = [];
 
   useEffect(() => {
+    setLoading(true);
     fetchShowroomData();
-    fetchData();
-    // console.log(route);
-    // console.log(authContext.user);
+    fetchData().then(() => setLoading(false));
   }, []);
 
-  // const AssociateShowroom = () => {
-  //   const userRef = firestore()
-  //     .collection("Users")
-  //     .doc(route.params.item.id);
-
-  //   const obj = {
-  //     id: userRef,
-  //     Name: route.params.item.name,
-  //   };
-  //   firestore()
-  //     .collection("Users")
-  //     .doc(authContext.user)
-  //     .update(obj)
-  //     .then(() => {
-  //       alert("Showroom Associated!");
-  //     });
-  // };
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
@@ -232,12 +216,6 @@ const ShowroomDetailScreen = ({ route }) => {
               <Text style={styles.txt1}>{item.location}</Text>
             </View>
           </View>
-          {/* <Text onPress={AssociateShowroom}> ID </Text> 
-       {authContext.user != undefined ? (
-            <Text>Hey</Text>
-          ) : (
-            <Text>Not Signed IN</Text>
-          )} */}
         </View>
       </View>
 
@@ -279,15 +257,19 @@ const ShowroomDetailScreen = ({ route }) => {
           </View>
         </View>
       </View>
-      <FlatList
-        contentContainerStyle={{
-          alignSelf: "center",
-        }}
-        numColumns={2}
-        data={dataCar}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#1c2e65" style={{ top: 150 }} />
+      ) : (
+        <FlatList
+          contentContainerStyle={{
+            alignSelf: "center",
+          }}
+          numColumns={2}
+          data={dataCar}
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

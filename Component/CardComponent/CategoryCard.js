@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/core";
 import React, { memo } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FontAwsome from "react-native-vector-icons/FontAwesome";
+import Octicons from "react-native-vector-icons/Octicons";
 import { screenWidth } from "../../Global/Dimension";
 
 const CategoryCard = () => {
@@ -46,8 +47,8 @@ const CategoryCard = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => naivgation.navigate("DemandCars")}>
           <View style={styles.container}>
-            <FontAwsome name="building" size={35} color="#1e2d64" />
-            <Text style={styles.text}>Demand</Text>
+            <Octicons name="request-changes" size={35} color="#1e2d64" />
+            <Text style={styles.text}>DEMAND</Text>
           </View>
         </TouchableOpacity>
       </View>

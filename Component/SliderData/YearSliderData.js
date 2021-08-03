@@ -14,14 +14,13 @@ const YearSliderData = ({ onValueChanged }) => {
   const renderThumb = useCallback(() => <Thumb />, []);
   const renderRail = useCallback(() => <Rail />, []);
   const renderRailSelected = useCallback(() => <RailSelected />, []);
-  const renderLabel = useCallback((value) => <Label text={value} />, []);
+  // const renderLabel = useCallback((value) => <Label text={value} />, []);
   const renderNotch = useCallback(() => <Notch />, []);
   return (
     <ScrollView
       scrollEnabled={allowScroll}
       contentContainerStyle={{
         alignItems: "center",
-        justifyContent: "center",
         flexDirection: "column",
       }}
     >
@@ -29,10 +28,11 @@ const YearSliderData = ({ onValueChanged }) => {
         renderThumb={renderThumb}
         renderRail={renderRail}
         renderRailSelected={renderRailSelected}
-        renderLabel={renderLabel}
+        // renderLabel={renderLabel}
         renderNotch={renderNotch}
         style={{
           width: screenWidth * 0.8,
+          marginTop: "5%",
         }}
         gravity={"center"}
         min={1990}

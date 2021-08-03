@@ -15,7 +15,7 @@ const MainScreen = ({ navigation }) => {
           Title="HomeScreen"
           source={Back}
           backStyle={styles.back}
-          goBack={() => navigation.goBack()}
+          goBack={() => navigation.navigate("Home")}
         />
         <View>
           <Image
