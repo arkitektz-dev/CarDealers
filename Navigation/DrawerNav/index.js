@@ -25,8 +25,8 @@ var status = [];
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
   const authContext = useContext(AuthContext);
-  useEffect(async () => {
-    await getData().then((data) => {
+  useEffect(() => {
+    getData().then((data) => {
       status = data;
     });
   });

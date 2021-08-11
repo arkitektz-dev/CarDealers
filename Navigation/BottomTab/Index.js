@@ -30,8 +30,8 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   const [status, setStatus] = useState();
   const [isVisible, setIsVisible] = useState(false);
-  useEffect(async () => {
-    await getData().then((data) => {
+  useEffect(() => {
+    getData().then((data) => {
       setStatus(data);
     });
   });

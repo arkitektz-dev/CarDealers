@@ -23,29 +23,29 @@ const ShowroomDetailScreen = ({ route }) => {
   const showroomId = route.params.item.id;
   const [dealerCount, setdealerCount] = useState(0);
   const [modalData, setModalData] = useState([]);
+  const [name, setName] = useState("");
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
   const [showroomExist, setShowroomExist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [tempArr, setTempArr] = useState([]);
   const authContext = useContext(AuthContext);
   const user = authContext.user.toString();
-  const ShowroomArr = [];
   const arr = [];
 
   useEffect(() => {
     const ref = firestore()
       .collection("Dealers")
       .doc(user);
-    ref.get().then((res) =>
+    ref.get().then((res) => {
+      setTempArr(res.data().showrooms);
       res.data().showrooms.forEach((data) => {
-        console.log(data);
-        // ShowroomArr.push({id:data.id._documentPath._parts[1]})
         if (data.id._documentPath._parts[1] == showroomId) {
           setShowroomExist(showroomId);
         }
-      })
-    );
+      });
+    });
 
     setLoading(true);
     fetchShowroomData();
@@ -53,10 +53,23 @@ const ShowroomDetailScreen = ({ route }) => {
   }, []);
 
   const AssignShowroom = () => {
-    firestore()
+    const Id_Showroom = firestore()
       .collection("Dealers")
-      .doc(user)
-      .update({ name: "names" });
+      .doc(showroomId);
+    const showrooms = [];
+    showrooms.push(...tempArr, { id: Id_Showroom, name: item.name });
+    // showroomArr.push(tempData);
+    //    showroomArr.push({ id: Id_Showroom, name: name });
+    console.log(showrooms, "N");
+    try {
+      firestore()
+        .collection("Dealers")
+        .doc(user)
+        .update({ showrooms: showrooms });
+    } catch {
+      console.log(error);
+    }
+    // .update({ name: "names" });
   };
 
   const fetchData = async () => {
@@ -109,6 +122,7 @@ const ShowroomDetailScreen = ({ route }) => {
     setVisible(false);
   };
   const _renderDealerList = ({ item }) => {
+    setName(item.name);
     return (
       <View
         style={{
