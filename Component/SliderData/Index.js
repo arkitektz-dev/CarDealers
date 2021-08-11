@@ -1,53 +1,34 @@
 import React, { useCallback, useState } from "react";
 
-import Thumb from "./Thumb";
-import Rail from "./Rail";
-import RailSelected from "./RailSelected";
-import Notch from "./Notch";
-import Label from "./Label";
 import { screenWidth } from "../../Global/Dimension";
 import { ScrollView } from "react-native";
-import Slider from "rn-range-slider";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 const SliderData = ({ onValueChanged, min, max, step }) => {
   const [allowScroll, setAllowScroll] = useState(true);
-  const renderThumb = useCallback(() => <Thumb />, []);
-  const renderRail = useCallback(() => <Rail />, []);
-  const renderRailSelected = useCallback(() => <RailSelected />, []);
-  // const renderLabel = useCallback((value) => <Label text={value} />, []);
-  const renderNotch = useCallback(() => <Notch />, []);
+
+  const enableScroll = () => setAllowScroll(true);
+  const disableScroll = () => setAllowScroll(false);
   return (
     <ScrollView
       scrollEnabled={allowScroll}
       contentContainerStyle={{
         alignItems: "center",
-        bottom: 15,
+        top: 15,
         flexDirection: "column",
       }}
     >
-      <Slider
-        renderThumb={renderThumb}
-        renderRail={renderRail}
-        renderRailSelected={renderRailSelected}
-        // renderLabel={renderLabel}
-        renderNotch={renderNotch}
-        style={{
-          width: screenWidth * 0.8,
-          marginTop: "5%",
-        }}
-        gravity={"center"}
+      <MultiSlider
+        sliderLength={screenWidth * 0.7}
+        values={[0, 5000000]}
         min={0}
         max={5000000}
+        isMarkersSeparated={true}
+        enabledTwo={true}
         step={25000}
-        selectionColor="#3df"
-        blankColor="#f618"
-        onValueChanged={onValueChanged}
-        onTouchStart={() => {
-          setAllowScroll(true);
-        }}
-        onTouchEnd={() => {
-          setAllowScroll(true);
-        }}
+        onValuesChange={onValueChanged}
+        onValuesChangeStart={enableScroll}
+        onValuesChangeFinish={disableScroll}
       />
     </ScrollView>
   );

@@ -30,14 +30,16 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   const [status, setStatus] = useState();
   const [isVisible, setIsVisible] = useState(false);
-  useEffect(() => {
-    getData().then((data) => {
+  useEffect(async () => {
+    await getData().then((data) => {
       setStatus(data);
     });
   });
   return (
     <Tab.Navigator
       initialRouteName="Home"
+      detachInactiveScreens={true}
+      screenOptions={{ unmountOnBlur: true }}
       tabBarOptions={{
         elevation: 2,
         activeTintColor: "#1c2e65",

@@ -11,7 +11,9 @@ import { screenHeight } from "../../Global/Dimension";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(
+    "https://cdn5.vectorstock.com/i/1000x1000/93/09/car-salesman-cartoon-vector-17209309.jpg"
+  );
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
 
@@ -100,7 +102,8 @@ const Profile = ({ navigation }) => {
         style={styles.avatar}
         accessibilityLabel="Pic"
         source={{
-          uri: image,
+          uri:
+            "https://cdn5.vectorstock.com/i/1000x1000/93/09/car-salesman-cartoon-vector-17209309.jpg",
         }}
       />
       <View style={styles.distance}></View>

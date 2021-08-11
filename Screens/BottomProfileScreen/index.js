@@ -60,7 +60,7 @@ const BottomProfileScreen = ({ route }) => {
   };
   useEffect(() => {
     fetchSpecificDealer(dealer).then((res) => {
-      console.log(res, "@3"), setParam(res.data());
+      setParam(res.data());
     });
 
     fetchData();
@@ -71,10 +71,7 @@ const BottomProfileScreen = ({ route }) => {
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
-  const onPressHandler2 = (item) => {
-    navigation.navigate("ShowroomDetailScreen", { item });
-    setVisible(false);
-  };
+
   const _renderShowroomList = ({ item }) => {
     return (
       <View
@@ -227,7 +224,8 @@ const BottomProfileScreen = ({ route }) => {
           >
             {param && param.showrooms.length}
           </Text>
-          <TouchableOpacity style={styles.CarInfoTitle} onPress={modalVisible}>
+          {/* onPress={modalVisible} */}
+          <TouchableOpacity style={styles.CarInfoTitle}>
             <Text style={styles.countText}> SHOWROOMS </Text>
           </TouchableOpacity>
         </View>
@@ -265,7 +263,6 @@ const styles = StyleSheet.create({
   },
   parent: {
     flexDirection: "column",
-    flex: 1,
     backgroundColor: "#fff",
   },
   navTxt: {

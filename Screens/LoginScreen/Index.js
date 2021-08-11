@@ -40,8 +40,8 @@ export const LoginScreen = () => {
       setEmptyFieldError(true);
     } else {
       await ref
-        .where("username", "==", user.name)
-        .where("password", "==", user.password)
+        .where("username", "==", user.name.toLocaleLowerCase())
+        .where("password", "==", user.password.toLocaleLowerCase())
         .get()
         .then((querySnapshot) => {
           if (querySnapshot.size == 0) {
@@ -64,7 +64,6 @@ export const LoginScreen = () => {
               };
 
               storeData(b);
-
               navigation.replace("Home");
               setLoader(false);
             });
@@ -80,13 +79,6 @@ export const LoginScreen = () => {
 
   return (
     <View style={styles.imageBackground}>
-      <Navbar
-        style={styles.nav}
-        Title="Sign in"
-        source={Back}
-        backStyle={styles.back}
-        goBack={() => navigation.goBack()}
-      />
       <View style={styles.logoContainer}>
         <Text style={styles.headText}>Sign in to Car Dealer</Text>
       </View>
@@ -282,10 +274,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 0.2,
     justifyContent: "center",
-    top: 15,
+    top: "13%",
   },
   logoContainer: {
-    margin: 20,
+    marginTop: "20%",
+    marginBottom: "5%",
   },
   titleContainer: {
     alignSelf: "center",
@@ -294,7 +287,9 @@ const styles = StyleSheet.create({
   },
   headText: {
     fontSize: 20,
-    fontWeight: "900",
+    top: "20%",
+    fontWeight: "bold",
     color: "#000000",
+    textAlign: "center",
   },
 });

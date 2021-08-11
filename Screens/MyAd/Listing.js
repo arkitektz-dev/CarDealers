@@ -57,7 +57,6 @@ const ListingCars = () => {
             .trim();
         }
 
-        console.log(value, "Val");
         const paramdealerId = value;
 
         if (dealerId == paramdealerId) {

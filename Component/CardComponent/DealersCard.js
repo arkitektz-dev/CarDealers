@@ -12,7 +12,6 @@ import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { fetchDealerData } from "../../Data/FetchData";
-
 const DealerCard = () => {
   const [dealerData, setDealerData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +31,7 @@ const DealerCard = () => {
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
-        title={item.name}
+        title={`${item.name}`}
         price={item.contactInformation[0]}
         image={{ uri: item.images[0] }}
         pressHandler={() => onPressHandler(item)}

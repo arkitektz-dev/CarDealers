@@ -26,16 +26,38 @@ const ShowroomDetailScreen = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [showroomExist, setShowroomExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const authContext = useContext(AuthContext);
-
+  const user = authContext.user.toString();
+  const ShowroomArr = [];
   const arr = [];
 
   useEffect(() => {
+    const ref = firestore()
+      .collection("Dealers")
+      .doc(user);
+    ref.get().then((res) =>
+      res.data().showrooms.forEach((data) => {
+        console.log(data);
+        // ShowroomArr.push({id:data.id._documentPath._parts[1]})
+        if (data.id._documentPath._parts[1] == showroomId) {
+          setShowroomExist(showroomId);
+        }
+      })
+    );
+
     setLoading(true);
     fetchShowroomData();
     fetchData().then(() => setLoading(false));
   }, []);
+
+  const AssignShowroom = () => {
+    firestore()
+      .collection("Dealers")
+      .doc(user)
+      .update({ name: "names" });
+  };
 
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
@@ -50,7 +72,7 @@ const ShowroomDetailScreen = ({ route }) => {
             .showroom.id.id.toString()
             .trim();
         }
-        const paramShowroomId = showroomId.toString();
+        const paramShowroomId = showroomId;
         if (showroomDataId == paramShowroomId)
           arr.push(documentSnapshot.data());
       });
@@ -217,6 +239,13 @@ const ShowroomDetailScreen = ({ route }) => {
             </View>
           </View>
         </View>
+        {showroomExist ? (
+          <Text style={styles.carSubInfoText}>Showroom Exist</Text>
+        ) : (
+          <TouchableOpacity onPress={AssignShowroom}>
+            <Text style={styles.carSubInfoText}>Showroom Does Not Exist</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View
@@ -295,7 +324,7 @@ const styles = StyleSheet.create({
   },
   topDiv: {
     width: screenWidth,
-    height: screenHeight * 0.15,
+    height: screenHeight * 0.18,
     flexDirection: "column",
     borderBottomWidth: 2,
     borderBottomColor: "#e0e0e0",
@@ -352,5 +381,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "white",
     marginBottom: 5,
+  },
+  carSubInfoText: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "#1c2e65",
+    right: 10,
+    textAlign: "right",
   },
 });

@@ -20,14 +20,11 @@ import NavHome from "../../Component/HomeNav";
 import AuthContext from "../../Component/Authcontext";
 
 const HomeScreen = ({ navigation }) => {
-  const [userInfo, setUserInfo] = useState(null);
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
     getData().then((data) => {
       authContext.setUser(data.DealerId);
-
-      setUserInfo(data);
     });
   }, []);
 

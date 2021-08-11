@@ -13,6 +13,8 @@ import defaultStyles from "../../config/styles";
 import Screen from "./Screen";
 import { screenWidth } from "../../Global/Dimension";
 import Feather from "react-native-vector-icons/Feather";
+import { Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 const AppPicker = ({
   items,
@@ -38,7 +40,36 @@ const AppPicker = ({
       </TouchableWithoutFeedback>
       <Modal visible={modalVisible} animationType="slide">
         <Screen>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              borderBottomColor: "#000000",
+              borderBottomWidth: 0.5,
+            }}
+          >
+            <Text
+              style={{
+                color: "#000000",
+                margin: 10,
+                fontSize: 16,
+              }}
+            >
+              Select
+            </Text>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <Text
+                style={{
+                  color: "#000000",
+                  fontSize: 16,
+                  margin: 10,
+                }}
+              >
+                Close
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <FlatList
             data={items}
             keyExtractor={(item) => item.value.toString()}

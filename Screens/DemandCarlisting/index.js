@@ -162,79 +162,84 @@ const DemandCarList = () => {
   };
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onPressHandler(item)}>
+      <View
+        style={{
+          flexDirection: "column",
+          borderBottomWidth: 2,
+          borderBottomColor: "#e0e0e0",
+        }}
+      >
         <View
           style={{
-            flexDirection: "column",
-            borderBottomWidth: 2,
-            borderBottomColor: "#e0e0e0",
+            left: "5%",
+            flexDirection: "row",
           }}
         >
-          <View
-            style={{
-              left: "5%",
-              flexDirection: "row",
-            }}
-          >
-            <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
-              <Text
-                style={{
-                  textAlign: "left",
-                  color: "#565656",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                {item.Make} {item.Model} {"\b"}
-                {item.Year}
-              </Text>
-              <View style={{ height: 10 }}></View>
-              <Text
-                style={{
-                  color: "#1c2e65",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  textAlign: "left",
-                }}
-              >
-                {numberWithCommas(item.Price)}
-              </Text>
-              <View style={{ height: 10 }}></View>
-
-              <Text
-                style={{
-                  color: "#565656",
-                  fontSize: 14,
-                  fontWeight: "800",
-                  textAlign: "left",
-                }}
-              >
-                {item.Dealer.Name}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            activeOpacity={0}
-            onPress={() => makeCall(item.Dealer.id)}
-            style={{
-              flexDirection: "column",
-              justifyContent: "center",
-              height: 70,
-            }}
-          >
-            <Image
-              source={CallSeller}
+          <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
+            <Text
               style={{
-                width: 150,
-                left: 21,
-                height: 50,
-                resizeMode: "contain",
-                alignSelf: "flex-start",
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 16,
+                fontWeight: "bold",
               }}
-            />
-          </TouchableOpacity>
+            >
+              {item.Make} {item.Model} {"\b"}
+              {item.Year}
+            </Text>
+            <View style={{ height: 10 }}></View>
+            <Text
+              style={{
+                color: "#1c2e65",
+                fontSize: 14,
+                fontWeight: "bold",
+                textAlign: "left",
+              }}
+            >
+              {`${numberWithCommas(item.minPrice)} - ${numberWithCommas(
+                item.maxPrice
+              )}`}
+            </Text>
+            <Text
+              style={{
+                color: "#1c2e65",
+                fontSize: 14,
+                fontWeight: "bold",
+                textAlign: "left",
+                marginTop: 5,
+              }}
+            >
+              {`${item.minYear} - ${item.maxYear}`}
+            </Text>
+            <View style={{ height: 10 }}></View>
+
+            <Text
+              style={{
+                color: "#565656",
+                fontSize: 14,
+                fontWeight: "800",
+                textAlign: "left",
+              }}
+            >
+              {item.Dealer.Name}
+            </Text>
+          </View>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={{ margin: 15, width: 150 }}
+          onPress={() => makeCall(item.Dealer.id)}
+        >
+          <Image
+            source={CallSeller}
+            style={{
+              width: "100%",
+              height: 50,
+              resizeMode: "contain",
+              alignSelf: "flex-start",
+            }}
+          />
+        </TouchableOpacity>
+      </View>
     );
   };
   const _onEndReached = () => {

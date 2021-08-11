@@ -14,45 +14,50 @@ import SliderData from "../../Component/SliderData/Index";
 import { ActivityIndicator } from "react-native";
 import YearSliderData from "../../Component/SliderData/YearSliderData";
 import { TextInput } from "react-native-gesture-handler";
+import AppPicker from "../../Component/Pickers/Index";
 
 const AddDemandCar = ({ navigation }) => {
-  const [dealerState, setDealerState] = useState("");
+  const [make, setMake] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
   const [rangePriceData, setRangePriceData] = useState({ init: "", final: "" });
   const [yearRange, setYearRange] = useState({ init: "", final: "" });
-
+  const [Model, setModel] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const [showroomData, setShowroomData] = useState({
-    Make: "",
-    Model: "",
-  });
   const [errorState, setErrorState] = useState({
     Make: false,
     Model: false,
     Year: false,
   });
-  const setUploadImage = () => {
-    const options = {
-      maxWidth: 2000,
-      maxHeight: 2000,
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.error) {
-        alert("Error");
-      } else {
-        const images = [];
-        images.push(response.uri);
-        setShowroomData({ ...showroomData, images: images });
-      }
-    });
-  };
-  var d;
+  // const setUploadImage = () => {
+  //   const options = {
+  //     maxWidth: 2000,
+  //     maxHeight: 2000,
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: "images",
+  //     },
+  //   };
+  //   launchImageLibrary(options, (response) => {
+  //     if (response.error) {
+  //       alert("Error");
+  //     } else {
+  //       const images = [];
+  //       images.push(response.uri);
+  //       setShowroomData({ ...showroomData, images: images });
+  //     }
+  //   });
+  // };
+
+  const company = [
+    { label: "Suzuki", value: "Suzuki" },
+    { label: "Toyota", value: "Toyota" },
+    { label: "Honda", value: "Honda" },
+    { label: "Kia", value: "Kia" },
+    { label: "BMW", value: "BMW" },
+  ];
+
   useEffect(() => {
     getData().then((res) => {
       setDealerPickerID(res.DealerId);
@@ -68,42 +73,41 @@ const AddDemandCar = ({ navigation }) => {
       id: userRef,
       Name: dealerPicker,
     };
-    function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+
     const data = {
-      Make: showroomData.Make,
-      Model: showroomData.Model,
+      Make: make.value,
+      Model: Model,
       minYear: yearRange.init,
       maxYear: yearRange.final,
-      minPrice: `${numberWithCommas(rangePriceData.init)}`,
-      maxPrice: `${numberWithCommas(rangePriceData.final)}`,
+      minPrice: `${rangePriceData.init}`,
+      maxPrice: `${rangePriceData.final}`,
     };
     const obj = {
       ...data,
       Dealer,
     };
-    if (showroomData.Make != "" && showroomData.Model != "") {
-      setLoader(true);
-      await AddDemand(obj)
-        .then(() => {
-          setLoader(false);
-          navigation.navigate("DemandCars");
-        })
-        .catch(() => setLoader(false));
-      setLoader(false);
-    } else {
-      setLoader(false);
+    console.log(obj);
+    // if (showroomData.Make != "" && showroomData.Model != "") {
+    //   setLoader(true);
+    //   await AddDemand(obj)
+    //     .then(() => {
+    //       setLoader(false);
+    //       navigation.navigate("DemandCars");
+    //     })
+    //     .catch(() => setLoader(false));
+    //   setLoader(false);
+    // } else {
+    //   setLoader(false);
 
-      alert("Fields can not be empty");
-    }
+    //   alert("Fields can not be empty");
+    // }
   };
   const onChangeMake = (e) => {
     if (e == "") {
       setErrorState({ Make: true });
     } else {
       setErrorState({ Make: false });
-      setShowroomData({ ...showroomData, Make: e });
+      setMake(e);
     }
   };
   const onChangeModel = (e) => {
@@ -111,7 +115,7 @@ const AddDemandCar = ({ navigation }) => {
       setErrorState({ Model: true });
     } else {
       setErrorState({ Model: false });
-      setShowroomData({ ...showroomData, Model: e });
+      setModel(e);
     }
   };
   const onChangeYear = (e) => {
@@ -123,13 +127,13 @@ const AddDemandCar = ({ navigation }) => {
     }
   };
 
-  const handleValueYearChange = useCallback((low, high) => {
-    setYearRange({ init: low, final: high });
-  }, []);
+  const handleValueYearChange = (e) => {
+    setYearRange({ init: e[0], final: e[1] });
+  };
 
-  const handleValuePriceChange = useCallback((low, high) => {
-    setRangePriceData({ init: low, final: high });
-  }, []);
+  const handleValuePriceChange = (e) => {
+    setRangePriceData({ init: e[0], final: e[1] });
+  };
 
   return (
     <View style={styles.parent}>
@@ -156,6 +160,7 @@ const AddDemandCar = ({ navigation }) => {
               color: "#fff",
               fontSize: 18,
               fontWeight: "bold",
+              right: 15,
               textAlignVertical: "center",
             }}
           >
@@ -164,10 +169,14 @@ const AddDemandCar = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.form}>
-        <AppTextInput
-          onChangeHandler={(e) => onChangeMake(e)}
-          label="Make"
-          returnKeyType="next"
+        <AppPicker
+          items={company}
+          name="category"
+          onSelectItem={(item) => onChangeMake(item)}
+          PickerItemComponent={CategoryPickerItem}
+          placeholder=" Model Year"
+          selectedItem={make.label}
+          width="90%"
         />
         {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
         <AppTextInput

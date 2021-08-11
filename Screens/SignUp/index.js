@@ -20,7 +20,12 @@ import Back from "../../Assets/NewAsset/backButton.png";
 import Navbar from "../../Component/Navbar.js/Index";
 import AppCheckBox from "../../Component/AppCheckbox/index";
 import defaultStyles from "../../config/styles";
-import { AddDealer, AddUser } from "../../Data/FetchData";
+import {
+  AddDealer,
+  AddUser,
+  clearStorage,
+  storeData,
+} from "../../Data/FetchData";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -70,6 +75,8 @@ export const SignupScreen = () => {
   const showroomArr = [];
 
   useEffect(() => {
+    clearStorage();
+
     firestore()
       .collection("Showrooms")
       .get()
@@ -85,20 +92,28 @@ export const SignupScreen = () => {
   }, []);
 
   const Signup = async () => {
+    var num = "";
     if (
       user.name == "" ||
       user.password == "" ||
       user.phone == "" ||
-      user.username == "" ||
-      user.email == ""
+      user.username == ""
     ) {
       alert("Fields Can not be empty");
       setEmptyFieldError(true);
     } else {
       if (!emaiError && !usernameError) {
+        const data = user.phone.split("");
+        if (data[3] == 0) {
+          data.splice(3, 1);
+          num = data.join("");
+        } else {
+          num = user.phone;
+        }
         setModalVisible(true);
+
         try {
-          const confirmation = await auth().signInWithPhoneNumber(user.phone);
+          const confirmation = await auth().signInWithPhoneNumber(num);
           setConfirm(confirmation);
         } catch (error) {
           alert("Invalid Number");
@@ -109,7 +124,7 @@ export const SignupScreen = () => {
   const navigation = useNavigation();
   const ref = firestore().collection("Users");
 
-  async function confirmCode() {
+  const confirmCode = async () => {
     checkbox.forEach((item) => {
       const id = firestore()
         .collection("Showrooms")
@@ -127,11 +142,28 @@ export const SignupScreen = () => {
       );
       try {
         const obj = { ...user, showrooms };
-
         await AddDealer(obj)
           .then((res) =>
-            AddUser(obj, res.id).then(() => alert("User Registered"))
+            AddUser(obj, res.id).then((res) => {
+              res.get().then((querySnapshot) => {
+                var b = {
+                  id: res.id,
+                  email: querySnapshot.data().email,
+                  image: querySnapshot.data().image,
+                  name: querySnapshot.data().name,
+                  isSignedIn: true,
+                  password: querySnapshot.data().password,
+                  phone: querySnapshot.data().phone,
+                  username: querySnapshot.data().username,
+                  DealerId: `${
+                    querySnapshot.data().DealerId._documentPath._parts[1]
+                  }`,
+                };
+                storeData(b);
+              });
+            })
           )
+
           .catch((err) => console.log(err));
 
         navigation.replace("Home");
@@ -141,9 +173,20 @@ export const SignupScreen = () => {
     } catch (error) {
       alert("Invalid code.");
     }
-  }
+  };
+  const onChangePhoneNumber = (e) => {
+    const data = e.split("");
+    if (data[3] == 0) {
+      data.splice(3, 1);
+      const num = data.join("");
+      setUser({ ...user, phone: num });
+    } else {
+      setUser({ ...user, phone: e });
+    }
+  };
   const handleChangeConfirmPassowrd = (e) => {
-    setUser({ ...user, confirmPassowrd: e });
+    const lower = e.toLowerCase();
+    setUser({ ...user, confirmPassowrd: lower });
     if (e != user.password) {
       setConfirmPasswordError(true);
     } else {
@@ -161,7 +204,8 @@ export const SignupScreen = () => {
   };
 
   const handleChangeUsername = async (e) => {
-    setUser({ ...user, username: e });
+    const lower = e.toLowerCase();
+    setUser({ ...user, username: lower });
 
     let reg = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
 
@@ -177,6 +221,14 @@ export const SignupScreen = () => {
         if (querySnapshot.size == 1) {
         }
       });
+  };
+  const handleChangePassword = async (e) => {
+    const lower = e.toLowerCase();
+    setUser({ ...user, password: lower });
+  };
+  const handleChangeName = async (e) => {
+    const lower = e.toLowerCase();
+    setUser({ ...user, name: lower });
   };
   const onModalHandler = () => {
     if (visible == false) {
@@ -217,7 +269,7 @@ export const SignupScreen = () => {
             underlineColorAndroid="#000000"
             style={styles.textInput}
             style={{ backgroundColor: "transparent" }}
-            onChangeText={(e) => setUser({ ...user, name: e })}
+            onChangeText={handleChangeName}
           />
           <View style={styles.distance}></View>
 
@@ -247,6 +299,7 @@ export const SignupScreen = () => {
           <View style={styles.distance}></View>
 
           <TextInput
+            defaultValue={"+92"}
             autoCapitalize="none"
             keyboardType="phone-pad"
             maxLength={14}
@@ -261,23 +314,8 @@ export const SignupScreen = () => {
             underlineColor="#000000"
             underlineColorAndroid="#000000"
             style={{ backgroundColor: "transparent" }}
-            onChangeText={(e) => setUser({ ...user, phone: e })}
+            onChangeText={onChangePhoneNumber}
           />
-          <Tooltip
-            popover={
-              <Text style={{ color: "#000000" }}>Start with +921234567890</Text>
-            }
-          >
-            <Text
-              style={{
-                color: "#000000",
-                fontStyle: "italic",
-                fontWeight: "bold",
-              }}
-            >
-              Number Format Please Check
-            </Text>
-          </Tooltip>
 
           <View style={styles.distance}></View>
 
@@ -323,7 +361,7 @@ export const SignupScreen = () => {
             underlineColorAndroid="#000000"
             style={styles.textInput}
             style={{ backgroundColor: "transparent" }}
-            onChangeText={(e) => setUser({ ...user, password: e })}
+            onChangeText={handleChangePassword}
           />
 
           <View style={styles.distance}></View>

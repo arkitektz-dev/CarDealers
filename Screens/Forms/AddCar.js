@@ -35,7 +35,6 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import changeNumberFormat from "../../Component/Converter";
 import { ActivityIndicator } from "react-native";
 
@@ -295,6 +294,17 @@ const AddCar = ({ navigation }) => {
           size={35}
           onPress={() => navigation.goBack()}
         />
+        <Text
+          style={{
+            textAlignVertical: "center",
+            marginLeft: "20%",
+            color: "#fff",
+            fontSize: 17,
+            fontWeight: "bold",
+          }}
+        >
+          Add Advertisment
+        </Text>
       </View>
 
       <BottomSheet
@@ -370,6 +380,12 @@ const AddCar = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
+            {/* <AppForm
+              initialValues={{
+                images: [],
+              }}
+              onSubmit={handleSubmit}
+            ></AppForm> */}
             <View
               style={{
                 borderStyle: "dotted",
@@ -384,11 +400,11 @@ const AddCar = ({ navigation }) => {
               }}
             >
               <TouchableOpacity onPress={bottomSheetHandeler}>
-                <MaterialCommunityIcons
+                {/* <MaterialCommunityIcons
                   name="camera-plus-outline"
                   color="#333"
                   size={28}
-                />
+                /> */}
                 <Text
                   style={{
                     fontSize: 15,
@@ -400,6 +416,7 @@ const AddCar = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            {/* <AppFormImagePicker name="images" /> */}
           </View>
 
           <View
@@ -666,7 +683,7 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
-    flexGrow: 1,
+    width: "100%",
     marginBottom: 10,
   },
   img: { width: 80, height: 45, resizeMode: "contain" },

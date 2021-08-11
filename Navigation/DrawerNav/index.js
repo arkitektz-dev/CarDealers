@@ -25,8 +25,8 @@ var status = [];
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
   const authContext = useContext(AuthContext);
-  useEffect(() => {
-    getData().then((data) => {
+  useEffect(async () => {
+    await getData().then((data) => {
       status = data;
     });
   });
@@ -76,7 +76,8 @@ function CustomDrawerContent(props) {
   );
 }
 
-const DrawerNav = () => {
+const DrawerNav = ({ route }) => {
+  console.log(route.params);
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawe}

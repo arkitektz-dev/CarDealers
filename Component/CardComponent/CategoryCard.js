@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-evenly",
     padding: 15,
-    width: 85,
+    width: 95,
     alignItems: "center",
     borderColor: "#b3b5b8",
     borderWidth: 0.3,
@@ -83,10 +83,9 @@ const styles = StyleSheet.create({
   text: {
     color: "#000000",
     fontSize: 10,
+    width: "100%",
     fontWeight: "900",
-    textAlignVertical: "center",
     textAlign: "center",
-    paddingBottom: 5,
   },
 });
 export default memo(CategoryCard);

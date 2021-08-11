@@ -62,9 +62,16 @@ export const fetchMoreDemandCar = async (startAfter) => {
 // };
 
 export const AddDealer = async (data) => {
+  const imagesArr = [];
+  const contactInformation = [];
+  contactInformation.push(data.phone);
+  imagesArr.push(
+    "https://cdn5.vectorstock.com/i/1000x1000/93/09/car-salesman-cartoon-vector-17209309.jpg"
+  );
   const obj = {
     name: data.name,
-    contactInformation: data.phone,
+    images: imagesArr,
+    contactInformation: contactInformation,
     showrooms: data.showrooms,
   };
   return firestore()
@@ -111,9 +118,7 @@ export const fetchMoreShowroom = async (startAfter) => {
 
 export const fetchDealerData = async () => {
   const arr = [];
-  const ref = firestore()
-    .collection("Dealers")
-    .where("feature", "==", true);
+  const ref = firestore().collection("Dealers");
   const data = await ref.get();
   const size = data.size;
 
@@ -125,9 +130,8 @@ export const fetchDealerData = async () => {
 };
 
 export const fetchShowroomData = async () => {
-  const ref = firestore()
-    .collection("Showrooms")
-    .where("feature", "==", true);
+  const ref = firestore().collection("Showrooms");
+
   const arr = [];
   const data = await ref.limit(5).get();
   const size = data.size;
@@ -183,7 +187,6 @@ export const updateProfile = async (userinfo, userData) => {
   }
 };
 export const updatePassword = async (userinfo, userData) => {
-  console.log(userinfo, userData.confirmPassword);
   if (userData.password == "" && userData.confirmPassword == "") {
     alert("Fields can not be empty");
   } else {

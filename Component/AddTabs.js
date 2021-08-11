@@ -6,9 +6,9 @@ const Tab = createMaterialTopTabNavigator();
 
 function AddTabs() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="My Ads" component={MyAds} />
-      <Tab.Screen name="My Demands" component={MyDemand} />
+    <Tab.Navigator swipeEnabled={false}>
+      <Tab.Screen name="Ads" component={MyAds} />
+      <Tab.Screen name="Demands" component={MyDemand} />
     </Tab.Navigator>
   );
 }

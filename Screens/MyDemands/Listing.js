@@ -63,13 +63,11 @@ const MyDemandListing = () => {
         const paramdealerId = value;
 
         if (dealerId == paramdealerId) {
-          console.log(documentSnapshot.data(), "Data");
           adArr.push(documentSnapshot.data());
         }
       });
       setDataCar(adArr);
       setcarCount(adArr.length);
-      // setfilteredData(adArr);
     });
   };
   useEffect(() => {
@@ -193,6 +191,7 @@ const MyDemandListing = () => {
                 {item.Year}
               </Text>
               <View style={{ height: 10 }}></View>
+
               <Text
                 style={{
                   color: "#1c2e65",
@@ -201,8 +200,22 @@ const MyDemandListing = () => {
                   textAlign: "left",
                 }}
               >
-                {changeNumberFormat(item.Price)}
+                {`${changeNumberFormat(item.minPrice)} - ${changeNumberFormat(
+                  item.maxPrice
+                )}`}
               </Text>
+              <Text
+                style={{
+                  color: "#1c2e65",
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  marginTop: 5,
+                }}
+              >
+                {`${item.minYear} - ${item.maxYear}`}
+              </Text>
+
               <View style={{ height: 10 }}></View>
 
               {/* <Text
