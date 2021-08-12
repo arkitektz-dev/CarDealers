@@ -11,7 +11,7 @@ import {
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
-import Profile from "../../Assets/RedProfileLogo.png";
+import Profile from "../../Assets/BlueProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";

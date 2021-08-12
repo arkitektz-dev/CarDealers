@@ -24,6 +24,7 @@ const ShowroomDetailScreen = ({ route }) => {
   const [dealerCount, setdealerCount] = useState(0);
   const [modalData, setModalData] = useState([]);
   const [name, setName] = useState("");
+  const [refreshPage, setRefreshPage] = useState("");
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -50,7 +51,7 @@ const ShowroomDetailScreen = ({ route }) => {
     setLoading(true);
     fetchShowroomData();
     fetchData().then(() => setLoading(false));
-  }, []);
+  }, [refreshPage]);
 
   const AssignShowroom = () => {
     const Id_Showroom = firestore()
@@ -58,18 +59,15 @@ const ShowroomDetailScreen = ({ route }) => {
       .doc(showroomId);
     const showrooms = [];
     showrooms.push(...tempArr, { id: Id_Showroom, name: item.name });
-    // showroomArr.push(tempData);
-    //    showroomArr.push({ id: Id_Showroom, name: name });
-    console.log(showrooms, "N");
     try {
       firestore()
         .collection("Dealers")
         .doc(user)
-        .update({ showrooms: showrooms });
+        .update({ showrooms: showrooms })
+        .then(() => setRefreshPage("refresh"));
     } catch {
       console.log(error);
     }
-    // .update({ name: "names" });
   };
 
   const fetchData = async () => {

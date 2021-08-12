@@ -48,14 +48,29 @@ const ListingCars = () => {
   const onSearch = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
-        const itemData = `${item.vehicle.information.make.toUpperCase()}
-        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+        console.log(item.vehicle.information.make, "Make");
+        console.log(item.vehicle.information.modelYear, "modelYear");
+        console.log(item.vehicle.information.model, "model");
+        const itemData = `${
+          item.vehicle.information.make
+            ? item.vehicle.information.make.toUpperCase()
+            : ""
+        }
+        ${
+          item.vehicle.information.modelYear
+            ? item.vehicle.information.modelYear.toUpperCase()
+            : ""
+        } ${
+          item.vehicle.information.model
+            ? item.vehicle.information.model.toUpperCase()
+            : ""
+        }`;
         const textData = text.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
       });
-
-      setDataCar(newData);
+      setcarCount(newData.length);
+      setfilteredData(newData);
     } else {
       setDataCar(filteredData);
     }
@@ -64,7 +79,6 @@ const ListingCars = () => {
   const onFilter = async (dropdownValues) => {
     const arr = [];
     let ref = firestore().collection("Advertisments");
-
     if (dropdownValues.Year != "") {
       ref = ref.where(
         "vehicle.information.modelYear",
@@ -95,13 +109,13 @@ const ListingCars = () => {
       ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
     }
 
-    // if (dropdownValues.Assemble != "") {
-    //   ref = ref.where(
-    //     "vehicle.additionalInformation.assembly",
-    //     "==",
-    //     "imported"
-    //   );
-    // }
+    if (dropdownValues.Assemble != "") {
+      ref = ref.where(
+        "vehicle.additionalInformation.assembly",
+        "==",
+        dropdownValues.Assemble
+      );
+    }
 
     var a = await ref.get();
     a.docs.forEach((data) => {
@@ -110,7 +124,7 @@ const ListingCars = () => {
     setfilteredData(arr);
     {
       filteredData.length > 0
-        ? setcarCount(filteredData.length)
+        ? setcarCount(arr.length)
         : setcarCount(dataCar.length);
     }
   };
@@ -127,11 +141,7 @@ const ListingCars = () => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={_onEndReached}
-          style={styles.loadMoreBtn}
-        >
+        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
           <Text style={styles.btnText}>Load More</Text>
           {moreloading ? (
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
@@ -218,6 +228,7 @@ const ListingCars = () => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
+
     fetchMoreCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
@@ -228,7 +239,7 @@ const ListingCars = () => {
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch();
+      .catch((e) => console.log(e));
   };
   const onRefresh = () => {
     setRefreshing(true);

@@ -86,21 +86,20 @@ const AddDemandCar = ({ navigation }) => {
       ...data,
       Dealer,
     };
-    console.log(obj);
-    // if (showroomData.Make != "" && showroomData.Model != "") {
-    //   setLoader(true);
-    //   await AddDemand(obj)
-    //     .then(() => {
-    //       setLoader(false);
-    //       navigation.navigate("DemandCars");
-    //     })
-    //     .catch(() => setLoader(false));
-    //   setLoader(false);
-    // } else {
-    //   setLoader(false);
+    if (showroomData.Make != "" && showroomData.Model != "") {
+      setLoader(true);
+      await AddDemand(obj)
+        .then(() => {
+          setLoader(false);
+          navigation.navigate("DemandCars");
+        })
+        .catch(() => setLoader(false));
+      setLoader(false);
+    } else {
+      setLoader(false);
 
-    //   alert("Fields can not be empty");
-    // }
+      alert("Fields can not be empty");
+    }
   };
   const onChangeMake = (e) => {
     if (e == "") {

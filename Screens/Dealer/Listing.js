@@ -37,13 +37,21 @@ const ListingDealer = () => {
   const searchDealer = (text) => {
     if (text) {
       const newData = dealerdata.filter((item) => {
-        const itemData = `${item.contactInformation[0].toUpperCase()}   
-         ${item.name.toUpperCase()}`;
+        const itemData = `${
+          item.contactInformation.length > 0
+            ? item.contactInformation[0].toUpperCase()
+            : item.contactInformation[0]
+        }   
+         ${item.name ? item.name.toUpperCase() : ""}`;
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setDealerData(newData);
+      if (newData.length > 0) {
+        setDealerCount(newData.length);
+      }
     } else {
+      setDealerCount(filteredData.length);
       setDealerData(filteredData);
     }
   };

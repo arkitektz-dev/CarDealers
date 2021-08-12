@@ -25,6 +25,10 @@ import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import { BottomSheet } from "react-native-elements";
 import FontAwsome from "react-native-vector-icons/FontAwesome";
 import FontAwsome5 from "react-native-vector-icons/FontAwesome5";
+import AppFormImagePicker from "../../Component/ImageHandling/AppFormImage";
+import AppForm from "../../Component/ImageHandling/AppForm";
+import ImageInputList from "../../Component/ImageHandling/ImageInputList";
+
 import {
   AddCarData,
   fetchShowroomCar,
@@ -37,6 +41,8 @@ import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import changeNumberFormat from "../../Component/Converter";
 import { ActivityIndicator } from "react-native";
+import ImageScreen from "../ImageScreen";
+import SubCarForm from "./SubCarForm";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -47,7 +53,7 @@ const AddCar = ({ navigation }) => {
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
 
-  const [featured, setFeatured] = useState(false);
+  const [imagesArr, setImagesArr] = useState([]);
   const [image, setImage] = useState([]);
   const [tempImage, setTempImage] = useState([]);
   const [assembly, setAssembly] = useState("");
@@ -73,6 +79,7 @@ const AddCar = ({ navigation }) => {
 
   const [registrationCity, setRegistrationCity] = useState("");
   const [Description, setDescription] = useState("");
+  const [imagesUrl, setImagesUrl] = useState([]);
   const [checkbox, setCheckbox] = useState([]);
   const [showroomStateData, setShowroomStateData] = useState("");
   const [visible, setVisible] = useState(false);
@@ -107,12 +114,12 @@ const AddCar = ({ navigation }) => {
     } else setIsVisible(true);
   };
 
-  const handleValueChange = useCallback((low, high) => {
-    setPriceRange({ init: low });
-  }, []);
-  const handleMileageChange = useCallback((low, high) => {
-    setRangeMileageData({ init: low });
-  }, []);
+  const handleValueChange = (e) => {
+    setPriceRange({ init: e[0] });
+  };
+  const handleMileageChange = (e) => {
+    setRangeMileageData({ init: e[0] });
+  };
 
   const items = [
     { label: "800cc", value: "800cc" },
@@ -207,38 +214,57 @@ const AddCar = ({ navigation }) => {
     });
   };
   const imageURI = async () => {
-    tempImage.map(async (pic, index) => {
-      const uploadImage = pic.substring(pic.lastIndexOf("/") + 1);
-      setUploading(true);
-      setTransferred(0);
+    var a = [];
+    imagesArr.map((item) => {
+      const uploadImage = item.substring(item.lastIndexOf("/") + 1);
       const storageRef = storage().ref(`photos/${uploadImage}`);
-      const task = storageRef.putFile(pic);
-
-      task.on("state_changed", (taskSnapshot) => {
-        setTransferred(
-          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-            100
-        );
-      });
-      try {
-        task;
-        const url = storageRef.getDownloadURL();
-
-        setImage([...image, url]);
-        setUploading(false);
-      } catch (error) {
-        console.log(error);
-      }
+      storageRef
+        .putFile(item)
+        .then(async (snapshot) => {
+          //You can check the image is now uploaded in the storage bucket
+          const url = await storageRef.getDownloadURL();
+          // setImagesUrl(...imagesUrl, { images: url });
+          a.push(url);
+        })
+        .catch((e) => console.log("uploading image error => ", e));
     });
+    setImagesUrl(a);
+    return imagesUrl;
   };
+  // imagesArr.map(async (pic, index) => {
+  //   const uploadImage = pic.substring(pic.lastIndexOf("/") + 1);
+  //   setUploading(true);
+  //   setTransferred(0);
+  //   const storageRef = storage().ref(`photos/${uploadImage}`);
+  //   const task = storageRef.putFile(pic);
+  //   task.on("state_changed", (taskSnapshot) => {
+  //     setTransferred(
+  //       Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+  //         100
+  //     );
+  //   });
+  //   try {
+  //     task;
+  //     const url = storageRef.getDownloadURL();
+  //     setImage([...image, url]);
+  //     setUploading(false);
+  //     return image;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
+  //};
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
   const onPressHandler = async () => {
+    const images = [];
+    await images.push(imageURI());
+
     setLoader(true);
     const showroomRef = firestore()
       .collection("Showrooms")
-      .doc(showroomId);
+      .doc(showroomId.toString());
     const userRef = firestore()
       .collection("Dealers")
       .doc(authContext.user);
@@ -250,12 +276,17 @@ const AddCar = ({ navigation }) => {
       name: showroomPicker,
     };
 
-    imageURI();
     const obj = {
       amount: `${priceRange.init}`,
       dealer: dealerObj,
-      featured: featured,
-      images: image,
+      images: [
+        "https://cache4.pakwheels.com/ad_pictures/5134/toyota-corolla-gli-vvti-automatic-2016-51344671.jpg",
+      ],
+      // images.length > 0
+      //   ? images
+      //   : image.push(
+      //       "https://cache4.pakwheels.com/ad_pictures/5134/toyota-corolla-gli-vvti-automatic-2016-51344671.jpg"
+      //     ),
       showroom: showroomObj,
       vehicle: {
         additionalInformation: {
@@ -278,14 +309,16 @@ const AddCar = ({ navigation }) => {
     setLoader(false);
   };
 
+  const handleAdd = (uri) => {
+    setImagesArr([...imagesArr, uri]);
+  };
+
+  const handleRemove = (uri) => {
+    setImagesArr(imagesArr.filter((imagesArr) => imagesArr !== uri));
+  };
+
   return (
-    <View
-      style={{
-        flexDirection: "column",
-        flex: 1,
-        backgroundColor: "#fff",
-      }}
-    >
+    <>
       <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 10 }}
@@ -306,364 +339,381 @@ const AddCar = ({ navigation }) => {
           Add Advertisment
         </Text>
       </View>
-
-      <BottomSheet
-        isVisible={isVisible}
-        containerStyle={{
+      <View
+        style={{
+          flexDirection: "row",
+          width: "100%",
           backgroundColor: "white",
-          marginTop: "90%",
-          borderTopStartRadius: 30,
-          borderTopEndRadius: 30,
-          flexDirection: "column",
-          flex: 1,
+          justifyContent: "center",
+          borderStyle: "dotted",
+          borderBottomWidth: 1,
+          borderRadius: 1,
+          borderBottomColor: "#1e2d64",
+          padding: 10,
         }}
       >
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            alignSelf: "flex-end",
-            margin: 20,
+        {/* <AppForm
+          initialValues={{
+            images: [],
           }}
-          onPress={bottomSheetHandeler}
+          onSubmit={(e) => onPressHandler(e)}
         >
-          <Text
-            style={{
-              color: "blue",
-              fontSize: 18,
-              textAlign: "center",
-            }}
-          >
-            Close
-          </Text>
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: "grey",
-            fontSize: 25,
-            textAlign: "center",
-            margin: 20,
-          }}
-        >
-          Select the following
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <FontAwsome
-            name="camera"
-            color="grey"
-            size={50}
-            onPress={setUploadImageFromCamera}
-          />
-          <FontAwsome5
-            name="images"
-            color="grey"
-            size={50}
-            onPress={setUploadImage}
-          />
-        </View>
-      </BottomSheet>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 }}
+          <AppFormImagePicker name="images" />
+        </AppForm> */}
+
+        <ImageInputList
+          imageUris={imagesArr}
+          onAddImage={handleAdd}
+          onRemoveImage={handleRemove}
+        />
+      </View>
+
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 1,
+          backgroundColor: "#fff",
+        }}
       >
-        <View
-          style={{
+        <BottomSheet
+          isVisible={isVisible}
+          containerStyle={{
+            backgroundColor: "white",
+            marginTop: "90%",
+            borderTopStartRadius: 30,
+            borderTopEndRadius: 30,
             flexDirection: "column",
-            width: "100%",
+            flex: 1,
           }}
         >
-          <View
+          <TouchableOpacity
             style={{
               flexDirection: "row",
-              flex: 0.7,
-              borderBottomWidth: 1,
-              justifyContent: "center",
+              flex: 1,
+              alignSelf: "flex-end",
+              margin: 20,
             }}
+            onPress={bottomSheetHandeler}
           >
-            {/* <AppForm
-              initialValues={{
-                images: [],
-              }}
-              onSubmit={handleSubmit}
-            ></AppForm> */}
-            <View
+            <Text
               style={{
-                borderStyle: "dotted",
-                borderWidth: 1,
-                borderRadius: 1,
-                borderColor: "blue",
-                width: screenWidth * 0.93,
-                height: 100,
-                marginBottom: 15,
-                justifyContent: "center",
-                alignItems: "center",
+                color: "blue",
+                fontSize: 18,
+                textAlign: "center",
               }}
             >
-              <TouchableOpacity onPress={bottomSheetHandeler}>
-                {/* <MaterialCommunityIcons
-                  name="camera-plus-outline"
-                  color="#333"
-                  size={28}
-                /> */}
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    color: "#1e2d64",
-                  }}
-                >
-                  Add Photo
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {/* <AppFormImagePicker name="images" /> */}
+              Close
+            </Text>
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: "grey",
+              fontSize: 25,
+              textAlign: "center",
+              margin: 20,
+            }}
+          >
+            Select the following
+          </Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <FontAwsome
+              name="camera"
+              color="grey"
+              size={50}
+              onPress={setUploadImageFromCamera}
+            />
+            <FontAwsome5
+              name="images"
+              color="grey"
+              size={50}
+              onPress={setUploadImage}
+            />
           </View>
-
+        </BottomSheet>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 40 }}
+        >
           <View
             style={{
               flexDirection: "column",
-              flex: 1,
-              padding: 10,
               width: "100%",
-              alignItems: "center",
             }}
           >
-            <AppPicker
-              items={assembleType}
-              name="category"
-              onSelectItem={(item) => setAssembly(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Assembly"
-              selectedItem={assembly}
-              width="80%"
-            />
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: defaultStyles.colors.light,
-                borderRadius: 25,
-                flexDirection: "row",
-                padding: 15,
-                marginVertical: 10,
-                width: 220,
-              }}
-              onPress={() => setVisible(true)}
-            >
-              <Text style={{ color: "#333", fontSize: 17 }}>
-                Select Features
-              </Text>
-            </TouchableOpacity>
-            <Modal visible={visible} animationType="slide">
-              <Button
-                title="Close"
-                style={styles.buttonContainer}
-                onPressHandler={() => setVisible(false)}
-              />
-              {checkboxData.map((item) => {
-                return (
-                  <View style={{ flexDirection: "row" }}>
-                    <AppCheckBox
-                      status={checkbox.includes(item) ? "checked" : "unchecked"}
-                      onPress={() => onChangeHandler(item)}
-                    />
-                    <Text
-                      style={{
-                        color: "#000",
-                        fontSize: 18,
-                        fontWeight: "800",
-                      }}
-                      key={(item, index) => index.toString()}
-                    >
-                      {item}
-                    </Text>
-                  </View>
-                );
-              })}
-            </Modal>
-
-            <AppPicker
-              items={items}
-              name="category"
-              onSelectItem={(item) => setEngineCapacity(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Engine Capacity"
-              selectedItem={enginecapacity}
-              width="80%"
-            />
-            <AppPicker
-              items={engineTypeData}
-              name="category"
-              onSelectItem={(item) => setEngineType(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Engine Type"
-              selectedItem={engineType}
-              width="80%"
-            />
-            <AppPicker
-              items={type}
-              name="category"
-              onSelectItem={(item) => setTransmission(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Transmission"
-              selectedItem={transmission}
-              width="80%"
-            />
             <View
               style={{
-                flexDirection: "row",
+                flexDirection: "column",
+                flex: 1,
+                padding: 10,
+                width: "100%",
                 alignItems: "center",
               }}
             >
-              {/* <Image source={Location} style={styles.img} /> */}
+              <AppPicker
+                items={assembleType}
+                name="category"
+                onSelectItem={(item) => setAssembly(item.label)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Assembly"
+                selectedItem={assembly}
+                width="80%"
+              />
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: defaultStyles.colors.light,
+                  borderRadius: 25,
+                  flexDirection: "row",
+                  padding: 15,
+                  marginVertical: 10,
+                  width: 220,
+                }}
+                onPress={() => setVisible(true)}
+              >
+                <Text style={{ color: "#333", fontSize: 17 }}>
+                  Select Features
+                </Text>
+              </TouchableOpacity>
+              <Modal visible={visible} animationType="slide">
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    borderBottomColor: "#000000",
+                    borderBottomWidth: 0.5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#000000",
+                      margin: 10,
+                      fontSize: 16,
+                    }}
+                  >
+                    Select
+                  </Text>
+                  <TouchableOpacity onPress={() => setVisible(false)}>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontSize: 16,
+                        margin: 10,
+                      }}
+                    >
+                      Close
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {checkboxData.map((item) => {
+                  return (
+                    <View style={{ flexDirection: "row", marginTop: 10 }}>
+                      <AppCheckBox
+                        status={
+                          checkbox.includes(item) ? "checked" : "unchecked"
+                        }
+                        onPress={() => onChangeHandler(item)}
+                      />
+                      <Text
+                        style={{
+                          color: "#000",
+                          fontSize: 18,
+                          fontWeight: "800",
+                        }}
+                        key={(item, index) => index.toString()}
+                      >
+                        {item}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </Modal>
+
+              <AppPicker
+                items={items}
+                name="category"
+                onSelectItem={(item) => setEngineCapacity(item.label)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Engine Capacity"
+                selectedItem={enginecapacity}
+                width="80%"
+              />
+              <AppPicker
+                items={engineTypeData}
+                name="category"
+                onSelectItem={(item) => setEngineType(item.label)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Engine Type"
+                selectedItem={engineType}
+                width="80%"
+              />
+              <AppPicker
+                items={type}
+                name="category"
+                onSelectItem={(item) => setTransmission(item.label)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Transmission"
+                selectedItem={transmission}
+                width="80%"
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                {/* <Image source={Location} style={styles.img} /> */}
+                <AppPicker
+                  items={city}
+                  name="category"
+                  onSelectItem={(item) => setCity(item.label)}
+                  PickerItemComponent={CategoryPickerItem}
+                  placeholder=" City"
+                  selectedItem={City}
+                  width="80%"
+                />
+              </View>
+              <AppPicker
+                items={company}
+                name="category"
+                onSelectItem={(item) =>
+                  setInformation({ ...information, make: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Company"
+                selectedItem={information.make}
+                width="80%"
+              />
+              <AppPicker
+                items={modelCar}
+                name="category"
+                onSelectItem={(item) =>
+                  setInformation({ ...information, model: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Model"
+                selectedItem={information.model}
+                width="80%"
+              />
+
+              <AppPicker
+                items={year}
+                name="category"
+                onSelectItem={(item) =>
+                  setInformation({ ...information, modelYear: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Model Year"
+                selectedItem={information.modelYear}
+                width="80%"
+              />
+              <AppPicker
+                items={versionCar}
+                name="category"
+                onSelectItem={(item) =>
+                  setInformation({ ...information, version: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Version"
+                selectedItem={information.version}
+                width="80%"
+              />
+
+              <AppPicker
+                items={color}
+                name="category"
+                onSelectItem={(item) => setExteriorColor(item.label)}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Exterior Color"
+                selectedItem={ExteriorColor}
+                width="80%"
+              />
+
               <AppPicker
                 items={city}
                 name="category"
-                onSelectItem={(item) => setCity(item.label)}
+                onSelectItem={(item) => setRegistrationCity(item.label)}
                 PickerItemComponent={CategoryPickerItem}
-                placeholder=" City"
-                selectedItem={City}
+                placeholder=" Registration City"
+                selectedItem={registrationCity}
                 width="80%"
               />
-            </View>
-            <AppPicker
-              items={company}
-              name="category"
-              onSelectItem={(item) =>
-                setInformation({ ...information, make: item.label })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Company"
-              selectedItem={information.make}
-              width="80%"
-            />
-            <AppPicker
-              items={modelCar}
-              name="category"
-              onSelectItem={(item) =>
-                setInformation({ ...information, model: item.label })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Model"
-              selectedItem={information.model}
-              width="80%"
-            />
-
-            <AppPicker
-              items={year}
-              name="category"
-              onSelectItem={(item) =>
-                setInformation({ ...information, modelYear: item.label })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Model Year"
-              selectedItem={information.modelYear}
-              width="80%"
-            />
-            <AppPicker
-              items={versionCar}
-              name="category"
-              onSelectItem={(item) =>
-                setInformation({ ...information, version: item.label })
-              }
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Version"
-              selectedItem={information.version}
-              width="80%"
-            />
-
-            <AppPicker
-              items={color}
-              name="category"
-              onSelectItem={(item) => setExteriorColor(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Exterior Color"
-              selectedItem={ExteriorColor}
-              width="80%"
-            />
-
-            <AppPicker
-              items={city}
-              name="category"
-              onSelectItem={(item) => setRegistrationCity(item.label)}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder=" Registration City"
-              selectedItem={registrationCity}
-              width="80%"
-            />
-            <AppPicker
-              items={showroomStateData}
-              name="category"
-              onSelectItem={(item) => {
-                setShowroomPicker(item.label), setShowroomId(item.value);
-              }}
-              PickerItemComponent={CategoryPickerItem}
-              placeholder="Showrooms"
-              selectedItem={showroomPicker}
-              width="80%"
-            />
-            <View
-              style={{
-                width: "85%",
-                alignItems: "center",
-                marginBottom: 10,
-                bottom: 5,
-              }}
-            >
-              <AppTextInput
-                label={"Description"}
-                onChangeHandler={(e) => setDescription(e)}
+              <AppPicker
+                items={showroomStateData}
+                name="category"
+                onSelectItem={(item) => {
+                  setShowroomPicker(item.label), setShowroomId(item.value);
+                }}
+                PickerItemComponent={CategoryPickerItem}
+                placeholder="Showrooms"
+                selectedItem={showroomPicker}
+                width="80%"
               />
-            </View>
-            <View style={{ width: "100%" }}>
               <View
                 style={{
-                  flexDirection: "column",
-                  width: "100%",
+                  width: "85%",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  bottom: 5,
                 }}
               >
-                <Text
+                <AppTextInput
+                  label={"Description"}
+                  onChangeHandler={(e) => setDescription(e)}
+                />
+              </View>
+              <View style={{ width: "100%" }}>
+                <View
                   style={{
-                    color: "black",
-                    fontWeight: "bold",
-                    fontSize: 16,
-                    textAlign: "center",
+                    flexDirection: "column",
+                    width: "100%",
                   }}
                 >
-                  Selected Amount: Rs {changeNumberFormat(priceRange.init)}
-                </Text>
-                <SliderData onValueChanged={handleValueChange} />
-              </View>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      textAlign: "center",
+                    }}
+                  >
+                    Selected Amount: Rs {changeNumberFormat(priceRange.init)}
+                  </Text>
+                  <SliderData onValueChanged={handleValueChange} />
+                </View>
 
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "bold",
-                    fontSize: 16,
-                    textAlign: "center",
-                  }}
-                >
-                  Select Mileage: {mileage.init}KM
-                </Text>
-                <SliderData onValueChanged={handleMileageChange} />
-              </View>
+                <View style={{ flexDirection: "column" }}>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      textAlign: "center",
+                    }}
+                  >
+                    Select Mileage: {mileage.init}KM
+                  </Text>
+                  <SliderData onValueChanged={handleMileageChange} />
+                </View>
 
-              <Button
-                style={styles.background}
-                title={
-                  loader ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    "Submit"
-                  )
-                }
-                onPressHandler={onPressHandler}
-              />
+                <Button
+                  style={styles.background}
+                  title={
+                    loader ? (
+                      <ActivityIndicator size="small" color="#fff" />
+                    ) : (
+                      "Submit"
+                    )
+                  }
+                  onPressHandler={onPressHandler}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 export default memo(AddCar);
