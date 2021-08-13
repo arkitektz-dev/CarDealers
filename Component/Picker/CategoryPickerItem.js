@@ -4,7 +4,7 @@ import AppText from "../AppText";
 function CategoryPickerItem({ item, onPress }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress} activeOpacity={0}>
+      <TouchableOpacity onPress={onPress}>
         <AppText style={styles.label}>{item.label}</AppText>
       </TouchableOpacity>
     </View>
@@ -13,12 +13,16 @@ function CategoryPickerItem({ item, onPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    alignItems: "center",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.2,
+    width: "100%",
+    alignItems: "flex-start",
   },
   label: {
-    marginTop: 5,
+    fontSize: 15,
+    margin: 15,
+    fontWeight: "900",
+    color: "#000000",
     textAlign: "center",
   },
 });

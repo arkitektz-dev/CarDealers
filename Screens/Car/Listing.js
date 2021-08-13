@@ -48,9 +48,6 @@ const ListingCars = () => {
   const onSearch = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
-        console.log(item.vehicle.information.make, "Make");
-        console.log(item.vehicle.information.modelYear, "modelYear");
-        console.log(item.vehicle.information.model, "model");
         const itemData = `${
           item.vehicle.information.make
             ? item.vehicle.information.make.toUpperCase()

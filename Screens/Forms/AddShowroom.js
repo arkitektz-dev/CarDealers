@@ -8,6 +8,7 @@ import { AddShowroomData } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 
 import ErrorHandle from "../../Component/HelperText";
+import { Alert } from "react-native";
 
 const AddShowroom = ({ navigation }) => {
   const [showroomData, setShowroomData] = useState({
@@ -24,8 +25,11 @@ const AddShowroom = ({ navigation }) => {
   });
   const [errorState, setErrorState] = useState({
     name: false,
+    nameError: false,
     contactInformation: false,
+    contactInformationType: false,
     location: false,
+    email: false,
   });
   const setUploadImage = () => {
     const options = {
@@ -48,7 +52,16 @@ const AddShowroom = ({ navigation }) => {
   };
 
   const onSubmitHandler = () => {
-    AddShowroomData(showroomData);
+    if (
+      errorState.name != true ||
+      errorState.location != true ||
+      errorState.contactInformationType != true ||
+      errorState.contactInformation != true
+    ) {
+      AddShowroomData(showroomData);
+    } else {
+      Alert("Fields are invalid");
+    }
   };
   const onChangeNameHandeler = (e) => {
     if (e == "") {
@@ -59,10 +72,16 @@ const AddShowroom = ({ navigation }) => {
     }
   };
   const onChangeContactInformation = (e) => {
+    const re = /^[0-9\b]/;
     if (e == "") {
       setErrorState({ contactInformation: true });
     } else {
       setErrorState({ contactInformation: false });
+    }
+    if (re.test(e) == false) {
+      setErrorState({ contactInformationType: true });
+    } else {
+      setErrorState({ contactInformationType: false });
       setShowroomData({ ...showroomData, contactInformation: e });
     }
   };
@@ -74,6 +93,10 @@ const AddShowroom = ({ navigation }) => {
       setShowroomData({ ...showroomData, location: e });
     }
   };
+  const onChangeEmailHandeler = (e) => {
+    setShowroomData({ ...showroomData, email: e });
+  };
+
   return (
     <View style={styles.parent}>
       <View
@@ -113,6 +136,9 @@ const AddShowroom = ({ navigation }) => {
           returnKeyType="next"
         />
         {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
+        {errorState.nameError ? (
+          <ErrorHandle text="Numbers can not be used in name" />
+        ) : null}
         <AppTextInput
           onChangeHandler={(e) => onChangelocation(e)}
           label="Location:"
@@ -135,13 +161,13 @@ const AddShowroom = ({ navigation }) => {
           returnKeyType="next"
         />
         <AppTextInput
-          onChangeHandler={(e) =>
-            setShowroomData({ ...showroomData, email: e })
-          }
+          onChangeHandler={(e) => onChangeEmailHandeler(e)}
           label="Email:"
           returnKeyType="next"
         />
+        {errorState.email ? <ErrorHandle text="Email not valid" /> : null}
         <AppTextInput
+          maxLength={14}
           onChangeHandler={(e) => onChangeContactInformation(e)}
           label="Contact information:"
           returnKeyType="next"
@@ -150,6 +176,9 @@ const AddShowroom = ({ navigation }) => {
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
 
+        {errorState.contactInformationType ? (
+          <ErrorHandle text="Phone Number is not valid" />
+        ) : null}
         <AppTextInput
           onChangeHandler={(e) =>
             setShowroomData({ ...showroomData, website: e })
@@ -158,11 +187,6 @@ const AddShowroom = ({ navigation }) => {
           returnKeyType="done"
         />
 
-        {/* <Button
-          title={"Upload Images"}
-          onPressHandler={setUploadImage}
-          style={styles.buttonContainer}
-        /> */}
         <Button
           title={"Submit"}
           onPressHandler={onSubmitHandler}

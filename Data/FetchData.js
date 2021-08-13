@@ -97,6 +97,22 @@ export const fetchMoreCar = async (startAfter) => {
 
   return { size, arr, lastVal };
 };
+export const fetchMoreDealer = async (startAfter) => {
+  const arr = [];
+  const ref = firestore().collection("Dealers");
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
 export const fetchMoreShowroom = async (startAfter) => {
   const ref = firestore()
     .collection("Showrooms")
@@ -285,4 +301,9 @@ export const AddUser = (obj, id) => {
   return firestore()
     .collection("Users")
     .add(data);
+};
+export const AddCompanyMake = async () => {
+  return await firestore()
+    .collection("Make")
+    .get();
 };

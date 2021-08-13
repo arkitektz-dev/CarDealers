@@ -40,7 +40,7 @@ export const SignupScreen = () => {
   const [user, setUser] = useState({
     name: "",
     username: "",
-    phone: "+92",
+    phone: "",
     email: "",
     password: "",
     confirmPassowrd: "",
@@ -202,7 +202,6 @@ export const SignupScreen = () => {
       setEmailError(false);
     }
   };
-
   const handleChangeUsername = async (e) => {
     const lower = e.toLowerCase();
     setUser({ ...user, username: lower });
@@ -297,26 +296,38 @@ export const SignupScreen = () => {
             <Text style={{ color: "#000000" }}>Username Already Exist</Text>
           ) : null}
           <View style={styles.distance}></View>
-
-          <TextInput
-            defaultValue={"+92"}
-            autoCapitalize="none"
-            keyboardType="phone-pad"
-            maxLength={14}
-            label="Phone"
-            theme={{
-              colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
-              },
-            }}
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            style={{ backgroundColor: "transparent" }}
-            onChangeText={onChangePhoneNumber}
-          />
-
+          <View style={{ flexDirection: "row", width: "100%" }}>
+            <TextInput
+              value={"+92"}
+              editable={false}
+              theme={{
+                colors: {
+                  primary: "#000000",
+                  placeholder: "#000000",
+                  text: "#000000",
+                },
+              }}
+              underlineColor="#000000"
+              underlineColorAndroid="#000000"
+              style={{ backgroundColor: "transparent" }}
+            />
+            <TextInput
+              autoCapitalize="none"
+              keyboardType="phone-pad"
+              maxLength={13}
+              theme={{
+                colors: {
+                  primary: "#000000",
+                  placeholder: "#000000",
+                  text: "#000000",
+                },
+              }}
+              underlineColor="#000000"
+              underlineColorAndroid="#000000"
+              style={{ backgroundColor: "transparent", width: "80%" }}
+              onChangeText={onChangePhoneNumber}
+            />
+          </View>
           <View style={styles.distance}></View>
 
           <TextInput

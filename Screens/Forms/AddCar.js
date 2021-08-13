@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import firestore from "@react-native-firebase/firestore";
+import React, { memo, useContext, useEffect, useState } from "react";
 import {
   Text,
   Modal,
@@ -22,11 +15,8 @@ import { screenWidth } from "../../Global/Dimension";
 import defaultStyles from "../../config/styles";
 import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
-import { BottomSheet } from "react-native-elements";
-import FontAwsome from "react-native-vector-icons/FontAwesome";
-import FontAwsome5 from "react-native-vector-icons/FontAwesome5";
-import AppFormImagePicker from "../../Component/ImageHandling/AppFormImage";
-import AppForm from "../../Component/ImageHandling/AppForm";
+// import AppFormImagePicker from "../../Component/ImageHandling/AppFormImage";
+// import AppForm from "../../Component/ImageHandling/AppForm";
 import ImageInputList from "../../Component/ImageHandling/ImageInputList";
 
 import {
@@ -34,24 +24,21 @@ import {
   fetchShowroomCar,
   fetchDealerCar,
   getData,
+  AddCompanyMake,
 } from "../../Data/FetchData";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import changeNumberFormat from "../../Component/Converter";
 import { ActivityIndicator } from "react-native";
-import ImageScreen from "../ImageScreen";
-import SubCarForm from "./SubCarForm";
+import { TextInput } from "react-native";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 const AddCar = ({ navigation }) => {
-  const [amount, setAmount] = useState("");
+  const [makeCompany, setCompany] = useState([]);
 
   const [loader, setLoader] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [transferred, setTransferred] = useState(0);
 
   const [imagesArr, setImagesArr] = useState([]);
   const [image, setImage] = useState([]);
@@ -65,8 +52,8 @@ const AddCar = ({ navigation }) => {
   const [showroomPicker, setShowroomPicker] = useState("");
   const [dealerState, setDealerState] = useState("");
   const [showroomId, setShowroomId] = useState("");
-  const [priceRange, setPriceRange] = useState({ init: "", final: "" });
-  const [mileage, setRangeMileageData] = useState({ init: "", final: "" });
+  const [priceRange, setPriceRange] = useState({ init: "0" });
+  const [mileage, setRangeMileageData] = useState({ init: "0" });
 
   const [information, setInformation] = useState({
     make: "",
@@ -85,7 +72,9 @@ const AddCar = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const authContext = useContext(AuthContext);
+
   useEffect(() => {
+    getCompanies();
     getData().then((res) => authContext.setUser(res.DealerId));
     fetchShowroomCar(authContext).then((res) => {
       res.data().showrooms.forEach((data) => {
@@ -108,12 +97,18 @@ const AddCar = ({ navigation }) => {
       setDealerState(dealerData)
     );
   }, []);
-  const bottomSheetHandeler = () => {
-    if (isVisible == true) {
-      setIsVisible(false);
-    } else setIsVisible(true);
+  const getCompanies = () => {
+    AddCompanyMake().then((res) => {
+      const arr = [];
+      res.docs.forEach((item) =>
+        arr.push({
+          label: item.data().name,
+          value: item.data().name,
+        })
+      );
+      setCompany(arr);
+    });
   };
-
   const handleValueChange = (e) => {
     setPriceRange({ init: e[0] });
   };
@@ -160,11 +155,7 @@ const AddCar = ({ navigation }) => {
     { label: "2002", value: "2002" },
     { label: "2009 ", value: "2009" },
   ];
-  const company = [
-    { label: "Suzuki", value: "Suzuki" },
-    { label: "Toyota", value: "Toyota" },
-    { label: "Honda", value: "Honda" },
-  ];
+
   const engineTypeData = [
     { label: "Petrol", value: "Petrol" },
     { label: "Diesel", value: "Diesel" },
@@ -178,41 +169,7 @@ const AddCar = ({ navigation }) => {
       setCheckbox([...checkbox, item]);
     }
   };
-  const setUploadImage = async () => {
-    const arr = [];
-    const options = {
-      maxWidth: 2000,
-      maxHeight: 2000,
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.error) {
-        alert("Error");
-      } else {
-        const uri = response.uri;
-        setTempImage([...tempImage, uri]);
-      }
-    });
-  };
-  const setUploadImageFromCamera = async () => {
-    let options = {
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    launchCamera(options, (response) => {
-      if (response.errorMessage) {
-        console.log("Facing Errors");
-      } else {
-        const uri = response.uri;
-        setTempImage([...tempImage, uri]);
-      }
-    });
-  };
+
   const imageURI = async () => {
     var a = [];
     imagesArr.map((item) => {
@@ -221,7 +178,6 @@ const AddCar = ({ navigation }) => {
       storageRef
         .putFile(item)
         .then(async (snapshot) => {
-          //You can check the image is now uploaded in the storage bucket
           const url = await storageRef.getDownloadURL();
           // setImagesUrl(...imagesUrl, { images: url });
           a.push(url);
@@ -231,29 +187,6 @@ const AddCar = ({ navigation }) => {
     setImagesUrl(a);
     return imagesUrl;
   };
-  // imagesArr.map(async (pic, index) => {
-  //   const uploadImage = pic.substring(pic.lastIndexOf("/") + 1);
-  //   setUploading(true);
-  //   setTransferred(0);
-  //   const storageRef = storage().ref(`photos/${uploadImage}`);
-  //   const task = storageRef.putFile(pic);
-  //   task.on("state_changed", (taskSnapshot) => {
-  //     setTransferred(
-  //       Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-  //         100
-  //     );
-  //   });
-  //   try {
-  //     task;
-  //     const url = storageRef.getDownloadURL();
-  //     setImage([...image, url]);
-  //     setUploading(false);
-  //     return image;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
-  //};
 
   const checkboxData = ["AC", "Radio", "Sunroof"];
 
@@ -375,63 +308,6 @@ const AddCar = ({ navigation }) => {
           backgroundColor: "#fff",
         }}
       >
-        <BottomSheet
-          isVisible={isVisible}
-          containerStyle={{
-            backgroundColor: "white",
-            marginTop: "90%",
-            borderTopStartRadius: 30,
-            borderTopEndRadius: 30,
-            flexDirection: "column",
-            flex: 1,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              alignSelf: "flex-end",
-              margin: 20,
-            }}
-            onPress={bottomSheetHandeler}
-          >
-            <Text
-              style={{
-                color: "blue",
-                fontSize: 18,
-                textAlign: "center",
-              }}
-            >
-              Close
-            </Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: "grey",
-              fontSize: 25,
-              textAlign: "center",
-              margin: 20,
-            }}
-          >
-            Select the following
-          </Text>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <FontAwsome
-              name="camera"
-              color="grey"
-              size={50}
-              onPress={setUploadImageFromCamera}
-            />
-            <FontAwsome5
-              name="images"
-              color="grey"
-              size={50}
-              onPress={setUploadImage}
-            />
-          </View>
-        </BottomSheet>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 40 }}
@@ -468,7 +344,7 @@ const AddCar = ({ navigation }) => {
                   flexDirection: "row",
                   padding: 15,
                   marginVertical: 10,
-                  width: 220,
+                  width: 305,
                 }}
                 onPress={() => setVisible(true)}
               >
@@ -480,6 +356,7 @@ const AddCar = ({ navigation }) => {
                 <View
                   style={{
                     flexDirection: "row",
+
                     justifyContent: "space-between",
                     borderBottomColor: "#000000",
                     borderBottomWidth: 0.5,
@@ -506,9 +383,15 @@ const AddCar = ({ navigation }) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
+
                 {checkboxData.map((item) => {
                   return (
-                    <View style={{ flexDirection: "row", marginTop: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        margin: 10,
+                      }}
+                    >
                       <AppCheckBox
                         status={
                           checkbox.includes(item) ? "checked" : "unchecked"
@@ -529,8 +412,19 @@ const AddCar = ({ navigation }) => {
                   );
                 })}
               </Modal>
-
+              {checkbox.length > 0 ? (
+                <Text
+                  style={{
+                    color: "#1e2d64",
+                    fontWeight: "600",
+                    fontStyle: "normal",
+                  }}
+                >
+                  {checkbox.length} Features Selected
+                </Text>
+              ) : null}
               <AppPicker
+                title="Engine Capacity"
                 items={items}
                 name="category"
                 onSelectItem={(item) => setEngineCapacity(item.label)}
@@ -540,6 +434,7 @@ const AddCar = ({ navigation }) => {
                 width="80%"
               />
               <AppPicker
+                title="Engine Type"
                 items={engineTypeData}
                 name="category"
                 onSelectItem={(item) => setEngineType(item.label)}
@@ -549,6 +444,7 @@ const AddCar = ({ navigation }) => {
                 width="80%"
               />
               <AppPicker
+                title="Engine Transmission"
                 items={type}
                 name="category"
                 onSelectItem={(item) => setTransmission(item.label)}
@@ -565,6 +461,7 @@ const AddCar = ({ navigation }) => {
               >
                 {/* <Image source={Location} style={styles.img} /> */}
                 <AppPicker
+                  title="City"
                   items={city}
                   name="category"
                   onSelectItem={(item) => setCity(item.label)}
@@ -575,7 +472,8 @@ const AddCar = ({ navigation }) => {
                 />
               </View>
               <AppPicker
-                items={company}
+                title="Company"
+                items={makeCompany}
                 name="category"
                 onSelectItem={(item) =>
                   setInformation({ ...information, make: item.label })
@@ -586,6 +484,7 @@ const AddCar = ({ navigation }) => {
                 width="80%"
               />
               <AppPicker
+                title="Car Model"
                 items={modelCar}
                 name="category"
                 onSelectItem={(item) =>
@@ -598,6 +497,7 @@ const AddCar = ({ navigation }) => {
               />
 
               <AppPicker
+                title="Model Year"
                 items={year}
                 name="category"
                 onSelectItem={(item) =>
@@ -609,6 +509,7 @@ const AddCar = ({ navigation }) => {
                 width="80%"
               />
               <AppPicker
+                title="Car Version"
                 items={versionCar}
                 name="category"
                 onSelectItem={(item) =>
@@ -621,6 +522,7 @@ const AddCar = ({ navigation }) => {
               />
 
               <AppPicker
+                title="Car Exterior Color"
                 items={color}
                 name="category"
                 onSelectItem={(item) => setExteriorColor(item.label)}
@@ -631,6 +533,7 @@ const AddCar = ({ navigation }) => {
               />
 
               <AppPicker
+                title="Registered City"
                 items={city}
                 name="category"
                 onSelectItem={(item) => setRegistrationCity(item.label)}
@@ -640,6 +543,7 @@ const AddCar = ({ navigation }) => {
                 width="80%"
               />
               <AppPicker
+                title="Showroom"
                 items={showroomStateData}
                 name="category"
                 onSelectItem={(item) => {
@@ -648,11 +552,11 @@ const AddCar = ({ navigation }) => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder="Showrooms"
                 selectedItem={showroomPicker}
-                width="80%"
+                width="82%"
               />
               <View
                 style={{
-                  width: "85%",
+                  width: "92%",
                   alignItems: "center",
                   marginBottom: 10,
                   bottom: 5,
@@ -670,31 +574,46 @@ const AddCar = ({ navigation }) => {
                     width: "100%",
                   }}
                 >
-                  <Text
+                  <View
                     style={{
-                      color: "black",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                      textAlign: "center",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      marginTop: 15,
                     }}
                   >
-                    Selected Amount: Rs {changeNumberFormat(priceRange.init)}
-                  </Text>
-                  <SliderData onValueChanged={handleValueChange} />
+                    <TextInput
+                      placeholderTextColor={"#000000"}
+                      placeholder="0 Rs"
+                      value={changeNumberFormat(priceRange.init)}
+                      style={styles.int}
+                    />
+                  </View>
+                  <SliderData
+                    values={[0]}
+                    enabledTwo={false}
+                    onValueChanged={handleValueChange}
+                  />
                 </View>
 
                 <View style={{ flexDirection: "column" }}>
-                  <Text
+                  <View
                     style={{
-                      color: "black",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                      textAlign: "center",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      marginTop: 15,
                     }}
                   >
-                    Select Mileage: {mileage.init}KM
-                  </Text>
-                  <SliderData onValueChanged={handleMileageChange} />
+                    <TextInput
+                      placeholder="0 Km"
+                      value={`${mileage.init} Km`}
+                      style={styles.int}
+                    />
+                  </View>
+                  <SliderData
+                    values={[0]}
+                    enabledTwo={false}
+                    onValueChanged={handleMileageChange}
+                  />
                 </View>
 
                 <Button
@@ -726,6 +645,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 20,
     margin: 10,
+  },
+  int: {
+    borderWidth: 1,
+    borderColor: "#000000",
+    width: screenWidth * 0.4,
+    color: "#000000",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center",
+    borderRadius: 5,
   },
   distance: {
     width: screenWidth * 0.09,

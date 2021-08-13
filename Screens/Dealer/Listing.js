@@ -16,17 +16,20 @@ import Card from "../../Component/CardViews/Card";
 import { SearchComponent } from "../../Component/Search";
 import { ActivityIndicator } from "react-native-paper";
 import { screenWidth } from "../../Global/Dimension";
-import { fetchDealerData } from "../../Data/FetchData";
+import { fetchDealerData, fetchMoreDealer } from "../../Data/FetchData";
 
 const ListingDealer = () => {
   const [dealerdata, setDealerData] = useState([]);
   const [dealerCount, setDealerCount] = useState(0);
+  const [startAfter, setStartAfter] = useState(Object);
   const [filteredData, setfilteredData] = useState([]);
+  const [moreloading, setMoreLoading] = useState(false);
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
     fetchDealerData().then((data) => {
+      setStartAfter(data.lastVal);
       setDealerData(data.arr);
       setfilteredData(data.arr);
       setDealerCount(data.size);
@@ -54,6 +57,39 @@ const ListingDealer = () => {
       setDealerCount(filteredData.length);
       setDealerData(filteredData);
     }
+  };
+  const _onEndReached = () => {
+    setMoreLoading(true);
+    fetchMoreDealer(startAfter)
+      .then((res) => {
+        setDealerData([...dealerdata, ...res.arr]);
+        if (filteredData.length > 0) {
+          setfilteredData([...dealerdata, ...res.arr]);
+        }
+        setDealerCount(dealerdata.length + res.arr.length);
+        setStartAfter(res.lastVal);
+        setMoreLoading(false);
+      })
+      .catch((e) => console.log(e));
+  };
+  const _renderFooter = () => {
+    return (
+      <View
+        style={{
+          padding: 10,
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
+          <Text style={styles.btnText}>Load More</Text>
+          {moreloading ? (
+            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   const _renderItem = ({ item }) => {
@@ -113,7 +149,8 @@ const ListingDealer = () => {
         />
       ) : (
         <FlatList
-          contentContainerStyle={{ paddingBottom: "30%" }}
+          ListFooterComponent={filteredData.length > 0 ? _renderFooter : null}
+          contentContainerStyle={{ paddingBottom: "10%" }}
           data={dealerdata}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}

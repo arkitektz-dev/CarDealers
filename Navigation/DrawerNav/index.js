@@ -77,7 +77,6 @@ function CustomDrawerContent(props) {
 }
 
 const DrawerNav = ({ route }) => {
-  console.log(route.params);
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawe}

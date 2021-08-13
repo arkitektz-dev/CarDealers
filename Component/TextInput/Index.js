@@ -14,7 +14,7 @@ const AppTextInput = ({
   return (
     <>
       <TextInput
-      value={value}
+        value={value}
         maxLength={maxLength}
         placeholder={placeholder}
         renderToHardwareTextureAndroid

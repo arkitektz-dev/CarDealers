@@ -13,11 +13,14 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/core";
-import { screenHeight, screenWidth } from "../../Global/Dimension";
+import {
+  autoCapitalize,
+  screenHeight,
+  screenWidth,
+} from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import AuthContext from "../../Component/Authcontext";
-import { ActivityIndicator } from "react-native";
-
+import LottieView from "lottie-react-native";
 const ShowroomDetailScreen = ({ route }) => {
   const item = route.params.item;
   const showroomId = route.params.item.id;
@@ -148,7 +151,7 @@ const ShowroomDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {item.name}
+              {autoCapitalize(item.name)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -180,138 +183,156 @@ const ShowroomDetailScreen = ({ route }) => {
   };
   const navigation = useNavigation();
   return (
-    <View style={styles.parent}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={styles.searchHolder}>
-          <IonIcon
-            style={{ margin: 10 }}
-            name="chevron-back-circle-sharp"
-            color="white"
-            size={35}
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={styles.headingText}> Showroom Profile</Text>
-        </View>
-        <Modal
-          visible={visible}
-          containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
-        >
-          <TouchableOpacity
-            activeOpacity={0}
-            onPress={modalVisible}
+    <>
+      {loading ? (
+        <LottieView
+          source={require("../../Assets/CarLoader.json")}
+          autoPlay
+          resizeMode="contain"
+          style={{
+            top: 100,
+            alignSelf: "center",
+            width: 170,
+            height: 170,
+          }}
+          hardwareAccelerationAndroid={true}
+        />
+      ) : (
+        <View style={styles.parent}>
+          <View
             style={{
-              margin: 10,
               flexDirection: "row",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
             }}
           >
-            <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
-              Close
-            </Text>
-          </TouchableOpacity>
+            <View style={styles.searchHolder}>
+              <IonIcon
+                style={{ margin: 10 }}
+                name="chevron-back-circle-sharp"
+                color="white"
+                size={35}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.headingText}> Showroom Profile</Text>
+            </View>
+            <Modal
+              visible={visible}
+              containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+            >
+              <TouchableOpacity
+                activeOpacity={0}
+                onPress={modalVisible}
+                style={{
+                  margin: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={{ color: "blue", fontSize: 18, fontWeight: "900" }}
+                >
+                  Close
+                </Text>
+              </TouchableOpacity>
 
-          <FlatList
-            renderItem={_renderDealerList}
-            data={modalData}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </Modal>
-      </View>
-      <View style={styles.distance}></View>
-      <View style={styles.topDiv}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignSelf: "flex-start",
-            marginHorizontal: 25,
-          }}
-        >
-          <Image
-            source={{ uri: item.images[0] }}
-            onPress={() => navigation.goBack()}
-            style={{
-              width: 85,
-              height: 85,
-              borderRadius: 85 / 2,
-            }}
-          />
-          <View style={{ width: 15 }}></View>
-          <View style={{ flexDirection: "column", justifyContent: "flex-end" }}>
-            <View style={styles.DealerName}>
-              <Text style={styles.carInfoText}> {item.name} </Text>
-            </View>
-            <View style={{ flexDirection: "column" }}>
-              <Text style={styles.h1}>{item.contactInformation}</Text>
-              <Text style={styles.txt1}>{item.location}</Text>
-            </View>
+              <FlatList
+                renderItem={_renderDealerList}
+                data={modalData}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </Modal>
           </View>
-        </View>
-        {showroomExist ? (
+          <View style={styles.distance}></View>
+          <View style={styles.topDiv}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignSelf: "flex-start",
+                marginHorizontal: 25,
+              }}
+            >
+              <Image
+                source={{ uri: item.images[0] }}
+                onPress={() => navigation.goBack()}
+                style={{
+                  width: 85,
+                  height: 85,
+                  borderRadius: 85 / 2,
+                }}
+              />
+              <View style={{ width: 15 }}></View>
+              <View
+                style={{ flexDirection: "column", justifyContent: "flex-end" }}
+              >
+                <View style={styles.DealerName}>
+                  <Text style={styles.carInfoText}> {item.name} </Text>
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <Text style={styles.h1}>{item.contactInformation}</Text>
+                  <Text style={styles.txt1}>{item.location}</Text>
+                </View>
+              </View>
+            </View>
+            {/* {showroomExist ? (
           <Text style={styles.carSubInfoText}>Showroom Exist</Text>
         ) : (
           <TouchableOpacity onPress={AssignShowroom}>
             <Text style={styles.carSubInfoText}>Showroom Does Not Exist</Text>
           </TouchableOpacity>
-        )}
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          margin: 5,
-          justifyContent: "space-evenly",
-        }}
-      >
-        <View style={{ flexDirection: "column" }}>
-          <Text
-            style={{
-              fontSize: 35,
-              fontWeight: "bold",
-              color: "grey",
-              textAlign: "center",
-            }}
-          >
-            {dealerCount}
-          </Text>
-          <TouchableOpacity activeOpacity={0} style={styles.CarInfoTitle}>
-            <Text style={styles.countText}> Dealers </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ flexDirection: "column" }}>
-          <Text
-            style={{
-              fontSize: 35,
-              fontWeight: "bold",
-              color: "grey",
-              textAlign: "center",
-            }}
-          >
-            {carCount}
-          </Text>
-          <View style={styles.CarInfoTitle}>
-            <Text style={styles.countText}> Cars </Text>
+        )} */}
           </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              margin: 5,
+              justifyContent: "space-evenly",
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
+              <Text
+                style={{
+                  fontSize: 35,
+                  fontWeight: "bold",
+                  color: "grey",
+                  textAlign: "center",
+                }}
+              >
+                {dealerCount}
+              </Text>
+              <TouchableOpacity activeOpacity={0} style={styles.CarInfoTitle}>
+                <Text style={styles.countText}> Dealers </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: "column" }}>
+              <Text
+                style={{
+                  fontSize: 35,
+                  fontWeight: "bold",
+                  color: "grey",
+                  textAlign: "center",
+                }}
+              >
+                {carCount}
+              </Text>
+              <View style={styles.CarInfoTitle}>
+                <Text style={styles.countText}> Cars </Text>
+              </View>
+            </View>
+          </View>
+
+          <FlatList
+            contentContainerStyle={{
+              alignSelf: "center",
+            }}
+            numColumns={2}
+            data={dataCar}
+            renderItem={_renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#1c2e65" style={{ top: 150 }} />
-      ) : (
-        <FlatList
-          contentContainerStyle={{
-            alignSelf: "center",
-          }}
-          numColumns={2}
-          data={dataCar}
-          renderItem={_renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
       )}
-    </View>
+    </>
   );
 };
 export default memo(ShowroomDetailScreen);

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Modal,
   Text,
@@ -14,10 +14,15 @@ import { screenWidth } from "../../Global/Dimension";
 import CategoryPickerItem from "../Picker/CategoryPickerItem";
 import SliderData from "../SliderData/Index";
 import changeNumberFormat from "../Converter";
+import { AddCompanyMake } from "../../Data/FetchData";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
 const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
+  useEffect(() => {
+    getCompanies();
+  }, []);
+  const [makeCompany, setCompany] = useState([]);
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
@@ -56,6 +61,18 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
     });
   };
   const data = 0;
+  const getCompanies = () => {
+    AddCompanyMake().then((res) => {
+      const arr = [];
+      res.docs.forEach((item) =>
+        arr.push({
+          label: item.data().name,
+          value: item.data().name,
+        })
+      );
+      setCompany(arr);
+    });
+  };
   const handleValueChange = (e) => {
     setDropDownValues({
       ...dropdownValues,
@@ -91,11 +108,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
     { label: "2010", value: 2 },
     { label: "2016", value: 3 },
   ];
-  const company = [
-    { label: "Suzuki", value: 1 },
-    { label: "Toyota", value: 2 },
-    { label: "Honda", value: 3 },
-  ];
+
   return (
     <View>
       <Modal visible={modalVisible} animationType={"slide"}>
@@ -139,6 +152,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
           }}
         >
           <AppPicker
+            title="Assemble"
             items={type}
             name="category"
             onSelectItem={(item) =>
@@ -150,6 +164,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             width="80%"
           />
           <AppPicker
+            title="Color"
             items={color}
             name="category"
             onSelectItem={(item) =>
@@ -164,6 +179,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             width="80%"
           />
           <AppPicker
+            title="City"
             items={city}
             name="category"
             onSelectItem={(item) =>
@@ -175,6 +191,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             width="80%"
           />
           <AppPicker
+            title="Year"
             items={year}
             name="category"
             onSelectItem={(item) =>
@@ -186,7 +203,8 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             width="80%"
           />
           <AppPicker
-            items={company}
+            title="Company"
+            items={makeCompany}
             name="category"
             onSelectItem={(item) =>
               setDropDownValues({ ...dropdownValues, Make: item.label })
@@ -209,7 +227,11 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             </View>
           </View>
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <SliderData onValueChanged={handleValueChange} />
+            <SliderData
+              enabledTwo={true}
+              onValueChanged={handleValueChange}
+              values={[0, 5000000]}
+            />
           </View>
 
           <Button

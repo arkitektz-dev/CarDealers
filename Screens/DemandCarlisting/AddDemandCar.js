@@ -16,12 +16,15 @@ import YearSliderData from "../../Component/SliderData/YearSliderData";
 import { TextInput } from "react-native-gesture-handler";
 import AppPicker from "../../Component/Pickers/Index";
 
-const AddDemandCar = ({ navigation }) => {
+const AddDemandCar = ({ navigation, route }) => {
   const [make, setMake] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
-  const [rangePriceData, setRangePriceData] = useState({ init: "", final: "" });
-  const [yearRange, setYearRange] = useState({ init: "", final: "" });
+  const [rangePriceData, setRangePriceData] = useState({
+    init: "0",
+    final: "5000000",
+  });
+  const [yearRange, setYearRange] = useState({ init: "1980", final: "2024" });
   const [Model, setModel] = useState("");
   const [loader, setLoader] = useState(false);
 
@@ -30,25 +33,6 @@ const AddDemandCar = ({ navigation }) => {
     Model: false,
     Year: false,
   });
-  // const setUploadImage = () => {
-  //   const options = {
-  //     maxWidth: 2000,
-  //     maxHeight: 2000,
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: "images",
-  //     },
-  //   };
-  //   launchImageLibrary(options, (response) => {
-  //     if (response.error) {
-  //       alert("Error");
-  //     } else {
-  //       const images = [];
-  //       images.push(response.uri);
-  //       setShowroomData({ ...showroomData, images: images });
-  //     }
-  //   });
-  // };
 
   const company = [
     { label: "Suzuki", value: "Suzuki" },
@@ -91,13 +75,13 @@ const AddDemandCar = ({ navigation }) => {
       await AddDemand(obj)
         .then(() => {
           setLoader(false);
-          navigation.navigate("DemandCars");
+
+          navigation.navigate("Home");
         })
         .catch(() => setLoader(false));
       setLoader(false);
     } else {
       setLoader(false);
-
       alert("Fields can not be empty");
     }
   };
@@ -187,7 +171,7 @@ const AddDemandCar = ({ navigation }) => {
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
 
-        <View style={{ width: "100%", top: 15, flex: 1 }}>
+        <View style={{ width: "100%", top: 15, marginBottom: 35 }}>
           <View
             style={{
               flexDirection: "column",
@@ -231,7 +215,11 @@ const AddDemandCar = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-            <SliderData onValueChanged={handleValuePriceChange} />
+            <SliderData
+              values={[0, 5000000]}
+              enabledTwo={true}
+              onValueChanged={handleValuePriceChange}
+            />
           </View>
 
           <View
@@ -264,7 +252,11 @@ const AddDemandCar = ({ navigation }) => {
                 style={styles.int}
               />
             </View>
-            <YearSliderData onValueChanged={handleValueYearChange} />
+            <YearSliderData
+              values={[1980, 2024]}
+              enabledTwo={true}
+              onValueChanged={handleValueYearChange}
+            />
           </View>
         </View>
 
@@ -292,7 +284,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonContainer: {
-    marginTop: 10,
     height: 45,
     flexDirection: "row",
     justifyContent: "center",
@@ -310,7 +301,8 @@ const styles = StyleSheet.create({
   int: {
     borderWidth: 1,
     borderColor: "#000000",
-    width: screenWidth * 0.4,
+    width: screenWidth * 0.37,
     color: "#000000",
+    borderRadius: 10,
   },
 });

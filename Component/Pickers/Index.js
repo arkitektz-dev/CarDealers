@@ -24,6 +24,7 @@ const AppPicker = ({
   placeholder,
   selectedItem,
   width = "100%",
+  title,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -55,7 +56,7 @@ const AppPicker = ({
                 fontSize: 16,
               }}
             >
-              Select
+              Select {title}
             </Text>
             <TouchableOpacity onPress={() => setModalVisible(false)}>
               <Text
@@ -75,14 +76,18 @@ const AppPicker = ({
             keyExtractor={(item) => item.value.toString()}
             numColumns={numberOfColumns}
             renderItem={({ item }) => (
-              <PickerItemComponent
-                item={item}
-                label={item.label}
-                onPress={() => {
-                  setModalVisible(false);
-                  onSelectItem(item);
-                }}
-              />
+              <View
+                style={{ borderBottomWidth: 1, borderBottomColor: "#000000" }}
+              >
+                <PickerItemComponent
+                  item={item}
+                  label={item.label}
+                  onPress={() => {
+                    setModalVisible(false);
+                    onSelectItem(item);
+                  }}
+                />
+              </View>
             )}
           />
         </Screen>
