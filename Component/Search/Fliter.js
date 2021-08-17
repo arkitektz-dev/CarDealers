@@ -116,7 +116,6 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
           style={{
             justifyContent: "space-between",
             flexDirection: "row",
-            marginBottom: 20,
           }}
         >
           <TouchableOpacity
@@ -191,6 +190,18 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             width="80%"
           />
           <AppPicker
+            title="Location"
+            items={city}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, City: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Select Location"
+            selectedItem={dropdownValues.City}
+            width="80%"
+          />
+          <AppPicker
             title="Year"
             items={year}
             name="category"
@@ -214,6 +225,7 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
             selectedItem={dropdownValues.Make}
             width="80%"
           />
+
           <View style={styles.priceNum}>
             <View style={styles.priceHolder}>
               <Text style={styles.txt}>
@@ -226,6 +238,10 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
               </Text>
             </View>
           </View>
+          <Text style={{ fontWeight: "700", color: "#000000" }}>
+            Price Range
+          </Text>
+
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
               enabledTwo={true}
@@ -259,7 +275,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
-    height: "10%",
+    height: "8%",
     alignItems: "center",
   },
   priceHolder: {

@@ -7,6 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/core";
 import AuthContext from "../../Component/Authcontext";
 import AppPicker from "../../Component/Pickers/Index";
 import { Button } from "../../Component/Button/Index";
@@ -17,7 +19,7 @@ import AppCheckBox from "../../Component/AppCheckbox";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 // import AppFormImagePicker from "../../Component/ImageHandling/AppFormImage";
 // import AppForm from "../../Component/ImageHandling/AppForm";
-import ImageInputList from "../../Component/ImageHandling/ImageInputList";
+import ImageInput from "../../Component/ImageHandling/ImageInput";
 
 import {
   AddCarData,
@@ -32,14 +34,15 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import changeNumberFormat from "../../Component/Converter";
 import { ActivityIndicator } from "react-native";
 import { TextInput } from "react-native";
+import { useRef } from "react";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
-const AddCar = ({ navigation }) => {
+
+const AddCar = () => {
+  const navigation = useNavigation();
   const [makeCompany, setCompany] = useState([]);
-
   const [loader, setLoader] = useState(false);
-
   const [imagesArr, setImagesArr] = useState([]);
   const [image, setImage] = useState([]);
   const [tempImage, setTempImage] = useState([]);
@@ -110,10 +113,10 @@ const AddCar = ({ navigation }) => {
     });
   };
   const handleValueChange = (e) => {
-    setPriceRange({ init: e[0] });
+    setPriceRange({ init: e });
   };
   const handleMileageChange = (e) => {
-    setRangeMileageData({ init: e[0] });
+    setRangeMileageData({ init: e });
   };
 
   const items = [
@@ -197,7 +200,7 @@ const AddCar = ({ navigation }) => {
     setLoader(true);
     const showroomRef = firestore()
       .collection("Showrooms")
-      .doc(showroomId.toString());
+      .doc(showroomId);
     const userRef = firestore()
       .collection("Dealers")
       .doc(authContext.user);
@@ -237,7 +240,12 @@ const AddCar = ({ navigation }) => {
         registrationCity: registrationCity,
       },
     };
-    await AddCarData(obj);
+
+    await AddCarData(obj).then(() => {
+      console.log(obj);
+      alert("Car Added");
+      navigation.navigate("ListCarScreen");
+    });
 
     setLoader(false);
   };
@@ -249,9 +257,10 @@ const AddCar = ({ navigation }) => {
   const handleRemove = (uri) => {
     setImagesArr(imagesArr.filter((imagesArr) => imagesArr !== uri));
   };
+  const scrollView = useRef();
 
   return (
-    <>
+    <View style={{ flex: 1, flexDirection: "column", backgroundColor: "#fff" }}>
       <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 10 }}
@@ -271,34 +280,6 @@ const AddCar = ({ navigation }) => {
         >
           Add Advertisment
         </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          width: "100%",
-          backgroundColor: "white",
-          justifyContent: "center",
-          borderStyle: "dotted",
-          borderBottomWidth: 1,
-          borderRadius: 1,
-          borderBottomColor: "#1e2d64",
-          padding: 10,
-        }}
-      >
-        {/* <AppForm
-          initialValues={{
-            images: [],
-          }}
-          onSubmit={(e) => onPressHandler(e)}
-        >
-          <AppFormImagePicker name="images" />
-        </AppForm> */}
-
-        <ImageInputList
-          imageUris={imagesArr}
-          onAddImage={handleAdd}
-          onRemoveImage={handleRemove}
-        />
       </View>
 
       <View
@@ -327,6 +308,38 @@ const AddCar = ({ navigation }) => {
                 alignItems: "center",
               }}
             >
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  alignContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                  borderStyle: "dotted",
+                  borderBottomWidth: 1,
+                  borderRadius: 1,
+                  borderBottomColor: "#1e2d64",
+                  padding: 10,
+                }}
+              >
+                <ScrollView
+                  ref={scrollView}
+                  horizontal
+                  onContentSizeChange={() => scrollView.current.scrollToEnd()}
+                >
+                  <View style={styles.container}>
+                    {imagesArr.map((uri) => (
+                      <View key={uri} style={styles.image}>
+                        <ImageInput
+                          imageUri={uri}
+                          onChangeImage={() => handleRemove(uri)}
+                        />
+                      </View>
+                    ))}
+                    <ImageInput onChangeImage={(uri) => handleAdd(uri)} />
+                  </View>
+                </ScrollView>
+              </View>
               <AppPicker
                 items={assembleType}
                 name="category"
@@ -344,7 +357,7 @@ const AddCar = ({ navigation }) => {
                   flexDirection: "row",
                   padding: 15,
                   marginVertical: 10,
-                  width: 305,
+                  width: "77%",
                 }}
                 onPress={() => setVisible(true)}
               >
@@ -582,20 +595,31 @@ const AddCar = ({ navigation }) => {
                     }}
                   >
                     <TextInput
-                      placeholderTextColor={"#000000"}
+                      keyboardType="number-pad"
                       placeholder="0 Rs"
-                      value={changeNumberFormat(priceRange.init)}
                       style={styles.int}
+                      onChangeText={handleValueChange}
                     />
                   </View>
-                  <SliderData
+                  {/* <SliderData
                     values={[0]}
                     enabledTwo={false}
                     onValueChanged={handleValueChange}
-                  />
+                  /> */}
                 </View>
-
-                <View style={{ flexDirection: "column" }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    color: "#4BB543",
+                    left: 50,
+                    top: 5,
+                  }}
+                >
+                  {changeNumberFormat(priceRange.init)}
+                </Text>
+                <View
+                  style={{ flexDirection: "column", justifyContent: "center" }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
@@ -604,16 +628,27 @@ const AddCar = ({ navigation }) => {
                     }}
                   >
                     <TextInput
+                      keyboardType="number-pad"
                       placeholder="0 Km"
-                      value={`${mileage.init} Km`}
                       style={styles.int}
+                      onChangeText={handleMileageChange}
                     />
                   </View>
-                  <SliderData
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      left: 50,
+                      top: 5,
+                      color: "#4BB543",
+                    }}
+                  >
+                    {`${mileage.init} KM`}
+                  </Text>
+                  {/* <SliderData
                     values={[0]}
                     enabledTwo={false}
                     onValueChanged={handleMileageChange}
-                  />
+                  /> */}
                 </View>
 
                 <Button
@@ -632,7 +667,7 @@ const AddCar = ({ navigation }) => {
           </View>
         </ScrollView>
       </View>
-    </>
+    </View>
   );
 };
 export default memo(AddCar);
@@ -644,12 +679,18 @@ const styles = StyleSheet.create({
     height: buttonHeight,
     justifyContent: "center",
     borderRadius: 20,
-    margin: 10,
+    top: 25,
+  },
+  container: {
+    flexDirection: "row",
+  },
+  image: {
+    marginRight: 10,
   },
   int: {
     borderWidth: 1,
     borderColor: "#000000",
-    width: screenWidth * 0.4,
+    width: screenWidth * 0.7,
     color: "#000000",
     fontWeight: "bold",
     fontSize: 16,

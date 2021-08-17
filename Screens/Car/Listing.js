@@ -14,7 +14,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/core";
 
-import { fetchCarData, fetchMoreCar } from "../../Data/FetchData";
+import { fetchCarListData, fetchMoreCar } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
@@ -30,13 +30,19 @@ const ListingCars = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
-  const [noData, setNoData] = useState(false);
+  const [filter, setFilter] = useState({
+    Year: "",
+    Make: "",
+    City: "",
+    ExteriorColor: "",
+    Assemble: "",
+  });
 
   const navigation = useNavigation();
 
   useEffect(() => {
     setLoading(true);
-    fetchCarData().then((res) => {
+    fetchCarListData().then((res) => {
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
       setfilteredData(res.arr);
@@ -82,16 +88,19 @@ const ListingCars = () => {
         "==",
         dropdownValues.Year
       );
+      setFilter({ ...filter, Year: dropdownValues.Year });
     }
 
     if (dropdownValues.Make != "") {
       ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
+      setFilter({ ...filter, Make: dropdownValues.Make });
     }
     // if (dropdownValues.mileage != "") {
     //   ref = ref.where("vehicle.mileage", "==", dropdownValues.mileage);
     // }
     if (dropdownValues.City != "") {
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
+      setFilter({ ...filter, City: dropdownValues.City });
     }
     if (dropdownValues.ExteriorColor != "") {
       ref = ref.where(
@@ -99,6 +108,7 @@ const ListingCars = () => {
         "==",
         dropdownValues.ExteriorColor
       );
+      setFilter({ ...filter, ExteriorColor: dropdownValues.ExteriorColor });
     }
 
     if (dropdownValues.price.init > 0) {
@@ -112,6 +122,7 @@ const ListingCars = () => {
         "==",
         dropdownValues.Assemble
       );
+      setFilter({ ...filter, Assemble: dropdownValues.Assemble });
     }
 
     var a = await ref.get();
@@ -164,20 +175,35 @@ const ListingCars = () => {
             }}
           >
             {item.images[0] != undefined ? (
-              <Image
-                source={{ uri: item.images[0] }}
-                style={styles.imageSize}
-                resizeMode={"contain"}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri:
-                    "https://firebasestorage.googleapis.com/v0/b/cardealer-41e38.appspot.com/o/photos%2FNoImage.jpg?alt=media&token=5c584571-f6f7-4579-9096-08b50eb639ff",
+              <View
+                style={{
+                  margin: 5,
+                  width: screenWidth * 0.28,
+                  height: screenHeight * 0.17,
                 }}
-                style={styles.imageSize}
-                resizeMode={"contain"}
-              />
+              >
+                <Image
+                  source={{ uri: item.images[0] }}
+                  style={styles.imageSize}
+                  resizeMode={"cover"}
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  width: 130,
+                  height: 130,
+                }}
+              >
+                <Image
+                  source={{
+                    uri:
+                      "https://firebasestorage.googleapis.com/v0/b/cardealer-41e38.appspot.com/o/photos%2FNoImage.jpg?alt=media&token=5c584571-f6f7-4579-9096-08b50eb639ff",
+                  }}
+                  style={styles.imageSize}
+                  resizeMode={"cover"}
+                />
+              </View>
             )}
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
@@ -225,7 +251,6 @@ const ListingCars = () => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-
     fetchMoreCar(startAfter)
       .then((res) => {
         setDataCar([...dataCar, ...res.arr]);
@@ -308,9 +333,9 @@ const ListingCars = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {noData ? (
+      {/* {noData ? (
         <Text style={{ color: "black", textAlign: "center" }}>No Data</Text>
-      ) : null}
+      ) : null} */}
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}
@@ -343,8 +368,9 @@ const ListingCars = () => {
 export default memo(ListingCars);
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.35,
-    height: screenHeight * 0.2,
+    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
   },
   searchHolder: {
     backgroundColor: "#1c2e65",

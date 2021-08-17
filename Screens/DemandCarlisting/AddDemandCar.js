@@ -157,7 +157,7 @@ const AddDemandCar = ({ navigation, route }) => {
           name="category"
           onSelectItem={(item) => onChangeMake(item)}
           PickerItemComponent={CategoryPickerItem}
-          placeholder=" Model Year"
+          placeholder="Make"
           selectedItem={make.label}
           width="90%"
         />

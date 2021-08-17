@@ -181,6 +181,7 @@ const ShowroomDetailScreen = ({ route }) => {
       />
     );
   };
+
   const navigation = useNavigation();
   return (
     <>
@@ -281,7 +282,6 @@ const ShowroomDetailScreen = ({ route }) => {
           </TouchableOpacity>
         )} */}
           </View>
-
           <View
             style={{
               flexDirection: "row",
@@ -320,16 +320,31 @@ const ShowroomDetailScreen = ({ route }) => {
               </View>
             </View>
           </View>
-
-          <FlatList
-            contentContainerStyle={{
-              alignSelf: "center",
-            }}
-            numColumns={2}
-            data={dataCar}
-            renderItem={_renderItem}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {/*  */}
+          {dataCar.length > 0 ? (
+            <FlatList
+              contentContainerStyle={{
+                alignSelf: "center",
+              }}
+              numColumns={2}
+              data={dataCar}
+              renderItem={_renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          ) : (
+            <LottieView
+              source={require("../../Assets/NoData.json")}
+              autoPlay
+              resizeMode="contain"
+              style={{
+                bottom: 10,
+                alignSelf: "center",
+                width: 300,
+                height: 300,
+              }}
+              hardwareAccelerationAndroid={true}
+            />
+          )}
         </View>
       )}
     </>

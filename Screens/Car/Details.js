@@ -22,6 +22,7 @@ import { fetchSpecificDealer } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
+import changeNumberFormat from "../../Component/Converter";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
@@ -51,7 +52,7 @@ const DetailCarScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 5 }}
@@ -60,7 +61,10 @@ const DetailCarScreen = ({ route, navigation }) => {
           size={31}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headingText}>Car Profile</Text>
+        <Text style={styles.headingText}>
+          {" "}
+          {item.vehicle.information.make} {item.vehicle.information.model}
+        </Text>
       </View>
       <View style={styles.imageHolder}>
         <ImageSlider
@@ -84,8 +88,8 @@ const DetailCarScreen = ({ route, navigation }) => {
           {item.vehicle.information.make} {item.vehicle.information.model}{" "}
           {item.vehicle.information.modelYear}
         </Text>
-        <Text style={styles.location}>{item.amount} </Text>
-        <Text style={styles.location}> {item.vehicle.city} </Text>
+        <Text style={styles.location}>{`PKR ${item.amount} `} </Text>
+        <Text style={styles.location}>{item.vehicle.city} </Text>
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
         <View style={styles.CarInfoTitle}>
@@ -93,7 +97,7 @@ const DetailCarScreen = ({ route, navigation }) => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-              flex: 1,
+              flex: 0.7,
             }}
           >
             <Image source={Calendar} style={styles.img} />
@@ -178,7 +182,6 @@ const DetailCarScreen = ({ route, navigation }) => {
             Features
           </Text>
           <FlatList
-            contentContainerStyle={{}}
             numColumns={2}
             data={item.vehicle.additionalInformation.features}
             renderItem={({ item }) => {
@@ -186,8 +189,8 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View
                   style={{
                     flexDirection: "row",
-                    flex: 0.5,
-                    // justifyContent: "space-around",
+                    flex: 0.4,
+                    left: 18,
                   }}
                 >
                   <Image source={Radio} style={styles.img} />
@@ -212,7 +215,8 @@ const DetailCarScreen = ({ route, navigation }) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-evenly",
-              borderColor: "#333",
+              borderColor: "#e0e0e0",
+              borderStyle: "dotted",
               borderBottomWidth: 1,
             }}
           >
@@ -311,7 +315,7 @@ const DetailCarScreen = ({ route, navigation }) => {
           />
         </View>
       </BottomSheet>
-    </View>
+    </ScrollView>
   );
 };
 export default DetailCarScreen;
@@ -405,7 +409,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#A9A9A9",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
     textAlignVertical: "center",
   },
   feature: {
@@ -417,18 +421,20 @@ const styles = StyleSheet.create({
   },
   propertyBorder: {
     flexDirection: "row",
-    borderBottomColor: "#000000",
+    borderBottomColor: "#e0e0e0",
     width: "90%",
     borderBottomWidth: 1,
     borderTopWidth: 1,
-    borderTopColor: "#333",
+    borderTopColor: "#e0e0e0",
     justifyContent: "space-between",
     marginTop: 10,
     textAlign: "right",
+    borderStyle: "dotted",
   },
   otherData: {
     flexDirection: "row",
-    borderBottomColor: "#000000",
+    borderBottomColor: "#e0e0e0",
+    borderStyle: "dotted",
     width: "90%",
     borderBottomWidth: 1,
     justifyContent: "space-between",
@@ -443,8 +449,8 @@ const styles = StyleSheet.create({
   text2: {
     color: "#000000",
     fontWeight: "900",
-    fontSize: 18,
-    margin: 15,
+    fontSize: 15,
+    margin: 10,
   },
   callText: {
     color: "#000000",
@@ -455,9 +461,8 @@ const styles = StyleSheet.create({
   },
   imageHolder: {
     alignSelf: "center",
-    height: 300,
+    height: 200,
     justifyContent: "center",
-    overflow: "hidden",
     width: "100%",
   },
   container: {
@@ -466,6 +471,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     padding: 15,
+    left: 8,
     borderBottomWidth: 0.4,
     opacity: 2,
     shadowColor: "grey",
@@ -473,14 +479,13 @@ const styles = StyleSheet.create({
   },
   carousel: {
     width: "100%",
-    resizeMode: "contain",
-    alignSelf: "center",
+    resizeMode: "center",
   },
   headingText: {
     fontWeight: "bold",
     fontSize: 19,
     color: "white",
-    marginLeft: "25%",
+    marginLeft: "5%",
     textAlignVertical: "center",
   },
 });

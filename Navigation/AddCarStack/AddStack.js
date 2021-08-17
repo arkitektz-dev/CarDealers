@@ -4,11 +4,16 @@ import CarScreen from "../../Screens/Car";
 import DetailCarScreen from "../../Screens/Car/Details";
 import AddCar from "../../Screens/Forms/AddCar";
 
-const CarStack = () => {
+const AddCarStack = () => {
   const Stack = createStackNavigator();
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="AddCar"
+        component={AddCar}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="ListCarScreen"
         component={CarScreen}
@@ -24,12 +29,7 @@ const CarStack = () => {
         component={DetailCarScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="AddCar"
-        component={AddCar}
-        options={{ headerShown: false }}
-      />
     </Stack.Navigator>
   );
 };
-export default CarStack;
+export default AddCarStack;

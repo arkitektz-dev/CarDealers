@@ -24,6 +24,7 @@ const CategoryCard = () => {
           justifyContent: "space-evenly",
           flexDirection: "row",
           flex: 1,
+          padding: 10,
         }}
       >
         <TouchableOpacity onPress={() => naivgation.navigate("CarStack")}>
@@ -63,11 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "#b3b5b8",
     borderWidth: 0.3,
-    shadowColor: "#470000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-    elevation: 3,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   image: {
     width: "100%",

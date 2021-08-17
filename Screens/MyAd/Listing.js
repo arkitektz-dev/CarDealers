@@ -25,6 +25,8 @@ import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
 import changeNumberFormat from "../../Component/Converter";
+import { BackHandler } from "react-native";
+import { Alert } from "react-native";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -67,12 +69,10 @@ const ListingCars = () => {
       setcarCount(adArr.length);
     });
   };
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
     convertData();
-    compare();
-
-    setLoading(false);
+    compare().then(() => setLoading(false));
   }, []);
 
   const onSearch = (text) => {
@@ -173,6 +173,7 @@ const ListingCars = () => {
       <TouchableOpacity onPress={() => onPressHandler(item)}>
         <View
           style={{
+            backgroundColor: "#fff",
             flexDirection: "column",
             borderBottomWidth: 2,
             borderBottomColor: "#e0e0e0",
@@ -244,7 +245,7 @@ const ListingCars = () => {
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch();
+      .catch(() => setMoreLoading(false));
   };
   const onRefresh = () => {
     setRefreshing(true);
@@ -326,8 +327,8 @@ const ListingCars = () => {
           resizeMode="contain"
           style={{
             alignSelf: "center",
-            width: 140,
-            height: 140,
+            width: 150,
+            height: 150,
           }}
           hardwareAccelerationAndroid={true}
         />
@@ -352,6 +353,7 @@ export default memo(ListingCars);
 const styles = StyleSheet.create({
   imageSize: {
     width: screenWidth * 0.35,
+    resizeMode: "center",
     height: screenHeight * 0.2,
   },
   searchHolder: {
