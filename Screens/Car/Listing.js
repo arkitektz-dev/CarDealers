@@ -19,12 +19,14 @@ import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import changeNumberFormat from "../../Component/Converter";
+import { BackHandler } from "react-native";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -51,8 +53,8 @@ const ListingCars = () => {
     });
   }, []);
 
-  const onSearch = (text) => {
-    if (text) {
+  const onSearch = () => {
+    if (searchText) {
       const newData = dataCar.filter((item) => {
         const itemData = `${
           item.vehicle.information.make
@@ -68,7 +70,7 @@ const ListingCars = () => {
             ? item.vehicle.information.model.toUpperCase()
             : ""
         }`;
-        const textData = text.toUpperCase();
+        const textData = searchText.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
       });
@@ -285,7 +287,8 @@ const ListingCars = () => {
         />
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => onSearch(text)}
+          onChangeHandler={(text) => setSearchText(text)}
+          onSearchPress={onSearch}
         />
       </View>
 
@@ -307,6 +310,7 @@ const ListingCars = () => {
           {carCount} Results
         </Text>
         <Filter
+          onRequestClose={() => setShown(false)}
           modalVisible={shown}
           toggleModal={(dropdownValues) => {
             setShown(false);

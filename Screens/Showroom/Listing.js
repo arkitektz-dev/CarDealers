@@ -27,6 +27,7 @@ const ListingShowroom = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [noData, setNoData] = useState(false);
+  const [searchText, setSearchText] = useState("");
   useEffect(() => {
     setLoading(true);
     fetchShowroomData().then((data) => {
@@ -39,15 +40,16 @@ const ListingShowroom = ({ route }) => {
   }, []);
   const navigation = useNavigation();
 
-  const searchShowroom = (text) => {
-    if (text) {
+  const searchShowroom = () => {
+    if (searchText) {
       const newData = showroomdata.filter((item) => {
         const itemData = `${item.location.toUpperCase()}   
          ${item.name.toUpperCase()}`;
-        const textData = text.toUpperCase();
+        const textData = searchText.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setShowroomData(newData);
+      setshowroomCount(newData.length);
     } else {
       setShowroomData(filteredData);
     }
@@ -120,7 +122,8 @@ const ListingShowroom = ({ route }) => {
 
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => searchShowroom(text)}
+          onChangeHandler={(text) => setSearchText(text)}
+          onSearchPress={searchShowroom}
         />
       </View>
       <View style={{ flexDirection: "row", padding: 10 }}>
