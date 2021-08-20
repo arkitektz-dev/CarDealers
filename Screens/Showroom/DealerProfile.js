@@ -1,13 +1,5 @@
-import React, { memo, useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Image, StyleSheet, Text, View, FlatList } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
@@ -19,10 +11,9 @@ import {
   screenWidth,
 } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
-import { Modal } from "react-native";
-
-const DealerDetailScreen = ({ route }) => {
-  const param = route.params.item;
+import { useState } from "react";
+const ShowroomDealerProfile = ({ route }) => {
+  const param = route.params.item.data;
 
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -30,7 +21,6 @@ const DealerDetailScreen = ({ route }) => {
   const [modalData, setModalData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const fetchData = async () => {
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
@@ -54,64 +44,14 @@ const DealerDetailScreen = ({ route }) => {
       setcarCount(arr.length);
     });
   };
-  const modalVisible = () => {
-    if (visible == false) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  };
   useEffect(() => {
-    setLoading(true);
-    setModalData(param.showrooms);
     setshowroomCount(param.showrooms.length);
     fetchData().then(() => setLoading(false));
+    console.log(route.params.item.id);
   }, []);
-
   const arr = [];
+  const navigation = useNavigation();
 
-  const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
-  };
-  const onPressShowroomHandeler = (item) => {
-    setVisible(false);
-    navigation.navigate("DealerShowroomProfile", { item });
-  };
-
-  const _renderShowroomList = ({ item }) => {
-    return (
-      <View
-        style={{
-          flexDirection: "column",
-          borderBottomWidth: 2,
-          borderBottomColor: "#e0e0e0",
-        }}
-      >
-        <View
-          style={{
-            left: "5%",
-            flexDirection: "row",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => onPressShowroomHandeler(item)}
-            style={{ flexDirection: "column", margin: 15, top: 10 }}
-          >
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 16,
-                fontWeight: "bold",
-              }}
-            >
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
@@ -133,10 +73,6 @@ const DealerDetailScreen = ({ route }) => {
       />
     );
   };
-  const _onEmpty = ({}) => {
-    return <Text style={{ fontSize: 20 }}>No Cars Associated </Text>;
-  };
-  const navigation = useNavigation();
   return (
     <>
       {loading ? (
@@ -164,29 +100,6 @@ const DealerDetailScreen = ({ route }) => {
             />
             <Text style={styles.headingText}>Dealer Profile</Text>
           </View>
-          <Modal
-            visible={visible}
-            containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
-          >
-            <TouchableOpacity
-              onPress={modalVisible}
-              style={{
-                margin: 10,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
-                Close
-              </Text>
-            </TouchableOpacity>
-
-            <FlatList
-              renderItem={_renderShowroomList}
-              data={modalData}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </Modal>
 
           <View style={styles.distance}></View>
           <View style={styles.topDiv}>
@@ -253,12 +166,9 @@ const DealerDetailScreen = ({ route }) => {
               >
                 {showroomCount}
               </Text>
-              <TouchableOpacity
-                style={styles.CarInfoTitle}
-                onPress={modalVisible}
-              >
+              <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> SHOWROOMS </Text>
-              </TouchableOpacity>
+              </View>
             </View>
             <View style={{ flexDirection: "column" }}>
               <Text
@@ -306,7 +216,7 @@ const DealerDetailScreen = ({ route }) => {
     </>
   );
 };
-export default memo(DealerDetailScreen);
+export default ShowroomDealerProfile;
 const styles = StyleSheet.create({
   Nav: { flexDirection: "row" },
   distance: {

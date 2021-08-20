@@ -77,17 +77,21 @@ const MyDemandListing = () => {
     compare().then(() => setLoading(false));
   }, []);
 
-  const onSearch = (text) => {
+  const onSearch = () => {
     if (searchText) {
       const newData = dataCar.filter((item) => {
-        const itemData = `${item.Make.toUpperCase()}
-        ${item.Year.toUpperCase()} ${item.Model.toUpperCase()}`;
+        const itemData = `${item.Make ? item.Make.toUpperCase() : ""}
+        ${item.Year ? item.Year : ""} ${
+          item.Model ? item.Model.toUpperCase() : ""
+        }`;
+        // console.log(searchText.toUpperCase());
         const textData = searchText.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
       });
 
       setfilteredData(newData);
+      setcarCount(newData.length);
     } else {
       setfilteredData(dataCar);
     }
@@ -247,14 +251,6 @@ const MyDemandListing = () => {
       .catch();
   };
   const onRefresh = () => {
-    // setRefreshing(true);
-    // fetchCarData().then((res) => {
-    //   setDataCar(res.arr);
-    //   setStartAfter(res.lastVal);
-    //   setfilteredData(res.arr);
-    //   setcarCount(res.size);
-    //   setRefreshing(false);
-    // });
     convertData();
     compare();
   };
@@ -271,6 +267,7 @@ const MyDemandListing = () => {
         <SearchComponent
           style={styles.search}
           onChangeHandler={(text) => setSearchText(text)}
+          onSearchPress={onSearch}
         />
       </View>
 

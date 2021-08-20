@@ -4,6 +4,7 @@ import ShowroomScreen from "../../Screens/Showroom";
 import ListingShowroom from "../../Screens/Showroom/Listing";
 import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 import ShowroomProfile from "../../Screens/Showroom/Profile";
+import ShowroomDealerProfile from "../../Screens/Showroom/DealerProfile";
 
 const ShowroomStack = () => {
   const Stack = createStackNavigator();
@@ -23,6 +24,11 @@ const ShowroomStack = () => {
       <Stack.Screen
         name="ListingScreen"
         component={ListingShowroom}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ShowroomDealerProfile"
+        component={ShowroomDealerProfile}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

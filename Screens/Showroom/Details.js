@@ -26,7 +26,6 @@ const ShowroomDetailScreen = ({ route }) => {
   const showroomId = route.params.item.id;
   const [dealerCount, setdealerCount] = useState(0);
   const [modalData, setModalData] = useState([]);
-  const [name, setName] = useState("");
   const [refreshPage, setRefreshPage] = useState("");
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
@@ -96,13 +95,21 @@ const ShowroomDetailScreen = ({ route }) => {
   };
   const fetchShowroomData = async () => {
     let dealersCount = 0;
+    const arr = [];
     const ref = firestore().collection("Dealers");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         var a = documentSnapshot.data().showrooms.filter((s) => {
           if (s.id.id.trim() == showroomId) {
+            arr.push({
+              id: documentSnapshot.id,
+              data: documentSnapshot.data(),
+            });
+
             return true;
           }
+
+          setModalData(arr);
         });
         if (a.length > 0) {
           dealersCount++;
@@ -118,12 +125,11 @@ const ShowroomDetailScreen = ({ route }) => {
       setVisible(false);
     }
   };
-  const onPressHandler2 = (item) => {
-    navigation.navigate("DealerProfile", { item });
+  const onPressHandlerDealerList = (item) => {
+    navigation.navigate("ShowroomDealerProfile", { item });
     setVisible(false);
   };
   const _renderDealerList = ({ item }) => {
-    setName(item.name);
     return (
       <View
         style={{
@@ -140,7 +146,7 @@ const ShowroomDetailScreen = ({ route }) => {
         >
           <TouchableOpacity
             activeOpacity={0}
-            onPress={() => onPressHandler2(item)}
+            onPress={() => onPressHandlerDealerList(item)}
             style={{ flexDirection: "column", margin: 15, top: 10 }}
           >
             <Text
@@ -151,7 +157,7 @@ const ShowroomDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {autoCapitalize(item.name)}
+              {autoCapitalize(item.data.name)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -300,7 +306,10 @@ const ShowroomDetailScreen = ({ route }) => {
               >
                 {dealerCount}
               </Text>
-              <TouchableOpacity activeOpacity={0} style={styles.CarInfoTitle}>
+              <TouchableOpacity
+                onPress={modalVisible}
+                style={styles.CarInfoTitle}
+              >
                 <Text style={styles.countText}> Dealers </Text>
               </TouchableOpacity>
             </View>

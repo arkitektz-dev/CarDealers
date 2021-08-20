@@ -33,6 +33,7 @@ const ListingCars = () => {
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
+  const [refresh, setRefresh] = useState(true);
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -47,39 +48,54 @@ const ListingCars = () => {
   };
   const compare = async () => {
     const ref = firestore().collection("Advertisments");
-    await ref.get().then((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        let dealerId;
-        if (typeof documentSnapshot.data().dealer.id == "string") {
-          dealerId = documentSnapshot.data().dealer.id.split("/")[1];
-        } else {
-          dealerId = documentSnapshot
-            .data()
-            .dealer.id.id.toString()
-            .trim();
-        }
+    await ref
+      .limit(20)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          let dealerId;
+          if (typeof documentSnapshot.data().dealer.id == "string") {
+            dealerId = documentSnapshot.data().dealer.id.split("/")[1];
+          } else {
+            dealerId = documentSnapshot
+              .data()
+              .dealer.id.id.toString()
+              .trim();
+          }
 
-        const paramdealerId = value;
+          const paramdealerId = value;
 
-        if (dealerId == paramdealerId) {
-          adArr.push(documentSnapshot.data());
-        }
+          if (dealerId == paramdealerId) {
+            adArr.push(documentSnapshot.data());
+          }
+        });
+        setDataCar(adArr);
+        setcarCount(adArr.length);
       });
-      setDataCar(adArr);
-      setcarCount(adArr.length);
-    });
   };
   useEffect(() => {
     setLoading(true);
     convertData();
     compare().then(() => setLoading(false));
-  }, []);
+  }, [refresh]);
 
   const onSearch = (text) => {
     if (text) {
       const newData = dataCar.filter((item) => {
-        const itemData = `${item.vehicle.information.make.toUpperCase()}
-        ${item.vehicle.information.modelYear.toUpperCase()} ${item.vehicle.information.model.toUpperCase()}`;
+        const itemData = `${
+          item.vehicle.information.make
+            ? item.vehicle.information.make.toUpperCase()
+            : ""
+        }
+        ${
+          item.vehicle.information.modelYear
+            ? item.vehicle.information.modelYear
+            : ""
+        } ${
+          item.vehicle.information.model
+            ? item.vehicle.information.model.toUpperCase()
+            : ""
+        }`;
         const textData = text.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
@@ -248,14 +264,7 @@ const ListingCars = () => {
       .catch(() => setMoreLoading(false));
   };
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchCarData().then((res) => {
-      setDataCar(res.arr);
-      setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
-      setcarCount(res.size);
-      setRefreshing(false);
-    });
+    setRefresh(true);
   };
   return (
     <View style={{ backgroundColor: "white" }}>
