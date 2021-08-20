@@ -242,7 +242,6 @@ const AddCar = () => {
     };
 
     await AddCarData(obj).then(() => {
-      console.log(obj);
       alert("Car Added");
       navigation.navigate("ListCarScreen");
     });

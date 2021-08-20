@@ -14,7 +14,11 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/core";
 
-import { fetchCarListData, fetchMoreCar } from "../../Data/FetchData";
+import {
+  fetchCarData,
+  fetchCarListData,
+  fetchMoreCar,
+} from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";

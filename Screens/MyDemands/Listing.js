@@ -32,6 +32,7 @@ const MyDemandListing = () => {
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,16 +74,15 @@ const MyDemandListing = () => {
   useEffect(() => {
     setLoading(true);
     convertData();
-    compare();
-    setLoading(false);
+    compare().then(() => setLoading(false));
   }, []);
 
   const onSearch = (text) => {
-    if (text) {
+    if (searchText) {
       const newData = dataCar.filter((item) => {
         const itemData = `${item.Make.toUpperCase()}
         ${item.Year.toUpperCase()} ${item.Model.toUpperCase()}`;
-        const textData = text.toUpperCase();
+        const textData = searchText.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
       });
@@ -270,7 +270,7 @@ const MyDemandListing = () => {
         />
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => onSearch(text)}
+          onChangeHandler={(text) => setSearchText(text)}
         />
       </View>
 
@@ -339,7 +339,7 @@ const MyDemandListing = () => {
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
-          //    ListFooterComponent={_renderFooter}
+          //ListFooterComponent={_renderFooter}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
           refreshControl={

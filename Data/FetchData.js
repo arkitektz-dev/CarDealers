@@ -14,6 +14,7 @@ export const fetchCarData = async () => {
 
   return { size, arr, lastVal };
 };
+
 export const fetchCarListData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
@@ -125,6 +126,7 @@ export const fetchMoreDealer = async (startAfter) => {
 
   return { size, arr, lastVal };
 };
+
 export const fetchMoreShowroom = async (startAfter) => {
   const ref = firestore()
     .collection("Showrooms")
@@ -201,6 +203,7 @@ export const storeData = async (value) => {
     console.log(e);
   }
 };
+
 export const updateProfile = async (userinfo, userData) => {
   const { id } = userinfo;
   if (userData.name == "" || userData.email == "") {
@@ -215,6 +218,7 @@ export const updateProfile = async (userinfo, userData) => {
       });
   }
 };
+
 export const updatePassword = async (userinfo, userData) => {
   if (userData.password == "" && userData.confirmPassword == "") {
     alert("Fields can not be empty");
@@ -227,6 +231,7 @@ export const updatePassword = async (userinfo, userData) => {
       .update(obj);
   }
 };
+
 export const AddShowroomData = (showroomData) => {
   if (
     showroomData.name == "" ||
@@ -243,6 +248,7 @@ export const AddShowroomData = (showroomData) => {
       });
   }
 };
+
 export const AddDemand = (obj, navigation) => {
   if (obj.Make == "" || obj.Model == "" || obj.Year == "")
     alert("Fields can not be empty");
@@ -266,23 +272,27 @@ export const AddCarData = async (obj) => {
       .add(obj);
   }
 };
+
 export const fetchSpecificDealer = async (dealerId) => {
   return firestore()
     .collection("Dealers")
     .doc(dealerId)
     .get();
 };
+
 export const fetchShowroomCar = async (value) => {
   return await firestore()
     .collection("Dealers")
     .doc(value.user)
     .get();
 };
+
 export const fetchDealerCar = async () => {
   return await firestore()
     .collection("Dealers")
     .get();
 };
+
 export const passwordReset = async (value, pass, navigation) => {
   const obj = { password: pass };
   const ref = firestore()
@@ -304,6 +314,7 @@ export const passwordReset = async (value, pass, navigation) => {
     })
     .catch((err) => console.log(err));
 };
+
 export const AddUser = (obj, id) => {
   const DealerId = firestore()
     .collection("Dealers")
@@ -314,6 +325,7 @@ export const AddUser = (obj, id) => {
     .collection("Users")
     .add(data);
 };
+
 export const AddCompanyMake = async () => {
   return await firestore()
     .collection("Make")

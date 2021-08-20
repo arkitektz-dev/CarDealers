@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -22,16 +22,21 @@ import { fetchSpecificDealer } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
-import changeNumberFormat from "../../Component/Converter";
+import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
   const [isVisible, setIsVisible] = useState(false);
   const [dealerData, setDealerData] = useState();
   const dealerId = item.dealer.id.id;
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    fetchSpecificDealer(dealerId).then((data) => setDealerData(data.data()));
+    // console.log(dealerId, "Oka");
+    console.log(authContext.user, "Oka");
+    fetchSpecificDealer(authContext.user).then((data) =>
+      console.log(data.data())
+    );
   }, []);
 
   const makeCall = () => {

@@ -217,7 +217,12 @@ export const SignupScreen = () => {
       .where("username", "==", user.username)
       .get()
       .then((querySnapshot) => {
-        if (querySnapshot.size == 1) {
+        console.log(querySnapshot.size);
+        if (querySnapshot.size > 0) {
+          setAlreadyExit(true);
+        }
+        if (querySnapshot.size == 0) {
+          setAlreadyExit(false);
         }
       });
   };

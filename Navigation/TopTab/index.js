@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { View } from "react-native";
-import MyDemand from "../../Screens/MyDemands";
-import MyAds from "../../Screens/MyAd";
-import { TouchableOpacity } from "react-native";
-import { Text } from "react-native";
+import React from "react";
+import MyDemandListing from "../../Screens/MyDemands/Listing";
+import MyAd from "../../Screens/MyAd";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 function DemandTabs() {
-  const [swipeEnabled, setSwipeEnabled] = useState(false);
+  const Tab = createMaterialTopTabNavigator();
 
-  return <MyDemand />;
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="My Demands" component={MyDemandListing} />
+      <Tab.Screen name="My Ads" component={MyAd} />
+    </Tab.Navigator>
+  );
 }
 export default DemandTabs;
