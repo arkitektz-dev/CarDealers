@@ -292,6 +292,7 @@ const MyDemandListing = () => {
           {carCount} Results
         </Text>
         <Filter
+          onRequestClose={() => setShown(false)}
           modalVisible={shown}
           toggleModal={(dropdownValues) => {
             setShown(false);

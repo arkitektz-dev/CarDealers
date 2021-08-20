@@ -15,12 +15,31 @@ import CategoryPickerItem from "../Picker/CategoryPickerItem";
 import SliderData from "../SliderData/Index";
 import changeNumberFormat from "../Converter";
 import { AddCompanyMake } from "../../Data/FetchData";
+import { BackHandler } from "react-native";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
-const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
+const Filter = ({
+  modalVisible,
+  toggleModal,
+  onRequestClose,
+  toggleModalView,
+  Visibility,
+}) => {
+  function handleBackButtonClick() {
+    alert(false);
+    return true;
+  }
+
   useEffect(() => {
     getCompanies();
+    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener(
+        "hardwareBackPress",
+        handleBackButtonClick
+      );
+    };
   }, []);
   const [makeCompany, setCompany] = useState([]);
   const [dropdownValues, setDropDownValues] = useState({
@@ -111,7 +130,11 @@ const Filter = ({ modalVisible, toggleModal, toggleModalView, Visibility }) => {
 
   return (
     <View>
-      <Modal visible={modalVisible} animationType={"slide"}>
+      <Modal
+        onRequestClose={onRequestClose}
+        visible={modalVisible}
+        animationType={"slide"}
+      >
         <View
           style={{
             justifyContent: "space-between",

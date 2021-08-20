@@ -25,6 +25,7 @@ const ListingDealer = () => {
   const [startAfter, setStartAfter] = useState(Object);
   const [filteredData, setfilteredData] = useState([]);
   const [moreloading, setMoreLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -39,7 +40,7 @@ const ListingDealer = () => {
   }, []);
 
   const searchDealer = (text) => {
-    if (text) {
+    if (tesearchTextxt) {
       const newData = dealerdata.filter((item) => {
         const itemData = `${
           item.contactInformation.length > 0
@@ -47,7 +48,7 @@ const ListingDealer = () => {
             : item.contactInformation[0]
         }   
          ${item.name ? item.name.toUpperCase() : ""}`;
-        const textData = text.toUpperCase();
+        const textData = searchText.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setDealerData(newData);
@@ -197,7 +198,8 @@ const ListingDealer = () => {
 
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => searchDealer(text)}
+          onSearchPress={searchDealer}
+          onChangeHandler={(text) => setSearchText(text)}
         />
       </View>
       <View style={{ flexDirection: "row", padding: 10 }}>
