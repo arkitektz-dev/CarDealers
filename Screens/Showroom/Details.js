@@ -34,21 +34,26 @@ const ShowroomDetailScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [tempArr, setTempArr] = useState([]);
   const authContext = useContext(AuthContext);
-  const user = authContext.user.toString();
+  var user;
+  if (authContext.user != null) {
+    user = authContext.user.toString();
+  }
   const arr = [];
 
   useEffect(() => {
-    const ref = firestore()
-      .collection("Dealers")
-      .doc(user);
-    ref.get().then((res) => {
-      setTempArr(res.data().showrooms);
-      res.data().showrooms.forEach((data) => {
-        if (data.id._documentPath._parts[1] == showroomId) {
-          setShowroomExist(showroomId);
-        }
-      });
-    });
+    // console.log(user);
+    // const ref = firestore()
+    //   .collection("Dealers")
+    //   .doc(user);
+    // ref.get().then((res) => {
+    //   console.log(res);
+    //   // setTempArr(res.data().showrooms);
+    //   res.data().showrooms.forEach((data) => {
+    //     if (data.id._documentPath._parts[1] == showroomId) {
+    //       setShowroomExist(showroomId);
+    //     }
+    //   });
+    // });
 
     setLoading(true);
     fetchShowroomData();
@@ -108,7 +113,6 @@ const ShowroomDetailScreen = ({ route }) => {
 
             return true;
           }
-
           setModalData(arr);
         });
         if (a.length > 0) {
@@ -126,7 +130,9 @@ const ShowroomDetailScreen = ({ route }) => {
     }
   };
   const onPressHandlerDealerList = (item) => {
+    console.log(item);
     navigation.navigate("ShowroomDealerProfile", { item });
+
     setVisible(false);
   };
   const _renderDealerList = ({ item }) => {
@@ -187,10 +193,33 @@ const ShowroomDetailScreen = ({ route }) => {
       />
     );
   };
-
+  const _onEmpty = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          backgroundColor: "#fff",
+          top: "40%",
+          paddingBottom: "90%",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}> No Cars Available </Text>
+      </View>
+    );
+  };
   const navigation = useNavigation();
   return (
     <>
+      <View style={styles.searchHolder}>
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.headingText}> Showroom Profile</Text>
+      </View>
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}
@@ -212,17 +241,8 @@ const ShowroomDetailScreen = ({ route }) => {
               justifyContent: "space-between",
             }}
           >
-            <View style={styles.searchHolder}>
-              <IonIcon
-                style={{ margin: 10 }}
-                name="chevron-back-circle-sharp"
-                color="white"
-                size={35}
-                onPress={() => navigation.goBack()}
-              />
-              <Text style={styles.headingText}> Showroom Profile</Text>
-            </View>
             <Modal
+              onRequestClose={() => setVisible(false)}
               visible={visible}
               containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
             >
@@ -329,31 +349,16 @@ const ShowroomDetailScreen = ({ route }) => {
               </View>
             </View>
           </View>
-          {/*  */}
-          {dataCar.length > 0 ? (
-            <FlatList
-              contentContainerStyle={{
-                alignSelf: "center",
-              }}
-              numColumns={2}
-              data={dataCar}
-              renderItem={_renderItem}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          ) : (
-            <LottieView
-              source={require("../../Assets/NoData.json")}
-              autoPlay
-              resizeMode="contain"
-              style={{
-                bottom: 10,
-                alignSelf: "center",
-                width: 300,
-                height: 300,
-              }}
-              hardwareAccelerationAndroid={true}
-            />
-          )}
+          <FlatList
+            contentContainerStyle={{
+              alignSelf: "center",
+            }}
+            numColumns={2}
+            data={dataCar}
+            ListEmptyComponent={_onEmpty}
+            renderItem={_renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       )}
     </>
@@ -370,7 +375,6 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
-    flexGrow: 1,
   },
   navTxt: {
     textAlign: "center",

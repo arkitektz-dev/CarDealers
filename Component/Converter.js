@@ -1,7 +1,7 @@
 export default function changeNumberFormat(number, decimals, recursiveCall) {
   const decimalPoints = decimals || 2;
   const noOfLakhs = number / 100000;
-  if (noOfLakhs === 0.1 || noOfLakhs === 0.01) {
+  if (number < 100000) {
     return number;
   }
   let displayStr;

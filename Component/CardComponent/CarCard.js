@@ -13,7 +13,7 @@ import HomeCard from "../CardViews/HomeProductListCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { fetchCarData } from "../../Data/FetchData";
 import changeNumberFormat from "../Converter";
-
+import Sold from "../../Assets/Sold.png";
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,6 +44,7 @@ const Card = () => {
           " " +
           item.vehicle.additionalInformation.engineType} `}
         image={{ uri: item.images[0] }}
+        sold={item.sold ? Sold : null}
         pressHandler={() => onPressHandler(item)}
       />
     );

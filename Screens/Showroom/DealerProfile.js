@@ -12,8 +12,11 @@ import {
 } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
+import { Modal } from "react-native";
 const ShowroomDealerProfile = ({ route }) => {
   const param = route.params.item.data;
+  const paramId = route.params.item.id;
 
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -34,8 +37,7 @@ const ShowroomDealerProfile = ({ route }) => {
             .dealer.id.id.toString()
             .trim();
         }
-
-        const paramdealerId = param.id.toString();
+        const paramdealerId = paramId.toString();
         if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
         }
@@ -44,11 +46,57 @@ const ShowroomDealerProfile = ({ route }) => {
       setcarCount(arr.length);
     });
   };
+  const onPressShowroomHandeler = (item) => {
+    setVisible(false);
+    navigation.navigate("DealerShowroomProfile", { item });
+  };
+  const _renderShowroomList = ({ item }) => {
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          borderBottomWidth: 2,
+          borderBottomColor: "#e0e0e0",
+        }}
+      >
+        <View
+          style={{
+            left: "5%",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => onPressShowroomHandeler(item)}
+            style={{ flexDirection: "column", margin: 15, top: 10 }}
+          >
+            <Text
+              style={{
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
   useEffect(() => {
+    setLoading(true);
     setshowroomCount(param.showrooms.length);
     fetchData().then(() => setLoading(false));
-    console.log(route.params.item.id);
+    setModalData(route.params.item.data.showrooms);
   }, []);
+  const modalVisible = () => {
+    if (visible == false) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
   const arr = [];
   const navigation = useNavigation();
 
@@ -71,6 +119,21 @@ const ShowroomDealerProfile = ({ route }) => {
           item.vehicle.additionalInformation.engineType} `}
         image={{ uri: item.images[0] }}
       />
+    );
+  };
+  const _onEmpty = () => {
+    return (
+      <View
+        style={{
+          top: "40%",
+          paddingBottom: "90%",
+          flex: 1,
+          flexDirection: "column",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}> No Cars Available </Text>
+      </View>
     );
   };
   return (
@@ -135,9 +198,6 @@ const ShowroomDealerProfile = ({ route }) => {
                   </View>
                   <View style={{ flexDirection: "column" }}>
                     <Text style={styles.h1}>{param.showrooms[0].name}</Text>
-                    {/* {param.showrooms.map((item) => {
-                      return <Text style={styles.h1}>{item.name}</Text>;
-                    })} */}
 
                     <Text style={styles.txt1}>
                       {param.contactInformation[0]}
@@ -166,9 +226,43 @@ const ShowroomDealerProfile = ({ route }) => {
               >
                 {showroomCount}
               </Text>
-              <View style={styles.CarInfoTitle}>
+              <Modal
+                visible={visible}
+                containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+              >
+                <TouchableOpacity
+                  onPress={modalVisible}
+                  style={{
+                    margin: 10,
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Text
+                    style={{ color: "blue", fontSize: 18, fontWeight: "900" }}
+                  >
+                    Close
+                  </Text>
+                </TouchableOpacity>
+
+                <FlatList
+                  renderItem={_renderShowroomList}
+                  data={modalData}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </Modal>
+
+              <TouchableOpacity
+                onPress={modalVisible}
+                style={{
+                  margin: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+                style={styles.CarInfoTitle}
+              >
                 <Text style={styles.countText}> SHOWROOMS </Text>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "column" }}>
               <Text
@@ -186,31 +280,18 @@ const ShowroomDealerProfile = ({ route }) => {
               </View>
             </View>
           </View>
-          {dataCar.length > 0 ? (
-            <FlatList
-              contentContainerStyle={{
-                alignSelf: "center",
-                backgroundColor: "#fff",
-              }}
-              numColumns={2}
-              data={dataCar}
-              renderItem={dataCar.length > 0 ? _renderItem : _onEmpty}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          ) : (
-            <LottieView
-              source={require("../../Assets/NoData.json")}
-              autoPlay
-              resizeMode="contain"
-              style={{
-                bottom: 10,
-                alignSelf: "center",
-                width: 300,
-                height: 300,
-              }}
-              hardwareAccelerationAndroid={true}
-            />
-          )}
+
+          <FlatList
+            contentContainerStyle={{
+              alignSelf: "center",
+              backgroundColor: "#fff",
+            }}
+            numColumns={2}
+            data={dataCar}
+            ListEmptyComponent={_onEmpty}
+            renderItem={_renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       )}
     </>

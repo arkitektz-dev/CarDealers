@@ -18,12 +18,15 @@ import {
   fetchCarData,
   fetchCarListData,
   fetchMoreCar,
+  fetchMoreCarWithoutFilter,
+  fetchMoreCarWithSearch,
 } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import changeNumberFormat from "../../Component/Converter";
-import { BackHandler } from "react-native";
+import { ImageBackground } from "react-native";
+import Sold from "../../Assets/Sold.png";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -32,16 +35,20 @@ const ListingCars = () => {
   const [search, setSearch] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [shown, setShown] = useState(false);
+  const [searchLoadMore, setSearchLoadMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
+  const [filterState, setFilterState] = useState(false);
   const [filter, setFilter] = useState({
     Year: "",
     Make: "",
     City: "",
     ExteriorColor: "",
     Assemble: "",
+    initPrice: "",
+    finalPrice: "",
   });
 
   const navigation = useNavigation();
@@ -59,6 +66,7 @@ const ListingCars = () => {
 
   const onSearch = () => {
     if (searchText) {
+      setSearchLoadMore(true);
       const newData = dataCar.filter((item) => {
         const itemData = `${
           item.vehicle.information.make
@@ -95,11 +103,13 @@ const ListingCars = () => {
         dropdownValues.Year
       );
       setFilter({ ...filter, Year: dropdownValues.Year });
+      setFilterState(true);
     }
 
     if (dropdownValues.Make != "") {
       ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
       setFilter({ ...filter, Make: dropdownValues.Make });
+      setFilterState(true);
     }
     // if (dropdownValues.mileage != "") {
     //   ref = ref.where("vehicle.mileage", "==", dropdownValues.mileage);
@@ -107,6 +117,7 @@ const ListingCars = () => {
     if (dropdownValues.City != "") {
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
       setFilter({ ...filter, City: dropdownValues.City });
+      setFilterState(true);
     }
     if (dropdownValues.ExteriorColor != "") {
       ref = ref.where(
@@ -115,11 +126,15 @@ const ListingCars = () => {
         dropdownValues.ExteriorColor
       );
       setFilter({ ...filter, ExteriorColor: dropdownValues.ExteriorColor });
+      setFilterState(true);
     }
 
     if (dropdownValues.price.init > 0) {
       ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
       ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
+      setFilter({ ...filter, initPrice: dropdownValues.price.init });
+      setFilter({ ...filter, finalPrice: dropdownValues.price.final });
+      setFilterState(true);
     }
 
     if (dropdownValues.Assemble != "") {
@@ -129,6 +144,7 @@ const ListingCars = () => {
         dropdownValues.Assemble
       );
       setFilter({ ...filter, Assemble: dropdownValues.Assemble });
+      setFilterState(true);
     }
 
     var a = await ref.get();
@@ -188,11 +204,19 @@ const ListingCars = () => {
                   height: screenHeight * 0.17,
                 }}
               >
-                <Image
+                <ImageBackground
                   source={{ uri: item.images[0] }}
                   style={styles.imageSize}
                   resizeMode={"cover"}
-                />
+                >
+                  {item.sold ? (
+                    <Image
+                      resizeMode={"contain"}
+                      source={Sold}
+                      style={{ alignSelf: "flex-start", width: 70, height: 50 }}
+                    />
+                  ) : null}
+                </ImageBackground>
               </View>
             ) : (
               <View
@@ -201,14 +225,22 @@ const ListingCars = () => {
                   height: 130,
                 }}
               >
-                <Image
+                <ImageBackground
                   source={{
                     uri:
                       "https://firebasestorage.googleapis.com/v0/b/cardealer-41e38.appspot.com/o/photos%2FNoImage.jpg?alt=media&token=5c584571-f6f7-4579-9096-08b50eb639ff",
                   }}
                   style={styles.imageSize}
                   resizeMode={"cover"}
-                />
+                >
+                  {item.sold ? (
+                    <Image
+                      resizeMode={"contain"}
+                      source={Sold}
+                      style={{ alignSelf: "flex-start", width: 70, height: 50 }}
+                    />
+                  ) : null}
+                </ImageBackground>
               </View>
             )}
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
@@ -257,17 +289,46 @@ const ListingCars = () => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreCar(startAfter)
-      .then((res) => {
-        setDataCar([...dataCar, ...res.arr]);
+    if (searchLoadMore == true) {
+      fetchMoreCarWithSearch(startAfter, searchText)
+        .then((res) => {
+          if (filteredData.length > 0) {
+            // console.log([...filteredData, ...res.arr]);
+            setDataCar([...filteredData, ...res.arr]);
+            setfilteredData([...filteredData, ...res.arr]);
+          }
+          setcarCount(filteredData.length + res.arr.length);
+          setStartAfter(res.lastVal);
+          setMoreLoading(false);
+        })
+        .catch((e) => console.log(e));
+    }
+    if (filterState == false && searchLoadMore == false) {
+      fetchMoreCarWithoutFilter(startAfter)
+        .then((res) => {
+          setDataCar([...dataCar, ...res.arr]);
+          if (filteredData.length > 0) {
+            setfilteredData([...dataCar, ...res.arr]);
+          }
+          setcarCount(dataCar.length + res.arr.length);
+          setStartAfter(res.lastVal);
+          setMoreLoading(false);
+        })
+        .catch((e) => console.log(e));
+    }
+    if (filterState == true) {
+      fetchMoreCar(startAfter, filter).then((res) => {
         if (filteredData.length > 0) {
-          setfilteredData([...dataCar, ...res.arr]);
+          setfilteredData([...filteredData, ...res.arr]);
+          setcarCount(filteredData.length + res.arr.length);
+        } else {
+          setDataCar([...dataCar, ...res.arr]);
+          setcarCount(dataCar.length + res.arr.length);
         }
-        setcarCount(dataCar.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);
-      })
-      .catch((e) => console.log(e));
+      });
+    }
   };
   const onRefresh = () => {
     setRefreshing(true);

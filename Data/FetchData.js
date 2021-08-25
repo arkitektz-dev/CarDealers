@@ -5,7 +5,7 @@ export const fetchCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
   // .where("featured", "==", true);
-  var data = await ref.limit(20).get();
+  var data = await ref.limit(10).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -93,12 +93,106 @@ export const AddDealer = async (data) => {
 };
 
 //Fetch More Car Dealer Data
-export const fetchMoreCar = async (startAfter, val) => {
+export const fetchMoreCarSearch = async (startAfter, filter) => {
   const arr = [];
-  const ref = firestore().collection("Advertisments");
+  var ref;
+  if (filter != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.information.make", "==", filter);
+  }
+
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(10)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchMoreCar = async (startAfter, filter) => {
+  const arr = [];
+  var ref;
+  if (filter.Make != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.information.make", "==", filter.Make);
+  }
+  if (filter.Year != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.information.modelYear", "==", filter.Year);
+  }
+
+  if (filter.City != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.city", "==", filter.City);
+  }
+  if (filter.ExteriorColor != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.exteriorColor", "==", filter.ExteriorColor);
+  }
+
+  if (filter.initPrice > 0) {
+    ref = ref.where("amount", ">", `${filter.initPrice}`);
+    ref = ref.where("amount", "<", `${filter.finalPrice}`);
+  }
+
+  if (filter.Assemble != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.additionalInformation.assembly", "==", filter.Assemble);
+  }
+
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(10)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchMoreCarWithoutFilter = async (startAfter) => {
+  const arr = [];
+  const ref = firestore().collection("Advertisments");
+
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(10)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+export const fetchMoreCarWithSearch = async (startAfter, searchText) => {
+  const arr = [];
+  var ref;
+  console.log(searchText);
+  if (searchText != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.information.make", "==", searchText);
+  }
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -260,17 +354,9 @@ export const AddDemand = (obj, navigation) => {
 };
 
 export const AddCarData = async (obj) => {
-  if (
-    obj.vehicle.information.make == "" ||
-    obj.vehicle.information.model == "" ||
-    obj.vehicle.information.modelYear == ""
-  ) {
-    alert("Fields Can not be empty");
-  } else {
-    return firestore()
-      .collection("Advertisments")
-      .add(obj);
-  }
+  return firestore()
+    .collection("Advertisments")
+    .add(obj);
 };
 
 export const fetchSpecificDealer = async (dealerId) => {

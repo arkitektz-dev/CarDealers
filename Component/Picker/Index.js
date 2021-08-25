@@ -19,6 +19,7 @@ const AppPicker = ({
   PickerItemComponent = PickerItem,
   placeholder,
   selectedItem,
+  onRequestClose,
   width = "100%",
 }) => {
   const [modalVisible, setModalVisible] = useState(false);

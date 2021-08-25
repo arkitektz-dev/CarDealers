@@ -80,6 +80,8 @@ const AddCar = () => {
     getCompanies();
     getData().then((res) => authContext.setUser(res.DealerId));
     fetchShowroomCar(authContext).then((res) => {
+      // console.log(res.data());
+      // if (res.data().showrooms.length > 0) {
       res.data().showrooms.forEach((data) => {
         showroomData.push({
           value: data.id,
@@ -87,6 +89,7 @@ const AddCar = () => {
         });
       }),
         setShowroomStateData(showroomData);
+      // }
     });
 
     fetchDealerCar().then(
@@ -200,10 +203,10 @@ const AddCar = () => {
     setLoader(true);
     const showroomRef = firestore()
       .collection("Showrooms")
-      .doc(showroomId);
+      .doc(showroomId.toString());
     const userRef = firestore()
       .collection("Dealers")
-      .doc(authContext.user);
+      .doc(authContext.user.toString());
     const dealerObj = {
       id: userRef,
     };
@@ -211,7 +214,7 @@ const AddCar = () => {
       id: showroomRef,
       name: showroomPicker,
     };
-
+    const date = new Date();
     const obj = {
       amount: `${priceRange.init}`,
       dealer: dealerObj,
@@ -239,13 +242,25 @@ const AddCar = () => {
         mileage: `${mileage.init} KM`,
         registrationCity: registrationCity,
       },
+      date: date,
     };
-
-    await AddCarData(obj).then(() => {
-      alert("Car Added");
-      navigation.navigate("ListCarScreen");
-    });
-
+    if (
+      obj.vehicle.information.make == "" ||
+      obj.vehicle.information.model == "" ||
+      obj.vehicle.information.modelYear == "" ||
+      obj.showroom.name == "" ||
+      obj.amount == "" ||
+      obj.vehicle.mileage == ""
+    ) {
+      alert("Fields Can not be empty");
+    } else {
+      await AddCarData(obj)
+        .then(() => {
+          alert("Car Added");
+          navigation.navigate("MyAds");
+        })
+        .catch((e) => console.log(e));
+    }
     setLoader(false);
   };
 
@@ -556,7 +571,7 @@ const AddCar = () => {
               />
               <AppPicker
                 title="Showroom"
-                items={showroomStateData}
+                items={showroomStateData.length > 0 ? showroomStateData : null}
                 name="category"
                 onSelectItem={(item) => {
                   setShowroomPicker(item.label), setShowroomId(item.value);

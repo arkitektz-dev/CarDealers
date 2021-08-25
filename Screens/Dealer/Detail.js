@@ -133,12 +133,33 @@ const DealerDetailScreen = ({ route }) => {
       />
     );
   };
-  const _onEmpty = ({}) => {
-    return <Text style={{ fontSize: 20 }}>No Cars Associated </Text>;
+  const _onEmpty = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          backgroundColor: "#fff",
+          top: "40%",
+          paddingBottom: "90%",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}> No Cars Available </Text>
+      </View>
+    );
   };
   const navigation = useNavigation();
   return (
     <>
+      <View style={styles.searchHolder}>
+        <IonIcon
+          style={{ margin: 10 }}
+          name="chevron-back-circle-sharp"
+          color="white"
+          size={35}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.headingText}>Dealer Profile</Text>
+      </View>
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}
@@ -154,16 +175,6 @@ const DealerDetailScreen = ({ route }) => {
         />
       ) : (
         <View style={styles.parent}>
-          <View style={styles.searchHolder}>
-            <IonIcon
-              style={{ margin: 10 }}
-              name="chevron-back-circle-sharp"
-              color="white"
-              size={35}
-              onPress={() => navigation.goBack()}
-            />
-            <Text style={styles.headingText}>Dealer Profile</Text>
-          </View>
           <Modal
             visible={visible}
             containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
@@ -276,31 +287,18 @@ const DealerDetailScreen = ({ route }) => {
               </View>
             </View>
           </View>
-          {dataCar.length > 0 ? (
-            <FlatList
-              contentContainerStyle={{
-                alignSelf: "center",
-                backgroundColor: "#fff",
-              }}
-              numColumns={2}
-              data={dataCar}
-              renderItem={dataCar.length > 0 ? _renderItem : _onEmpty}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          ) : (
-            <LottieView
-              source={require("../../Assets/NoData.json")}
-              autoPlay
-              resizeMode="contain"
-              style={{
-                bottom: 10,
-                alignSelf: "center",
-                width: 300,
-                height: 300,
-              }}
-              hardwareAccelerationAndroid={true}
-            />
-          )}
+
+          <FlatList
+            contentContainerStyle={{
+              alignSelf: "center",
+              backgroundColor: "#fff",
+            }}
+            numColumns={2}
+            ListEmptyComponent={_onEmpty}
+            data={dataCar}
+            renderItem={dataCar.length > 0 ? _renderItem : _onEmpty}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       )}
     </>
@@ -353,7 +351,6 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
-    flexGrow: 1,
   },
   countText: {
     fontWeight: "bold",

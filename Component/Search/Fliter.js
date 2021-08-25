@@ -15,7 +15,10 @@ import CategoryPickerItem from "../Picker/CategoryPickerItem";
 import SliderData from "../SliderData/Index";
 import changeNumberFormat from "../Converter";
 import { AddCompanyMake } from "../../Data/FetchData";
-import { BackHandler } from "react-native";
+import Checkbox from "../Checkbox";
+import Transmission from "../../Assets/Transmission.png";
+import { Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
@@ -26,20 +29,8 @@ const Filter = ({
   toggleModalView,
   Visibility,
 }) => {
-  function handleBackButtonClick() {
-    alert(false);
-    return true;
-  }
-
   useEffect(() => {
     getCompanies();
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
   const [makeCompany, setCompany] = useState([]);
   const [dropdownValues, setDropDownValues] = useState({
@@ -57,12 +48,18 @@ const Filter = ({
     InteriorColor: "",
     Description: "",
     mileage: "",
-    price: { init: "", final: "" },
+    price: { init: "0", final: "10000000" },
   });
-  const [rangPriceData, setRangePriceData] = useState();
+  const [assemblyCheckedState, setAssemblyCheckedState] = useState({
+    first: false,
+    second: false,
+  });
   const clearFilter = () => {
+    setAssemblyCheckedState({
+      first: false,
+      second: false,
+    });
     setDropDownValues({
-      Assemble: "",
       EngineCapacity: "",
       Engine: "",
       Features: [],
@@ -76,7 +73,7 @@ const Filter = ({
       InteriorColor: "",
       Description: "",
       mileage: "",
-      price: { init: "", final: "" },
+      price: { init: "0", final: "10000000" },
     });
   };
   const data = 0;
@@ -139,8 +136,29 @@ const Filter = ({
           style={{
             justifyContent: "space-between",
             flexDirection: "row",
+            backgroundColor: "#1c2e65",
           }}
         >
+          <TouchableOpacity
+            onPress={Visibility}
+            style={{
+              margin: 5,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Ionicons
+              name="chevron-back-outline"
+              color="white"
+              size={31}
+              onPress={() => navigation.goBack()}
+            />
+            <Text
+              style={{ color: "#fff", fontSize: 18, top: 5, fontWeight: "900" }}
+            >
+              Refine Search
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={clearFilter}
             style={{
@@ -149,43 +167,104 @@ const Filter = ({
               justifyContent: "flex-end",
             }}
           >
-            <Text style={{ color: "#000000", fontSize: 18, fontWeight: "900" }}>
+            <Text style={{ color: "#fff", fontSize: 18, fontWeight: "900" }}>
               Clear Filter
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={Visibility}
-            style={{
-              margin: 10,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Text style={{ color: "#000000", fontSize: 18, fontWeight: "900" }}>
-              Close
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView
           contentContainerStyle={{
             flexDirection: "column",
-            flex: 1,
             alignItems: "center",
+            paddingBottom: 50,
           }}
         >
+          <View
+            style={{
+              marginTop: "10%",
+              borderBottomColor: "#d3d3d3",
+              borderBottomWidth: 0.2,
+              width: "100%",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "left",
+                left: "10%",
+                bottom: 5,
+                fontSize: 18,
+                fontWeight: "600",
+                color: "#6e6969",
+              }}
+            >
+              Select Assemble Type:
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                margin: 5,
+              }}
+            >
+              <Checkbox
+                key={type[1].value}
+                onPress={() => {
+                  setDropDownValues({
+                    ...dropdownValues,
+                    Assemble: type[0].label,
+                  });
+
+                  if (assemblyCheckedState.first == false) {
+                    setAssemblyCheckedState({
+                      assemblyCheckedState,
+                      second: false,
+                      first: true,
+                    });
+                  } else {
+                    setAssemblyCheckedState({
+                      assemblyCheckedState,
+                      first: false,
+                    });
+                  }
+                }}
+                title={type[0].label}
+                checkedState={assemblyCheckedState.first}
+              />
+              <Checkbox
+                key={type[1].value}
+                onPress={() => {
+                  setDropDownValues({
+                    ...dropdownValues,
+                    Assemble: type[1].label,
+                  });
+
+                  if (assemblyCheckedState.second == false) {
+                    setAssemblyCheckedState({
+                      assemblyCheckedState,
+                      first: false,
+                      second: true,
+                    });
+                  } else {
+                    setAssemblyCheckedState({
+                      assemblyCheckedState,
+                      second: false,
+                    });
+                  }
+                }}
+                title={type[1].label}
+                checkedState={assemblyCheckedState.second}
+              />
+            </View>
+          </View>
+
           <AppPicker
-            title="Assemble"
-            items={type}
-            name="category"
-            onSelectItem={(item) =>
-              setDropDownValues({ ...dropdownValues, Assemble: item.label })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Select Assembly"
-            selectedItem={dropdownValues.Assemble}
-            width="80%"
-          />
-          <AppPicker
+            // initialIcon={
+            //   <Image
+            //     resizeMode={"contain"}
+            //     style={{ width: 30, height: 20 }}
+            //     source={Transmission}
+            //   />
+            // }
             title="Color"
             items={color}
             name="category"
@@ -261,15 +340,15 @@ const Filter = ({
               </Text>
             </View>
           </View>
-          <Text style={{ fontWeight: "700", color: "#000000" }}>
-            Price Range
+          <Text style={{ fontWeight: "700", fontSize: 16, color: "#000000" }}>
+            Price Range: (PKR)
           </Text>
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
               enabledTwo={true}
               onValueChanged={handleValueChange}
-              values={[0, 5000000]}
+              values={[0, 10000000]}
             />
           </View>
 
@@ -292,7 +371,6 @@ const styles = StyleSheet.create({
     height: buttonHeight,
     justifyContent: "center",
     borderRadius: 20,
-    margin: 10,
   },
   priceNum: {
     flexDirection: "row",
@@ -302,7 +380,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   priceHolder: {
-    borderRadius: 20,
+    borderRadius: 7,
     backgroundColor: "#d3d3d3",
     width: "30%",
     height: "70%",

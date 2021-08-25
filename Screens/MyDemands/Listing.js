@@ -26,12 +26,14 @@ import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
 import changeNumberFormat from "../../Component/Converter";
+import DemandFilter from "../../Component/Search/DemandFilter";
 
 const MyDemandListing = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -75,7 +77,7 @@ const MyDemandListing = () => {
     setLoading(true);
     convertData();
     compare().then(() => setLoading(false));
-  }, []);
+  }, [refresh]);
 
   const onSearch = () => {
     if (searchText) {
@@ -84,7 +86,6 @@ const MyDemandListing = () => {
         ${item.Year ? item.Year : ""} ${
           item.Model ? item.Model.toUpperCase() : ""
         }`;
-        // console.log(searchText.toUpperCase());
         const textData = searchText.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
@@ -113,23 +114,9 @@ const MyDemandListing = () => {
       ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
       ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
     }
-    // if (dropdownValues.City != "") {
-    //   ref = ref.where("vehicle.city", "==", dropdownValues.City);
-    // }
-    // if (dropdownValues.ExteriorColor != "") {
-    //   ref = ref.where(
-    //     "vehicle.exteriorColor",
-    //     "==",
-    //     dropdownValues.ExteriorColor
-    //   );
-    // }
-    // if (dropdownValues.Assemble != "") {
-    //   ref = ref.where(
-    //     "vehicle.additionalInformation.assembly",
-    //     "==",
-    //     "imported"
-    //   );
-    // }
+    if (dropdownValues.City != "") {
+      ref = ref.where("Model", "==", dropdownValues.Model);
+    }
 
     var a = await ref.get();
     a.docs.forEach((data) => {
@@ -168,61 +155,60 @@ const MyDemandListing = () => {
   };
   const _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity>
+      <View
+        style={{
+          flexDirection: "column",
+          borderBottomWidth: 2,
+          borderBottomColor: "#e0e0e0",
+        }}
+      >
         <View
           style={{
-            flexDirection: "column",
-            borderBottomWidth: 2,
-            borderBottomColor: "#e0e0e0",
+            left: "5%",
+            flexDirection: "row",
           }}
         >
-          <View
-            style={{
-              left: "5%",
-              flexDirection: "row",
-            }}
-          >
-            <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
-              <Text
-                style={{
-                  textAlign: "left",
-                  color: "#565656",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                {item.Make} {item.Model} {"\b"}
-                {item.Year}
-              </Text>
-              <View style={{ height: 10 }}></View>
+          <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
+            <Text
+              style={{
+                textAlign: "left",
+                color: "#565656",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              {item.Make} {item.Model} {"\b"}
+              {item.Year}
+            </Text>
+            <View style={{ height: 10 }}></View>
 
-              <Text
-                style={{
-                  color: "#1c2e65",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  textAlign: "left",
-                }}
-              >
-                {`${changeNumberFormat(item.minPrice)} - ${changeNumberFormat(
-                  item.maxPrice
-                )}`}
-              </Text>
-              <Text
-                style={{
-                  color: "#1c2e65",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  textAlign: "left",
-                  marginTop: 5,
-                }}
-              >
-                {`${item.minYear} - ${item.maxYear}`}
-              </Text>
+            <Text
+              style={{
+                color: "#1c2e65",
+                fontSize: 14,
+                fontWeight: "bold",
+                textAlign: "left",
+              }}
+            >
+              {`${changeNumberFormat(item.minPrice)} - ${changeNumberFormat(
+                item.maxPrice
+              )}`}
+            </Text>
+            <Text
+              style={{
+                color: "#1c2e65",
+                fontSize: 14,
+                fontWeight: "bold",
+                textAlign: "left",
+                marginTop: 5,
+              }}
+            >
+              {`${item.minYear} - ${item.maxYear}`}
+            </Text>
 
-              <View style={{ height: 10 }}></View>
+            <View style={{ height: 10 }}></View>
 
-              {/* <Text
+            {/* <Text
                 style={{
                   color: "#565656",
                   fontSize: 14,
@@ -232,10 +218,9 @@ const MyDemandListing = () => {
               >
                 {item.Dealer.Name}
               </Text> */}
-            </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
   const _onEndReached = () => {
@@ -248,11 +233,10 @@ const MyDemandListing = () => {
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       })
-      .catch();
+      .catch((e) => console.log(e, "Tjs"));
   };
   const onRefresh = () => {
-    convertData();
-    compare();
+    setRefresh(true);
   };
   return (
     <View style={{ backgroundColor: "white" }}>
@@ -288,7 +272,7 @@ const MyDemandListing = () => {
         >
           {carCount} Results
         </Text>
-        <Filter
+        <DemandFilter
           onRequestClose={() => setShown(false)}
           modalVisible={shown}
           toggleModal={(dropdownValues) => {
@@ -337,7 +321,7 @@ const MyDemandListing = () => {
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
-          //ListFooterComponent={_renderFooter}
+          ListFooterComponent={_renderFooter}
           onEndReachedThreshold={0.01}
           scrollEventThrottle={150}
           refreshControl={

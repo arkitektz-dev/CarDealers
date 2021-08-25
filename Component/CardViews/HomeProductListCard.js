@@ -1,4 +1,5 @@
 import React from "react";
+import { ImageBackground } from "react-native";
 import {
   View,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
 } from "react-native";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
-const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
+const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
   return (
     <View
       style={{
@@ -25,7 +26,17 @@ const HomeCard = ({ image, title, price, subtitle, pressHandler }) => {
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
-        <Image source={image} style={styles.imageSize} resizeMode={"cover"} />
+        <ImageBackground
+          source={image}
+          style={styles.imageSize}
+          resizeMode={"cover"}
+        >
+          <Image
+            source={sold}
+            resizeMode={"contain"}
+            style={{ alignSelf: "flex-start", width: 70, height: 50 }}
+          />
+        </ImageBackground>
       </TouchableOpacity>
       <View style={{ padding: 10 }}>
         <Text

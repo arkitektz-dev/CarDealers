@@ -4,7 +4,12 @@ import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
-import { AddDemand, fetchDealerCar, getData } from "../../Data/FetchData";
+import {
+  AddCompanyMake,
+  AddDemand,
+  fetchDealerCar,
+  getData,
+} from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import changeNumberFormat from "../../Component/Converter";
 import ErrorHandle from "../../Component/HelperText";
@@ -20,6 +25,8 @@ const AddDemandCar = ({ navigation, route }) => {
   const [make, setMake] = useState("");
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
+  const [makeCompany, setCompany] = useState([]);
+
   const [rangePriceData, setRangePriceData] = useState({
     init: "0",
     final: "5000000",
@@ -33,16 +40,20 @@ const AddDemandCar = ({ navigation, route }) => {
     Model: false,
     Year: false,
   });
-
-  const company = [
-    { label: "Suzuki", value: "Suzuki" },
-    { label: "Toyota", value: "Toyota" },
-    { label: "Honda", value: "Honda" },
-    { label: "Kia", value: "Kia" },
-    { label: "BMW", value: "BMW" },
-  ];
-
+  const getCompanies = () => {
+    AddCompanyMake().then((res) => {
+      const arr = [];
+      res.docs.forEach((item) =>
+        arr.push({
+          label: item.data().name,
+          value: item.data().name,
+        })
+      );
+      setCompany(arr);
+    });
+  };
   useEffect(() => {
+    getCompanies();
     getData().then((res) => {
       setDealerPickerID(res.DealerId);
       setDealerPicker(res.name);
@@ -70,7 +81,7 @@ const AddDemandCar = ({ navigation, route }) => {
       ...data,
       Dealer,
     };
-    if (showroomData.Make != "" && showroomData.Model != "") {
+    if (make != "" && Model != "") {
       setLoader(true);
       await AddDemand(obj)
         .then(() => {
@@ -153,7 +164,7 @@ const AddDemandCar = ({ navigation, route }) => {
       </View>
       <View style={styles.form}>
         <AppPicker
-          items={company}
+          items={makeCompany}
           name="category"
           onSelectItem={(item) => onChangeMake(item)}
           PickerItemComponent={CategoryPickerItem}

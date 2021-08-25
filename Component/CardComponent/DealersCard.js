@@ -35,7 +35,7 @@ const DealerCard = () => {
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
-        title={autoCapitalize(`${item.name}`)}
+        title={item.name ? autoCapitalize(`${item.name}`) : ""}
         price={item.contactInformation[0]}
         image={{ uri: item.images[0] }}
         pressHandler={() => onPressHandler(item)}

@@ -25,15 +25,13 @@ import Filter from "../../Component/Search/Fliter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
 import changeNumberFormat from "../../Component/Converter";
-import { BackHandler } from "react-native";
-import { Alert } from "react-native";
 
 const ListingCars = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
-  const [refresh, setRefresh] = useState(true);
+  const [searchText, setSearchText] = useState("");
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -48,39 +46,36 @@ const ListingCars = () => {
   };
   const compare = async () => {
     const ref = firestore().collection("Advertisments");
-    await ref
-      .limit(20)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          let dealerId;
-          if (typeof documentSnapshot.data().dealer.id == "string") {
-            dealerId = documentSnapshot.data().dealer.id.split("/")[1];
-          } else {
-            dealerId = documentSnapshot
-              .data()
-              .dealer.id.id.toString()
-              .trim();
-          }
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        let dealerId;
+        if (typeof documentSnapshot.data().dealer.id == "string") {
+          dealerId = documentSnapshot.data().dealer.id.split("/")[1];
+        } else {
+          dealerId = documentSnapshot
+            .data()
+            .dealer.id.id.toString()
+            .trim();
+        }
 
-          const paramdealerId = value;
+        const paramdealerId = value;
 
-          if (dealerId == paramdealerId) {
-            adArr.push(documentSnapshot.data());
-          }
-        });
-        setDataCar(adArr);
-        setcarCount(adArr.length);
+        if (dealerId == paramdealerId) {
+          adArr.push(documentSnapshot.data());
+        }
       });
+      setfilteredData(adArr);
+      setcarCount(adArr.length);
+    });
   };
   useEffect(() => {
     setLoading(true);
     convertData();
     compare().then(() => setLoading(false));
-  }, [refresh]);
+  }, []);
 
   const onSearch = (text) => {
-    if (text) {
+    if (searchText) {
       const newData = dataCar.filter((item) => {
         const itemData = `${
           item.vehicle.information.make
@@ -96,14 +91,16 @@ const ListingCars = () => {
             ? item.vehicle.information.model.toUpperCase()
             : ""
         }`;
-        const textData = text.toUpperCase();
+        const textData = searchText.toUpperCase();
 
         return itemData.indexOf(textData) > -1;
       });
 
       setfilteredData(newData);
+      setcarCount(newData.length);
     } else {
       setfilteredData(dataCar);
+      setcarCount(dataCar.length);
     }
   };
 
@@ -152,14 +149,28 @@ const ListingCars = () => {
       arr.push(data.data());
     });
     setfilteredData(arr);
-    {
-      filteredData.length > 0
-        ? setcarCount(arr.length)
-        : setcarCount(dataCar.length);
-    }
+    setcarCount(arr.length);
+    // {
+    //   filteredData.length > 0
+    //     ? setcarCount(arr.length)
+    //     : setcarCount(filteredData.length);
+    // }
   };
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
+  };
+  const _onEndReached = () => {
+    setMoreLoading(true);
+    fetchMoreCar(startAfter)
+      .then((res) => {
+        console.log(res);
+        setDataCar([...dataCar, ...res.arr]);
+        setfilteredData([...dataCar, ...res.arr]);
+        setcarCount(dataCar.length + res.arr.length);
+        setStartAfter(res.lastVal);
+        setMoreLoading(false);
+      })
+      .catch(() => setMoreLoading(false));
   };
   const _renderFooter = () => {
     return (
@@ -171,11 +182,7 @@ const ListingCars = () => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={_onEndReached}
-          style={styles.loadMoreBtn}
-        >
+        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
           <Text style={styles.btnText}>Load More</Text>
           {moreloading ? (
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
@@ -201,11 +208,19 @@ const ListingCars = () => {
               flexDirection: "row",
             }}
           >
-            <Image
-              source={{ uri: item.images[0] }}
-              style={styles.imageSize}
-              resizeMode={"contain"}
-            />
+            <View
+              style={{
+                margin: 5,
+                width: screenWidth * 0.28,
+                height: screenHeight * 0.17,
+              }}
+            >
+              <Image
+                source={{ uri: item.images[0] }}
+                style={styles.imageSize}
+                resizeMode={"cover"}
+              />
+            </View>
 
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
@@ -251,20 +266,10 @@ const ListingCars = () => {
       </TouchableOpacity>
     );
   };
-  const _onEndReached = () => {
-    setMoreLoading(true);
-    fetchMoreCar(startAfter)
-      .then((res) => {
-        setDataCar([...dataCar, ...res.arr]);
-        setfilteredData([...dataCar, ...res.arr]);
-        setcarCount(dataCar.length + res.arr.length);
-        setStartAfter(res.lastVal);
-        setMoreLoading(false);
-      })
-      .catch(() => setMoreLoading(false));
-  };
   const onRefresh = () => {
-    setRefresh(true);
+    setRefreshing(true);
+    convertData();
+    compare().then(() => setRefreshing(false));
   };
   return (
     <View style={{ backgroundColor: "white" }}>
@@ -278,7 +283,8 @@ const ListingCars = () => {
         />
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => onSearch(text)}
+          onChangeHandler={(text) => setSearchText(text)}
+          onSearchPress={onSearch}
         />
       </View>
 
@@ -362,9 +368,9 @@ const ListingCars = () => {
 export default memo(ListingCars);
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.35,
-    resizeMode: "center",
-    height: screenHeight * 0.2,
+    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
   },
   searchHolder: {
     backgroundColor: "#1c2e65",

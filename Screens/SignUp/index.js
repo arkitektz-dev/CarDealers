@@ -104,18 +104,22 @@ export const SignupScreen = () => {
     } else {
       if (!emaiError && !usernameError) {
         const data = user.phone.split("");
-        if (data[3] == 0) {
-          data.splice(3, 1);
-          num = data.join("");
-        } else {
-          num = user.phone;
-        }
+        const num = user.phone;
+        // if (data[0] == 0) {
+        //   data.splice(0, 1);
+        //   num = data.join("");
+        // } else {
+        //   num = user.phone;
+        // }
         setModalVisible(true);
 
         try {
-          const confirmation = await auth().signInWithPhoneNumber(num);
+          console.log(`+92${num}`);
+
+          const confirmation = await auth().signInWithPhoneNumber(`+92${num}`);
           setConfirm(confirmation);
         } catch (error) {
+          console.log(`+92${num}`);
           alert("Invalid Number");
         }
       }
@@ -176,8 +180,8 @@ export const SignupScreen = () => {
   };
   const onChangePhoneNumber = (e) => {
     const data = e.split("");
-    if (data[3] == 0) {
-      data.splice(3, 1);
+    if (data[1] == 0) {
+      data.splice(1, 1);
       const num = data.join("");
       setUser({ ...user, phone: num });
     } else {
@@ -420,7 +424,11 @@ export const SignupScreen = () => {
                 Select Showroom
               </Text>
             </TouchableOpacity>
-            <Modal visible={visible} animationType="slide">
+            <Modal
+              onRequestClose={() => setVisible(false)}
+              visible={visible}
+              animationType="slide"
+            >
               <Button
                 title="Close"
                 style={styles.buttonContainer}
@@ -658,11 +666,32 @@ export const SignupScreen = () => {
                 style={{
                   color: "#333",
                   alignSelf: "center",
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: "600",
                 }}
               >
-                Resend Code
+                Change Number ?
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                const confirmation = await auth().signInWithPhoneNumber(
+                  `+92${user.phone}`
+                );
+                setConfirm(confirmation);
+              }}
+              style={{ justifyContent: "center" }}
+            >
+              <Text
+                style={{
+                  color: "#1c2e65",
+                  alignSelf: "center",
+                  top: 10,
+                  fontSize: 16,
+                  fontWeight: "800",
+                }}
+              >
+                Resend Code ?
               </Text>
             </TouchableOpacity>
           </View>

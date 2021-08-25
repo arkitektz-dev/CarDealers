@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import CarScreen from "../../Screens/Car";
+import MyAds from "../../Screens/MyAd/Listing";
 import DetailCarScreen from "../../Screens/Car/Details";
 import AddCar from "../../Screens/Forms/AddCar";
 
@@ -15,8 +15,8 @@ const AddCarStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="ListCarScreen"
-        component={CarScreen}
+        name="MyAds"
+        component={MyAds}
         options={{
           headerShown: false,
           headerTitleAlign: "center",

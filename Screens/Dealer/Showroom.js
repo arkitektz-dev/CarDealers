@@ -21,7 +21,8 @@ import {
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import AuthContext from "../../Component/Authcontext";
 import LottieView from "lottie-react-native";
-const DealerShowroomProfile = ({ route }) => {
+
+const DealerShowroomProfile = ({ route, navigation }) => {
   const showroomId = route.params.item.id._documentPath._parts[1];
   const showroomName = route.params.item.name;
 
@@ -31,12 +32,14 @@ const DealerShowroomProfile = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [showroomData, setShowroomData] = useState([]);
   const [showroomExist, setShowroomExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tempArr, setTempArr] = useState([]);
   const authContext = useContext(AuthContext);
-  const user = authContext.user.toString();
+  const user = authContext.user;
   const arr = [];
+  const showroomArr = [];
 
   const AssignShowroom = () => {
     const Id_Showroom = firestore()
@@ -99,6 +102,25 @@ const DealerShowroomProfile = ({ route }) => {
         }
       });
       setdealerCount(dealersCount);
+    });
+  };
+  const getShowrooms = async () => {
+    const ref = firestore().collection("Showrooms");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        let showroomDataId;
+        if (typeof documentSnapshot.id == "string") {
+          showroomDataId = documentSnapshot.id;
+        } else {
+          showroomDataId = documentSnapshot.id.toString().trim();
+        }
+        console.log(showroomId);
+        const paramShowroomId = showroomId.toString();
+        if (showroomDataId == paramShowroomId) {
+          showroomArr.push(documentSnapshot.data());
+        }
+      });
+      setShowroomData(showroomArr);
     });
   };
   const modalVisible = () => {
@@ -171,19 +193,22 @@ const DealerShowroomProfile = ({ route }) => {
     );
   };
 
-  useEffect(() => {
-    const ref = firestore()
-      .collection("Dealers")
-      .doc(user);
-    ref.get().then((res) => {
-      setTempArr(res.data().showrooms);
-      res.data().showrooms.forEach((data) => {
-        if (data.id._documentPath._parts[1] == showroomId) {
-          setShowroomExist(showroomId);
-        }
-      });
-    });
+  //    Showroom Exist Code
 
+  // const ref = firestore()
+  //   .collection("Dealers")
+  //   .doc(user);
+  // ref.get().then((res) => {
+  //   setTempArr(res.data().showrooms);
+  //   res.data().showrooms.forEach((data) => {
+  //     if (data.id._documentPath._parts[1] == showroomId) {
+  //       setShowroomExist(showroomId);
+  //     }
+  //   });
+  // });
+
+  useEffect(() => {
+    getShowrooms();
     setLoading(true);
     fetchShowroomData();
     fetchData().then(() => setLoading(false));
@@ -257,25 +282,29 @@ const DealerShowroomProfile = ({ route }) => {
                 marginHorizontal: 25,
               }}
             >
-              {/* <Image
-                source={{ uri: item.images[0] }}
+              <Image
+                source={{ uri: showroomData[0] && showroomData[0].images[0] }}
                 onPress={() => navigation.goBack()}
                 style={{
                   width: 85,
                   height: 85,
                   borderRadius: 85 / 2,
                 }}
-              /> */}
+              />
               <View style={{ width: 15 }}></View>
               <View
                 style={{ flexDirection: "column", justifyContent: "flex-end" }}
               >
                 <View style={styles.DealerName}>
-                  <Text style={styles.carInfoText}> {showroomName} </Text>
+                  <Text style={styles.carInfoText}>{showroomName}</Text>
                 </View>
                 <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>{item.contactInformation}</Text>
-                  <Text style={styles.txt1}>{item.location}</Text>
+                  <Text style={styles.h1}>
+                    {showroomData[0] && showroomData[0].contactInformation}
+                  </Text>
+                  <Text style={styles.txt1}>
+                    {showroomData[0] && showroomData[0].location}
+                  </Text>
                 </View>
               </View>
             </View>

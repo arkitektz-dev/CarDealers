@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CarScreen from "../../Screens/Car";
 import DetailCarScreen from "../../Screens/Car/Details";
 import AddCar from "../../Screens/Forms/AddCar";
+import MyAd from "../../Screens/MyAd/Listing";
 
 const CarStack = () => {
   const Stack = createStackNavigator();

@@ -14,7 +14,6 @@ const SliderData = ({ onValueChanged, enabledTwo, values }) => {
       scrollEnabled={allowScroll}
       contentContainerStyle={{
         alignItems: "center",
-        top: 15,
         flexDirection: "column",
       }}
     >
@@ -22,7 +21,7 @@ const SliderData = ({ onValueChanged, enabledTwo, values }) => {
         sliderLength={screenWidth * 0.7}
         values={values}
         min={0}
-        max={5000000}
+        max={10000000}
         isMarkersSeparated={true}
         enabledTwo={enabledTwo}
         step={25000}

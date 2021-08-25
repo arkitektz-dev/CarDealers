@@ -1,7 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeStack from "./HomeStack";
-import CarStack from "./CarStack";
 
 const IndexStack = () => {
   const Stack = createStackNavigator();
@@ -11,6 +10,11 @@ const IndexStack = () => {
       <Stack.Screen
         name="HomeStack"
         component={HomeStack}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MyAd"
+        component={MyAd}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

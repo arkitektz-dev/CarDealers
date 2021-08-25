@@ -25,12 +25,15 @@ const AppPicker = ({
   selectedItem,
   width = "100%",
   title,
+  initialIcon,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
         <View style={[styles.container, { width }]}>
+          {initialIcon}
+
           {selectedItem ? (
             <AppText style={styles.text}>{selectedItem}</AppText>
           ) : (
@@ -39,7 +42,11 @@ const AppPicker = ({
           <Feather name="chevron-down" size={25} color="#333" />
         </View>
       </TouchableWithoutFeedback>
-      <Modal visible={modalVisible} animationType="slide">
+      <Modal
+        onRequestClose={() => setModalVisible(false)}
+        visible={modalVisible}
+        animationType="slide"
+      >
         <Screen>
           <View
             style={{
