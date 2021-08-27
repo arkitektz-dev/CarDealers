@@ -6,7 +6,6 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -67,9 +66,7 @@ const DealerDetailScreen = ({ route }) => {
     setshowroomCount(param.showrooms.length);
     fetchData().then(() => setLoading(false));
   }, []);
-
   const arr = [];
-
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
@@ -77,7 +74,6 @@ const DealerDetailScreen = ({ route }) => {
     setVisible(false);
     navigation.navigate("DealerShowroomProfile", { item });
   };
-
   const _renderShowroomList = ({ item }) => {
     return (
       <View
@@ -233,9 +229,6 @@ const DealerDetailScreen = ({ route }) => {
                   </View>
                   <View style={{ flexDirection: "column" }}>
                     <Text style={styles.h1}>{param.showrooms[0].name}</Text>
-                    {/* {param.showrooms.map((item) => {
-                      return <Text style={styles.h1}>{item.name}</Text>;
-                    })} */}
 
                     <Text style={styles.txt1}>
                       {param.contactInformation[0]}
@@ -306,7 +299,9 @@ const DealerDetailScreen = ({ route }) => {
 };
 export default memo(DealerDetailScreen);
 const styles = StyleSheet.create({
-  Nav: { flexDirection: "row" },
+  Nav: {
+    flexDirection: "row",
+  },
   distance: {
     height: screenHeight * 0.035,
   },

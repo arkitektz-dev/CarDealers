@@ -8,20 +8,20 @@ import {
   Linking,
   View,
 } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
+import { FlatList } from "react-native-gesture-handler";
+import ImageSlider from "react-native-image-slider";
+
 import { Button } from "../../Component/Button/Index";
 import Calendar from "../../Assets/NewAsset/Calendar.png";
 import Radio from "../../Assets/NewAsset/radio.png";
-
 import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
-import ImageSlider from "react-native-image-slider";
 import { screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";
-import IonIcon from "react-native-vector-icons/Ionicons";
-import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
-import { FlatList } from "react-native-gesture-handler";
 import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;

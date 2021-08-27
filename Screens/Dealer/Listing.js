@@ -1,33 +1,30 @@
 import React, { memo, useEffect, useState } from "react";
 import {
   FlatList,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import LottieView from "lottie-react-native";
-
 import IonIcon from "react-native-vector-icons/Ionicons";
-
+import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import Card from "../../Component/CardViews/Card";
-import { SearchComponent } from "../../Component/Search";
 import { ActivityIndicator } from "react-native-paper";
+
+import { SearchComponent } from "../../Component/Search";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { fetchDealerData, fetchMoreDealer } from "../../Data/FetchData";
-import { Image } from "react-native";
 
 const ListingDealer = () => {
+  const [filteredData, setfilteredData] = useState([]);
   const [dealerdata, setDealerData] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [dealerCount, setDealerCount] = useState(0);
   const [startAfter, setStartAfter] = useState(Object);
-  const [filteredData, setfilteredData] = useState([]);
   const [moreloading, setMoreLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
-
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     setLoading(true);
     fetchDealerData().then((data) => {
@@ -38,9 +35,8 @@ const ListingDealer = () => {
       setLoading(false);
     });
   }, []);
-
   const searchDealer = (text) => {
-    if (tesearchTextxt) {
+    if (searchText) {
       const newData = dealerdata.filter((item) => {
         const itemData = `${
           item.contactInformation.length > 0
@@ -93,7 +89,6 @@ const ListingDealer = () => {
       </View>
     );
   };
-
   const _renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => onPressHandler(item)}>
@@ -180,10 +175,10 @@ const ListingDealer = () => {
     // />
     //    );
   };
-  const navigation = useNavigation();
   const onPressHandler = (item) => {
     navigation.navigate("DealerDetailScreen", { item });
   };
+  const navigation = useNavigation();
 
   return (
     <View style={{ backgroundColor: "#fff", flex: 1, flexDirection: "column" }}>

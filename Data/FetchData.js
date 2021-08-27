@@ -5,7 +5,7 @@ export const fetchCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
   // .where("featured", "==", true);
-  var data = await ref.limit(10).get();
+  var data = await ref.limit(20).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
