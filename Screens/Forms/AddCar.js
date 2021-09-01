@@ -187,10 +187,16 @@ const AddCar = () => {
           const url = await storageRef.getDownloadURL();
           // setImagesUrl(...imagesUrl, { images: url });
           a.push(url);
+          if (a.length == imagesArr.length) {
+            setImagesUrl(a);
+          }
         })
         .catch((e) => console.log("uploading image error => ", e));
     });
-    setImagesUrl(a);
+
+    if (a.length == imagesArr.length) {
+      console.log(a);
+    }
     return imagesUrl;
   };
 
@@ -198,70 +204,84 @@ const AddCar = () => {
 
   const onPressHandler = async () => {
     const images = [];
-    await images.push(imageURI());
-
     setLoader(true);
-    const showroomRef = firestore()
-      .collection("Showrooms")
-      .doc(showroomId.toString());
-    const userRef = firestore()
-      .collection("Dealers")
-      .doc(authContext.user.toString());
-    const dealerObj = {
-      id: userRef,
-    };
-    const showroomObj = {
-      id: showroomRef,
-      name: showroomPicker,
-    };
-    const date = new Date();
-    const obj = {
-      amount: `${priceRange.init}`,
-      dealer: dealerObj,
-      images: [
-        "https://cache4.pakwheels.com/ad_pictures/5134/toyota-corolla-gli-vvti-automatic-2016-51344671.jpg",
-      ],
-      // images.length > 0
-      //   ? images
-      //   : image.push(
-      //       "https://cache4.pakwheels.com/ad_pictures/5134/toyota-corolla-gli-vvti-automatic-2016-51344671.jpg"
-      //     ),
-      showroom: showroomObj,
-      vehicle: {
-        additionalInformation: {
-          assembly: assembly,
-          engineCapacity: enginecapacity,
-          engineType: engineType,
-          features: checkbox,
-          transmission: transmission,
-        },
-        city: City,
-        description: Description,
-        exteriorColor: ExteriorColor,
-        information: information,
-        mileage: `${mileage.init} KM`,
-        registrationCity: registrationCity,
-      },
-      date: date,
-    };
     if (
-      obj.vehicle.information.make == "" ||
-      obj.vehicle.information.model == "" ||
-      obj.vehicle.information.modelYear == "" ||
-      obj.showroom.name == "" ||
-      obj.amount == "" ||
-      obj.vehicle.mileage == ""
+     imagesArr.length == 0 ||
+     mileage == '' ||
+     information.make == '' ||
+     information.model == '' ||
+     information.modelYear == '' ||
+     priceRange.init == '0' ||
+     showroomPicker == ''
     ) {
-      alert("Fields Can not be empty");
+      alert("Required")
+      setLoader(false)
     } else {
-      await AddCarData(obj)
-        .then(() => {
-          alert("Car Added");
-          navigation.navigate("MyAds");
-        })
-        .catch((e) => console.log(e));
+      await images.push(imageURI());
+
+      if (imagesUrl.length > 0) {
+        console.log(imagesUrl);
+        const showroomRef = firestore()
+          .collection("Showrooms")
+          .doc(showroomId.toString());
+        const userRef = firestore()
+          .collection("Dealers")
+          .doc(authContext.user.toString());
+        const dealerObj = {
+          id: userRef,
+        };
+        const showroomObj = {
+          id: showroomRef,
+          name: showroomPicker,
+        };
+        const date = new Date();
+        const obj = {
+          amount: `${priceRange.init}`,
+          dealer: dealerObj,
+          images: imagesUrl,
+          // images.length > 0
+          //   ? images
+          //   : image.push(
+          //       "https://cache4.pakwheels.com/ad_pictures/5134/toyota-corolla-gli-vvti-automatic-2016-51344671.jpg"
+          //     ),
+          showroom: showroomObj,
+          vehicle: {
+            additionalInformation: {
+              assembly: assembly,
+              engineCapacity: enginecapacity,
+              engineType: engineType,
+              features: checkbox,
+              transmission: transmission,
+            },
+            city: City,
+            description: Description,
+            exteriorColor: ExteriorColor,
+            information: information,
+            mileage: `${mileage.init} KM`,
+            registrationCity: registrationCity,
+          },
+          date: date,
+        };
+        if (
+          obj.vehicle.information.make == "" ||
+          obj.vehicle.information.model == "" ||
+          obj.vehicle.information.modelYear == "" ||
+          obj.showroom.name == "" ||
+          obj.amount == "" ||
+          obj.vehicle.mileage == ""
+        ) {
+          alert("Fields Can not be empty");
+        } else {
+          await AddCarData(obj)
+            .then(() => {
+              alert("Car Added");
+              navigation.navigate("MyAds");
+            })
+            .catch((e) => console.log(e));
+        }
+        setLoader(false);
+      }
     }
-    setLoader(false);
   };
 
   const handleAdd = (uri) => {
@@ -361,7 +381,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Assembly"
                 selectedItem={assembly}
-                width="80%"
+                width="95%"
               />
 
               <TouchableOpacity
@@ -371,7 +391,7 @@ const AddCar = () => {
                   flexDirection: "row",
                   padding: 15,
                   marginVertical: 10,
-                  width: "77%",
+                  width: "90%",
                 }}
                 onPress={() => setVisible(true)}
               >
@@ -458,7 +478,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Engine Capacity"
                 selectedItem={enginecapacity}
-                width="80%"
+                width="95%"
               />
               <AppPicker
                 title="Engine Type"
@@ -468,7 +488,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Engine Type"
                 selectedItem={engineType}
-                width="80%"
+                width="95%"
               />
               <AppPicker
                 title="Engine Transmission"
@@ -478,7 +498,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Transmission"
                 selectedItem={transmission}
-                width="80%"
+                width="95%"
               />
               <View
                 style={{
@@ -495,7 +515,7 @@ const AddCar = () => {
                   PickerItemComponent={CategoryPickerItem}
                   placeholder=" City"
                   selectedItem={City}
-                  width="80%"
+                  width="95%"
                 />
               </View>
               <AppPicker
@@ -508,7 +528,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Company"
                 selectedItem={information.make}
-                width="80%"
+                width="95%"
               />
               <AppPicker
                 title="Car Model"
@@ -520,7 +540,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Model"
                 selectedItem={information.model}
-                width="80%"
+                width="95%"
               />
 
               <AppPicker
@@ -533,7 +553,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Model Year"
                 selectedItem={information.modelYear}
-                width="80%"
+                width="95%"
               />
               <AppPicker
                 title="Car Version"
@@ -545,7 +565,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Version"
                 selectedItem={information.version}
-                width="80%"
+                width="95%"
               />
 
               <AppPicker
@@ -556,7 +576,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Exterior Color"
                 selectedItem={ExteriorColor}
-                width="80%"
+                width="95%"
               />
 
               <AppPicker
@@ -567,7 +587,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Registration City"
                 selectedItem={registrationCity}
-                width="80%"
+                width="95%"
               />
               <AppPicker
                 title="Showroom"
@@ -579,7 +599,7 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder="Showrooms"
                 selectedItem={showroomPicker}
-                width="82%"
+                width="95%"
               />
               <View
                 style={{
@@ -674,7 +694,7 @@ const AddCar = () => {
                       "Submit"
                     )
                   }
-                  onPressHandler={onPressHandler}
+                  onPressHandler={() => onPressHandler()}
                 />
               </View>
             </View>
