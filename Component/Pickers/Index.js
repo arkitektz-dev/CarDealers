@@ -108,11 +108,13 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 25,
     flexDirection: "row",
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+
     width: screenWidth * 0.8,
-    marginVertical: 10,
+    marginVertical: 12,
     borderBottomColor: "grey",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
   },
   icon: {
     marginRight: 10,

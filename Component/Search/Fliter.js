@@ -60,6 +60,7 @@ const Filter = ({
       second: false,
     });
     setDropDownValues({
+      Assemble: "",
       EngineCapacity: "",
       Engine: "",
       Features: [],
@@ -151,7 +152,7 @@ const Filter = ({
               name="chevron-back-outline"
               color="white"
               size={31}
-              onPress={() => navigation.goBack()}
+              onPress={() => Visibility()}
             />
             <Text
               style={{ color: "#fff", fontSize: 18, top: 5, fontWeight: "900" }}
@@ -277,7 +278,7 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Color"
             selectedItem={dropdownValues.ExteriorColor}
-            width="80%"
+            width="95%"
           />
           <AppPicker
             title="City"
@@ -289,9 +290,10 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select City"
             selectedItem={dropdownValues.City}
-            width="80%"
+            width="95%"
+            
           />
-          <AppPicker
+          {/* <AppPicker
             title="Location"
             items={city}
             name="category"
@@ -301,8 +303,8 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Location"
             selectedItem={dropdownValues.City}
-            width="80%"
-          />
+            width="95%"
+          /> */}
           <AppPicker
             title="Year"
             items={year}
@@ -313,7 +315,7 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Year"
             selectedItem={dropdownValues.Year}
-            width="80%"
+            width="95%"
           />
           <AppPicker
             title="Company"
@@ -325,7 +327,7 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Company"
             selectedItem={dropdownValues.Make}
-            width="80%"
+            width="95%"
           />
 
           <View style={styles.priceNum}>
@@ -382,7 +384,7 @@ const styles = StyleSheet.create({
   priceHolder: {
     borderRadius: 7,
     backgroundColor: "#d3d3d3",
-    width: "30%",
+    width: "40%",
     height: "70%",
     padding: 10,
   },

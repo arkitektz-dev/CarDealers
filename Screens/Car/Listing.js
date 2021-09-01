@@ -147,7 +147,9 @@ const ListingCars = () => {
       setFilterState(true);
     }
 
-    var a = await ref.get();
+    var a = await ref.limit(20).get();
+    const lastVal = a.docs[a.docs.length - 1];
+    setStartAfter(lastVal);
     a.docs.forEach((data) => {
       arr.push(data.data());
     });

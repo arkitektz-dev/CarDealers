@@ -9,7 +9,7 @@ import MyTabs from "./Navigation/BottomTab/Index";
 import AuthContext from "./Component/Authcontext";
 import { SignupScreen } from "./Screens/SignUp";
 import ImageScreen from "./Screens/ImageScreen";
-
+console.disableYellowBox = true;
 const MainStack = () => {
   const Stack = createStackNavigator();
 
