@@ -108,8 +108,8 @@ const Filter = ({
   ];
   const color = [
     { label: "Red", value: 1 },
-    { label: "Gold", value: 2 },
-    { label: "Black", value: 3 },
+    { label: "Black", value: 2 },
+    { label: "Gold", value: 3 },
   ];
   const city = [
     { label: "Karachi", value: 1 },

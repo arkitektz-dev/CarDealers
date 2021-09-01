@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   RefreshControl,
+  Keyboard,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
@@ -56,44 +57,53 @@ const ListingCars = () => {
   useEffect(() => {
     setLoading(true);
     fetchCarListData().then((res) => {
+      console.log(res.arr);
+      setfilteredData(res.arr);
       setDataCar(res.arr);
       setStartAfter(res.lastVal);
-      setfilteredData(res.arr);
       setcarCount(res.size);
       setLoading(false);
     });
   }, []);
-
-  const onSearch = () => {
+  //search
+  const onSearch = async () => {
+    setFilterState(false);
+    Keyboard.dismiss();
     if (searchText) {
       setSearchLoadMore(true);
-      const newData = dataCar.filter((item) => {
-        const itemData = `${
-          item.vehicle.information.make
-            ? item.vehicle.information.make.toUpperCase()
-            : ""
-        }
-        ${
-          item.vehicle.information.modelYear
-            ? item.vehicle.information.modelYear.toUpperCase()
-            : ""
-        } ${
-          item.vehicle.information.model
-            ? item.vehicle.information.model.toUpperCase()
-            : ""
-        }`;
-        const textData = searchText.toUpperCase();
+      setLoading(true);
 
-        return itemData.indexOf(textData) > -1;
+      const arr = [];
+      let ref = firestore().collection("Advertisments");
+
+      if (searchText != "") {
+        ref = firestore()
+          .collection("Advertisments")
+          .where("vehicle.information.make", ">=", searchText)
+          .where("vehicle.information.make", "<=", searchText + "\uf8ff");
+      }
+
+      var a = await ref.limit(20).get();
+      const lastVal = a.docs[a.docs.length - 1];
+      setStartAfter(lastVal);
+      a.docs.forEach((data) => {
+        arr.push(data.data());
       });
-      setcarCount(newData.length);
-      setfilteredData(newData);
-    } else {
-      setDataCar(filteredData);
+      console.log(arr);
+      setfilteredData(arr);
+      setDataCar(arr);
+      {
+        filteredData.length > 0
+          ? setcarCount(arr.length)
+          : setcarCount(filteredData.length);
+      }
+      setLoading(false);
     }
   };
 
   const onFilter = async (dropdownValues) => {
+    setLoading(true);
+    console.log(dropdownValues);
     const arr = [];
     let ref = firestore().collection("Advertisments");
     if (dropdownValues.Year != "") {
@@ -153,34 +163,53 @@ const ListingCars = () => {
     a.docs.forEach((data) => {
       arr.push(data.data());
     });
+    console.log(arr);
     setfilteredData(arr);
+    setDataCar(arr);
     {
       filteredData.length > 0
         ? setcarCount(arr.length)
-        : setcarCount(dataCar.length);
+        : setcarCount(filteredData.length);
     }
+    setLoading(false);
   };
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const _renderFooter = () => {
-    return (
+    if (dataCar.length == 20)
+      return (
+        <View
+          style={{
+            padding: 10,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
+            <Text style={styles.btnText}>Load More</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </TouchableOpacity>
+        </View>
+      );
+    else
+    return(
       <View
-        style={{
-          padding: 10,
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-        }}
-      >
-        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
-          <Text style={styles.btnText}>Load More</Text>
-          {moreloading ? (
-            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
-          ) : null}
-        </TouchableOpacity>
+      style={{
+        padding: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+      }}
+    >
+      <View style={styles.NoMoreBtn}>
+      <Text style={styles.btnText}>No More Data</Text>
       </View>
-    );
+    </View>
+    )
   };
   const _renderItem = ({ item }) => {
     return (
@@ -296,8 +325,8 @@ const ListingCars = () => {
         .then((res) => {
           if (filteredData.length > 0) {
             // console.log([...filteredData, ...res.arr]);
-            setDataCar([...filteredData, ...res.arr]);
             setfilteredData([...filteredData, ...res.arr]);
+            setDataCar(res.arr);
           }
           setcarCount(filteredData.length + res.arr.length);
           setStartAfter(res.lastVal);
@@ -308,11 +337,9 @@ const ListingCars = () => {
     if (filterState == false && searchLoadMore == false) {
       fetchMoreCarWithoutFilter(startAfter)
         .then((res) => {
-          setDataCar([...dataCar, ...res.arr]);
-          if (filteredData.length > 0) {
-            setfilteredData([...dataCar, ...res.arr]);
-          }
-          setcarCount(dataCar.length + res.arr.length);
+          setfilteredData([...filteredData, ...res.arr]);
+          setDataCar(res.arr);
+          setcarCount(filteredData.length + res.arr.length);
           setStartAfter(res.lastVal);
           setMoreLoading(false);
         })
@@ -320,13 +347,9 @@ const ListingCars = () => {
     }
     if (filterState == true) {
       fetchMoreCar(startAfter, filter).then((res) => {
-        if (filteredData.length > 0) {
-          setfilteredData([...filteredData, ...res.arr]);
-          setcarCount(filteredData.length + res.arr.length);
-        } else {
-          setDataCar([...dataCar, ...res.arr]);
-          setcarCount(dataCar.length + res.arr.length);
-        }
+        setfilteredData([...filteredData, ...res.arr]);
+        setcarCount(filteredData.length + res.arr.length);
+        setDataCar(res.arr);
         setStartAfter(res.lastVal);
         setMoreLoading(false);
       });
@@ -335,9 +358,9 @@ const ListingCars = () => {
   const onRefresh = () => {
     setRefreshing(true);
     fetchCarData().then((res) => {
-      setDataCar(res.arr);
-      setStartAfter(res.lastVal);
       setfilteredData(res.arr);
+      setStartAfter(res.lastVal);
+      setDataCar(res.arr);
       setcarCount(res.size);
       setRefreshing(false);
     });
@@ -419,9 +442,9 @@ const ListingCars = () => {
           }}
           hardwareAccelerationAndroid={true}
         />
-      ) : (
+      ) : filteredData.length > 0 ? (
         <FlatList
-          data={filteredData.length > 0 ? filteredData : dataCar}
+          data={filteredData}
           contentContainerStyle={{ paddingBottom: "35%" }}
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}
@@ -432,6 +455,10 @@ const ListingCars = () => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
+      ) : (
+        <View>
+          <Text>No Result</Text>
+        </View>
       )}
     </View>
   );
@@ -462,6 +489,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: "#1c2e65",
     borderWidth: 1,
+    borderRadius: 4,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  NoMoreBtn: {
+    padding: 10,
+    borderColor: "#1c2e65",
+    borderWidth: 0.5,
     borderRadius: 4,
     flexDirection: "row",
     justifyContent: "center",

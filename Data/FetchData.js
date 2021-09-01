@@ -104,7 +104,7 @@ export const fetchMoreCarSearch = async (startAfter, filter) => {
 
   var data = await ref
     .startAfter(startAfter)
-    .limit(10)
+    .limit(20)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -170,7 +170,7 @@ export const fetchMoreCarWithoutFilter = async (startAfter) => {
 
   var data = await ref
     .startAfter(startAfter)
-    .limit(10)
+    .limit(20)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -192,7 +192,7 @@ export const fetchMoreCarWithSearch = async (startAfter, searchText) => {
   }
   var data = await ref
     .startAfter(startAfter)
-    .limit(10)
+    .limit(20)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
