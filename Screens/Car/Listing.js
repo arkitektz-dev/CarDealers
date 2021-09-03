@@ -14,6 +14,7 @@ import {
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/core";
+import { query, where } from "firebase/firestore";
 
 import {
   fetchCarData,
@@ -50,10 +51,10 @@ const ListingCars = () => {
     Assemble: "",
     initPrice: "",
     finalPrice: "",
-    Model:"",
-    registrationCity:"",
-    transmission:"",
-    EngineCapacity:""
+    Model: "",
+    registrationCity: "",
+    transmission: "",
+    EngineCapacity: "",
   });
 
   const navigation = useNavigation();
@@ -89,7 +90,7 @@ const ListingCars = () => {
 
       var a = await ref.limit(20).get();
       const lastVal = a.docs[a.docs.length - 1];
-      console.log('lastV',lastVal)
+      console.log("lastV", lastVal);
       setStartAfter(lastVal);
       a.docs.forEach((data) => {
         arr.push(data.data());
@@ -132,12 +133,20 @@ const ListingCars = () => {
       setFilterState(true);
     }
     if (dropdownValues.transmission != "") {
-      ref = ref.where("vehicle.additionalInformation.transmission", "==", dropdownValues.transmission);
+      ref = ref.where(
+        "vehicle.additionalInformation.transmission",
+        "==",
+        dropdownValues.transmission
+      );
       setFilter({ ...filter, transmission: dropdownValues.transmission });
       setFilterState(true);
     }
     if (dropdownValues.EngineCapacity != "") {
-      ref = ref.where("vehicle.additionalInformation.engineCapacity", "==", dropdownValues.EngineCapacity);
+      ref = ref.where(
+        "vehicle.additionalInformation.engineCapacity",
+        "==",
+        dropdownValues.EngineCapacity
+      );
       setFilter({ ...filter, EngineCapacity: dropdownValues.EngineCapacity });
       setFilterState(true);
     }
@@ -150,8 +159,15 @@ const ListingCars = () => {
       setFilterState(true);
     }
     if (dropdownValues.registrationCity != "") {
-      ref = ref.where("vehicle.registrationCity", "==", dropdownValues.registrationCity);
-      setFilter({ ...filter, registrationCity: dropdownValues.registrationCity });
+      ref = ref.where(
+        "vehicle.registrationCity",
+        "==",
+        dropdownValues.registrationCity
+      );
+      setFilter({
+        ...filter,
+        registrationCity: dropdownValues.registrationCity,
+      });
       setFilterState(true);
     }
     if (dropdownValues.ExteriorColor != "") {
@@ -163,11 +179,23 @@ const ListingCars = () => {
       setFilter({ ...filter, ExteriorColor: dropdownValues.ExteriorColor });
       setFilterState(true);
     }
-
+    if (
+      dropdownValues.price.init > 0 ||
+      dropdownValues.price.final < "10000000"
+    ) {
+      ref = ref.orderBy("amount");
+    }
     if (dropdownValues.price.init > 0) {
       ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
-      ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
+
+      // ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
       setFilter({ ...filter, initPrice: dropdownValues.price.init });
+      // setFilter({ ...filter, finalPrice: dropdownValues.price.final });
+      setFilterState(true);
+    }
+    if (dropdownValues.price.final < "10000000") {
+      ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
+
       setFilter({ ...filter, finalPrice: dropdownValues.price.final });
       setFilterState(true);
     }
@@ -182,12 +210,9 @@ const ListingCars = () => {
       setFilterState(true);
     }
 
-    var a = await ref
-      
-      .limit(20)
-      .get();
+    var a = await ref.limit(20).get();
     const lastVal = a.docs[a.docs.length - 1];
-    console.log('lastV',lastVal)
+    console.log("lastV", lastVal);
     setStartAfter(lastVal);
     a.docs.forEach((data) => {
       arr.push(data.data());

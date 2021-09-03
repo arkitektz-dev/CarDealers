@@ -138,12 +138,20 @@ export const fetchMoreCar = async (startAfter, filter) => {
   if (filter.transmission != "") {
     ref = firestore()
       .collection("Advertisments")
-      .where("vehicle.additionalInformation.transmission", "==", filter.transmission);
+      .where(
+        "vehicle.additionalInformation.transmission",
+        "==",
+        filter.transmission
+      );
   }
   if (filter.EngineCapacity != "") {
     ref = firestore()
       .collection("Advertisments")
-      .where("vehicle.additionalInformation.engineCapacity", "==", filter.EngineCapacity);
+      .where(
+        "vehicle.additionalInformation.engineCapacity",
+        "==",
+        filter.EngineCapacity
+      );
   }
   if (filter.Year != "") {
     ref = firestore()
@@ -163,8 +171,19 @@ export const fetchMoreCar = async (startAfter, filter) => {
   }
 
   if (filter.initPrice > 0) {
-    ref = ref.where("amount", ">", `${filter.initPrice}`);
-    ref = ref.where("amount", "<", `${filter.finalPrice}`);
+    ref = firestore()
+      .collection("Advertisments")
+      .where("amount", ">", `${filter.initPrice}`);
+  }
+  if (filter.finalPrice < 10000000) {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("amount", "<", `${filter.finalPrice}`);
+  }
+  if (filter.initPrice > 0 || filter.finalPrice < 10000000) {
+    ref = firestore()
+      .collection("Advertisments")
+      .orderBy("amount");
   }
 
   if (filter.Assemble != "") {
@@ -172,7 +191,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
       .collection("Advertisments")
       .where("vehicle.additionalInformation.assembly", "==", filter.Assemble);
   }
-
+  console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)
     .limit(20)

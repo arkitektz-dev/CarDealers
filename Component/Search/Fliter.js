@@ -49,7 +49,7 @@ const Filter = ({
     Description: "",
     mileage: "",
     price: { init: "0", final: "10000000" },
-    transmission:""
+    transmission: "",
   });
   const [assemblyCheckedState, setAssemblyCheckedState] = useState({
     first: false,
@@ -76,7 +76,7 @@ const Filter = ({
       Description: "",
       mileage: "",
       price: { init: "0", final: "10000000" },
-      transmission:""
+      transmission: "",
     });
   };
   const data = 0;
@@ -95,7 +95,10 @@ const Filter = ({
   const handleValueChange = (e) => {
     setDropDownValues({
       ...dropdownValues,
-      price: { init: e[0], final: e[1] },
+      price: {
+        init: e[0] ? e[0] : dropdownValues.price.init,
+        final: e[1] ? e[1] : dropdownValues.price.final,
+      },
     });
   };
 
@@ -281,17 +284,20 @@ const Filter = ({
             width="95%"
           />
           <AppPicker
-                title="Engine Capacity"
-                items={items}
-                name="category"
-                onSelectItem={(item) =>
-                  setDropDownValues({ ...dropdownValues, EngineCapacity: item.label })
-                }
-                PickerItemComponent={CategoryPickerItem}
-                placeholder="Engine Capacity"
-                selectedItem={dropdownValues.EngineCapacity}
-                width="95%"
-              />
+            title="Engine Capacity"
+            items={items}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({
+                ...dropdownValues,
+                EngineCapacity: item.label,
+              })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Engine Capacity"
+            selectedItem={dropdownValues.EngineCapacity}
+            width="95%"
+          />
           <AppPicker
             title="City"
             items={city}
@@ -304,30 +310,33 @@ const Filter = ({
             selectedItem={dropdownValues.City}
             width="95%"
           />
-           <AppPicker
-                title="Registered City"
-                items={city}
-                name="category"
-                onSelectItem={(item) =>
-                  setDropDownValues({ ...dropdownValues, registrationCity: item.label })
-                }
-                PickerItemComponent={CategoryPickerItem}
-                placeholder=" Registration City"
-                selectedItem={dropdownValues.registrationCity}
-                width="95%"
-              />
-              <AppPicker
-                title="Engine Transmission"
-                items={transmission}
-                name="category"
-                onSelectItem={(item) =>
-                  setDropDownValues({ ...dropdownValues, transmission: item.label })
-                }
-                PickerItemComponent={CategoryPickerItem}
-                placeholder=" Transmission"
-                selectedItem={dropdownValues.transmission}
-                width="95%"
-              />
+          <AppPicker
+            title="Registered City"
+            items={city}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({
+                ...dropdownValues,
+                registrationCity: item.label,
+              })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder=" Registration City"
+            selectedItem={dropdownValues.registrationCity}
+            width="95%"
+          />
+          <AppPicker
+            title="Engine Transmission"
+            items={transmission}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, transmission: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder=" Transmission"
+            selectedItem={dropdownValues.transmission}
+            width="95%"
+          />
           <AppPicker
             title="Color"
             items={color}
@@ -400,7 +409,7 @@ const Filter = ({
             <SliderData
               enabledTwo={true}
               onValueChanged={handleValueChange}
-              values={[0, 10000000]}
+              values={[dropdownValues.price.init, dropdownValues.price.final]}
             />
           </View>
 
