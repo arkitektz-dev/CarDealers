@@ -274,6 +274,31 @@ const Filter = ({
             selectedItem={dropdownValues.Model}
             width="95%"
           />
+          
+          <AppPicker
+            title="City"
+            items={city}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, City: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Select City"
+            selectedItem={dropdownValues.City}
+            width="95%"
+          />
+           <AppPicker
+                title="Registered City"
+                items={city}
+                name="category"
+                onSelectItem={(item) =>
+                  setDropDownValues({ ...dropdownValues, registrationCity: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Registration City"
+                selectedItem={dropdownValues.registrationCity}
+                width="95%"
+              />
           <AppPicker
             title="Color"
             items={color}
@@ -287,18 +312,6 @@ const Filter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Color"
             selectedItem={dropdownValues.ExteriorColor}
-            width="95%"
-          />
-          <AppPicker
-            title="City"
-            items={city}
-            name="category"
-            onSelectItem={(item) =>
-              setDropDownValues({ ...dropdownValues, City: item.label })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Select City"
-            selectedItem={dropdownValues.City}
             width="95%"
           />
           {/* <AppPicker

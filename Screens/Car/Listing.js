@@ -50,7 +50,8 @@ const ListingCars = () => {
     Assemble: "",
     initPrice: "",
     finalPrice: "",
-    Model:""
+    Model:"",
+    registrationCity:""
   });
 
   const navigation = useNavigation();
@@ -125,7 +126,7 @@ const ListingCars = () => {
     }
     if (dropdownValues.Model != "") {
       ref = ref.where("vehicle.information.model", "==", dropdownValues.Model);
-      setFilter({ ...filter, Make: dropdownValues.Make });
+      setFilter({ ...filter, Model: dropdownValues.Model });
       setFilterState(true);
     }
     // if (dropdownValues.mileage != "") {
@@ -134,6 +135,11 @@ const ListingCars = () => {
     if (dropdownValues.City != "") {
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
       setFilter({ ...filter, City: dropdownValues.City });
+      setFilterState(true);
+    }
+    if (dropdownValues.registrationCity != "") {
+      ref = ref.where("vehicle.registrationCity", "==", dropdownValues.registrationCity);
+      setFilter({ ...filter, registrationCity: dropdownValues.registrationCity });
       setFilterState(true);
     }
     if (dropdownValues.ExteriorColor != "") {

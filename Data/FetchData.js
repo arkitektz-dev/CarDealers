@@ -125,6 +125,16 @@ export const fetchMoreCar = async (startAfter, filter) => {
       .collection("Advertisments")
       .where("vehicle.information.make", "==", filter.Make);
   }
+  if (filter.Model != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.information.model", "==", filter.Model);
+  }
+  if (filter.registrationCity != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.registrationCity", "==", filter.registrationCity);
+  }
   if (filter.Year != "") {
     ref = firestore()
       .collection("Advertisments")
