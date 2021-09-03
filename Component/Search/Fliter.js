@@ -280,7 +280,18 @@ const Filter = ({
             selectedItem={dropdownValues.Model}
             width="95%"
           />
-          
+          <AppPicker
+                title="Engine Capacity"
+                items={items}
+                name="category"
+                onSelectItem={(item) =>
+                  setDropDownValues({ ...dropdownValues, EngineCapacity: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder="Engine Capacity"
+                selectedItem={dropdownValues.EngineCapacity}
+                width="95%"
+              />
           <AppPicker
             title="City"
             items={city}

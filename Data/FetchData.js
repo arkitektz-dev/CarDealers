@@ -140,6 +140,11 @@ export const fetchMoreCar = async (startAfter, filter) => {
       .collection("Advertisments")
       .where("vehicle.additionalInformation.transmission", "==", filter.transmission);
   }
+  if (filter.EngineCapacity != "") {
+    ref = firestore()
+      .collection("Advertisments")
+      .where("vehicle.additionalInformation.engineCapacity", "==", filter.EngineCapacity);
+  }
   if (filter.Year != "") {
     ref = firestore()
       .collection("Advertisments")
