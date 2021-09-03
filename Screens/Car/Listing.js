@@ -50,6 +50,7 @@ const ListingCars = () => {
     Assemble: "",
     initPrice: "",
     finalPrice: "",
+    Model:""
   });
 
   const navigation = useNavigation();
@@ -85,6 +86,7 @@ const ListingCars = () => {
 
       var a = await ref.limit(20).get();
       const lastVal = a.docs[a.docs.length - 1];
+      console.log('lastV',lastVal)
       setStartAfter(lastVal);
       a.docs.forEach((data) => {
         arr.push(data.data());
@@ -118,6 +120,11 @@ const ListingCars = () => {
 
     if (dropdownValues.Make != "") {
       ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
+      setFilter({ ...filter, Make: dropdownValues.Make });
+      setFilterState(true);
+    }
+    if (dropdownValues.Model != "") {
+      ref = ref.where("vehicle.information.model", "==", dropdownValues.Model);
       setFilter({ ...filter, Make: dropdownValues.Make });
       setFilterState(true);
     }
@@ -157,8 +164,12 @@ const ListingCars = () => {
       setFilterState(true);
     }
 
-    var a = await ref.limit(20).get();
+    var a = await ref
+      
+      .limit(20)
+      .get();
     const lastVal = a.docs[a.docs.length - 1];
+    console.log('lastV',lastVal)
     setStartAfter(lastVal);
     a.docs.forEach((data) => {
       arr.push(data.data());
@@ -196,20 +207,20 @@ const ListingCars = () => {
         </View>
       );
     else
-    return(
-      <View
-      style={{
-        padding: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
-      }}
-    >
-      <View style={styles.NoMoreBtn}>
-      <Text style={styles.btnText}>No More Data</Text>
-      </View>
-    </View>
-    )
+      return (
+        <View
+          style={{
+            padding: 10,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <View style={styles.NoMoreBtn}>
+            <Text style={styles.btnText}>No More Data</Text>
+          </View>
+        </View>
+      );
   };
   const _renderItem = ({ item }) => {
     return (

@@ -102,9 +102,10 @@ const Filter = ({
     { label: "1300cc", value: 2 },
     { label: "1600cc", value: 3 },
   ];
-  const Model = [
-    { label: "City", value: 1 },
-    { label: "Corolla", value: 2 },
+  const modelCar = [
+    { label: "Corolla", value: "Corolla" },
+    { label: "Civic", value: "Civic" },
+    { label: "Reborn ", value: "Reborn" },
   ];
   const color = [
     { label: "Red", value: 1 },
@@ -117,8 +118,8 @@ const Filter = ({
     { label: "Islamabad", value: 3 },
   ];
   const type = [
-    { label: "Local", value: 1 },
-    { label: "Imported", value: 2 },
+    { label: "local", value: 1 },
+    { label: "imported", value: 2 },
   ];
   const year = [
     { label: "2015", value: 1 },
@@ -259,13 +260,21 @@ const Filter = ({
           </View>
 
           <AppPicker
-            // initialIcon={
-            //   <Image
-            //     resizeMode={"contain"}
-            //     style={{ width: 30, height: 20 }}
-            //     source={Transmission}
-            //   />
-            // }
+            title="Car Model"
+            items={modelCar}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({
+                ...dropdownValues,
+                Model: item.label,
+              })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder=" Model"
+            selectedItem={dropdownValues.Model}
+            width="95%"
+          />
+          <AppPicker
             title="Color"
             items={color}
             name="category"
@@ -291,7 +300,6 @@ const Filter = ({
             placeholder="Select City"
             selectedItem={dropdownValues.City}
             width="95%"
-            
           />
           {/* <AppPicker
             title="Location"

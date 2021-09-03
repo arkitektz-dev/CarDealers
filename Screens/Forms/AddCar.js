@@ -275,7 +275,7 @@ const AddCar = () => {
           await AddCarData(obj)
             .then(() => {
               alert("Car Added");
-              navigation.navigate("MyAds");
+              // navigation.navigate("MyAds");
             })
             .catch((e) => console.log(e));
         }

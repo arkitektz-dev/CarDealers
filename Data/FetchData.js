@@ -18,7 +18,10 @@ export const fetchCarData = async () => {
 export const fetchCarListData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
-  var data = await ref.orderBy('date', 'desc').limit(20).get();
+  var data = await ref
+    .orderBy("date", "desc")
+    .limit(20)
+    .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -168,6 +171,7 @@ export const fetchMoreCarWithoutFilter = async (startAfter) => {
   const ref = firestore().collection("Advertisments");
 
   var data = await ref
+    .orderBy("date", "desc")
     .startAfter(startAfter)
     .limit(20)
     .get();
