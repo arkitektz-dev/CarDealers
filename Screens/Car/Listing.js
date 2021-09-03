@@ -51,7 +51,8 @@ const ListingCars = () => {
     initPrice: "",
     finalPrice: "",
     Model:"",
-    registrationCity:""
+    registrationCity:"",
+    transmission:""
   });
 
   const navigation = useNavigation();
@@ -127,6 +128,11 @@ const ListingCars = () => {
     if (dropdownValues.Model != "") {
       ref = ref.where("vehicle.information.model", "==", dropdownValues.Model);
       setFilter({ ...filter, Model: dropdownValues.Model });
+      setFilterState(true);
+    }
+    if (dropdownValues.transmission != "") {
+      ref = ref.where("vehicle.additionalInformation.transmission", "==", dropdownValues.transmission);
+      setFilter({ ...filter, transmission: dropdownValues.transmission });
       setFilterState(true);
     }
     // if (dropdownValues.mileage != "") {

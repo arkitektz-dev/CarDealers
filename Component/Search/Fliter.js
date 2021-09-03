@@ -49,6 +49,7 @@ const Filter = ({
     Description: "",
     mileage: "",
     price: { init: "0", final: "10000000" },
+    transmission:""
   });
   const [assemblyCheckedState, setAssemblyCheckedState] = useState({
     first: false,
@@ -75,6 +76,7 @@ const Filter = ({
       Description: "",
       mileage: "",
       price: { init: "0", final: "10000000" },
+      transmission:""
     });
   };
   const data = 0;
@@ -125,6 +127,10 @@ const Filter = ({
     { label: "2015", value: 1 },
     { label: "2010", value: 2 },
     { label: "2016", value: 3 },
+  ];
+  const transmission = [
+    { label: "Automatic", value: "Automatic" },
+    { label: "Manual", value: "Manual" },
   ];
 
   return (
@@ -297,6 +303,18 @@ const Filter = ({
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Registration City"
                 selectedItem={dropdownValues.registrationCity}
+                width="95%"
+              />
+              <AppPicker
+                title="Engine Transmission"
+                items={transmission}
+                name="category"
+                onSelectItem={(item) =>
+                  setDropDownValues({ ...dropdownValues, transmission: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Transmission"
+                selectedItem={dropdownValues.transmission}
                 width="95%"
               />
           <AppPicker
