@@ -119,77 +119,61 @@ export const fetchMoreCarSearch = async (startAfter, filter) => {
 };
 export const fetchMoreCar = async (startAfter, filter) => {
   const arr = [];
-  var ref;
+  let ref = firestore().collection("Advertisments");
   if (filter.Make != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.information.make", "==", filter.Make);
+    ref = ref.where("vehicle.information.make", "==", filter.Make);
   }
   if (filter.Model != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.information.model", "==", filter.Model);
+    ref = ref.where("vehicle.information.model", "==", filter.Model);
   }
   if (filter.registrationCity != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.registrationCity", "==", filter.registrationCity);
+    ref = ref.where("vehicle.registrationCity", "==", filter.registrationCity);
   }
   if (filter.transmission != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where(
-        "vehicle.additionalInformation.transmission",
-        "==",
-        filter.transmission
-      );
+    ref = ref.where(
+      "vehicle.additionalInformation.transmission",
+      "==",
+      filter.transmission
+    );
   }
   if (filter.EngineCapacity != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where(
-        "vehicle.additionalInformation.engineCapacity",
-        "==",
-        filter.EngineCapacity
-      );
+    ref = ref.where(
+      "vehicle.additionalInformation.engineCapacity",
+      "==",
+      filter.EngineCapacity
+    );
   }
   if (filter.Year != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.information.modelYear", "==", filter.Year);
+    ref = ref.where("vehicle.information.modelYear", "==", filter.Year);
+  }
+
+  if (filter.ExteriorColor != "") {
+    ref = ref.where("vehicle.exteriorColor", "==", filter.ExteriorColor);
+  }
+
+  if (filter.initPrice != "") {
+    console.log("init");
+    ref = ref.where("amount", ">", `${filter.initPrice}`);
+  }
+  if (filter.finalPrice != "") {
+    console.log("final");
+    ref = ref.where("amount", "<", `${filter.finalPrice}`);
+  }
+  if (filter.initPrice != "" || filter.finalPrice != "") {
+    console.log("wrong_back", filter);
+    ref = ref.orderBy("amount");
   }
 
   if (filter.City != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.city", "==", filter.City);
+    console.log("city", filter.City);
+    ref = ref.where("vehicle.city", "==", filter.City);
   }
-  if (filter.ExteriorColor != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.exteriorColor", "==", filter.ExteriorColor);
-  }
-
-  if (filter.initPrice > 0) {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("amount", ">", `${filter.initPrice}`);
-  }
-  if (filter.finalPrice < 10000000) {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("amount", "<", `${filter.finalPrice}`);
-  }
-  if (filter.initPrice > 0 || filter.finalPrice < 10000000) {
-    ref = firestore()
-      .collection("Advertisments")
-      .orderBy("amount");
-  }
-
   if (filter.Assemble != "") {
-    ref = firestore()
-      .collection("Advertisments")
-      .where("vehicle.additionalInformation.assembly", "==", filter.Assemble);
+    ref = ref.where(
+      "vehicle.additionalInformation.assembly",
+      "==",
+      filter.Assemble
+    );
   }
   console.log(startAfter, "last bacl");
   var data = await ref

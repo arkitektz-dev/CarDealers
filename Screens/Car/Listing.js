@@ -150,10 +150,9 @@ const ListingCars = () => {
       setFilter({ ...filter, EngineCapacity: dropdownValues.EngineCapacity });
       setFilterState(true);
     }
-    // if (dropdownValues.mileage != "") {
-    //   ref = ref.where("vehicle.mileage", "==", dropdownValues.mileage);
-    // }
+    
     if (dropdownValues.City != "") {
+      console.log(dropdownValues.City)
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
       setFilter({ ...filter, City: dropdownValues.City });
       setFilterState(true);
@@ -183,14 +182,16 @@ const ListingCars = () => {
       dropdownValues.price.init > 0 ||
       dropdownValues.price.final < "10000000"
     ) {
+      console.log("worng");
       ref = ref.orderBy("amount");
     }
+   
+    
     if (dropdownValues.price.init > 0) {
       ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
 
-      // ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
       setFilter({ ...filter, initPrice: dropdownValues.price.init });
-      // setFilter({ ...filter, finalPrice: dropdownValues.price.final });
+
       setFilterState(true);
     }
     if (dropdownValues.price.final < "10000000") {
@@ -209,7 +210,7 @@ const ListingCars = () => {
       setFilter({ ...filter, Assemble: dropdownValues.Assemble });
       setFilterState(true);
     }
-
+    // ref = ref.orderBy('date','desc')
     var a = await ref.limit(20).get();
     const lastVal = a.docs[a.docs.length - 1];
     console.log("lastV", lastVal);
@@ -375,6 +376,7 @@ const ListingCars = () => {
   const _onEndReached = () => {
     setMoreLoading(true);
     if (searchLoadMore == true) {
+      console.log("seacch");
       fetchMoreCarWithSearch(startAfter, searchText)
         .then((res) => {
           if (filteredData.length > 0) {
@@ -389,6 +391,7 @@ const ListingCars = () => {
         .catch((e) => console.log(e));
     }
     if (filterState == false && searchLoadMore == false) {
+      console.log("normal");
       fetchMoreCarWithoutFilter(startAfter)
         .then((res) => {
           setfilteredData([...filteredData, ...res.arr]);
@@ -400,6 +403,7 @@ const ListingCars = () => {
         .catch((e) => console.log(e));
     }
     if (filterState == true) {
+      console.log("filter",filter);
       fetchMoreCar(startAfter, filter).then((res) => {
         setfilteredData([...filteredData, ...res.arr]);
         setcarCount(filteredData.length + res.arr.length);
