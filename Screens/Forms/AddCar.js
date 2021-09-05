@@ -40,12 +40,65 @@ const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
 const AddCar = () => {
+  const items = [
+    { label: "800cc", value: "800cc" },
+    { label: "1300cc", value: "1300cc" },
+    { label: "1600cc", value: "1600cc" },
+  ];
+
+  const assembleType = [
+    { label: "local", value: "local" },
+    { label: "imported", value: "imported" },
+  ];
+  const color = [
+    { label: "red", value: "red" },
+    { label: "blue", value: "blue" },
+    { label: "yellow", value: "yellow" },
+  ];
+  const city = [
+    { label: "Karachi", value: "Karachi" },
+    { label: "Lahore", value: "Lahore" },
+    { label: "Islamabad", value: "Islamabad" },
+  ];
+  const type = [
+    { label: "Automatic", value: "Automatic" },
+    { label: "Manual", value: "Manual" },
+  ];
+
+  const carCompany = [
+    { label: "Toyota", value: "Toyota", categoryId: 1 },
+    { label: "Honda", value: "Honda", categoryId: 2 },
+  ];
+  const modelCar = [
+    { label: "Corolla", value: "Corolla", categoryId: 1, versionId: 1 },
+    { label: "Civic", value: "Civic", categoryId: 2, versionId: 2 },
+    { label: "Reborn ", value: "Reborn", categoryId: 2, versionId: 3 },
+  ];
+  const versionCar = [
+    { label: "Gli", value: "Gli", versionId: 1 },
+    { label: "Vti", value: "Vti", versionId: 2 },
+    { label: "Vti", value: "Vti", versionId: 3 },
+    { label: "xli ", value: "xli", versionId: 1 },
+  ];
+  const year = [
+    { label: "2000", value: "2000" },
+    { label: "2002", value: "2002" },
+    { label: "2009 ", value: "2009" },
+  ];
+
+  const engineTypeData = [
+    { label: "Petrol", value: "Petrol" },
+    { label: "Diesel", value: "Diesel" },
+  ];
+
   const navigation = useNavigation();
   const [makeCompany, setCompany] = useState([]);
   const [loader, setLoader] = useState(false);
   const [imagesArr, setImagesArr] = useState([]);
   const [image, setImage] = useState([]);
   const [tempImage, setTempImage] = useState([]);
+  const [modelArr, setModelArr] = useState([]);
+  const [verionArr, setVersionArr] = useState([]);
   const [assembly, setAssembly] = useState("");
   const [enginecapacity, setEngineCapacity] = useState("");
   const [engineType, setEngineType] = useState("");
@@ -112,6 +165,7 @@ const AddCar = () => {
           value: item.data().name,
         })
       );
+      console.log(arr, "company");
       setCompany(arr);
     });
   };
@@ -122,51 +176,6 @@ const AddCar = () => {
     setRangeMileageData({ init: e });
   };
 
-  const items = [
-    { label: "800cc", value: "800cc" },
-    { label: "1300cc", value: "1300cc" },
-    { label: "1600cc", value: "1600cc" },
-  ];
-
-  const assembleType = [
-    { label: "local", value: "local" },
-    { label: "imported", value: "imported" },
-  ];
-  const color = [
-    { label: "red", value: "red" },
-    { label: "blue", value: "blue" },
-    { label: "yellow", value: "yellow" },
-  ];
-  const city = [
-    { label: "Karachi", value: "Karachi" },
-    { label: "Lahore", value: "Lahore" },
-    { label: "Islamabad", value: "Islamabad" },
-  ];
-  const type = [
-    { label: "Automatic", value: "Automatic" },
-    { label: "Manual", value: "Manual" },
-  ];
-  const modelCar = [
-    { label: "Corolla", value: "Corolla" },
-    { label: "Civic", value: "Civic" },
-    { label: "Reborn ", value: "Reborn" },
-  ];
-  const versionCar = [
-    { label: "Gli", value: "Gli" },
-    { label: "Vti", value: "Vti" },
-    { label: "xli ", value: "xli" },
-  ];
-  const year = [
-    { label: "2000", value: "2000" },
-    { label: "2002", value: "2002" },
-    { label: "2009 ", value: "2009" },
-  ];
-
-  const engineTypeData = [
-    { label: "Petrol", value: "Petrol" },
-    { label: "Diesel", value: "Diesel" },
-  ];
-
   const onChangeHandler = (item) => {
     if (checkbox.includes(item)) {
       const a = checkbox.filter((c) => c !== item);
@@ -174,6 +183,16 @@ const AddCar = () => {
     } else {
       setCheckbox([...checkbox, item]);
     }
+  };
+  const onChangeHandler2 = (item) => {
+    const body = modelCar.filter((e) => e.categoryId == item);
+    setModelArr(body);
+    console.log(body);
+  };
+  const onChangeHandler3 = (item) => {
+    const body = versionCar.filter((e) => e.versionId == item);
+    setVersionArr(body);
+    console.log(body, versionCar, item);
   };
 
   const imageURI = async () => {
@@ -497,38 +516,53 @@ const AddCar = () => {
                   title="City"
                   items={city}
                   name="category"
-                  onSelectItem={(item) => setCity(item.label)}
+                  onSelectItem={(item) => {
+                    setCity(item.label);
+                  }}
                   PickerItemComponent={CategoryPickerItem}
-                  placeholder=" City"
+                  placeholder=" City *"
                   selectedItem={City}
                   width="95%"
                 />
               </View>
               <AppPicker
                 title="Company"
-                items={makeCompany}
+                items={carCompany}
                 name="category"
-                onSelectItem={(item) =>
-                  setInformation({ ...information, make: item.label })
-                }
+                onSelectItem={(item) => {
+                  setInformation({ ...information, make: item.label });
+                  onChangeHandler2(item.categoryId);
+                }}
                 PickerItemComponent={CategoryPickerItem}
-                placeholder=" Company"
+                placeholder=" Company *"
                 selectedItem={information.make}
                 width="95%"
               />
               <AppPicker
                 title="Car Model"
-                items={modelCar}
+                items={modelArr}
                 name="category"
-                onSelectItem={(item) =>
-                  setInformation({ ...information, model: item.label })
-                }
+                onSelectItem={(item) => {
+                  setInformation({ ...information, model: item.label });
+                  onChangeHandler3(item.versionId);
+                }}
                 PickerItemComponent={CategoryPickerItem}
-                placeholder=" Model"
+                placeholder=" Model *"
                 selectedItem={information.model}
                 width="95%"
               />
-
+              <AppPicker
+                title="Car Version"
+                items={verionArr}
+                name="category"
+                onSelectItem={(item) =>
+                  setInformation({ ...information, version: item.label })
+                }
+                PickerItemComponent={CategoryPickerItem}
+                placeholder=" Version"
+                selectedItem={information.version}
+                width="95%"
+              />
               <AppPicker
                 title="Model Year"
                 items={year}
@@ -539,18 +573,6 @@ const AddCar = () => {
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Model Year"
                 selectedItem={information.modelYear}
-                width="95%"
-              />
-              <AppPicker
-                title="Car Version"
-                items={versionCar}
-                name="category"
-                onSelectItem={(item) =>
-                  setInformation({ ...information, version: item.label })
-                }
-                PickerItemComponent={CategoryPickerItem}
-                placeholder=" Version"
-                selectedItem={information.version}
                 width="95%"
               />
 
@@ -583,7 +605,7 @@ const AddCar = () => {
                   setShowroomPicker(item.label), setShowroomId(item.value);
                 }}
                 PickerItemComponent={CategoryPickerItem}
-                placeholder="Showrooms"
+                placeholder=" Showrooms *"
                 selectedItem={showroomPicker}
                 width="95%"
               />
