@@ -150,7 +150,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
   if (filter.ExteriorColor != "") {
     ref = ref.where("vehicle.exteriorColor", "==", filter.ExteriorColor);
   }
-
+  //price
   if (filter.initPrice != "") {
     console.log("init");
     ref = ref.where("amount", ">", `${filter.initPrice}`);
@@ -162,6 +162,19 @@ export const fetchMoreCar = async (startAfter, filter) => {
   if (filter.initPrice != "" || filter.finalPrice != "") {
     console.log("wrong_back", filter);
     ref = ref.orderBy("amount");
+  }
+  //mileage
+  if (filter.initMileage != "") {
+    console.log("init m");
+    ref = ref.where("vehicle.mileage", ">", `${filter.initMileage}`);
+  }
+  if (filter.finalMileage != "") {
+    console.log("final m");
+    ref = ref.where("vehicle.mileage", "<", `${filter.finalMileage}`);
+  }
+  if (filter.initMileage != "" || filter.finalMileage != "") {
+    console.log("wrong_back", filter);
+    ref = ref.orderBy("vehicle.mileage");
   }
 
   if (filter.City != "") {
@@ -175,6 +188,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
       filter.Assemble
     );
   }
+  // ref = ref.orderBy('date','desc')
   console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)

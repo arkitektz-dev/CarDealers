@@ -47,7 +47,7 @@ const Filter = ({
     ExteriorColor: "",
     InteriorColor: "",
     Description: "",
-    mileage: "",
+    mileage:  { init: "0", final: "1000000" },
     price: { init: "0", final: "10000000" },
     transmission: "",
   });
@@ -74,7 +74,7 @@ const Filter = ({
       ExteriorColor: "",
       InteriorColor: "",
       Description: "",
-      mileage: "",
+      mileage:  { init: "0", final: "1000000" },
       price: { init: "0", final: "10000000" },
       transmission: "",
     });
@@ -98,6 +98,15 @@ const Filter = ({
       price: {
         init: e[0] ? e[0] : dropdownValues.price.init,
         final: e[1] ? e[1] : dropdownValues.price.final,
+      },
+    });
+  };
+  const handleValueChangeMillage = (e) => {
+    setDropDownValues({
+      ...dropdownValues,
+      mileage: {
+        init: e[0] ? e[0] : dropdownValues.mileage.init,
+        final: e[1] ? e[1] : dropdownValues.mileage.final,
       },
     });
   };
@@ -337,7 +346,7 @@ const Filter = ({
             selectedItem={dropdownValues.transmission}
             width="95%"
           />
-          <AppPicker
+          {/* <AppPicker
             title="Color"
             items={color}
             name="category"
@@ -351,7 +360,7 @@ const Filter = ({
             placeholder="Select Color"
             selectedItem={dropdownValues.ExteriorColor}
             width="95%"
-          />
+          /> */}
           {/* <AppPicker
             title="Location"
             items={city}
@@ -364,7 +373,7 @@ const Filter = ({
             selectedItem={dropdownValues.City}
             width="95%"
           /> */}
-          <AppPicker
+          {/* <AppPicker
             title="Year"
             items={year}
             name="category"
@@ -375,7 +384,7 @@ const Filter = ({
             placeholder="Select Year"
             selectedItem={dropdownValues.Year}
             width="95%"
-          />
+          /> */}
           <AppPicker
             title="Company"
             items={makeCompany}
@@ -410,6 +419,33 @@ const Filter = ({
               enabledTwo={true}
               onValueChanged={handleValueChange}
               values={[dropdownValues.price.init, dropdownValues.price.final]}
+              max={10000000}
+              step={25000}
+            />
+          </View>
+          <View style={styles.priceNum}>
+            <View style={styles.priceHolder}>
+              <Text style={styles.txt}>
+                {dropdownValues.mileage.init} KM
+              </Text>
+            </View>
+            <View style={styles.priceHolder}>
+              <Text style={styles.txt}>
+                {dropdownValues.mileage.final} KM
+              </Text>
+            </View>
+          </View>
+          <Text style={{ fontWeight: "700", fontSize: 16, color: "#000000" }}>
+          Mileage Range: (KM)
+          </Text>
+
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <SliderData
+              enabledTwo={true}
+              onValueChanged={handleValueChangeMillage}
+              values={[dropdownValues.mileage.init, dropdownValues.mileage.final]}
+              max={1000000}
+              step={3000}
             />
           </View>
 
@@ -417,6 +453,7 @@ const Filter = ({
             style={styles.background}
             title="Submit"
             onPressHandler={() => toggleModal(dropdownValues)}
+         
           />
         </ScrollView>
       </Modal>

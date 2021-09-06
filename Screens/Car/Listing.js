@@ -51,6 +51,8 @@ const ListingCars = () => {
     Assemble: "",
     initPrice: "",
     finalPrice: "",
+    initMileage: "",
+    finalMileage: "",
     Model: "",
     registrationCity: "",
     transmission: "",
@@ -150,9 +152,9 @@ const ListingCars = () => {
       setFilter({ ...filter, EngineCapacity: dropdownValues.EngineCapacity });
       setFilterState(true);
     }
-    
+
     if (dropdownValues.City != "") {
-      console.log(dropdownValues.City)
+      console.log(dropdownValues.City);
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
       setFilter({ ...filter, City: dropdownValues.City });
       setFilterState(true);
@@ -178,6 +180,7 @@ const ListingCars = () => {
       setFilter({ ...filter, ExteriorColor: dropdownValues.ExteriorColor });
       setFilterState(true);
     }
+    //price
     if (
       dropdownValues.price.init > 0 ||
       dropdownValues.price.final < "10000000"
@@ -185,8 +188,7 @@ const ListingCars = () => {
       console.log("worng");
       ref = ref.orderBy("amount");
     }
-   
-    
+
     if (dropdownValues.price.init > 0) {
       ref = ref.where("amount", ">", `${dropdownValues.price.init}`);
 
@@ -198,6 +200,34 @@ const ListingCars = () => {
       ref = ref.where("amount", "<", `${dropdownValues.price.final}`);
 
       setFilter({ ...filter, finalPrice: dropdownValues.price.final });
+      setFilterState(true);
+    }
+    // mileage
+    if (
+      dropdownValues.mileage.init > 0 ||
+      dropdownValues.mileage.final < "1000000"
+    ) {
+      console.log("worng");
+      ref = ref.orderBy("mileage");
+    }
+
+    if (dropdownValues.mileage.init > 0) {
+      console.log("mileage iniht");
+      ref = ref.where("mileage", ">", `${dropdownValues.mileage.init}`);
+
+      setFilter({ ...filter, initMileage: dropdownValues.mileage.init });
+
+      setFilterState(true);
+    }
+    if (dropdownValues.mileage.final < "1000000") {
+      console.log("mileage final");
+      ref = ref.where(
+        "mileage",
+        "<",
+        `${dropdownValues.mileage.final}`
+      );
+
+      setFilter({ ...filter, finalMileage: dropdownValues.mileage.final });
       setFilterState(true);
     }
 
@@ -403,7 +433,7 @@ const ListingCars = () => {
         .catch((e) => console.log(e));
     }
     if (filterState == true) {
-      console.log("filter",filter);
+      console.log("filter", filter);
       fetchMoreCar(startAfter, filter).then((res) => {
         setfilteredData([...filteredData, ...res.arr]);
         setcarCount(filteredData.length + res.arr.length);
