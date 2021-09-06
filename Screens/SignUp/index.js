@@ -26,6 +26,7 @@ import {
   clearStorage,
   storeData,
 } from "../../Data/FetchData";
+import Feather from "react-native-vector-icons/Fontisto";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -265,37 +266,40 @@ export const SignupScreen = () => {
           <TextInput
             autoCapitalize="none"
             placeholderTextColor="#000000"
-            label="Name"
+            label="Name *"
+            mode="outlined"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            style={styles.textInput}
-            style={{ backgroundColor: "transparent" }}
+            dense="20"
+            outlineColor="#CCCCCC"
+            style={{ backgroundColor: "white" }}
+           
             onChangeText={handleChangeName}
           />
+
           <View style={styles.distance}></View>
 
           <TextInput
             autoCapitalize="none"
             placeholderTextColor="#000000"
-            label="Username"
+           
+            mode="outlined"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            style={styles.textInput}
-            style={{ backgroundColor: "transparent" }}
+            dense="20"
+            outlineColor="#CCCCCC"
+            style={{ backgroundColor: "white" }}
+            label="Username *"
             onChangeText={handleChangeUsername}
           />
           {usernameError ? (
@@ -307,33 +311,37 @@ export const SignupScreen = () => {
           <View style={styles.distance}></View>
           <View style={{ flexDirection: "row", width: "100%" }}>
             <TextInput
+              mode="outlined"
+              dense="20"
               value={"+92"}
               editable={false}
               theme={{
                 colors: {
-                  primary: "#000000",
-                  placeholder: "#000000",
-                  text: "#000000",
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
                 },
               }}
-              underlineColor="#000000"
-              underlineColorAndroid="#000000"
-              style={{ backgroundColor: "transparent" }}
+              outlineColor="#CCCCCC"
+              style={{ backgroundColor: "transparent", width: "15%" }}
             />
             <TextInput
               autoCapitalize="none"
-              keyboardType="phone-pad"
-              maxLength={13}
+              placeholderTextColor="#000000"
+              label="Ph No *"
+              mode="outlined"
+              dense="20"
               theme={{
                 colors: {
-                  primary: "#000000",
-                  placeholder: "#000000",
-                  text: "#000000",
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
                 },
               }}
-              underlineColor="#000000"
-              underlineColorAndroid="#000000"
-              style={{ backgroundColor: "transparent", width: "80%" }}
+              outlineColor="#CCCCCC"
+              style={{ backgroundColor: "white", width: "85%" }}
+              keyboardType="phone-pad"
+              maxLength={13}
               onChangeText={onChangePhoneNumber}
             />
           </View>
@@ -342,21 +350,20 @@ export const SignupScreen = () => {
           <TextInput
             autoCapitalize="none"
             placeholderTextColor="#000000"
-            maxLength={40}
-            // style={styles.textInput}
-            keyboardType="email-address"
-            mode="flat"
-            label="Email"
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
+            mode="outlined"
+            outlineColor="#CCCCCC"
+            dense="20"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            style={{ backgroundColor: "transparent", color: "#000000" }}
+            style={{ backgroundColor: "white" }}
+            maxLength={40}
+            keyboardType="email-address"
+            label="Email *"
             onChangeText={handleChangeEmail}
           />
           {emaiError ? (
@@ -366,21 +373,20 @@ export const SignupScreen = () => {
           <View style={styles.distance}></View>
           <TextInput
             autoCapitalize="none"
+            mode="outlined"
             maxLength={20}
+            dense="20"
+            outlineColor="#CCCCCC"
             secureTextEntry
-            placeholderTextColor="#000000"
-            label="Password"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            style={styles.textInput}
-            style={{ backgroundColor: "transparent" }}
+            style={{ backgroundColor: "white" }}
+            label="Password *"
             onChangeText={handleChangePassword}
           />
 
@@ -388,41 +394,43 @@ export const SignupScreen = () => {
           <TextInput
             autoCapitalize="none"
             maxLength={20}
+            outlineColor="#CCCCCC"
+            dense="20"
             secureTextEntry
-            placeholderTextColor="#000000"
-            label="Confirm Password"
+            mode="outlined"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            underlineColor="#000000"
-            underlineColorAndroid="000000"
-            style={styles.textInput}
-            style={{ backgroundColor: "transparent" }}
+            style={{ backgroundColor: "white" }}
+            label="Confirm Password *"
             onChangeText={handleChangeConfirmPassowrd}
           />
-          <View style={{ alignSelf: "center" }}>
+          <View style={styles.distance}></View>
+          <View style={{ alignSelf: "center", width: "100%" }}>
             <TouchableOpacity
               style={{
-                backgroundColor: defaultStyles.colors.light,
-                borderRadius: 25,
+                backgroundColor: "#F5F5F5",
+                borderRadius: 5,
+                width: "100%",
+                height: 44,
                 flexDirection: "row",
-                padding: 15,
-                margin: 10,
-                width: screenWidth * 0.71,
-                justifyContent: "center",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 8,
               }}
               onPress={() => setVisible(true)}
             >
               <Text
-                style={{ color: "#333", fontSize: 17 }}
+                style={{ color: "#9B9B9B", fontSize: 17 }}
                 onPress={onModalHandler}
               >
-                Select Showroom
+                Select Showrooms
               </Text>
+              <Feather name="arrow-down" size={14} color="#9B9B9B" />
             </TouchableOpacity>
             <Modal
               onRequestClose={() => setVisible(false)}
@@ -434,26 +442,33 @@ export const SignupScreen = () => {
                 style={styles.buttonContainer}
                 onPressHandler={onModalHandler}
               />
-              {showroomData.map((item) => {
-                return (
-                  <View style={{ flexDirection: "row" }}>
-                    <AppCheckBox
-                      status={checkbox.includes(item) ? "checked" : "unchecked"}
-                      onPress={() => onChangeHandler(item)}
-                    />
-                    <Text
-                      style={{
-                        color: "#000",
-                        fontSize: 18,
-                        fontWeight: "800",
-                      }}
-                      key={(item, index) => index.toString()}
+              <ScrollView style={styles.form_container}>
+                {showroomData.map((item) => {
+                  return (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      {item.label}
-                    </Text>
-                  </View>
-                );
-              })}
+                      <AppCheckBox
+                        status={
+                          checkbox.includes(item) ? "checked" : "unchecked"
+                        }
+                        onPress={() => onChangeHandler(item)}
+                      />
+                      <Text
+                        style={{
+                          color: "#000",
+                          fontSize: 18,
+                          fontWeight: "800",
+                          marginTop: -2,
+                        }}
+                        key={(item, index) => index.toString()}
+                      >
+                        {item.label}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </ScrollView>
             </Modal>
           </View>
           {confirmPasswordError ? (
@@ -473,19 +488,36 @@ export const SignupScreen = () => {
           <HelperText
             type="error"
             style={{
-              color: "#000000",
-              fontWeight: "500",
-              textAlign: "center",
+              color: "#F63D40",
+              fontWeight: "700",
+              textAlign: "left",
+              marginLeft:10,
+              fontSize:14
+            
             }}
           >
-            Field can not be empty!
+           Please fill the required fields!
           </HelperText>
         ) : null}
-
+        <View style={styles.distance}></View>
         <View style={styles.buttonContainer}>
           <Button
             title="Register"
-            style={styles.background}
+            style={[
+              styles.background,
+              {
+                borderRadius: 15,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.22,
+                shadowRadius: 2.22,
+
+                elevation: 3,
+              },
+            ]}
             onPressHandler={Signup}
           />
         </View>
@@ -498,6 +530,20 @@ export const SignupScreen = () => {
               justifyContent: "center",
             }}
           >
+            <Text
+              style={{
+                color: "#1c2e65",
+                alignSelf: "center",
+
+                fontSize: 22,
+                fontWeight: "800",
+                marginBottom: 20,
+                padding: 22,
+                textAlign: "center",
+              }}
+            >
+              Please enter the 6 digit code sent to your phone number{" "}
+            </Text>
             <View
               style={{
                 flexDirection: "row",
@@ -521,8 +567,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -546,17 +592,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
-                  },
-                }}
-                underlineColor="#1c2e65"
-                underlineColorAndroid="#1c2e65"
-                theme={{
-                  colors: {
-                    primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -577,8 +614,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -599,8 +636,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -621,8 +658,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -640,8 +677,8 @@ export const SignupScreen = () => {
                 theme={{
                   colors: {
                     primary: "#1c2e65",
-                    placeholder: "#1c2e65",
-                    text: "#1c2e65",
+                    placeholder: "grey",
+                    text: "black",
                   },
                 }}
                 underlineColor="#1c2e65"
@@ -651,49 +688,71 @@ export const SignupScreen = () => {
             <View style={styles.distance}></View>
 
             <Button
-              style={styles.background}
+              style={[
+                styles.background,
+                {
+                  borderRadius: 15,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.22,
+                  shadowRadius: 2.22,
+
+                  elevation: 3,
+                },
+              ]}
               title="Verify"
               onPressHandler={confirmCode}
             />
-            <View style={styles.distance}></View>
-            <TouchableOpacity
-              onPress={() => {
-                setConfirm(null), setModalVisible(false);
+            
+            <View
+              style={{
+                flexDirection: "row",
+                width: "76%",
+                alignSelf: "center",
+                justifyContent: "space-around",
               }}
-              style={{ justifyContent: "center" }}
             >
-              <Text
-                style={{
-                  color: "#333",
-                  alignSelf: "center",
-                  fontSize: 20,
-                  fontWeight: "600",
+              <TouchableOpacity
+                onPress={() => {
+                  setConfirm(null), setModalVisible(false);
                 }}
+                style={{ justifyContent: "center" }}
               >
-                Change Number ?
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                const confirmation = await auth().signInWithPhoneNumber(
-                  `+92${user.phone}`
-                );
-                setConfirm(confirmation);
-              }}
-              style={{ justifyContent: "center" }}
-            >
-              <Text
-                style={{
-                  color: "#1c2e65",
-                  alignSelf: "center",
-                  top: 10,
-                  fontSize: 16,
-                  fontWeight: "800",
+                <Text
+                  style={{
+                    color: "#333",
+                    alignSelf: "center",
+                    fontSize: 16,
+                    fontWeight: "600",
+                  }}
+                >
+                  Change Number ?
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={async () => {
+                  const confirmation = await auth().signInWithPhoneNumber(
+                    `+92${user.phone}`
+                  );
+                  setConfirm(confirmation);
                 }}
+                style={{ justifyContent: "center" }}
               >
-                Resend Code ?
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: "#1c2e65",
+                    alignSelf: "center",
+                    fontSize: 16,
+                    fontWeight: "800",
+                  }}
+                >
+                  Resend Code ?
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Modal>
 
@@ -711,8 +770,10 @@ export const SignupScreen = () => {
 };
 const styles = StyleSheet.create({
   OTP_text: {
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 25,
+    textAlign: "center",
+    backgroundColor: "#E4E5E6",
   },
   nav: {
     backgroundColor: "#fff",
@@ -731,7 +792,7 @@ const styles = StyleSheet.create({
     borderColor: "#03DAC6",
   },
   distance: {
-    height: screenHeight * 0.02,
+    height: 16,
   },
   background: {
     alignSelf: "center",
@@ -762,8 +823,9 @@ const styles = StyleSheet.create({
     // opacity: 0.7,
   },
   inputContainer: {
-    width: screenWidth * 0.7,
+    width: "100%",
     alignSelf: "center",
+    paddingHorizontal: 20,
   },
   forgotpassContainer: {
     flexDirection: "row",
