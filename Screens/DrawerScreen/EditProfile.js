@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import AppTextInput from "../../Component/TextInput/Index";
 import { Button } from "../../Component/Button/Index";
@@ -16,9 +17,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import storage from "@react-native-firebase/storage";
 import * as ImagePicker from "expo-image-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { launchImageLibrary } from "react-native-image-picker";
 import { imageChecker, screenHeight } from "../../Global/Dimension";
 import { HelperText } from "react-native-paper";
 
@@ -70,9 +69,10 @@ const EditProfile = ({ navigation, route }) => {
         updateProfile(userinfo, userData);
       }
       setTimeout(() => {
+        setUploading(false);
         navigation.goBack();
         route.params.functionBack();
-      }, 3000);
+      }, 1500);
     }
   };
   useEffect(() => {
@@ -81,10 +81,11 @@ const EditProfile = ({ navigation, route }) => {
   }, []);
 
   const imageURI = async () => {
+    setUploading(true);
     if (url == true) {
       console.log(image);
       const uploadImage = image.substring(image.lastIndexOf("/") + 1);
-      setUploading(true);
+
       setTransferred(0);
       const storageRef = storage().ref(`photos/${uploadImage}`);
       const task = storageRef.putFile(image);
@@ -100,11 +101,11 @@ const EditProfile = ({ navigation, route }) => {
       try {
         await task;
         const url = await storageRef.getDownloadURL();
-        setUploading(false);
+
         console.log(url);
         // setImage(null);
         onSubmitHandler(url);
-        alert("Picture Added");
+
         return url;
       } catch (error) {
         console.log(error);
@@ -190,6 +191,7 @@ const EditProfile = ({ navigation, route }) => {
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
+            paddingHorizontal: 20,
           }}
         >
           <View>
@@ -225,7 +227,7 @@ const EditProfile = ({ navigation, route }) => {
           </View>
           <View
             style={{
-              width: "80%",
+              width: "100%",
               alignSelf: "center",
             }}
           >
@@ -238,7 +240,7 @@ const EditProfile = ({ navigation, route }) => {
           </View>
           <View
             style={{
-              width: "80%",
+              width: "100%",
               alignSelf: "center",
             }}
           >
@@ -268,9 +270,15 @@ const EditProfile = ({ navigation, route }) => {
             }}
           >
             <Button
-              onPressHandler={imageURI}
+              onPressHandler={!uploading ? imageURI : console.log("ring")}
               style={styles.buttonContainer}
-              title="Update Profile"
+              title={
+                uploading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  "Update"
+                )
+              }
             />
           </View>
         </View>
@@ -287,7 +295,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex:100
+    zIndex: 100,
   },
   distance: { height: screenHeight * 0.09 },
   container: {

@@ -1,6 +1,15 @@
-import React, { memo, useEffect, useState } from "react";
-import { updatePassword } from "../../Data/FetchData";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { memo, useEffect, useState,useContext } from "react";
+import { clearStorage, updatePassword } from "../../Data/FetchData";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 import { Button } from "../../Component/Button/Index";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -8,8 +17,11 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 
 import { screenHeight } from "../../Global/Dimension";
 import { ActivityIndicator } from "react-native";
+import AuthContext from "../../Component/Authcontext";
 
 const UpdatePassword = ({ navigation, route }) => {
+  const authContext = useContext(AuthContext);
+
   const [loader, setLoader] = useState(false);
   const [userinfo, setUserInfo] = useState(null);
   const [passwordMatch, setPasswordMatch] = useState(false);
@@ -26,6 +38,12 @@ const UpdatePassword = ({ navigation, route }) => {
       setPasswordMatch(false);
     }
   };
+
+  const onPressHandler = async () => {
+    clearStorage();
+    authContext.setUser(undefined);
+    navigation.replace("Login");
+  };
   const onConfirmPassword = (text) => {
     setUserData({ ...userData, confirmPassword: text });
     if (text != userData.password) {
@@ -36,194 +54,208 @@ const UpdatePassword = ({ navigation, route }) => {
   };
   const onSubmitHandler = async () => {
     setLoader(true);
-
+    console.log(passwordMatch, confirmMatch);
     if (!passwordMatch && !confirmMatch) {
       await updatePassword(userinfo, userData);
       setLoader(false);
-
+      onPressHandler();
+    } else {
       setLoader(false);
+      console.log("not done");
     }
-    setLoader(false);
   };
   useEffect(() => {
     setUserInfo(item);
   }, []);
-
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <IonIcon
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={35}
-          style={{ margin: 10 }}
-          onPress={() => navigation.goBack()}
-        />
-      </View>
-      <Image
-        style={styles.avatar}
-        source={{ uri: userinfo && userinfo.image }}
-      />
-
-      <View style={styles.distance}></View>
-      <View
-        style={{
-          flexDirection: "column",
-          flex: 0.8,
-          width: "90%",
-          alignSelf: "center",
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: "#333",
-          backgroundColor: "#fff",
-        }}
+    <ScrollView
+      // style={styles.container}
+      contentContainerStyle={styles.container}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? "height" : "padding"}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}
       >
-        <View
-          style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
-        >
-          <EvilIcons name="pencil" size={30} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <IonIcon
+              name="chevron-back-circle-sharp"
+              color="white"
+              size={35}
+              style={{ margin: 10 }}
+              onPress={() => navigation.goBack()}
+            />
+          </TouchableOpacity>
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
+              Edit Profile
+            </Text>
+          </View>
+          <View style={{ opacity: 0 }}>
+            <IonIcon
+              name="chevron-back-circle-sharp"
+              color="white"
+              size={35}
+              style={{ margin: 10 }}
+              onPress={() => navigation.goBack()}
+            />
+          </View>
         </View>
+
+        <View style={styles.distance}></View>
         <View
           style={{
-            width: "80%",
-            alignSelf: "center",
+            flexDirection: "column",
+            width: "100%",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
           }}
         >
-          <TextInput
-            placeholder="Old Password"
-            label="Old Password"
-            placeholderTextColor="#000000"
-            mode="flat"
-            renderToHardwareTextureAndroid
-            onChangeText={onChangeHandeler}
-            returnKeyType="next"
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            theme={{
-              colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
-              },
-            }}
+          <View
             style={{
-              backgroundColor: "transparent",
-              color: "#000000",
+              width: "100%",
+              alignSelf: "center",
+              marginTop: 10,
             }}
-          />
-          {passwordMatch ? (
-            <HelperText
-              type="error"
-              style={{
-                color: "red",
-                fontWeight: "500",
-                textAlign: "center",
+          >
+            <TextInput
+              // placeholder="Old Password"
+              label="Old Password"
+              renderToHardwareTextureAndroid
+              onChangeText={onChangeHandeler}
+              returnKeyType="next"
+              placeholderTextColor="#000000"
+              mode="outlined"
+              theme={{
+                colors: {
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
+                },
               }}
-            >
-              Does not match old password!
-            </HelperText>
-          ) : null}
-        </View>
-        <View
-          style={{
-            width: "80%",
-            alignSelf: "center",
-          }}
-        >
-          <TextInput
-            onChangeText={(e) => setUserData({ ...userData, password: e })}
-            returnKeyType="next"
-            placeholder="New Password"
-            placeholderTextColor="#000000"
-            mode="flat"
-            label="New Password"
-            renderToHardwareTextureAndroid
-            returnKeyType="next"
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            theme={{
-              colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
-              },
-            }}
+              dense="20"
+              outlineColor="#CCCCCC"
+              style={{ backgroundColor: "white", marginTop: 10 }}
+            />
+            {passwordMatch ? (
+              <HelperText
+                type="error"
+                style={{
+                  color: "red",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
+              >
+                Does not match old password!
+              </HelperText>
+            ) : null}
+          </View>
+          <View
             style={{
-              backgroundColor: "transparent",
-              color: "#000000",
+              width: "100%",
+              alignSelf: "center",
+              marginTop: 10,
             }}
-          />
-        </View>
-        <View
-          style={{
-            width: "80%",
-            alignSelf: "center",
-          }}
-        >
-          <TextInput
-            onChangeText={onConfirmPassword}
-            returnKeyType="done"
-            placeholder="Confirm Password"
-            placeholderTextColor="#000000"
-            mode="flat"
-            label="Confirm Password"
-            renderToHardwareTextureAndroid
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            theme={{
-              colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
-              },
-            }}
-            style={{
-              backgroundColor: "transparent",
-              color: "#000000",
-            }}
-          />
-          {confirmMatch ? (
-            <HelperText
-              type="error"
-              style={{
-                color: "red",
-                fontWeight: "500",
-                textAlign: "center",
+          >
+            <TextInput
+              onChangeText={(e) => setUserData({ ...userData, password: e })}
+              returnKeyType="next"
+              returnKeyType="next"
+              // placeholder="New Password"
+              label="New Password"
+              renderToHardwareTextureAndroid
+              placeholderTextColor="#000000"
+              mode="outlined"
+              theme={{
+                colors: {
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
+                },
               }}
-            >
-              Password Does Not Match!
-            </HelperText>
-          ) : null}
+              dense="20"
+              outlineColor="#CCCCCC"
+              style={{ backgroundColor: "white", marginTop: 10 }}
+            />
+          </View>
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              marginTop: 10,
+            }}
+          >
+            <TextInput
+              onChangeText={onConfirmPassword}
+              returnKeyType="done"
+              label="Confirm Password"
+              placeholderTextColor="#000000"
+              mode="outlined"
+              theme={{
+                colors: {
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
+                },
+              }}
+              dense="20"
+              outlineColor="#CCCCCC"
+              style={{ backgroundColor: "white", marginTop: 10 }}
+            />
+            {confirmMatch ? (
+              <HelperText
+                type="error"
+                style={{
+                  color: "red",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
+              >
+                Password Does Not Match!
+              </HelperText>
+            ) : null}
+          </View>
+          <View
+            style={{
+              margin: 10,
+              alignSelf: "center",
+            }}
+          >
+            <Button
+              onPressHandler={onSubmitHandler}
+              style={styles.buttonContainer}
+              title={
+                loader ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  "Update Password"
+                )
+              }
+            />
+          </View>
         </View>
-        <View
-          style={{
-            margin: 10,
-            alignSelf: "center",
-          }}
-        >
-          <Button
-            onPressHandler={onSubmitHandler}
-            style={styles.buttonContainer}
-            title={
-              loader ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                "Update Password"
-              )
-            }
-          />
-        </View>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#1c2e65",
-    height: 200,
+    height: 55,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    zIndex: 100,
   },
   distance: { height: screenHeight * 0.09 },
-
   container: {
     flex: 1,
     flexDirection: "column",

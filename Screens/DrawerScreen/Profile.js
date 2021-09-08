@@ -178,7 +178,7 @@ const Profile = ({ navigation }) => {
             marginTop: 18,
             paddingBottom: 18,
           }}
-          // onPress={() => navigation.navigate("UpdatePassword", { userinfo })}
+          onPress={() => navigation.navigate("UpdatePassword", { userinfo })}
         >
           <Text style={{ color: "black", fontSize: 17 }}>Change Password</Text>
           <Feather name="arrow-right" size={18} color="black" />
