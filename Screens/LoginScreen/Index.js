@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 import Back from "../../Assets/NewAsset/backButton.png";
@@ -31,7 +38,10 @@ export const LoginScreen = () => {
   const [loader, setLoader] = useState(false);
 
   const navigation = useNavigation();
-
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
   const Login = async () => {
     setLoader(true);
     const ref = firestore().collection("Users");
@@ -78,111 +88,141 @@ export const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.imageBackground}>
-      <View style={styles.logoContainer}>
-        <Text style={styles.headText}>Sign in to Car Dealer</Text>
-      </View>
+    <ScrollView
+      // style={styles.container}
+      contentContainerStyle={styles.container}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? "height" : "padding"}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.logoContainer}>
+          <Text style={styles.headText}>Sign In</Text>
+        </View>
 
-      <View style={styles.inputContainer}>
-        <View>
+        <View style={styles.inputContainer}>
+          <View>
+            <TextInput
+              renderToHardwareTextureAndroid
+              returnKeyType="next"
+              placeholderTextColor="#000000"
+              label="Username"
+              mode="outlined"
+              // fla
+
+              theme={{
+                colors: {
+                  primary: "#1B3661",
+                  placeholder: "grey",
+                  text: "black",
+                },
+              }}
+              dense="20"
+              outlineColor="#CCCCCC"
+              focus
+              style={{ backgroundColor: "white" }}
+              onChangeText={(e) => {
+                setEmptyFieldError(false), setUser({ ...user, name: e });
+              }}
+            />
+          </View>
+          <View style={styles.distance}></View>
           <TextInput
-            renderToHardwareTextureAndroid
-            returnKeyType="next"
-            placeholderTextColor="#000000"
-            mode="flat"
-            label="Username:"
-            underlineColor="#000000"
-            underlineColorAndroid="#000000"
-            placeholder="Username"
+            right={
+              <TextInput.Icon name="eye" onPress={() => setSecure(!secure)} />
+            }
+            secureTextEntry={secure}
+            label="Password"
+            mode="outlined"
             theme={{
               colors: {
-                primary: "#000000",
-                placeholder: "#000000",
-                text: "#000000",
+                primary: "#1B3661",
+                placeholder: "grey",
+                text: "black",
               },
             }}
-            style={{
-              backgroundColor: "transparent",
-              color: "#000000",
-            }}
+            dense="20"
+            outlineColor="#CCCCCC"
+            style={{ backgroundColor: "white" }}
             onChangeText={(e) => {
-              setEmptyFieldError(false), setUser({ ...user, name: e });
+              setEmptyFieldError(false), setUser({ ...user, password: e });
             }}
           />
+          <View style={styles.forgotpassContainer}>
+            <Text
+              style={styles.forgotpassText}
+              onPress={() => navigation.navigate("ForgotPassword")}
+            >
+              Forgot Password?
+            </Text>
+
+            <Text
+              style={styles.forgotpassText}
+              onPress={() => navigation.navigate("Home")}
+            >
+              Skip to home
+            </Text>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <Button
+              title={
+                loader ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  "Login"
+                )
+              }
+              onPressHandler={Login}
+              style={styles.background}
+            />
+          </View>
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Signup for an account? </Text>
+            <Text
+              style={styles.signupButtonText}
+              onPress={() => {
+                navigation.navigate("SignupScreen");
+              }}
+            >
+              {" "}
+              Signup
+            </Text>
+          </View>
+          {/* {emptyFieldError ? (
+            <HelperText
+              type="error"
+              style={{ color: "red", fontWeight: "600", textAlign: "left" }}
+            >
+              Field can not be empty!
+            </HelperText>
+          ) : null} */}
         </View>
-        <View style={styles.distance}></View>
-        <TextInput
-          right={<TextInput.Icon name="eye" onPress={() => setSecure(false)} />}
-          secureTextEntry={secure}
-          placeholderTextColor="#000000"
-          placeholder="Password"
-          label="Password:"
-          theme={{
-            colors: {
-              primary: "#000000",
-              placeholder: "#000000",
-              text: "#000000",
-            },
-          }}
-          underlineColor="#000000"
-          underlineColorAndroid="#000000"
-          style={{ backgroundColor: "transparent" }}
-          onChangeText={(e) => {
-            setEmptyFieldError(false), setUser({ ...user, password: e });
-          }}
-        />
-      </View>
-      <View style={styles.forgotpassContainer}>
-        <Text
-          style={styles.forgotpassText}
-          onPress={() => navigation.navigate("ForgotPassword")}
-        >
-          Forgot Password?
-        </Text>
-        <View style={{ width: "15%" }}></View>
-      </View>
-      {emptyFieldError ? (
-        <HelperText
-          type="error"
-          style={{ color: "#fff", fontWeight: "500", textAlign: "center" }}
-        >
-          Field can not be empty!
-        </HelperText>
-      ) : null}
 
-      <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>Signup for an account? </Text>
-        <Text
-          style={styles.signupButtonText}
-          onPress={() => {
-            navigation.navigate("SignupScreen");
-          }}
-        >
-          {" "}
-          Signup
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title={
-            loader ? <ActivityIndicator size="small" color="#fff" /> : "Login"
-          }
-          onPressHandler={Login}
-          style={styles.background}
-        />
-      </View>
+        {/* <View style={styles.forgotpassContainer}>
+          <Text
+            style={styles.forgotpassText}
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            Forgot Password?
+          </Text>
+          <View style={{ width: "15%" }}></View>
+        </View> */}
 
-      <View style={styles.buttonContainer}>
-        <Text
-          style={styles.skipButton}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        >
-          SKIP
-        </Text>
-      </View>
-    </View>
+        {/* <View style={styles.buttonContainer}>
+          <Text
+            style={styles.skipButton}
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+          >
+            SKIP
+          </Text>
+        </View> */}
+        {/* </View> */}
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -218,12 +258,12 @@ const styles = StyleSheet.create({
   distance: {
     height: screenHeight * 0.02,
   },
-  inputContainer: { width: screenWidth * 0.7, alignSelf: "center" },
+  inputContainer: { width: "100%",flex:1,justifyContent:'center' },
   forgotpassContainer: {
+    width: "100%",
     flexDirection: "row",
-    top: 15,
-    alignSelf: "center",
-    right: 50,
+    justifyContent: "space-between",
+    marginTop: 6,
   },
   forgotpassText: {
     color: "#000000",
@@ -233,9 +273,9 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     flexDirection: "row",
-    flex: 0.1,
-    top: "15%",
-    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 20,
   },
   signupText: {
     color: "#000000",
@@ -261,7 +301,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    paddingHorizontal: 30,
   },
   nav: {
     backgroundColor: "#fff",
@@ -271,10 +311,8 @@ const styles = StyleSheet.create({
   },
   back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
   buttonContainer: {
-    flexDirection: "row",
-    flex: 0.2,
-    justifyContent: "center",
-    top: "13%",
+    width:"100%",
+    marginTop:28
   },
   logoContainer: {
     marginTop: "20%",
@@ -286,10 +324,11 @@ const styles = StyleSheet.create({
     width: titleWidth,
   },
   headText: {
-    fontSize: 20,
+    fontSize: 24,
     top: "20%",
     fontWeight: "bold",
     color: "#000000",
     textAlign: "center",
+    marginTop: -20,
   },
 });
