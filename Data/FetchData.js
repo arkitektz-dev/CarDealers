@@ -343,12 +343,16 @@ export const updateProfile = async (userinfo, userData) => {
   if (userData.name == "" || userData.email == "") {
     alert("Fields Cant be empty");
   } else {
+    console.log(userData)
     firestore()
       .collection("Users")
       .doc(id)
       .update(userData)
-      .then(() => {
+      .then(async() => {
         alert("User updated!");
+        var d = JSON.stringify({...userinfo,...userData})
+        console.log(d)
+        return await AsyncStorage.setItem("userInfo", d);
       });
   }
 };

@@ -1,19 +1,38 @@
 import React, { memo, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import AppTextInput from "../../Component/TextInput/Index";
 import { Button } from "../../Component/Button/Index";
 import { updateProfile } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
+import storage from "@react-native-firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { screenHeight } from "../../Global/Dimension";
+import { launchImageLibrary } from "react-native-image-picker";
+import { imageChecker, screenHeight } from "../../Global/Dimension";
 import { HelperText } from "react-native-paper";
 
 const EditProfile = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+
+  const [image, setImage] = useState(route.params.userinfo?.image);
+  const [url, setUrl] = useState(false);
   const [userData, setUserData] = useState({
-    email: "",
-    name: "",
+    email: route.params.userinfo.email,
+    name: route.params.userinfo.name,
+    image: route.params.userinfo.image,
   });
   const [error, setError] = useState({
     name: false,
@@ -37,7 +56,7 @@ const EditProfile = ({ navigation, route }) => {
       setUserData({ ...userData, name: e });
     }
   };
-  const onSubmitHandler = () => {
+  const onSubmitHandler = (url) => {
     if (error.email) {
       alert("Format is not Correct");
     }
@@ -45,106 +64,230 @@ const EditProfile = ({ navigation, route }) => {
       alert("Fields Can Not be Empty");
     }
     if (!error.email && userData != {}) {
-      updateProfile(userinfo, userData);
+      if (url !== undefined) {
+        updateProfile(userinfo, { ...userData, image: url });
+      } else {
+        updateProfile(userinfo, userData);
+      }
+      setTimeout(() => {
+        navigation.goBack();
+        route.params.functionBack();
+      }, 3000);
     }
   };
   useEffect(() => {
+    console.log(route.params.userinfo);
     setUserInfo(route.params.userinfo);
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <IonIcon
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={35}
-          style={{ margin: 10 }}
-          onPress={() => navigation.goBack()}
-        />
-      </View>
-      <Image
-        style={styles.avatar}
-        source={{
-          uri: userinfo && userinfo.image,
-        }}
-      />
+  const imageURI = async () => {
+    if (url == true) {
+      console.log(image);
+      const uploadImage = image.substring(image.lastIndexOf("/") + 1);
+      setUploading(true);
+      setTransferred(0);
+      const storageRef = storage().ref(`photos/${uploadImage}`);
+      const task = storageRef.putFile(image);
+      task.on("state_changed", (taskSnapshot) => {
+        console.log(
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
+        );
+        setTransferred(
+          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            100
+        );
+      });
+      try {
+        await task;
+        const url = await storageRef.getDownloadURL();
+        setUploading(false);
+        console.log(url);
+        // setImage(null);
+        onSubmitHandler(url);
+        alert("Picture Added");
+        return url;
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      onSubmitHandler();
+    }
+  };
 
-      <View style={styles.distance}></View>
-      <View
-        style={{
-          flexDirection: "column",
-          flex: 0.8,
-          width: "90%",
-          alignSelf: "center",
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: "#333",
-          backgroundColor: "#fff",
-        }}
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
+  const selectImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.5,
+      });
+      if (!result.cancelled) {
+        setImage(result.uri);
+        setUrl(true);
+      }
+    } catch (error) {
+      console.log("Error reading an image", error);
+    }
+  };
+
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+  return (
+    <ScrollView
+      // style={styles.container}
+      contentContainerStyle={styles.container}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? "height" : "padding"}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}
       >
-        <View
-          style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
-        >
-          <EvilIcons name="pencil" size={30} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <IonIcon
+              name="chevron-back-circle-sharp"
+              color="white"
+              size={35}
+              style={{ margin: 10 }}
+              onPress={() => navigation.goBack()}
+            />
+          </TouchableOpacity>
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
+              Edit Profile
+            </Text>
+          </View>
+          <View style={{ opacity: 0 }}>
+            <IonIcon
+              name="chevron-back-circle-sharp"
+              color="white"
+              size={35}
+              style={{ margin: 10 }}
+              onPress={() => navigation.goBack()}
+            />
+          </View>
         </View>
+
+        <View style={styles.distance}></View>
         <View
           style={{
-            width: "80%",
-            alignSelf: "center",
+            flexDirection: "column",
+            width: "100%",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <AppTextInput
-            label="Full Name"
-            returnKeyType="next"
-            onChangeHandler={(e) => onChangeName(e)}
-          />
-        </View>
-        <View
-          style={{
-            width: "80%",
-            alignSelf: "center",
-          }}
-        >
-          <AppTextInput
-            label="Email"
-            returnKeyType="done"
-            onChangeHandler={(e) => onChangeEmail(e)}
-          />
-        </View>
-        {error.email ? (
-          <HelperText
-            type="error"
+          <View>
+            <View
+              style={{
+                margin: 10,
+                position: "absolute",
+                zIndex: 10,
+                top: -55,
+                right: -12,
+                borderRadius: 50,
+                backgroundColor: "white",
+                width: 25,
+                height: 25,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <EvilIcons
+                name="pencil"
+                color="black"
+                size={24}
+                onPress={() => selectImage()}
+              />
+            </View>
+            <Image
+              style={styles.avatar}
+              accessibilityLabel="Pic"
+              source={{
+                uri: imageChecker(image),
+              }}
+            />
+          </View>
+          <View
             style={{
-              color: "red",
-              fontWeight: "500",
-              textAlign: "center",
+              width: "80%",
+              alignSelf: "center",
             }}
           >
-            Email is not valid!
-          </HelperText>
-        ) : null}
-        <View
-          style={{
-            margin: 10,
-            alignSelf: "center",
-          }}
-        >
-          <Button
-            onPressHandler={onSubmitHandler}
-            style={styles.buttonContainer}
-            title="Update Profile"
-          />
+            <AppTextInput
+              label="Full Name"
+              returnKeyType="next"
+              value={userData.name}
+              onChangeHandler={(e) => onChangeName(e)}
+            />
+          </View>
+          <View
+            style={{
+              width: "80%",
+              alignSelf: "center",
+            }}
+          >
+            <AppTextInput
+              label="Email"
+              returnKeyType="done"
+              value={userData.email}
+              onChangeHandler={(e) => onChangeEmail(e)}
+            />
+          </View>
+          {error.email ? (
+            <HelperText
+              type="error"
+              style={{
+                color: "red",
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Email is not valid!
+            </HelperText>
+          ) : null}
+          <View
+            style={{
+              margin: 10,
+              alignSelf: "center",
+            }}
+          >
+            <Button
+              onPressHandler={imageURI}
+              style={styles.buttonContainer}
+              title="Update Profile"
+            />
+          </View>
         </View>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 export default memo(EditProfile);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#1c2e65",
-    height: 200,
+    height: 55,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    zIndex:100
   },
   distance: { height: screenHeight * 0.09 },
   container: {
@@ -167,12 +310,11 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderRadius: 63,
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: "white",
     marginBottom: 10,
     alignSelf: "center",
-    position: "absolute",
-    marginTop: 130,
+    marginTop: -50,
   },
   name: {
     fontSize: 22,

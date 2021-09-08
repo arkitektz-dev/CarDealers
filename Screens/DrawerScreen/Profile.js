@@ -1,32 +1,43 @@
 import firestore from "@react-native-firebase/firestore";
 import React, { memo, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import storage from "@react-native-firebase/storage";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { getData } from "../../Data/FetchData";
-import { screenHeight } from "../../Global/Dimension";
+import { imageChecker, screenHeight } from "../../Global/Dimension";
+import Feather from "react-native-vector-icons/Fontisto";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
-  const [image, setImage] = useState(
-    "https://cdn5.vectorstock.com/i/1000x1000/93/09/car-salesman-cartoon-vector-17209309.jpg"
-  );
+  const [update, setUpdate] = useState(false);
+
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-
+  const [image, setImage] = useState(undefined);
   useEffect(() => {
     getData().then((data) => {
       setUserInfo(data);
-      firestore()
-        .collection("Users")
-        .doc(data.id)
-        .get()
-        .then((data) => setImage(data.data().image));
+      setImage(data.image);
     });
   }, []);
+  const functionBack = () => {
+    console.log("testfing");
+    getData().then((data) => {
+      setUserInfo(data);
+      setImage(data.image);
+    });
+  };
 
   const imageURI = async () => {
     const uploadImage = image.substring(image.lastIndexOf("/") + 1);
@@ -48,7 +59,6 @@ const Profile = ({ navigation }) => {
       const url = await storageRef.getDownloadURL();
       setUploading(false);
       setImage(null);
-      alert("Picture Added");
       return url;
     } catch (error) {
       console.log(error);
@@ -70,12 +80,7 @@ const Profile = ({ navigation }) => {
 
   const setUploadImage = async () => {
     const options = {
-      maxWidth: 2000,
-      maxHeight: 2000,
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
+      mediaType: "photo",
     };
     launchImageLibrary(options, (response) => {
       if (response.error) {
@@ -97,62 +102,137 @@ const Profile = ({ navigation }) => {
             onPress={() => navigation.goBack()}
           />
         </TouchableOpacity>
+        <View>
+          <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
+            User Profile
+          </Text>
+        </View>
+        <View style={{ opacity: 0 }}>
+          <IonIcon
+            name="chevron-back-circle-sharp"
+            color="white"
+            size={35}
+            style={{ margin: 10 }}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
       </View>
-      <Image
-        style={styles.avatar}
-        accessibilityLabel="Pic"
-        source={{
-          uri:
-            "https://cdn5.vectorstock.com/i/1000x1000/93/09/car-salesman-cartoon-vector-17209309.jpg",
-        }}
-      />
-      <View style={styles.distance}></View>
-      <View
-        style={{
-          flexDirection: "column",
-          flex: 0.8,
-          width: "90%",
-          alignSelf: "center",
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: "#333",
-          backgroundColor: "#fff",
-        }}
-      >
+      <ScrollView style={{ paddingHorizontal: 20 }}>
         <View
-          style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 18,
+            marginBottom: 18,
+            borderBottomColor: "grey",
+            borderBottomWidth: 0.5,
+            paddingBottom: 10,
+          }}
         >
-          <EvilIcons
-            name="pencil"
-            size={30}
-            onPress={() => navigation.navigate("EditProfile", { userinfo })}
+          <Image
+            style={styles.avatar}
+            accessibilityLabel="Pic"
+            source={{
+              uri: imageChecker(image),
+            }}
           />
+          <View style={{ marginTop: -15, marginLeft: 10 }}>
+            <Text>{userinfo && userinfo.name.toUpperCase()}</Text>
+            <Text>muneeb@gmail.com</Text>
+          </View>
         </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>Name</Text>
-          <Text style={styles.value}>{userinfo && userinfo.name}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>Username</Text>
-          <Text style={styles.value}>{userinfo && userinfo.username}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>Phone</Text>
-          <Text style={styles.value}>{userinfo && userinfo.phone}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>Email</Text>
-          <Text style={styles.value}>{userinfo && userinfo.email}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>Password</Text>
-          <EvilIcons
-            name="pencil"
-            size={30}
-            onPress={() => navigation.navigate("UpdatePassword", { userinfo })}
-          />
-        </View>
-      </View>
+        <Text style={{ fontSize: 13 }}>Settings</Text>
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            // height: 50,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            // alignItems: "center",
+            paddingHorizontal: 2,
+            borderBottomColor: "grey",
+            borderBottomWidth: 0.5,
+            marginTop: 18,
+            paddingBottom: 18,
+          }}
+          onPress={() =>
+            navigation.navigate("EditProfile", {
+              userinfo,
+              functionBack: functionBack,
+            })
+          }
+        >
+          <Text style={{ color: "black", fontSize: 17 }}>Edit Profile</Text>
+          <Feather name="arrow-right" size={18} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            // height: 50,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: 2,
+            borderBottomColor: "grey",
+            borderBottomWidth: 0.5,
+            marginTop: 18,
+            paddingBottom: 18,
+          }}
+          // onPress={() => navigation.navigate("UpdatePassword", { userinfo })}
+        >
+          <Text style={{ color: "black", fontSize: 17 }}>Change Password</Text>
+          <Feather name="arrow-right" size={18} color="black" />
+        </TouchableOpacity>
+
+        {/* <View
+          style={{
+            flexDirection: "column",
+            flex: 0.8,
+            width: "90%",
+            alignSelf: "center",
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: "#333",
+            backgroundColor: "#fff",
+          }}
+        >
+          <View
+            style={{ flexDirection: "row", margin: 5, alignSelf: "flex-end" }}
+          >
+            <EvilIcons
+              name="pencil"
+              size={30}
+              onPress={() => navigation.navigate("EditProfile", { userinfo })}
+            />
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>Name</Text>
+            <Text style={styles.value}>{userinfo && userinfo.name}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>Username</Text>
+            <Text style={styles.value}>{userinfo && userinfo.username}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>Phone</Text>
+            <Text style={styles.value}>{userinfo && userinfo.phone}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>Email</Text>
+            <Text style={styles.value}>{userinfo && userinfo.email}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>Password</Text>
+            <EvilIcons
+              name="pencil"
+              size={30}
+              onPress={() =>
+                navigation.navigate("UpdatePassword", { userinfo })
+              }
+            />
+          </View>
+        </View> */}
+      </ScrollView>
     </View>
   );
 };
@@ -160,7 +240,11 @@ export default memo(Profile);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#1c2e65",
-    height: 200,
+    height: 55,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   rowContainer: {
     flexDirection: "row",
@@ -171,15 +255,9 @@ const styles = StyleSheet.create({
   },
   distance: { height: screenHeight * 0.09 },
   avatar: {
-    width: 130,
-    height: 130,
+    width: 80,
+    height: 80,
     borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "white",
-    marginBottom: 10,
-    alignSelf: "center",
-    position: "absolute",
-    marginTop: 130,
   },
   name: {
     fontSize: 22,
