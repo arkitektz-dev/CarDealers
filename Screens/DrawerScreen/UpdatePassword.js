@@ -93,7 +93,7 @@ const UpdatePassword = ({ navigation, route }) => {
           </TouchableOpacity>
           <View>
             <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
-              Edit Profile
+              Change Password
             </Text>
           </View>
           <View style={{ opacity: 0 }}>
@@ -114,7 +114,7 @@ const UpdatePassword = ({ navigation, route }) => {
             width: "100%",
             flex: 1,
             alignItems: "center",
-            justifyContent: "center",
+            // justifyContent: "center",
             paddingHorizontal: 20,
           }}
         >
@@ -235,7 +235,7 @@ const UpdatePassword = ({ navigation, route }) => {
                 loader ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  "Update Password"
+                  "Change Password"
                 )
               }
             />

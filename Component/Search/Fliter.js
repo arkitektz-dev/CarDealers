@@ -286,7 +286,18 @@ const Filter = ({
               />
             </View>
           </View>
-
+          <AppPicker
+            title="Company"
+            items={makeCompany}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, Make: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Select Company"
+            selectedItem={dropdownValues.Make}
+            width="95%"
+          />
           <AppPicker
             title="Car Model"
             items={modelCar}
@@ -395,18 +406,7 @@ const Filter = ({
             selectedItem={dropdownValues.Year}
             width="95%"
           /> */}
-          <AppPicker
-            title="Company"
-            items={makeCompany}
-            name="category"
-            onSelectItem={(item) =>
-              setDropDownValues({ ...dropdownValues, Make: item.label })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Select Company"
-            selectedItem={dropdownValues.Make}
-            width="95%"
-          />
+          
 
           <View style={styles.priceNum}>
             <View style={styles.priceHolder}>

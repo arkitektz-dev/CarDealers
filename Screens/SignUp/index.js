@@ -171,7 +171,8 @@ export const SignupScreen = () => {
 
           .catch((err) => console.log(err));
 
-        navigation.replace("Home");
+        navigation.replace("LoginScreen");
+        alert("Account Created")
       } catch (error) {
         alert(error);
       }

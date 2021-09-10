@@ -6,6 +6,7 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
+  Image,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
@@ -40,7 +41,7 @@ export const LoginScreen = () => {
   const navigation = useNavigation();
   const offsetKeyboard = Platform.select({
     ios: 0,
-    android: 20,
+    android: 10,
   });
   const Login = async () => {
     setLoader(true);
@@ -97,11 +98,14 @@ export const LoginScreen = () => {
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}
       >
-        <View style={styles.logoContainer}>
-          <Text style={styles.headText}>Sign In</Text>
-        </View>
-
         <View style={styles.inputContainer}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.headText}>Sign In</Text>
+          </View>
+          <Image
+            source={require("../../Assets/NewAsset/DrawerLogo.png")}
+            style={styles.image}
+          />
           <View>
             <TextInput
               renderToHardwareTextureAndroid
@@ -232,6 +236,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
+  image: {
+    height: 80,
+    width: "100%",
+    resizeMode: "contain",
+    marginBottom: 60,
+    // marginTop:-120
+  },
   background: {
     alignSelf: "center",
     backgroundColor: "#1e2d64",
@@ -258,7 +269,7 @@ const styles = StyleSheet.create({
   distance: {
     height: screenHeight * 0.02,
   },
-  inputContainer: { width: "100%",flex:1,justifyContent:'center' },
+  inputContainer: { width: "100%", flex: 1, justifyContent: "center" },
   forgotpassContainer: {
     width: "100%",
     flexDirection: "row",
@@ -311,24 +322,22 @@ const styles = StyleSheet.create({
   },
   back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
   buttonContainer: {
-    width:"100%",
-    marginTop:28
+    width: "100%",
+    marginTop: 28,
   },
   logoContainer: {
-    marginTop: "20%",
-    marginBottom: "5%",
+    marginBottom: 70,
+  },
+  headText: {
+    fontSize: 28,
+
+    fontWeight: "600",
+    color: "#000000",
+    textAlign: "center",
   },
   titleContainer: {
     alignSelf: "center",
     height: titleHeight,
     width: titleWidth,
-  },
-  headText: {
-    fontSize: 24,
-    top: "20%",
-    fontWeight: "bold",
-    color: "#000000",
-    textAlign: "center",
-    marginTop: -20,
   },
 });
