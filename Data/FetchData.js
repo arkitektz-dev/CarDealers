@@ -188,7 +188,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
       filter.Assemble
     );
   }
-  // ref = ref.orderBy('date','desc')
+  ref = ref.orderBy('date','desc')
   console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)

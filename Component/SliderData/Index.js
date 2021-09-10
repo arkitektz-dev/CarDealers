@@ -4,7 +4,7 @@ import { screenWidth } from "../../Global/Dimension";
 import { ScrollView } from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
-const SliderData = ({ onValueChanged, enabledTwo, values,max,step }) => {
+const SliderData = ({ onValueChanged,enabledOne, enabledTwo, values,max,step }) => {
   const [allowScroll, setAllowScroll] = useState(true);
 
   const enableScroll = () => setAllowScroll(true);
@@ -24,6 +24,7 @@ const SliderData = ({ onValueChanged, enabledTwo, values,max,step }) => {
         max={max}
         isMarkersSeparated={true}
         enabledTwo={enabledTwo}
+        enabledOne={enabledOne}
         step={step ? step : 25000}
         onValuesChange={onValueChanged}
         onValuesChangeStart={enableScroll}

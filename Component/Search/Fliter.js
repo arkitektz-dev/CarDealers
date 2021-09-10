@@ -33,6 +33,8 @@ const Filter = ({
     getCompanies();
   }, []);
   const [makeCompany, setCompany] = useState([]);
+  const [priceState, setPriceState] = useState(false);
+  const [mileageState, setMileageState] = useState(false);
   const [dropdownValues, setDropDownValues] = useState({
     Assemble: "",
     EngineCapacity: "",
@@ -47,7 +49,7 @@ const Filter = ({
     ExteriorColor: "",
     InteriorColor: "",
     Description: "",
-    mileage:  { init: "0", final: "1000000" },
+    mileage: { init: "0", final: "1000000" },
     price: { init: "0", final: "10000000" },
     transmission: "",
   });
@@ -56,6 +58,8 @@ const Filter = ({
     second: false,
   });
   const clearFilter = () => {
+    setMileageState(false)
+    setPriceState(false)
     setAssemblyCheckedState({
       first: false,
       second: false,
@@ -74,7 +78,7 @@ const Filter = ({
       ExteriorColor: "",
       InteriorColor: "",
       Description: "",
-      mileage:  { init: "0", final: "1000000" },
+      mileage: { init: "0", final: "1000000" },
       price: { init: "0", final: "10000000" },
       transmission: "",
     });
@@ -93,6 +97,9 @@ const Filter = ({
     });
   };
   const handleValueChange = (e) => {
+    if (!priceState) {
+      setPriceState(true);
+    }
     setDropDownValues({
       ...dropdownValues,
       price: {
@@ -102,6 +109,9 @@ const Filter = ({
     });
   };
   const handleValueChangeMillage = (e) => {
+    if (!mileageState) {
+      setMileageState(true);
+    }
     setDropDownValues({
       ...dropdownValues,
       mileage: {
@@ -416,7 +426,8 @@ const Filter = ({
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
-              enabledTwo={true}
+              enabledTwo={mileageState == true ? false : true}
+              enabledOne={mileageState == true ? false : true}
               onValueChanged={handleValueChange}
               values={[dropdownValues.price.init, dropdownValues.price.final]}
               max={10000000}
@@ -425,25 +436,25 @@ const Filter = ({
           </View>
           <View style={styles.priceNum}>
             <View style={styles.priceHolder}>
-              <Text style={styles.txt}>
-                {dropdownValues.mileage.init} KM
-              </Text>
+              <Text style={styles.txt}>{dropdownValues.mileage.init} KM</Text>
             </View>
             <View style={styles.priceHolder}>
-              <Text style={styles.txt}>
-                {dropdownValues.mileage.final} KM
-              </Text>
+              <Text style={styles.txt}>{dropdownValues.mileage.final} KM</Text>
             </View>
           </View>
           <Text style={{ fontWeight: "700", fontSize: 16, color: "#000000" }}>
-          Mileage Range: (KM)
+            Mileage Range: (KM)
           </Text>
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
-              enabledTwo={true}
+              enabledTwo={priceState == true ? false : true}
+              enabledOne={priceState == true ? false : true}
               onValueChanged={handleValueChangeMillage}
-              values={[dropdownValues.mileage.init, dropdownValues.mileage.final]}
+              values={[
+                dropdownValues.mileage.init,
+                dropdownValues.mileage.final,
+              ]}
               max={1000000}
               step={3000}
             />
@@ -453,7 +464,6 @@ const Filter = ({
             style={styles.background}
             title="Submit"
             onPressHandler={() => toggleModal(dropdownValues)}
-         
           />
         </ScrollView>
       </Modal>

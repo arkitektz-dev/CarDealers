@@ -207,13 +207,13 @@ const ListingCars = () => {
       dropdownValues.mileage.init > 0 ||
       dropdownValues.mileage.final < "1000000"
     ) {
-      console.log("worng");
-      ref = ref.orderBy("mileage");
+      console.log("worng mileage");
+      ref = ref.orderBy("vehicle.mileage");
     }
 
     if (dropdownValues.mileage.init > 0) {
       console.log("mileage iniht");
-      ref = ref.where("mileage", ">", `${dropdownValues.mileage.init}`);
+      ref = ref.where("vehicle.mileage", ">", `${dropdownValues.mileage.init}`);
 
       setFilter({ ...filter, initMileage: dropdownValues.mileage.init });
 
@@ -222,7 +222,7 @@ const ListingCars = () => {
     if (dropdownValues.mileage.final < "1000000") {
       console.log("mileage final");
       ref = ref.where(
-        "mileage",
+        "vehicle.mileage",
         "<",
         `${dropdownValues.mileage.final}`
       );
@@ -240,7 +240,7 @@ const ListingCars = () => {
       setFilter({ ...filter, Assemble: dropdownValues.Assemble });
       setFilterState(true);
     }
-    // ref = ref.orderBy('date','desc')
+    ref = ref.orderBy('date','desc')
     var a = await ref.limit(20).get();
     const lastVal = a.docs[a.docs.length - 1];
     console.log("lastV", lastVal);
