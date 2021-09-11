@@ -28,6 +28,7 @@ const Filter = ({
   onRequestClose,
   toggleModalView,
   Visibility,
+  onClear,
 }) => {
   useEffect(() => {
     getCompanies();
@@ -58,8 +59,9 @@ const Filter = ({
     second: false,
   });
   const clearFilter = () => {
-    setMileageState(false)
-    setPriceState(false)
+    onClear();
+    setMileageState(false);
+    setPriceState(false);
     setAssemblyCheckedState({
       first: false,
       second: false,
@@ -156,11 +158,13 @@ const Filter = ({
   ];
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Modal
         onRequestClose={onRequestClose}
         visible={modalVisible}
         animationType={"slide"}
+        presentationStyle="overFullScreen"
+        transparent
       >
         <View
           style={{
@@ -206,7 +210,9 @@ const Filter = ({
           contentContainerStyle={{
             flexDirection: "column",
             alignItems: "center",
-            paddingBottom: 50,
+
+            backgroundColor: "white",
+            height:900,
           }}
         >
           <View
@@ -406,7 +412,6 @@ const Filter = ({
             selectedItem={dropdownValues.Year}
             width="95%"
           /> */}
-          
 
           <View style={styles.priceNum}>
             <View style={styles.priceHolder}>
@@ -459,6 +464,31 @@ const Filter = ({
               step={3000}
             />
           </View>
+          {/* <View style={styles.priceNum}>
+            <View style={styles.priceHolder}>
+              <Text style={styles.txt}>{dropdownValues.mileage.init} KM</Text>
+            </View>
+            <View style={styles.priceHolder}>
+              <Text style={styles.txt}>{dropdownValues.mileage.final} KM</Text>
+            </View>
+          </View>
+          <Text style={{ fontWeight: "700", fontSize: 16, color: "#000000" }}>
+            Mileage Range: (KM)
+          </Text>
+
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <SliderData
+              enabledTwo={priceState == true ? false : true}
+              enabledOne={priceState == true ? false : true}
+              onValueChanged={handleValueChangeMillage}
+              values={[
+                dropdownValues.mileage.init,
+                dropdownValues.mileage.final,
+              ]}
+              max={1000000}
+              step={3000}
+            />
+          </View> */}
 
           <Button
             style={styles.background}
@@ -491,7 +521,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: "#d3d3d3",
     width: "40%",
-    height: "70%",
+    height: 40,
     padding: 10,
   },
   txt: {

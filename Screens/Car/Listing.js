@@ -58,7 +58,23 @@ const ListingCars = () => {
     transmission: "",
     EngineCapacity: "",
   });
-
+  const onClear = () => {
+    setFilter({
+      Year: "",
+      Make: "",
+      City: "",
+      ExteriorColor: "",
+      Assemble: "",
+      initPrice: "",
+      finalPrice: "",
+      initMileage: "",
+      finalMileage: "",
+      Model: "",
+      registrationCity: "",
+      transmission: "",
+      EngineCapacity: "",
+    });
+  };
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -240,7 +256,7 @@ const ListingCars = () => {
       setFilter({ ...filter, Assemble: dropdownValues.Assemble });
       setFilterState(true);
     }
-    ref = ref.orderBy('date','desc')
+    ref = ref.orderBy("date", "desc");
     var a = await ref.limit(20).get();
     const lastVal = a.docs[a.docs.length - 1];
     console.log("lastV", lastVal);
@@ -251,11 +267,11 @@ const ListingCars = () => {
     console.log(arr);
     setfilteredData(arr);
     setDataCar(arr);
-    {
-      filteredData.length > 0
-        ? setcarCount(arr.length)
-        : setcarCount(filteredData.length);
-    }
+    // {
+    //   filteredData.length > 0
+    //     ? setcarCount(arr.length)
+    setcarCount(arr.length);
+    // }
     setLoading(false);
   };
   const onPressHandler = (item) => {
@@ -496,6 +512,7 @@ const ListingCars = () => {
             onFilter(dropdownValues);
           }}
           Visibility={() => setShown(false)}
+          onClear={()=> onClear()}
         />
         <TouchableOpacity onPress={() => setShown(true)}>
           <Text
