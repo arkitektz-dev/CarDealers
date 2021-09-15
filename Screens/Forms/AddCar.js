@@ -20,6 +20,7 @@ import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 // import AppFormImagePicker from "../../Component/ImageHandling/AppFormImage";
 // import AppForm from "../../Component/ImageHandling/AppForm";
 import ImageInput from "../../Component/ImageHandling/ImageInput";
+import { useToast } from "native-base";
 
 import {
   AddCarData,
@@ -40,6 +41,8 @@ const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
 
 const AddCar = () => {
+  const toast = useToast();
+
   const items = [
     { label: "800cc", value: "800cc" },
     { label: "1300cc", value: "1300cc" },
@@ -251,7 +254,12 @@ const AddCar = () => {
 
             await AddCarData(obj)
               .then(() => {
-                alert("Car Added");
+                toast.show({
+                  title: "Car added",
+                  status: "success",
+                  description: "Your ad. has been added",
+                  duration: 1500,
+                });
                 // navigation.navigate("MyAds");
               })
               .catch((e) => console.log(e));
@@ -282,7 +290,12 @@ const AddCar = () => {
       priceRange.init == "0" ||
       showroomPicker == ""
     ) {
-      alert("Required");
+      toast.show({
+        title: "Failed",
+        status: "error",
+        description: "Fill the required fields",
+        duration: 1500,
+      });
       setLoader(false);
     } else {
       const resp = await imageURI();
@@ -611,15 +624,17 @@ const AddCar = () => {
               />
               <View
                 style={{
-                  width: "92%",
+                  width: "100%",
                   alignItems: "center",
                   marginBottom: 10,
                   bottom: 5,
+                  paddingHorizontal:20
                 }}
               >
                 <AppTextInput
                   label={"Description"}
                   onChangeHandler={(e) => setDescription(e)}
+                  multiline={true}
                 />
               </View>
               <View style={{ width: "100%" }}>

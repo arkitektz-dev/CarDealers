@@ -338,7 +338,7 @@ export const storeData = async (value) => {
   }
 };
 
-export const updateProfile = async (userinfo, userData) => {
+export const updateProfile = async (userinfo, userData,callme) => {
   const { id } = userinfo;
   if (userData.name == "" || userData.email == "") {
     alert("Fields Cant be empty");
@@ -349,7 +349,7 @@ export const updateProfile = async (userinfo, userData) => {
       .doc(id)
       .update(userData)
       .then(async() => {
-        alert("User updated!");
+        callme()
         var d = JSON.stringify({...userinfo,...userData})
         
         return await AsyncStorage.setItem("userInfo", d);

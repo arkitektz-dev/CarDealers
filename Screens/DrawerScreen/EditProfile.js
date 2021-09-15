@@ -17,6 +17,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import storage from "@react-native-firebase/storage";
 import * as ImagePicker from "expo-image-picker";
+import { useToast } from "native-base";
 
 import { imageChecker, screenHeight } from "../../Global/Dimension";
 import { HelperText } from "react-native-paper";
@@ -25,6 +26,7 @@ const EditProfile = ({ navigation, route }) => {
   const [userinfo, setUserInfo] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
+  const toast = useToast();
 
   const [image, setImage] = useState(route.params.userinfo?.image);
   const [url, setUrl] = useState(false);
@@ -56,19 +58,38 @@ const EditProfile = ({ navigation, route }) => {
       
     }
   };
+  const callme=()=>{
+    toast.show({
+      title: "Profile Updated",
+      status: "success",
+      description: "Profile has been updated",
+      duration: 1500,
+    });
+  }
   const onSubmitHandler = async(url) => {
     if (error.email) {
-      alert("Format is not Correct");
+      toast.show({
+        title: "Update failed",
+        status: "error",
+        description: "Invalid email",
+        duration: 1500,
+      });
+      setUploading(false)
     }
     if (userData == {}) {
-      alert("Fields Can Not be Empty");
+      toast.show({
+        title: "Update failed",
+        status: "error",
+        description: "Fill the feilds",
+        duration: 1500,
+      });
     }
     if (!error.email && userData != {}) {
       if (url !== undefined) {
-        updateProfile(userinfo, { ...userData, image: url });
+        updateProfile(userinfo, { ...userData, image: url },callme);
       } else {
         console.log(userinfo)
-       const res = await updateProfile(userinfo, userData);
+       const res = await updateProfile(userinfo, userData,callme);
        console.log(res)
       }
       setTimeout(() => {

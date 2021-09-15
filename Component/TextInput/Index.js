@@ -31,7 +31,7 @@ const AppTextInput = ({
         }}
         dense="20"
         outlineColor="#CCCCCC"
-        style={{ backgroundColor: "white",marginTop:10 }}
+        style={{ backgroundColor: "white",marginTop:10 ,width:'100%'}}
         multiline={multiline}
         label={label}
         onChangeText={onChangeHandler}
