@@ -9,11 +9,15 @@ import MyTabs from "./Navigation/BottomTab/Index";
 import AuthContext from "./Component/Authcontext";
 import { SignupScreen } from "./Screens/SignUp";
 import ImageScreen from "./Screens/ImageScreen";
+
+import { NativeBaseProvider, Box } from 'native-base';
+
 console.disableYellowBox = true;
 const MainStack = () => {
   const Stack = createStackNavigator();
 
   return (
+    <NativeBaseProvider>
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="Home"
@@ -21,6 +25,7 @@ const MainStack = () => {
       <Stack.Screen name="Login" component={LoginStack} />
       <Stack.Screen name="Home" component={MyTabs} />
     </Stack.Navigator>
+    </NativeBaseProvider>
   );
 };
 

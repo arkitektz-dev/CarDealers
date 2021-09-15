@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
+import { useToast } from "native-base";
 
 import Back from "../../Assets/NewAsset/backButton.png";
 
@@ -37,7 +38,18 @@ export const LoginScreen = () => {
   const [secure, setSecure] = useState(true);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const [loader, setLoader] = useState(false);
-
+  const toast = useToast();
+  const callme = () => {
+    setLoader(false)
+    setTimeout(() => {
+      toast.show({
+        title: "Login Failed",
+        status: "error",
+        description: "Invalid Username or Password",
+      });
+    }, 1000);
+  };
+ 
   const navigation = useNavigation();
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -49,6 +61,12 @@ export const LoginScreen = () => {
 
     if (user.name == "" || user.password == "") {
       setEmptyFieldError(true);
+      toast.show({
+        title: "Login Failed",
+        status: "error",
+        description: "Email & Password required",
+        duration: 1500,
+      });
     } else {
       await ref
         .where("username", "==", user.name.toLocaleLowerCase())
@@ -56,7 +74,8 @@ export const LoginScreen = () => {
         .get()
         .then((querySnapshot) => {
           if (querySnapshot.size == 0) {
-            alert("Invalid Username or Password");
+            console.log("error");
+            callme();
           } else
             querySnapshot.forEach((doc) => {
               const a = { ...doc.data() };
@@ -76,6 +95,8 @@ export const LoginScreen = () => {
 
               storeData(b);
               navigation.replace("Home");
+
+             
               setLoader(false);
             });
         })

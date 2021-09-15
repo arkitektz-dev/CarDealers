@@ -25,3 +25,15 @@ export const imageChecker = (image) => {
     return img;
   }
 };
+
+//email
+export const emailValidation = (email) => {
+  let result;
+  var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+  if (email?.length === 0 || email === undefined) {
+    result = 'Email is required';
+  } else if (re.test(email.trim()) === false) {
+    result = 'Invalid Email';
+  }
+  return result;
+};
