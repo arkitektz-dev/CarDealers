@@ -138,7 +138,7 @@ const Profile = ({ navigation }) => {
           />
           <View style={{ marginTop: -15, marginLeft: 10 }}>
             <Text>{userinfo && userinfo.name.toUpperCase()}</Text>
-            <Text>muneeb@gmail.com</Text>
+            <Text>{userinfo && userinfo.email}</Text>
           </View>
         </View>
         <Text style={{ fontSize: 13 }}>Settings</Text>

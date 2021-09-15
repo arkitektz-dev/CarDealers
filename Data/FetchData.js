@@ -351,7 +351,7 @@ export const updateProfile = async (userinfo, userData) => {
       .then(async() => {
         alert("User updated!");
         var d = JSON.stringify({...userinfo,...userData})
-        console.log(d)
+        
         return await AsyncStorage.setItem("userInfo", d);
       });
   }

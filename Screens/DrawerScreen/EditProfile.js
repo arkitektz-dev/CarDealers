@@ -48,14 +48,15 @@ const EditProfile = ({ navigation, route }) => {
     }
   };
   const onChangeName = (e) => {
+    setUserData({ ...userData, name: e });
     if (e == "") {
       setError({ ...error, name: true });
     } else {
       setError({ ...error, name: false });
-      setUserData({ ...userData, name: e });
+      
     }
   };
-  const onSubmitHandler = (url) => {
+  const onSubmitHandler = async(url) => {
     if (error.email) {
       alert("Format is not Correct");
     }
@@ -66,7 +67,9 @@ const EditProfile = ({ navigation, route }) => {
       if (url !== undefined) {
         updateProfile(userinfo, { ...userData, image: url });
       } else {
-        updateProfile(userinfo, userData);
+        console.log(userinfo)
+       const res = await updateProfile(userinfo, userData);
+       console.log(res)
       }
       setTimeout(() => {
         setUploading(false);

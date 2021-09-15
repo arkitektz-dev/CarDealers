@@ -29,16 +29,8 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView>
-      <View
-        style={{
-          justifyContent: "center",
-          flexDirection: "column",
-          flex: 1,
-          backgroundColor: "#fff",
-        }}
-      >
-        <NavHome
+    <>
+    <NavHome
           leftComponent={
             <TouchableOpacity
               style={{
@@ -64,6 +56,16 @@ const HomeScreen = ({ navigation }) => {
             <Image source={HomeLogo} style={styles.logo} resizeMode="contain" />
           }
         />
+    <ScrollView>
+      <View
+        style={{
+          justifyContent: "center",
+          flexDirection: "column",
+          flex: 1,
+          backgroundColor: "#fff",
+        }}
+      >
+        
 
         <CategoryCard />
 
@@ -80,6 +82,7 @@ const HomeScreen = ({ navigation }) => {
         <ShowroomCard />
       </View>
     </ScrollView>
+    </>
   );
 };
 export default memo(HomeScreen);

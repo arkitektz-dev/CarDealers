@@ -99,9 +99,9 @@ export const LoginScreen = () => {
         style={{ flex: 1 }}
       >
         <View style={styles.inputContainer}>
-          <View style={styles.logoContainer}>
+          {/* <View style={styles.logoContainer}>
             <Text style={styles.headText}>Sign In</Text>
-          </View>
+          </View> */}
           <Image
             source={require("../../Assets/NewAsset/DrawerLogo.png")}
             style={styles.image}
