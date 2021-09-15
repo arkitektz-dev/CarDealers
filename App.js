@@ -10,14 +10,24 @@ import AuthContext from "./Component/Authcontext";
 import { SignupScreen } from "./Screens/SignUp";
 import ImageScreen from "./Screens/ImageScreen";
 
-import { NativeBaseProvider, Box } from 'native-base';
-
+import { NativeBaseProvider, extendTheme } from 'native-base';
+const theme = extendTheme({
+  components: {
+      Toast: {
+          baseStyle: {},
+          defaultProps: {},
+          variants: {},
+          sizes: {},
+          
+      }
+  } 
+});
 console.disableYellowBox = true;
 const MainStack = () => {
   const Stack = createStackNavigator();
 
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="Home"

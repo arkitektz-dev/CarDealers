@@ -64,6 +64,8 @@ const EditProfile = ({ navigation, route }) => {
       status: "success",
       description: "Profile has been updated",
       duration: 1500,
+      minWidth:'90%',
+      isClosable:false
     });
   }
   const onSubmitHandler = async(url) => {
@@ -73,6 +75,8 @@ const EditProfile = ({ navigation, route }) => {
         status: "error",
         description: "Invalid email",
         duration: 1500,
+        minWidth:'90%',
+        isClosable:false
       });
       setUploading(false)
     }
@@ -82,6 +86,8 @@ const EditProfile = ({ navigation, route }) => {
         status: "error",
         description: "Fill the feilds",
         duration: 1500,
+        minWidth:'90%',
+        isClosable:false
       });
     }
     if (!error.email && userData != {}) {

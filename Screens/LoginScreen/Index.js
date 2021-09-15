@@ -46,6 +46,9 @@ export const LoginScreen = () => {
         title: "Login Failed",
         status: "error",
         description: "Invalid Username or Password",
+        duration: 1500,
+        minWidth:'90%',
+        isClosable:false
       });
     }, 1000);
   };
@@ -66,6 +69,9 @@ export const LoginScreen = () => {
         status: "error",
         description: "Email & Password required",
         duration: 1500,
+        minWidth:'90%',
+        isClosable:false
+
       });
     } else {
       await ref

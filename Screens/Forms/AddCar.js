@@ -259,6 +259,8 @@ const AddCar = () => {
                   status: "success",
                   description: "Your ad. has been added",
                   duration: 1500,
+                  minWidth: "90%",
+                  isClosable: false,
                 });
                 // navigation.navigate("MyAds");
               })
@@ -295,6 +297,8 @@ const AddCar = () => {
         status: "error",
         description: "Fill the required fields",
         duration: 1500,
+        minWidth:'90%',
+        isClosable:false
       });
       setLoader(false);
     } else {
@@ -628,7 +632,7 @@ const AddCar = () => {
                   alignItems: "center",
                   marginBottom: 10,
                   bottom: 5,
-                  paddingHorizontal:20
+                  paddingHorizontal: 20,
                 }}
               >
                 <AppTextInput
