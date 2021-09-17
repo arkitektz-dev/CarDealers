@@ -29,7 +29,7 @@ const AddDemandCar = ({ navigation, route }) => {
 
   const [rangePriceData, setRangePriceData] = useState({
     init: "0",
-    final: "5000000",
+    final: "10000000",
   });
   const [yearRange, setYearRange] = useState({ init: "1980", final: "2024" });
   const [Model, setModel] = useState("");
@@ -227,7 +227,7 @@ const AddDemandCar = ({ navigation, route }) => {
               </View>
             </View>
             <SliderData
-              values={[0, 5000000]}
+              values={[0, 10000000]}
               enabledTwo={true}
               onValueChanged={handleValuePriceChange}
             />

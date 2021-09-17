@@ -14,7 +14,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 
 import Profile from "../../Assets/BlueProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
-import { screenHeight, screenWidth } from "../../Global/Dimension";
+import { imageChecker, screenHeight, screenWidth } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import { Modal } from "react-native";
 import { fetchSpecificDealer, getData } from "../../Data/FetchData";
@@ -27,6 +27,9 @@ const BottomProfileScreen = ({ route }) => {
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [modalData, setModalData] = useState([]);
+  const [userinfo, setUserInfo] = useState(null);
+  const [image, setImage] = useState(undefined);
+
   const [visible, setVisible] = useState(false);
   const dealer = authContext.user;
   const fetchData = async () => {
@@ -65,7 +68,12 @@ const BottomProfileScreen = ({ route }) => {
     });
 
     fetchData();
+    getData().then((data) => {
+      setUserInfo(data);
+      setImage(data.image);
+    });
   }, []);
+
   const arr = [];
 
   const onPressHandler = (item) => {
@@ -172,13 +180,13 @@ const BottomProfileScreen = ({ route }) => {
               marginHorizontal: 25,
             }}
           >
-            <Image
-              source={Profile}
-              style={{
-                width: 85,
-                height: 85,
-              }}
-            />
+           <Image
+            style={styles.avatar}
+            accessibilityLabel="Pic"
+            source={{
+              uri: imageChecker(image),
+            }}
+          />
             <View style={{ width: 15 }}></View>
             <View style={{ flexDirection: "row" }}>
               <View
@@ -187,7 +195,7 @@ const BottomProfileScreen = ({ route }) => {
                 <View style={styles.DealerName}>
                   <Text style={styles.carInfoText}>
                     {"\b"}
-                    {param && param.name}
+                    {userinfo && userinfo.name.toUpperCase()}
                     {" \b"}
                   </Text>
                 </View>
@@ -299,7 +307,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     color: "white",
-    marginBottom: 5,
   },
   searchHolder: {
     backgroundColor: "#1c2e65",
@@ -315,7 +322,12 @@ const styles = StyleSheet.create({
   },
   DealerName: {
     backgroundColor: "#1c2e65",
-    justifyContent: "center",
+    // width:40
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 63,
   },
   CarInfoTitle: {
     backgroundColor: "#1c2e65",
