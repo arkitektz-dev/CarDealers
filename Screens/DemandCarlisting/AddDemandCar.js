@@ -35,11 +35,22 @@ const AddDemandCar = ({ navigation, route }) => {
   const [Model, setModel] = useState("");
   const [loader, setLoader] = useState(false);
 
+  const carCompany = [
+    { label: "Toyota", value: "Toyota", categoryId: 1 },
+    { label: "Honda", value: "Honda", categoryId: 2 },
+  ];
+  const modelCar = [
+    { label: "Corolla", value: "Corolla", categoryId: 1, versionId: 1 },
+    { label: "Civic", value: "Civic", categoryId: 2, versionId: 2 },
+    { label: "Reborn ", value: "Reborn", categoryId: 2, versionId: 3 },
+  ];
   const [errorState, setErrorState] = useState({
     Make: false,
     Model: false,
     Year: false,
   });
+  const [modelArr, setModelArr] = useState([]);
+
   const getCompanies = () => {
     AddCompanyMake().then((res) => {
       const arr = [];
@@ -70,7 +81,7 @@ const AddDemandCar = ({ navigation, route }) => {
     };
 
     const data = {
-      Make: make.value,
+      Make: make.label,
       Model: Model,
       minYear: yearRange.init,
       maxYear: yearRange.final,
@@ -96,12 +107,16 @@ const AddDemandCar = ({ navigation, route }) => {
       alert("Fields can not be empty");
     }
   };
-  const onChangeMake = (e) => {
-    if (e == "") {
+  const onChangeMake = (item) => {
+    const body = modelCar.filter((e) => e.categoryId == item.categoryId);
+    setModelArr(body);
+    console.log(item);
+    if (item.label == "") {
       setErrorState({ Make: true });
     } else {
       setErrorState({ Make: false });
-      setMake(e);
+      setMake(item);
+      setModel("");
     }
   };
   const onChangeModel = (e) => {
@@ -109,15 +124,8 @@ const AddDemandCar = ({ navigation, route }) => {
       setErrorState({ Model: true });
     } else {
       setErrorState({ Model: false });
-      setModel(e);
-    }
-  };
-  const onChangeYear = (e) => {
-    if (e == "") {
-      setErrorState({ Year: true });
-    } else {
-      setErrorState({ Year: false });
-      setShowroomData({ ...showroomData, Year: e });
+      console.log(e);
+      setModel(e.label);
     }
   };
 
@@ -164,25 +172,29 @@ const AddDemandCar = ({ navigation, route }) => {
       </View>
       <View style={styles.form}>
         <AppPicker
-          items={makeCompany}
+          items={carCompany}
           name="category"
           onSelectItem={(item) => onChangeMake(item)}
           PickerItemComponent={CategoryPickerItem}
-          placeholder="Make"
+          placeholder="Company"
           selectedItem={make.label}
           width="90%"
         />
         {errorState.name ? <ErrorHandle text="Field Can Not be empty" /> : null}
-        <AppTextInput
-          onChangeHandler={(e) => onChangeModel(e)}
-          label="Model"
-          returnKeyType="next"
+        <AppPicker
+          items={modelArr}
+          name="category"
+          onSelectItem={(item) => onChangeModel(item)}
+          PickerItemComponent={CategoryPickerItem}
+          placeholder="Model"
+          selectedItem={Model}
+          width="90%"
         />
         {errorState.location ? (
           <ErrorHandle text="Field Can Not be empty" />
         ) : null}
 
-        <View style={{ width: "100%", top: 15, marginBottom: 35 }}>
+        <View style={{ width: "100%", marginBottom: 5 }}>
           <View
             style={{
               flexDirection: "column",
@@ -191,83 +203,70 @@ const AddDemandCar = ({ navigation, route }) => {
           >
             <Text
               style={{
-                color: "black",
-                fontWeight: "bold",
+                fontWeight: "700",
                 fontSize: 16,
-                left: 35,
-                marginTop: 10,
+                color: "#000000",
+                alignSelf: "center",
+                marginVertical: 20,
               }}
             >
-              Selected Amount:
+              Price Range: (PKR)
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginTop: 10,
-              }}
-            >
-              <View style={{ flexDirection: "column" }}>
-                <TextInput
-                  value={rangePriceData.init.toString()}
-                  style={styles.int}
-                />
-                <Text style={{ color: "#000000", top: 6 }}>
+            <View style={styles.priceNum}>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>
                   {changeNumberFormat(rangePriceData.init.toString(), 2)}
                 </Text>
               </View>
-              <View style={{ flexDirection: "column" }}>
-                <TextInput
-                  value={rangePriceData.final.toString()}
-                  style={styles.int}
-                />
-                <Text style={{ color: "#000000", top: 6 }}>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>
                   {changeNumberFormat(rangePriceData.final.toString(), 2)}
                 </Text>
               </View>
             </View>
-            <SliderData
-              values={[0, 10000000]}
-              enabledTwo={true}
-              onValueChanged={handleValuePriceChange}
-            />
-          </View>
 
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <SliderData
+                values={[0, 10000000]}
+                enabledTwo={true}
+                onValueChanged={handleValuePriceChange}
+              />
+            </View>
+          </View>
           <View
             style={{
               flexDirection: "column",
-              marginTop: 10,
+              width: "100%",
             }}
           >
             <Text
               style={{
-                color: "black",
-                fontWeight: "bold",
+                fontWeight: "700",
                 fontSize: 16,
-                left: 35,
+                color: "#000000",
+                alignSelf: "center",
+                marginBottom: 20,
+                marginTop:-15
               }}
             >
-              Select Year:
+              Select Year
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginTop: 15,
-              }}
-            >
-              <TextInput value={yearRange.init.toString()} style={styles.int} />
+            <View style={styles.priceNum}>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>{yearRange.init.toString()}</Text>
+              </View>
+              <View style={styles.priceHolder}>
+                <Text style={styles.txt}>{yearRange.final.toString()}</Text>
+              </View>
+            </View>
 
-              <TextInput
-                value={yearRange.final.toString()}
-                style={styles.int}
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <YearSliderData
+                values={[1980, 2024]}
+                enabledTwo={true}
+                onValueChanged={handleValueYearChange}
               />
             </View>
-            <YearSliderData
-              values={[1980, 2024]}
-              enabledTwo={true}
-              onValueChanged={handleValueYearChange}
-            />
           </View>
         </View>
 
@@ -315,5 +314,25 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.37,
     color: "#000000",
     borderRadius: 10,
+  },
+  priceNum: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    height: "8%",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  priceHolder: {
+    borderRadius: 7,
+    backgroundColor: "#d3d3d3",
+    width: "40%",
+    height: 40,
+    padding: 10,
+  },
+  txt: {
+    textAlign: "center",
+    color: "#000000",
+    fontWeight: "bold",
   },
 });

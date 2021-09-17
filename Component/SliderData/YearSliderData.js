@@ -14,7 +14,7 @@ const YearSliderData = ({ onValueChanged, enabledTwo, values }) => {
       scrollEnabled={allowScroll}
       contentContainerStyle={{
         alignItems: "center",
-        top: 10,
+        
         flexDirection: "column",
       }}
     >
