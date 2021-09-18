@@ -79,7 +79,7 @@ const AddDemandCar = ({ navigation, route }) => {
       id: userRef,
       Name: dealerPicker,
     };
-
+    const date = new Date();
     const data = {
       Make: make.label,
       Model: Model,
@@ -87,6 +87,7 @@ const AddDemandCar = ({ navigation, route }) => {
       maxYear: yearRange.final,
       minPrice: `${rangePriceData.init}`,
       maxPrice: `${rangePriceData.final}`,
+      date:date
     };
     const obj = {
       ...data,
