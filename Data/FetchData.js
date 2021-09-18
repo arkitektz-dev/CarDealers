@@ -47,7 +47,8 @@ export const fetchDemandCarData = async () => {
 
 export const fetchMoreDemandCar = async (startAfter) => {
   const arr = [];
-  const ref = firestore().collection("Demand");
+  let ref = firestore().collection("Demand");
+  ref = ref.orderBy('date','desc')
   var data = await ref
     .startAfter(startAfter)
     .limit(5)

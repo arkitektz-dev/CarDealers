@@ -19,7 +19,7 @@ import {
   fetchSpecificDealer,
 } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
-import Filter from "../../Component/Search/Fliter";
+import DemandFilter from "../../Component/Search/DemandFilter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import CallSeller from "../../Assets/NewAsset/Call.png";
 import { Linking } from "react-native";
@@ -32,9 +32,10 @@ const DemandCarList = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [dealerCallData, setDealerCallData] = useState();
   const [shown, setShown] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
+  const [datalength, setDatalength] = useState(0);
 
   const navigation = useNavigation();
 
@@ -42,6 +43,7 @@ const DemandCarList = () => {
     fetchDemandCarData().then((res) => {
       setLoading(true);
       setDataCar(res.arr);
+      setDatalength(res.arr.length)
       setStartAfter(res.lastVal);
       // setfilteredData(res.arr);
       setcarCount(res.size);
@@ -147,8 +149,10 @@ const DemandCarList = () => {
           flexDirection: "row",
         }}
       >
+        {datalength == 5 ? (
+
         <TouchableOpacity
-          activeOpacity={0.9}
+          activeOpacity={0.7}
           onPress={_onEndReached}
           style={styles.loadMoreBtn}
         >
@@ -157,6 +161,19 @@ const DemandCarList = () => {
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
           ) : null}
         </TouchableOpacity>
+        ):
+        (
+          <View
+          activeOpacity={0.7}
+         
+          style={styles.loadMoreBtn}
+        >
+          <Text style={styles.btnText}>No More Data</Text>
+          {moreloading ? (
+            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+          ) : null}
+        </View>
+        )}
       </View>
     );
   };
@@ -247,6 +264,7 @@ const DemandCarList = () => {
     fetchMoreDemandCar(startAfter).then((res) => {
       setDataCar([...dataCar, ...res.arr]);
       // setfilteredData([...dataCar, ...res.arr]);
+      setDatalength(res.arr.length)
       setcarCount(dataCar.length + res.arr.length);
       setStartAfter(res.lastVal);
       setMoreLoading(false);
@@ -284,6 +302,7 @@ const DemandCarList = () => {
           justifyContent: "space-between",
           flexDirection: "row",
           padding: 10,
+          backgroundColor:'white'
         }}
       >
         <Text
@@ -296,7 +315,7 @@ const DemandCarList = () => {
         >
           {carCount} Results
         </Text>
-        <Filter
+        <DemandFilter
           onRequestClose={() => setShown(false)}
           modalVisible={shown}
           toggleModal={(dropdownValues) => {
@@ -306,7 +325,24 @@ const DemandCarList = () => {
           }}
           Visibility={() => setShown(false)}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("AddDemandCar")}>
+        <TouchableOpacity onPress={() => setShown(true)}>
+          <Text
+            style={{
+              color: "#333",
+              display: "flex",
+              fontWeight: "800",
+              fontSize: 18,
+            }}
+          >
+            Filter{"   "}
+            <Image
+              source={require("../../Assets/NewAsset/filter.png")}
+              style={{ width: 20, height: 15, resizeMode: "contain" }}
+              resizeMode="contain"
+            />
+          </Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("AddDemandCar")}>
           <Text
             style={{
               color: "#333",
@@ -317,9 +353,10 @@ const DemandCarList = () => {
           >
             Add Demand Car
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {loading ? (
+        <View style={{flex:1}}>
         <LottieView
           source={require("../../Assets/CarLoader.json")}
           autoPlay
@@ -331,6 +368,7 @@ const DemandCarList = () => {
           }}
           hardwareAccelerationAndroid={true}
         />
+        </View>
       ) : (
         <FlatList
           data={filteredData.length > 0 ? filteredData : dataCar}

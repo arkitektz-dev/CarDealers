@@ -41,6 +41,8 @@ const AddDemandCar = ({ navigation, route }) => {
   ];
   const modelCar = [
     { label: "Corolla", value: "Corolla", categoryId: 1, versionId: 1 },
+    { label: "Prius", value: "Prius", categoryId: 1, versionId: 1 },
+    { label: "Aqua", value: "Aqua", categoryId: 1, versionId: 1 },
     { label: "Civic", value: "Civic", categoryId: 2, versionId: 2 },
     { label: "Reborn ", value: "Reborn", categoryId: 2, versionId: 3 },
   ];
