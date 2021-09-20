@@ -20,10 +20,12 @@ import { ActivityIndicator } from "react-native";
 import YearSliderData from "../../Component/SliderData/YearSliderData";
 import { TextInput } from "react-native-gesture-handler";
 import AppPicker from "../../Component/Pickers/Index";
+import { useToast } from "native-base";
 
 const AddDemandCar = ({ navigation, route }) => {
   const [make, setMake] = useState("");
 
+  const toast = useToast();
 
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
@@ -103,7 +105,14 @@ const AddDemandCar = ({ navigation, route }) => {
       await AddDemand(obj)
         .then(() => {
           setLoader(false);
-
+          toast.show({
+            title: "Demand added",
+            status: "success",
+            description: "Your demand has been added",
+            duration: 1500,
+            minWidth: "90%",
+            isClosable: false,
+          });
           navigation.navigate("Home");
         })
         .catch(() => setLoader(false));

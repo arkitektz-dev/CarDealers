@@ -34,7 +34,7 @@ export const fetchCarListData = async () => {
 export const fetchDemandCarData = async () => {
   const arr = [];
   let ref = firestore().collection("Demand");
-  ref = ref.orderBy('date','desc')
+  ref = ref.orderBy("date", "desc");
   var data = await ref.limit(5).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -48,7 +48,48 @@ export const fetchDemandCarData = async () => {
 export const fetchMoreDemandCar = async (startAfter) => {
   const arr = [];
   let ref = firestore().collection("Demand");
-  ref = ref.orderBy('date','desc')
+  ref = ref.orderBy("date", "desc");
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
+
+//munib demand
+
+export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
+  const arr = [];
+  console.log(filter)
+  let ref = firestore().collection("Demand");
+  if (filter.Make != "") {
+    ref = ref.where("Make", "==", filter.Make);
+  }
+  if (filter.Model != "") {
+    ref = ref.where("Model", "==", filter.Model);
+  }
+
+  // price
+  if (filter.price.init != "0") {
+    console.log("init", filter.price.init);
+    ref = ref.orderBy("minPrice", "asc");
+    ref = ref.where("minPrice", ">", filter.price.init.toString());
+  }
+  if (filter.price.final != "10000000") {
+    console.log("max", filter.price.final);
+    ref = ref.orderBy("maxPrice", "asc");
+    ref = ref.where("maxPrice", "<", filter.price.final.toString());
+  }
+
+  ref = ref.orderBy("date", "desc");
+  console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)
     .limit(5)
@@ -189,7 +230,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
       filter.Assemble
     );
   }
-  ref = ref.orderBy('date','desc')
+  ref = ref.orderBy("date", "desc");
   console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)
@@ -339,20 +380,20 @@ export const storeData = async (value) => {
   }
 };
 
-export const updateProfile = async (userinfo, userData,callme) => {
+export const updateProfile = async (userinfo, userData, callme) => {
   const { id } = userinfo;
   if (userData.name == "" || userData.email == "") {
     alert("Fields Cant be empty");
   } else {
-    console.log(userData)
+    console.log(userData);
     firestore()
       .collection("Users")
       .doc(id)
       .update(userData)
-      .then(async() => {
-        callme()
-        var d = JSON.stringify({...userinfo,...userData})
-        
+      .then(async () => {
+        callme();
+        var d = JSON.stringify({ ...userinfo, ...userData });
+
         return await AsyncStorage.setItem("userInfo", d);
       });
   }

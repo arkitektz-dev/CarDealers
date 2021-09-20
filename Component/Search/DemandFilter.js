@@ -23,6 +23,7 @@ const DemandFilter = ({
   toggleModal,
   onRequestClose,
   Visibility,
+  onClear,
 }) => {
   const [dropdownValues, setDropDownValues] = useState({
     Model: "",
@@ -32,6 +33,8 @@ const DemandFilter = ({
   });
   const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
+    onClear();
+
     setDropDownValues({
       Model: "",
       Make: "",
