@@ -104,6 +104,30 @@ export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
   return { size, arr, lastVal };
 };
 
+
+export const fetchMoreDemandWithSearch = async (startAfter, searchText) => {
+  const arr = [];
+  var ref;
+  console.log(searchText);
+  if (searchText != "") {
+    ref = firestore()
+      .collection("Demand")
+      .where("Make", ">=", searchText)
+      .where("Make", "<=", searchText + "\uf8ff").orderBy('Make').orderBy('date','desc')
+  }
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(5)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
 // export const fetchCarList = async () => {
 //   const arr = [];
 //   const ref = firestore()

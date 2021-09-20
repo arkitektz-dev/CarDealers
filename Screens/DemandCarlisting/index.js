@@ -9,6 +9,7 @@ import {
   View,
   RefreshControl,
   Modal,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -19,6 +20,7 @@ import {
   fetchMoreDemandCar,
   fetchSpecificDealer,
   fetchMoreDemandCarWithFilter,
+  fetchMoreDemandWithSearch
 } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import DemandFilter from "../../Component/Search/DemandFilter";
@@ -46,6 +48,7 @@ const DemandCarList = () => {
   const [datalength, setDatalength] = useState(0);
   const [filterState, setFilterState] = useState(false);
   const [searchLoadMore, setSearchLoadMore] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState(undefined);
@@ -92,23 +95,43 @@ const DemandCarList = () => {
       })
       .catch((err) => console.log(err));
   };
-  const onSearch = (text) => {
-    if (text) {
-      const newData = dataCar.filter((item) => {
-        const itemData = `${item.Make.toUpperCase()}
-        ${item.Year} ${item.Model.toUpperCase()}`;
-        const textData = text.toUpperCase();
+  //search
+  const onSearch = async () => {
+    setFilterState(false);
+    Keyboard.dismiss();
+    if (searchText) {
+      setSearchLoadMore(true);
+      setLoading(true);
 
-        return itemData.indexOf(textData) > -1;
+      const arr = [];
+      let ref = firestore().collection("Demand");
+
+      if (searchText != "") {
+        ref = firestore()
+          .collection("Demand")
+          .where("Make", ">=", searchText)
+          .where("Make", "<=", searchText + "\uf8ff").orderBy('Make').orderBy('date','desc')
+      }
+
+      var a = await ref.limit(5).get();
+      const lastVal = a.docs[a.docs.length - 1];
+      console.log("lastV", lastVal);
+      setStartAfter(lastVal);
+      a.docs.forEach((data) => {
+        arr.push(data.data());
       });
-
-      setfilteredData(newData);
-    } else {
-      setfilteredData(dataCar);
+      console.log(arr);
+      setfilteredData(arr);
+      setDataCar(arr);
+      {
+        filteredData.length > 0
+          ? setcarCount(arr.length)
+          : setcarCount(filteredData.length);
+      }
+      setLoading(false);
     }
   };
   const onFilter = async (dropdownValues) => {
-   
     const arr = [];
     setLoading(true);
     let ref = firestore().collection("Demand");
@@ -117,27 +140,27 @@ const DemandCarList = () => {
       ref = ref.orderBy("minPrice", "asc");
       ref = ref.where("minPrice", ">", dropdownValues.price.init.toString());
       // setFilter({...filter,price:{final:'10000000',init:dropdownValues.price.init}})
-      setFilterState(true)
+      setFilterState(true);
     }
     if (dropdownValues.price.final != "10000000") {
       console.log("max", dropdownValues.price.final);
       ref = ref.orderBy("maxPrice", "asc");
       ref = ref.where("maxPrice", "<", dropdownValues.price.final.toString());
       // setFilter({...filter,price:{init:'0',final:dropdownValues.price.final}})
-      setFilterState(true)
+      setFilterState(true);
     }
     if (dropdownValues.Make != "") {
       ref = ref.where("Make", "==", dropdownValues.Make);
       // setFilter({...filter,Make:dropdownValues.Make})
-      setFilterState(true)
+      setFilterState(true);
     }
     if (dropdownValues.Model != "") {
       ref = ref.where("Model", "==", dropdownValues.Model);
       // setFilter({...filter,Model:dropdownValues.Model})
-      setFilterState(true)
+      setFilterState(true);
     }
 
-    setFilter(dropdownValues)
+    setFilter(dropdownValues);
     ref = ref.orderBy("date", "desc");
     var a = await ref.limit(5).get();
     a.docs.forEach((data) => {
@@ -150,7 +173,7 @@ const DemandCarList = () => {
     setfilteredData(arr);
     setDataCar(arr);
     setDatalength(arr.length);
-    
+
     setcarCount(arr.length);
 
     setLoading(false);
@@ -247,7 +270,7 @@ const DemandCarList = () => {
                 fontSize: 14,
                 fontWeight: "bold",
                 textAlign: "left",
-                width:150
+                width: 150,
               }}
             >
               {`${numberWithCommas(item.minPrice)} - ${numberWithCommas(
@@ -296,16 +319,17 @@ const DemandCarList = () => {
     setMoreLoading(true);
     if (searchLoadMore == true) {
       console.log("seacch");
-      fetchMoreCarWithSearch(startAfter, searchText)
+      fetchMoreDemandWithSearch(startAfter, searchText)
         .then((res) => {
           if (filteredData.length > 0) {
-            // console.log([...filteredData, ...res.arr]);
+            console.log(res.arr);
             setfilteredData([...filteredData, ...res.arr]);
             setDataCar(res.arr);
           }
           setcarCount(filteredData.length + res.arr.length);
           setStartAfter(res.lastVal);
           setMoreLoading(false);
+          setDatalength(res.arr.length);
         })
         .catch((e) => console.log(e));
     }
@@ -313,7 +337,7 @@ const DemandCarList = () => {
       console.log("normal");
       fetchMoreDemandCar(startAfter).then((res) => {
         setDataCar(res.arr);
-        console.log(res.arr)
+        console.log(res.arr);
         setfilteredData([...filteredData, ...res.arr]);
         setDatalength(res.arr.length);
         setcarCount(filteredData.length + res.arr.length);
@@ -357,7 +381,8 @@ const DemandCarList = () => {
 
         <SearchComponent
           style={styles.search}
-          onChangeHandler={(text) => onSearch(text)}
+          onChangeHandler={(text) => setSearchText(text)}
+          onSearchPress={onSearch}
         />
       </View>
       <View
@@ -386,7 +411,7 @@ const DemandCarList = () => {
             setSearch(dropdownValues);
             onFilter(dropdownValues);
           }}
-          onClear={()=> onClear()}
+          onClear={() => onClear()}
           Visibility={() => setShown(false)}
         />
         <TouchableOpacity onPress={() => setShown(true)}>
