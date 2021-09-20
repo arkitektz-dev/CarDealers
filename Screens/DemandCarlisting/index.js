@@ -23,6 +23,7 @@ import DemandFilter from "../../Component/Search/DemandFilter";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import CallSeller from "../../Assets/NewAsset/Call.png";
 import { Linking } from "react-native";
+import firestore from "@react-native-firebase/firestore";
 
 const DemandCarList = () => {
   const [dataCar, setDataCar] = useState([]);
@@ -43,7 +44,7 @@ const DemandCarList = () => {
     fetchDemandCarData().then((res) => {
       setLoading(true);
       setDataCar(res.arr);
-      setDatalength(res.arr.length)
+      setDatalength(res.arr.length);
       setStartAfter(res.lastVal);
       // setfilteredData(res.arr);
       setcarCount(res.size);
@@ -81,60 +82,54 @@ const DemandCarList = () => {
       setfilteredData(dataCar);
     }
   };
-  // const onFilter = async (dropdownValues) => {
-  //   const arr = [];
-  //   let ref = firestore().collection("Demand");
+  const onFilter = async (dropdownValues) => {
+    const arr = [];
+    setLoading(true);
+    let ref = firestore().collection("Demand");
 
-  //   if (dropdownValues.Make != "") {
-  //     ref = ref.where("Make", "==", dropdownValues.Make);
-  //   }
+    if (dropdownValues.Make != "") {
+      ref = ref.where("Make", "==", dropdownValues.Make);
+    }
+    if (dropdownValues.Model != "") {
+      ref = ref.where("Model", "==", dropdownValues.Model);
+    }
+    
+    if (dropdownValues.price.init != "0") {
+      console.log("init", dropdownValues.price.init);
+      ref = ref.orderBy("minPrice", "asc");
+      ref = ref.where("minPrice", ">", dropdownValues.price.init.toString());
+    }
+    if (dropdownValues.price.final != "10000000") {
+      console.log("max", dropdownValues.price.final);
+      ref = ref.orderBy("maxPrice", "asc");
+      ref = ref.where("maxPrice", "<", dropdownValues.price.final.toString());
+    }
+    ref = ref.orderBy("date", "desc");
+    var a = await ref.limit(5).get();
+    a.docs.forEach((data) => {
+      arr.push(data.data());
+    });
+    console.log(arr);
+    setfilteredData(arr);
+    setDataCar(arr);
+    setDatalength(arr.length);
 
-  //   // if (dropdownValues.Make != "") {
-  //   //   ref = ref.where("vehicle.information.make", "==", dropdownValues.Make);
-  //   // }
+    setcarCount(arr.length);
 
-  //   // if (dropdownValues.City != "") {
-  //   //   ref = ref.where("vehicle.city", "==", dropdownValues.City);
-  //   // }
-  //   // if (dropdownValues.ExteriorColor != "") {
-  //   //   ref = ref.where(
-  //   //     "vehicle.exteriorColor",
-  //   //     "==",
-  //   //     dropdownValues.ExteriorColor
-  //   //   );
-  //   // }
-  //   // if (dropdownValues.Assemble != "") {
-  //   //   ref = ref.where(
-  //   //     "vehicle.additionalInformation.assembly",
-  //   //     "==",
-  //   //     "imported"
-  //   //   );
-  //   // }
+    setLoading(false);
+    // const newData = dataCar.filter((item) => {
+    //   const itemData = `${item.Make.toUpperCase()}
+    //   ${item.Year} ${item.Model.toUpperCase()}`;
+    //   const textData = text.toUpperCase();
 
-  //   var a = await ref.get();
-  //   a.docs.forEach((data) => {
-  //     arr.push(data.data());
-  //   });
-  //   setfilteredData(arr);
-  //   {
-  //     filteredData.length > 0
-  //       ? setcarCount(arr.length)
-  //       : setcarCount(dataCar.length);
-  //   }
+    //   const textData = dropdownValues.Make.toUpperCase();
 
-  //   // const newData = dataCar.filter((item) => {
-  //   //   const itemData = `${item.Make.toUpperCase()}
-  //   //   ${item.Year} ${item.Model.toUpperCase()}`;
-  //   //   const textData = text.toUpperCase();
+    //   return itemData.indexOf(textData) > -1;
+    // });
 
-  //   //   const textData = dropdownValues.Make.toUpperCase();
-
-  //   //   return itemData.indexOf(textData) > -1;
-  //   // });
-
-  //   // setDataCar(newData);
-  //   // setcarCount(newData.length);
-  // };
+    // setDataCar(newData);
+    // setcarCount(newData.length);
+  };
 
   const onPressHandler = (item) => {
     navigation.navigate("DetailCarScreen", { item });
@@ -150,29 +145,23 @@ const DemandCarList = () => {
         }}
       >
         {datalength == 5 ? (
-
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={_onEndReached}
-          style={styles.loadMoreBtn}
-        >
-          <Text style={styles.btnText}>Load More</Text>
-          {moreloading ? (
-            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
-          ) : null}
-        </TouchableOpacity>
-        ):
-        (
-          <View
-          activeOpacity={0.7}
-         
-          style={styles.loadMoreBtn}
-        >
-          <Text style={styles.btnText}>No More Data</Text>
-          {moreloading ? (
-            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
-          ) : null}
-        </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={_onEndReached}
+            style={styles.loadMoreBtn}
+          >
+            <Text style={styles.btnText}>Load More</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </TouchableOpacity>
+        ) : (
+          <View activeOpacity={0.7} style={styles.loadMoreBtn}>
+            <Text style={styles.btnText}>No More Data</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </View>
         )}
       </View>
     );
@@ -264,7 +253,7 @@ const DemandCarList = () => {
     fetchMoreDemandCar(startAfter).then((res) => {
       setDataCar([...dataCar, ...res.arr]);
       // setfilteredData([...dataCar, ...res.arr]);
-      setDatalength(res.arr.length)
+      setDatalength(res.arr.length);
       setcarCount(dataCar.length + res.arr.length);
       setStartAfter(res.lastVal);
       setMoreLoading(false);
@@ -282,7 +271,7 @@ const DemandCarList = () => {
     });
   };
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{ backgroundColor: "white",height:'100%' }}>
       <View style={styles.searchHolder}>
         <IonIcon
           name="chevron-back-circle-sharp"
@@ -302,7 +291,7 @@ const DemandCarList = () => {
           justifyContent: "space-between",
           flexDirection: "row",
           padding: 10,
-          backgroundColor:'white'
+          backgroundColor: "white",
         }}
       >
         <Text
@@ -356,18 +345,18 @@ const DemandCarList = () => {
         </TouchableOpacity> */}
       </View>
       {loading ? (
-        <View style={{flex:1}}>
-        <LottieView
-          source={require("../../Assets/CarLoader.json")}
-          autoPlay
-          resizeMode="contain"
-          style={{
-            alignSelf: "center",
-            width: 140,
-            height: 140,
-          }}
-          hardwareAccelerationAndroid={true}
-        />
+        <View style={{ flex: 1 }}>
+          <LottieView
+            source={require("../../Assets/CarLoader.json")}
+            autoPlay
+            resizeMode="contain"
+            style={{
+              alignSelf: "center",
+              width: 140,
+              height: 140,
+            }}
+            hardwareAccelerationAndroid={true}
+          />
         </View>
       ) : (
         <FlatList
@@ -404,7 +393,7 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   search: {
     width: "75%",

@@ -24,15 +24,13 @@ const DemandFilter = ({
   onRequestClose,
   Visibility,
 }) => {
-  useEffect(() => {
-    getCompanies();
-  }, []);
-  const [makeCompany, setCompany] = useState([]);
+  
+
   const [dropdownValues, setDropDownValues] = useState({
     Model: "",
     Make: "",
     Year: "",
-    price: { init: "", final: "" },
+    price: { init: '0', final: '10000000' },
   });
   const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
@@ -40,22 +38,22 @@ const DemandFilter = ({
       Model: "",
       Make: "",
       Year: "",
-      price: { init: "", final: "" },
+      price: { init: "0", final: "10000000" },
     });
   };
   const data = 0;
-  const getCompanies = () => {
-    AddCompanyMake().then((res) => {
-      const arr = [];
-      res.docs.forEach((item) =>
-        arr.push({
-          label: item.data().name,
-          value: item.data().name,
-        })
-      );
-      setCompany(arr);
-    });
-  };
+  // const getCompanies = () => {
+  //   AddCompanyMake().then((res) => {
+  //     const arr = [];
+  //     res.docs.forEach((item) =>
+  //       arr.push({
+  //         label: item.data().name,
+  //         value: item.data().name,
+  //       })
+  //     );
+  //     setCompany(arr);
+  //   });
+  // };
   const handleValueChange = (e) => {
     setDropDownValues({
       ...dropdownValues,
@@ -68,9 +66,17 @@ const DemandFilter = ({
     { label: "1300cc", value: 2 },
     { label: "1600cc", value: 3 },
   ];
+  const makeCompany = [
+    { label: "Toyota", value: "Toyota", categoryId: 1 },
+    { label: "Honda", value: "Honda", categoryId: 2 },
+  ];
+
   const Model = [
-    { label: "City", value: 1 },
-    { label: "Corolla", value: 2 },
+    { label: "Corolla", value: "Corolla", categoryId: 1, versionId: 1 },
+    { label: "Prius", value: "Prius", categoryId: 1, versionId: 1 },
+    { label: "Aqua", value: "Aqua", categoryId: 1, versionId: 1 },
+    { label: "Civic", value: "Civic", categoryId: 2, versionId: 2 },
+    { label: "Reborn ", value: "Reborn", categoryId: 2, versionId: 3 },
   ];
   const color = [
     { label: "Red", value: 1 },
@@ -135,20 +141,9 @@ const DemandFilter = ({
             flexDirection: "column",
             flex: 1,
             alignItems: "center",
+            paddingHorizontal:10
           }}
         >
-          <AppPicker
-            title="Model"
-            items={Model}
-            name="category"
-            onSelectItem={(item) =>
-              setDropDownValues({ ...dropdownValues, Model: item.label })
-            }
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Select Model"
-            selectedItem={dropdownValues.Model}
-            width="80%"
-          />
           <AppPicker
             title="Company"
             items={makeCompany}
@@ -159,8 +154,21 @@ const DemandFilter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Company"
             selectedItem={dropdownValues.Make}
-            width="80%"
+            width="100%"
           />
+          <AppPicker
+            title="Model"
+            items={Model}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, Model: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Select Model"
+            selectedItem={dropdownValues.Model}
+            width="100%"
+          />
+          
           <AppPicker
             title="Year"
             items={year}
@@ -171,7 +179,7 @@ const DemandFilter = ({
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select Year"
             selectedItem={dropdownValues.Year}
-            width="80%"
+            width="100%"
           />
 
           <View style={styles.priceNum}>
@@ -192,9 +200,10 @@ const DemandFilter = ({
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
-              enabledTwo={true}
+              enabledTwo={dropdownValues.price.init != '0' ? false : true}
+              enabledOne={dropdownValues.price.final != '10000000' ? false : true}
               onValueChanged={handleValueChange}
-              values={[0, 5000000]}
+              values={[dropdownValues.price.init, dropdownValues.price.final]}
             />
           </View>
 
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
   priceHolder: {
     borderRadius: 20,
     backgroundColor: "#d3d3d3",
-    width: "30%",
+    width: "35%",
     height: "70%",
     padding: 10,
   },
