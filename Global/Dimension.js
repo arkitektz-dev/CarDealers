@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions } from "react-native";
-
+import moment from 'moment'
 export const screenWidth = Dimensions.get("window").width;
 export const screenHeight = Dimensions.get("window").height;
 
@@ -36,4 +36,17 @@ export const emailValidation = (email) => {
     result = 'Invalid Email';
   }
   return result;
+};
+export const defineDate = value => {
+  if (
+    value != null &&
+    value != undefined &&
+    value != '' &&
+    value != 0 &&
+    value != '0'
+  ) {
+    var momentObj = moment(value);
+    var momentString = momentObj.format('DD MMM YYYY'); // 2016-07-15
+    return momentString;
+  } else return ' - ';
 };

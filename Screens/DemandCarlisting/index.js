@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   RefreshControl,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -20,11 +21,16 @@ import {
 } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import DemandFilter from "../../Component/Search/DemandFilter";
-import { screenHeight, screenWidth } from "../../Global/Dimension";
+import {
+  defineDate,
+  imageChecker,
+  screenHeight,
+  screenWidth,
+} from "../../Global/Dimension";
 import CallSeller from "../../Assets/NewAsset/Call.png";
 import { Linking } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-
+import car from "../../Assets/car.png";
 const DemandCarList = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
@@ -37,7 +43,8 @@ const DemandCarList = () => {
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
   const [datalength, setDatalength] = useState(0);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState(undefined);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -56,16 +63,17 @@ const DemandCarList = () => {
 
     const dealerId = x.id.toString();
     fetchSpecificDealer(dealerId)
-      .then((data) => setDealerCallData(data.data().contactInformation[0]))
+      .then((data) => {
+        console.log(data.data());
+        if (Platform.OS === "android") {
+          phoneNumber = `tel:${"+92" + data.data().contactInformation[0]}`;
+        } else {
+          phoneNumber = `telprompt:${"+92" +
+            data.data().contactInformation[0]}`;
+        }
+        Linking.openURL(phoneNumber);
+      })
       .catch((err) => console.log(err));
-
-    if (Platform.OS === "android") {
-      phoneNumber = `tel:${dealerCallData}`;
-    } else {
-      phoneNumber = `telprompt:${dealerCallData}`;
-    }
-
-    Linking.openURL(phoneNumber);
   };
   const onSearch = (text) => {
     if (text) {
@@ -93,7 +101,7 @@ const DemandCarList = () => {
     if (dropdownValues.Model != "") {
       ref = ref.where("Model", "==", dropdownValues.Model);
     }
-    
+
     if (dropdownValues.price.init != "0") {
       console.log("init", dropdownValues.price.init);
       ref = ref.orderBy("minPrice", "asc");
@@ -168,13 +176,23 @@ const DemandCarList = () => {
   };
   const _renderItem = ({ item }) => {
     return (
-      <View
-        style={{
-          flexDirection: "column",
-          borderBottomWidth: 2,
-          borderBottomColor: "#e0e0e0",
+      <TouchableOpacity
+        style={styles.itemStyle}
+        onPress={() => {
+          setModalData(item);
+          setModalVisible(true);
         }}
       >
+        <View style={{ marginLeft: -25 }}>
+          <Image
+            source={car}
+            onPress={() => navigation.goBack()}
+            style={{
+              width: 150,
+              height: 52,
+            }}
+          />
+        </View>
         <View
           style={{
             left: "5%",
@@ -219,7 +237,7 @@ const DemandCarList = () => {
             </Text>
             <View style={{ height: 10 }}></View>
 
-            <Text
+            {/* <Text
               style={{
                 color: "#565656",
                 fontSize: 14,
@@ -228,24 +246,20 @@ const DemandCarList = () => {
               }}
             >
               {item.Dealer.Name}
+            </Text> */}
+            <Text
+              style={{
+                color: "#565656",
+                fontSize: 14,
+                fontWeight: "800",
+                textAlign: "left",
+              }}
+            >
+              {defineDate(item.date)}
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={{ margin: 15, width: 150 }}
-          onPress={() => makeCall(item.Dealer.id)}
-        >
-          <Image
-            source={CallSeller}
-            style={{
-              width: "100%",
-              height: 50,
-              resizeMode: "contain",
-              alignSelf: "flex-start",
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
   };
   const _onEndReached = () => {
@@ -271,7 +285,7 @@ const DemandCarList = () => {
     });
   };
   return (
-    <View style={{ backgroundColor: "white",height:'100%' }}>
+    <View style={{ backgroundColor: "white", height: "100%" }}>
       <View style={styles.searchHolder}>
         <IonIcon
           name="chevron-back-circle-sharp"
@@ -372,6 +386,83 @@ const DemandCarList = () => {
           }
         />
       )}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={[styles.centeredView, { width: "100%" }]}>
+          <View style={[styles.modalView, { width: "90%" }]}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.cross}
+            >
+              <IonIcon
+                name="ios-close"
+                size={20}
+                color={"black"}
+                enableRTL={true}
+              />
+            </TouchableOpacity>
+            <View style={styles.modalTitle}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  color: "#565656",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                Dealer Info
+              </Text>
+            </View>
+            <View>
+              <View style={styles.modaluser}>
+                <Image
+                  source={{ uri: imageChecker(modalData?.Dealer?.image) }}
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    marginLeft: -20,
+                  }}
+                />
+                <View style={{ marginLeft: 20 }}>
+                  <Text
+                    style={{
+                      color: "#565656",
+                      fontSize: 16,
+                      fontWeight: "800",
+                      textAlign: "left",
+                    }}
+                  >
+                    {modalData?.Dealer?.Name}
+                  </Text>
+                  <TouchableOpacity
+                    style={{ width: 120 }}
+                    onPress={() => makeCall(modalData?.Dealer?.id)}
+                  >
+                    <Image
+                      source={CallSeller}
+                      style={{
+                        width: "100%",
+                        height: 50,
+                        resizeMode: "contain",
+                        alignSelf: "flex-start",
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -404,5 +495,64 @@ const styles = StyleSheet.create({
   },
   distance: {
     width: screenWidth * 0.09,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "80%",
+    alignSelf: "center",
+    // marginTop: 22,
+    // marginBottom:-10
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  itemStyle: {
+    flexDirection: "row",
+    borderBottomWidth: 2,
+    borderBottomColor: "#e0e0e0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cross: {
+    backgroundColor: "#CCCCCC",
+    position: "absolute",
+    right: 15,
+    top: 12,
+    width: 26,
+    height: 26,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalTitle: {
+    position: "absolute",
+    top: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  modaluser: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "grey",
+    // borderBottomWidth: 0.5,
+    paddingVertical: 10,
+    marginTop:10
   },
 });

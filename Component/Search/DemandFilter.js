@@ -24,13 +24,11 @@ const DemandFilter = ({
   onRequestClose,
   Visibility,
 }) => {
-  
-
   const [dropdownValues, setDropDownValues] = useState({
     Model: "",
     Make: "",
     Year: "",
-    price: { init: '0', final: '10000000' },
+    price: { init: "0", final: "10000000" },
   });
   const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
@@ -112,18 +110,6 @@ const DemandFilter = ({
           }}
         >
           <TouchableOpacity
-            onPress={clearFilter}
-            style={{
-              margin: 10,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Text style={{ color: "#000000", fontSize: 18, fontWeight: "900" }}>
-              Clear Filter
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
             onPress={Visibility}
             style={{
               margin: 10,
@@ -135,13 +121,25 @@ const DemandFilter = ({
               Close
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={clearFilter}
+            style={{
+              margin: 10,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Text style={{ color: "#000000", fontSize: 18, fontWeight: "900" }}>
+              Clear Filter
+            </Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           contentContainerStyle={{
             flexDirection: "column",
             flex: 1,
             alignItems: "center",
-            paddingHorizontal:10
+            paddingHorizontal: 10,
           }}
         >
           <AppPicker
@@ -168,8 +166,8 @@ const DemandFilter = ({
             selectedItem={dropdownValues.Model}
             width="100%"
           />
-          
-          <AppPicker
+
+          {/* <AppPicker
             title="Year"
             items={year}
             name="category"
@@ -180,7 +178,7 @@ const DemandFilter = ({
             placeholder="Select Year"
             selectedItem={dropdownValues.Year}
             width="100%"
-          />
+          /> */}
 
           <View style={styles.priceNum}>
             <View style={styles.priceHolder}>
@@ -200,8 +198,10 @@ const DemandFilter = ({
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <SliderData
-              enabledTwo={dropdownValues.price.init != '0' ? false : true}
-              enabledOne={dropdownValues.price.final != '10000000' ? false : true}
+              enabledTwo={dropdownValues.price.init != "0" ? false : true}
+              enabledOne={
+                dropdownValues.price.final != "10000000" ? false : true
+              }
               onValueChanged={handleValueChange}
               values={[dropdownValues.price.init, dropdownValues.price.final]}
             />

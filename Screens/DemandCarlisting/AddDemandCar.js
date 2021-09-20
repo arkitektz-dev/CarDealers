@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text,Modal } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
 import { screenWidth } from "../../Global/Dimension";
@@ -23,6 +23,8 @@ import AppPicker from "../../Component/Pickers/Index";
 
 const AddDemandCar = ({ navigation, route }) => {
   const [make, setMake] = useState("");
+
+
   const [dealerPicker, setDealerPicker] = useState("");
   const [dealerPickerID, setDealerPickerID] = useState("");
   const [makeCompany, setCompany] = useState([]);
@@ -69,7 +71,7 @@ const AddDemandCar = ({ navigation, route }) => {
     getCompanies();
     getData().then((res) => {
       setDealerPickerID(res.DealerId);
-      setDealerPicker(res.name);
+      setDealerPicker(res);
     });
   }, []);
   const onSubmitHandler = async () => {
@@ -79,7 +81,8 @@ const AddDemandCar = ({ navigation, route }) => {
 
     const Dealer = {
       id: userRef,
-      Name: dealerPicker,
+      Name: dealerPicker.name,
+      image: dealerPicker.image,
     };
     const date = new Date();
     const data = {
