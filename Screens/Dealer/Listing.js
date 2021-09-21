@@ -5,12 +5,14 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Keyboard
 } from "react-native";
 import LottieView from "lottie-react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { ActivityIndicator } from "react-native-paper";
+import firestore from "@react-native-firebase/firestore";
 
 import { SearchComponent } from "../../Component/Search";
 import {
@@ -29,6 +31,7 @@ const ListingDealer = () => {
   const [moreloading, setMoreLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [datalength, setDatalength] = useState(0);
+  const [searchLoadMore, setSearchLoadMore] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -41,26 +44,40 @@ const ListingDealer = () => {
       setLoading(false);
     });
   }, []);
-  const searchDealer = (text) => {
+  const searchDealer = async(text) => {
+
+    Keyboard.dismiss();
     if (searchText) {
-      const newData = dealerdata.filter((item) => {
-        const itemData = `${
-          item.contactInformation.length > 0
-            ? item.contactInformation[0].toUpperCase()
-            : item.contactInformation[0]
-        }   
-         ${item.name ? item.name.toUpperCase() : ""}`;
-        const textData = searchText.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setDealerData(newData);
-      if (newData.length > 0) {
-        setDealerCount(newData.length);
+      setSearchLoadMore(true);
+      setLoading(true);
+
+      const arr = [];
+      let ref = firestore().collection("Users");
+
+      if (searchText != "") {
+        ref = firestore()
+          .collection("Users")
+          .where("name", ">=", searchText)
+          .where("name", "<=", searchText + "\uf8ff");
       }
-    } else {
-      setDealerCount(filteredData.length);
-      setDealerData(filteredData);
+
+      var a = await ref.limit(20).get();
+      const lastVal = a.docs[a.docs.length - 1];
+      console.log("lastV", lastVal);
+      setStartAfter(lastVal);
+      a.docs.forEach((data) => {
+        arr.push(data.data());
+      });
+      console.log(arr);
+      setDealerData(arr);
+      
+           setDealerCount(arr.length);
+      
+      setLoading(false);
     }
+
+
+    
   };
   const _onEndReached = () => {
     setMoreLoading(true);
@@ -143,7 +160,6 @@ const ListingDealer = () => {
                   color: "#1c2e65",
                   fontSize: 16,
                   fontWeight: "bold",
-                  textTransform: "uppercase",
                 }}
               >
                 {item?.name}
