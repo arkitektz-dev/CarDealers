@@ -462,19 +462,19 @@ export const updatePassword = async (userinfo, userData) => {
   }
 };
 
-export const AddShowroomData = (showroomData) => {
+export const AddShowroomData = (data) => {
   if (
-    showroomData.name == "" ||
-    showroomData.location == "" ||
-    showroomData.contactInformation == ""
+    data.showroomData.name == "" ||
+    data.showroomData.location == "" ||
+    data.showroomData.contactInformation == ""
   )
     alert("Fields can not be empty");
   else {
     firestore()
       .collection("Showrooms")
-      .add(showroomData)
+      .add(data.showroomData)
       .then(() => {
-        alert("Showroom Added");
+        data.showToaster()
       });
   }
 };
