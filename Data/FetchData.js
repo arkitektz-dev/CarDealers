@@ -363,6 +363,29 @@ export const fetchDealerData = async () => {
   return { size, arr, lastVal };
 };
 
+
+export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
+  const arr = [];
+  var ref;
+  console.log(searchText);
+  if (searchText != "") {
+    ref = firestore()
+      .collection("User")
+      .where("name", "==", searchText);
+  }
+  var data = await ref
+    .startAfter(startAfter)
+    .limit(20)
+    .get();
+  const lastVal = data.docs[data.docs.length - 1];
+  const size = data.size;
+
+  data.forEach((res) => {
+    arr.push(res.data());
+  });
+
+  return { size, arr, lastVal };
+};
 export const fetchShowroomData = async () => {
   const ref = firestore().collection("Showrooms");
 

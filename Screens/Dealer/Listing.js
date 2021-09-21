@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import LottieView from "lottie-react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -20,7 +20,7 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import { fetchDealerData, fetchMoreDealer } from "../../Data/FetchData";
+import { fetchDealerData, fetchMoreDealer,fetchMoreDealerWithSearch } from "../../Data/FetchData";
 
 const ListingDealer = () => {
   const [filteredData, setfilteredData] = useState([]);
@@ -44,8 +44,7 @@ const ListingDealer = () => {
       setLoading(false);
     });
   }, []);
-  const searchDealer = async(text) => {
-
+  const searchDealer = async (text) => {
     Keyboard.dismiss();
     if (searchText) {
       setSearchLoadMore(true);
@@ -70,29 +69,41 @@ const ListingDealer = () => {
       });
       console.log(arr);
       setDealerData(arr);
-      
-           setDealerCount(arr.length);
-      
+
+      setDealerCount(arr.length);
+
       setLoading(false);
     }
-
-
-    
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreDealer(startAfter)
-      .then((res) => {
-        setDealerData([...dealerdata, ...res.arr]);
-        if (filteredData.length > 0) {
-          setfilteredData([...dealerdata, ...res.arr]);
-        }
-        setDatalength(res.arr.length);
-        setDealerCount(dealerdata.length + res.arr.length);
-        setStartAfter(res.lastVal);
-        setMoreLoading(false);
-      })
-      .catch((e) => console.log(e));
+    if (!searchLoadMore) {
+      fetchMoreDealer(startAfter)
+        .then((res) => {
+          setDealerData([...dealerdata, ...res.arr]);
+          if (filteredData.length > 0) {
+            setfilteredData([...dealerdata, ...res.arr]);
+          }
+          setDatalength(res.arr.length);
+          setDealerCount(dealerdata.length + res.arr.length);
+          setStartAfter(res.lastVal);
+          setMoreLoading(false);
+        })
+        .catch((e) => console.log(e));
+    } else {
+      fetchMoreDealerWithSearch(startAfter,searchText)
+        .then((res) => {
+          setDealerData([...dealerdata, ...res.arr]);
+          if (filteredData.length > 0) {
+            setfilteredData([...dealerdata, ...res.arr]);
+          }
+          setDatalength(res.arr.length);
+          setDealerCount(dealerdata.length + res.arr.length);
+          setStartAfter(res.lastVal);
+          setMoreLoading(false);
+        })
+        .catch((e) => console.log(e));
+    }
   };
   const _renderFooter = () => {
     return (
