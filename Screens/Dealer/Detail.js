@@ -14,6 +14,7 @@ import Profile from "../../Assets/BlueProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import {
   autoCapitalize,
+  imageChecker,
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
@@ -31,6 +32,7 @@ const DealerDetailScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
+  
     const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
@@ -43,8 +45,8 @@ const DealerDetailScreen = ({ route }) => {
             .dealer.id.id.toString()
             .trim();
         }
-
-        const paramdealerId = param.id.toString();
+      
+        const paramdealerId = param.DealerId._documentPath._parts[1].toString();
         if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
         }
@@ -205,10 +207,11 @@ const DealerDetailScreen = ({ route }) => {
               }}
             >
               <Image
-                source={Profile}
+                source={{uri:imageChecker(param.image)}}
                 style={{
                   width: 85,
                   height: 85,
+                  borderRadius:50
                 }}
               />
               <View style={{ width: 15 }}></View>
@@ -231,7 +234,7 @@ const DealerDetailScreen = ({ route }) => {
                     <Text style={styles.h1}>{param.showrooms[0].name}</Text>
 
                     <Text style={styles.txt1}>
-                      {param.contactInformation[0]}
+                      {param.phone}
                     </Text>
                   </View>
                 </View>
@@ -341,7 +344,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     color: "white",
-    marginBottom: 5,
+    // marginBottom: 5,
   },
   searchHolder: {
     backgroundColor: "#1c2e65",
@@ -356,7 +359,7 @@ const styles = StyleSheet.create({
   },
   DealerName: {
     backgroundColor: "#1c2e65",
-    justifyContent: "center",
+    // maxWidth:150
   },
   CarInfoTitle: {
     backgroundColor: "#1c2e65",

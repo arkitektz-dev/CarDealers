@@ -13,7 +13,11 @@ import { useNavigation } from "@react-navigation/core";
 import { ActivityIndicator } from "react-native-paper";
 
 import { SearchComponent } from "../../Component/Search";
-import { screenHeight, screenWidth } from "../../Global/Dimension";
+import {
+  imageChecker,
+  screenHeight,
+  screenWidth,
+} from "../../Global/Dimension";
 import { fetchDealerData, fetchMoreDealer } from "../../Data/FetchData";
 
 const ListingDealer = () => {
@@ -24,6 +28,7 @@ const ListingDealer = () => {
   const [startAfter, setStartAfter] = useState(Object);
   const [moreloading, setMoreLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [datalength, setDatalength] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -31,6 +36,7 @@ const ListingDealer = () => {
       setStartAfter(data.lastVal);
       setDealerData(data.arr);
       setfilteredData(data.arr);
+      setDatalength(data.arr.length);
       setDealerCount(data.size);
       setLoading(false);
     });
@@ -64,6 +70,7 @@ const ListingDealer = () => {
         if (filteredData.length > 0) {
           setfilteredData([...dealerdata, ...res.arr]);
         }
+        setDatalength(res.arr.length);
         setDealerCount(dealerdata.length + res.arr.length);
         setStartAfter(res.lastVal);
         setMoreLoading(false);
@@ -80,12 +87,21 @@ const ListingDealer = () => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
-          <Text style={styles.btnText}>Load More</Text>
-          {moreloading ? (
-            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
-          ) : null}
-        </TouchableOpacity>
+        {datalength == 20 ? (
+          <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
+            <Text style={styles.btnText}>Load More</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </TouchableOpacity>
+        ) : (
+          <View activeOpacity={0.7} style={styles.loadMoreBtn}>
+            <Text style={styles.btnText}>No More Data</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </View>
+        )}
       </View>
     );
   };
@@ -106,38 +122,20 @@ const ListingDealer = () => {
               flexDirection: "row",
             }}
           >
-            {item.images[0] != undefined ? (
-              <View
-                style={{
-                  margin: 5,
-                  width: screenWidth * 0.28,
-                  height: screenHeight * 0.17,
-                }}
-              >
-                <Image
-                  source={{ uri: item.images[0] }}
-                  style={styles.imageSize}
-                  resizeMode={"contain"}
-                />
-              </View>
-            ) : (
-              <View
-                style={{
-                  margin: 5,
-                  width: screenWidth * 0.28,
-                  height: screenHeight * 0.17,
-                }}
-              >
-                <Image
-                  source={{
-                    uri:
-                      "https://firebasestorage.googleapis.com/v0/b/cardealer-41e38.appspot.com/o/photos%2FNoImage.jpg?alt=media&token=5c584571-f6f7-4579-9096-08b50eb639ff",
-                  }}
-                  style={styles.imageSize}
-                  resizeMode={"contain"}
-                />
-              </View>
-            )}
+            <View
+              style={{
+                margin: 5,
+                width: screenWidth * 0.28,
+                height: screenHeight * 0.17,
+              }}
+            >
+              <Image
+                source={{ uri: imageChecker(item.image) }}
+                style={styles.imageSize}
+                resizeMode={"contain"}
+              />
+            </View>
+
             <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
               <Text
                 style={{
@@ -145,9 +143,10 @@ const ListingDealer = () => {
                   color: "#1c2e65",
                   fontSize: 16,
                   fontWeight: "bold",
+                  textTransform: "uppercase",
                 }}
               >
-                {item.name}
+                {item?.name}
               </Text>
               <View style={{ height: 10 }}></View>
 
@@ -159,7 +158,7 @@ const ListingDealer = () => {
                   textAlign: "left",
                 }}
               >
-                {item.contactInformation[0]}
+                {item?.phone}
               </Text>
             </View>
           </View>
@@ -223,7 +222,7 @@ const ListingDealer = () => {
         />
       ) : (
         <FlatList
-          ListFooterComponent={filteredData.length > 0 ? _renderFooter : null}
+          ListFooterComponent={_renderFooter}
           contentContainerStyle={{ paddingBottom: "10%" }}
           data={dealerdata}
           renderItem={_renderItem}

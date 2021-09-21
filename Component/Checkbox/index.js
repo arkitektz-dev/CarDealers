@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckBox } from "react-native-elements/dist/checkbox/CheckBox";
+import { CheckBox } from 'react-native-elements'
 
 const Checkbox = ({ checkedState, key, title, onPress }) => {
   return (

@@ -12,6 +12,7 @@ import SkeletonLoader from "../SkeletonPlaceholder/Index";
 import HomeCard from "../CardViews/HomeProductListCard";
 import {
   autoCapitalize,
+  imageChecker,
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
@@ -36,8 +37,8 @@ const DealerCard = () => {
     return (
       <HomeCard
         title={item.name ? autoCapitalize(`${item.name}`) : ""}
-        price={item.contactInformation[0]}
-        image={{ uri: item.images[0] }}
+        price={item.phone}
+        image={{ uri: imageChecker(item.image) }}
         pressHandler={() => onPressHandler(item)}
       />
     );

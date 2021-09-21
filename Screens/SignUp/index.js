@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { Tooltip } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import { useToast } from "native-base";
 
 import { Button } from "../../Component/Button/Index";
 import { DismissKeyboard } from "../../Component/KeyboardDismiss";
@@ -62,6 +64,7 @@ export const SignupScreen = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [alreadyExit, setAlreadyExit] = useState(false);
   const [checkbox, setCheckbox] = useState([]);
+  const toast = useToast();
 
   const [otpInput, setOTPInput] = useState({
     pin1: "",
@@ -172,7 +175,7 @@ export const SignupScreen = () => {
           .catch((err) => console.log(err));
 
         navigation.replace("LoginScreen");
-        alert("Account Created")
+        alert("Account Created");
       } catch (error) {
         alert(error);
       }
@@ -279,7 +282,6 @@ export const SignupScreen = () => {
             dense="20"
             outlineColor="#CCCCCC"
             style={{ backgroundColor: "white" }}
-           
             onChangeText={handleChangeName}
           />
 
@@ -288,7 +290,6 @@ export const SignupScreen = () => {
           <TextInput
             autoCapitalize="none"
             placeholderTextColor="#000000"
-           
             mode="outlined"
             theme={{
               colors: {
@@ -492,12 +493,11 @@ export const SignupScreen = () => {
               color: "#F63D40",
               fontWeight: "700",
               textAlign: "left",
-              marginLeft:10,
-              fontSize:14
-            
+              marginLeft: 10,
+              fontSize: 14,
             }}
           >
-           Please fill the required fields!
+            Please fill the required fields!
           </HelperText>
         ) : null}
         <View style={styles.distance}></View>
@@ -531,6 +531,35 @@ export const SignupScreen = () => {
               justifyContent: "center",
             }}
           >
+            <TouchableOpacity
+              onPress={() => {
+                setConfirm(null), setModalVisible(false);
+              }}
+              style={{
+                position: "absolute",
+                top: 15,
+                left: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IonIcon
+                name="chevron-back-sharp"
+                color="black"
+                size={24}
+                onPress={() => navigation.goBack()}
+              />
+              <Text
+                style={{
+                  color: "#333",
+                  fontSize: 18,
+                  fontWeight: "600",
+                }}
+              >
+                Back
+              </Text>
+            </TouchableOpacity>
             <Text
               style={{
                 color: "#1c2e65",
@@ -707,7 +736,7 @@ export const SignupScreen = () => {
               title="Verify"
               onPressHandler={confirmCode}
             />
-            
+
             <View
               style={{
                 flexDirection: "row",
@@ -739,6 +768,14 @@ export const SignupScreen = () => {
                     `+92${user.phone}`
                   );
                   setConfirm(confirmation);
+                  toast.show({
+                    title: "Code Sent!",
+                    status: "success",
+                    description: "Code has been sent to your number",
+                    duration: 1500,
+                    minWidth: "90%",
+                    isClosable: false,
+                  });
                 }}
                 style={{ justifyContent: "center" }}
               >

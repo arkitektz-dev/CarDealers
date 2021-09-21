@@ -312,10 +312,10 @@ export const fetchMoreCarWithSearch = async (startAfter, searchText) => {
 
 export const fetchMoreDealer = async (startAfter) => {
   const arr = [];
-  const ref = firestore().collection("Dealers");
+  const ref = firestore().collection("Users");
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(20)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -347,8 +347,9 @@ export const fetchMoreShowroom = async (startAfter) => {
 
 export const fetchDealerData = async () => {
   const arr = [];
-  const ref = firestore().collection("Dealers");
-  const data = await ref.limit(10).get();
+  const ref = firestore().collection("Users");
+  
+  const data = await ref.limit(20).get();
   const lastVal = data.docs[data.docs.length - 1];
 
   const size = data.size;
@@ -357,6 +358,8 @@ export const fetchDealerData = async () => {
     const obj = { ...res.data(), id: res.id };
     arr.push(obj);
   });
+  console.log(arr)
+
   return { size, arr, lastVal };
 };
 
