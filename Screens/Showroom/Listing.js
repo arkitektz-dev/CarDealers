@@ -24,6 +24,8 @@ const ListingShowroom = ({ route }) => {
   const [filteredData, setfilteredData] = useState([]);
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
+  const [datalength, setDatalength] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [noData, setNoData] = useState(false);
@@ -34,6 +36,7 @@ const ListingShowroom = ({ route }) => {
       setShowroomData(data.arr);
       setStartAfter(data.lastVal);
       setfilteredData(data.arr);
+      setDatalength(data.size);
       setshowroomCount(data.size);
       setLoading(false);
     });
@@ -60,6 +63,7 @@ const ListingShowroom = ({ route }) => {
       setShowroomData(data.arr);
       setStartAfter(data.lastVal);
       setfilteredData(data.arr);
+      setDatalength(data.size);
       setshowroomCount(data.size);
       setRefreshing(false);
     });
@@ -77,16 +81,22 @@ const ListingShowroom = ({ route }) => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={_onEndReached}
-          style={styles.loadMoreBtn}
-        >
-          <Text style={styles.btnText}>Load More</Text>
-          {moreloading ? (
-            <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
-          ) : null}
-        </TouchableOpacity>
+        {datalength == 5 ? (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={_onEndReached}
+            style={styles.loadMoreBtn}
+          >
+            <Text style={styles.btnText}>Load More</Text>
+            {moreloading ? (
+              <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
+            ) : null}
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.loadMoreBtn}>
+            <Text style={styles.btnText}>No More Data</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -94,6 +104,7 @@ const ListingShowroom = ({ route }) => {
     setMoreLoading(true);
     fetchMoreShowroom(startAfter).then((res) => {
       setShowroomData([...showroomdata, ...res.arr]);
+      setDatalength(res.arr.length);
       setshowroomCount(showroomdata.length + res.arr.length);
       setStartAfter(res.lastVal);
       setMoreLoading(false);

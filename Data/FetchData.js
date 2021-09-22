@@ -330,7 +330,6 @@ export const fetchMoreDealer = async (startAfter) => {
 export const fetchMoreShowroom = async (startAfter) => {
   const ref = firestore()
     .collection("Showrooms")
-    .where("feature", "==", true);
   const arr = [];
   var data = await ref
     .startAfter(startAfter)
