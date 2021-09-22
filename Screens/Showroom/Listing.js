@@ -105,7 +105,7 @@ const ListingShowroom = ({ route }) => {
         onPressHandler={() => onPressHandler(item)}
         image={item.images[0]}
         title={item.name}
-        subTitle={item.location}
+        subTitle={item.city}
       />
     );
   };

@@ -465,7 +465,7 @@ export const updatePassword = async (userinfo, userData) => {
 export const AddShowroomData = (data) => {
   if (
     data.showroomData.name == "" ||
-    data.showroomData.location == "" ||
+    data.showroomData.address == "" ||
     data.showroomData.contactInformation == ""
   )
     alert("Fields can not be empty");

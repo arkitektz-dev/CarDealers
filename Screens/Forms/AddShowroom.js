@@ -7,17 +7,25 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Button } from "../../Component/Button/Index";
-import { screenWidth } from "../../Global/Dimension";
+import { imageChecker, screenWidth } from "../../Global/Dimension";
 import AppTextInput from "../../Component/TextInput/Index";
 import { AddShowroomData } from "../../Data/FetchData";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { useToast } from "native-base";
+import AppPicker from "../../Component/Pickers/Index";
+import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 
+import EvilIcons from "react-native-vector-icons/EvilIcons";
+import storage from "@react-native-firebase/storage";
+import * as ImagePicker from "expo-image-picker";
 import ErrorHandle from "../../Component/HelperText";
 import { Alert } from "react-native";
+import { backgroundColor } from "styled-system";
+import { ActivityIndicator } from "react-native-paper";
 
 const AddShowroom = ({ navigation }) => {
   const [showroomData, setShowroomData] = useState({
@@ -26,39 +34,26 @@ const AddShowroom = ({ navigation }) => {
     city: "",
     contactInformation: "",
     email: "",
-    location: "",
     address: "",
-    images: [
-      "https://www.homelandtransportcompany.com/wp-content/uploads/2021/03/haggle-free.jpg",
-    ],
+    images: [],
   });
+  const [uploading, setUploading] = useState(false);
+
   const [errorState, setErrorState] = useState({
     name: false,
     nameError: false,
     contactInformation: false,
     contactInformationType: false,
-    location: false,
     email: false,
   });
-  const setUploadImage = () => {
-    const options = {
-      maxWidth: 2000,
-      maxHeight: 2000,
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.error) {
-        alert("Error");
-      } else {
-        const images = [];
-        images.push(response.uri);
-        setShowroomData({ ...showroomData, images: images });
-      }
-    });
-  };
+  const city = [
+    { label: "Karachi", value: "Karachi" },
+    { label: "Lahore", value: "Lahore" },
+    { label: "Islamabad", value: "Islamabad" },
+  ];
+
+  const [image, setImage] = useState(undefined);
+
   const toast = useToast();
   const showToaster = () => {
     toast.show({
@@ -69,16 +64,75 @@ const AddShowroom = ({ navigation }) => {
       minWidth: "90%",
       isClosable: false,
     });
-    navigation.goBack()
+    navigation.goBack();
   };
-  const onSubmitHandler = () => {
+
+  const imageURI = async () => {
+    console.log(image);
+    if (
+      showroomData.name != "" &&
+      showroomData.address != "" &&
+      showroomData.contactInformation != "" &&
+      image != undefined
+    ) {
+      setUploading(true);
+      const uploadImage = image.substring(image.lastIndexOf("/") + 1);
+
+      // setTransferred(0);
+      const storageRef = storage().ref(`photos/${uploadImage}`);
+      const task = storageRef.putFile(image);
+      task.on("state_changed", (taskSnapshot) => {
+        console.log(
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
+        );
+        // setTransferred(
+        //   Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        //     100
+        // );
+      });
+      try {
+        await task;
+        const url = await storageRef.getDownloadURL();
+
+        console.log(url);
+        // setImage(null);
+        onSubmitHandler(url);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      toast.show({
+        title: "Error",
+        status: "error",
+        description: "Fill the required fields",
+        duration: 2000,
+        minWidth: "90%",
+        isClosable: false,
+      });
+    }
+  };
+
+  const onSubmitHandler = (url) => {
     if (
       errorState.name != true ||
-      errorState.location != true ||
       errorState.contactInformationType != true ||
       errorState.contactInformation != true
     ) {
-      AddShowroomData({ showroomData: showroomData, showToaster: showToaster });
+      AddShowroomData({
+        showroomData: { ...showroomData, images: [url] },
+        showToaster: showToaster,
+      });
+      setUploading(false);
+      setShowroomData({
+        name: "",
+        website: "",
+        city: "",
+        contactInformation: "",
+        email: "",
+        address: "",
+        images: [],
+      });
+      setImage(undefined);
     } else {
       Alert("Fields are invalid");
     }
@@ -105,18 +159,23 @@ const AddShowroom = ({ navigation }) => {
       setShowroomData({ ...showroomData, contactInformation: e });
     }
   };
-  const onChangelocation = (e) => {
-    if (e == "") {
-      setErrorState({ location: true });
-    } else {
-      setErrorState({ location: false });
-      setShowroomData({ ...showroomData, location: e });
-    }
-  };
   const onChangeEmailHandeler = (e) => {
     setShowroomData({ ...showroomData, email: e });
   };
 
+  const selectImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.5,
+      });
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+    } catch (error) {
+      console.log("Error reading an image", error);
+    }
+  };
   const offsetKeyboard = Platform.select({
     ios: 0,
     android: 20,
@@ -159,11 +218,45 @@ const AddShowroom = ({ navigation }) => {
             width: "100%",
             flex: 1,
             paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 60,
           }}
         >
+          <View>
+            <View
+              style={{
+                margin: 10,
+                position: "absolute",
+                zIndex: 10,
+                top: -55,
+                right: -12,
+                borderRadius: 50,
+                backgroundColor: "white",
+                width: 25,
+                height: 25,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <EvilIcons
+                name="pencil"
+                color="black"
+                size={24}
+                onPress={() => selectImage()}
+              />
+            </View>
+            <Image
+              style={styles.avatar}
+              accessibilityLabel="Pic"
+              source={{
+                uri: imageChecker(image),
+              }}
+            />
+          </View>
           <AppTextInput
             onChangeHandler={(e) => onChangeNameHandeler(e)}
-            label="Name of Showroom:"
+            label="Name of Showroom *"
             returnKeyType="next"
           />
           {errorState.name ? (
@@ -172,39 +265,37 @@ const AddShowroom = ({ navigation }) => {
           {errorState.nameError ? (
             <ErrorHandle text="Numbers can not be used in name" />
           ) : null}
-          <AppTextInput
-            onChangeHandler={(e) => onChangelocation(e)}
-            label="Location:"
-            returnKeyType="next"
-          />
-          {errorState.location ? (
-            <ErrorHandle text="Field Can Not be empty" />
-          ) : null}
 
           <AppTextInput
             onChangeHandler={(e) =>
               setShowroomData({ ...showroomData, address: e })
             }
-            label="Address:"
+            label="Address *"
             returnKeyType="next"
           />
-          <AppTextInput
-            onChangeHandler={(e) =>
-              setShowroomData({ ...showroomData, city: e })
-            }
-            label="City:"
-            returnKeyType="next"
+          <AppPicker
+            title="City"
+            items={city}
+            name="category"
+            onSelectItem={(item) => {
+              setShowroomData({ ...showroomData, city: item.label });
+            }}
+            PickerItemComponent={CategoryPickerItem}
+            placeholder=" City *"
+            selectedItem={showroomData.city}
+            width="100%"
+            style={styles.dropdown}
           />
           <AppTextInput
             onChangeHandler={(e) => onChangeEmailHandeler(e)}
-            label="Email:"
+            label="Email"
             returnKeyType="next"
           />
           {errorState.email ? <ErrorHandle text="Email not valid" /> : null}
           <AppTextInput
             maxLength={14}
             onChangeHandler={(e) => onChangeContactInformation(e)}
-            label="Contact information:"
+            label="Contact Number"
             returnKeyType="next"
           />
           {errorState.contactInformation ? (
@@ -218,13 +309,19 @@ const AddShowroom = ({ navigation }) => {
             onChangeHandler={(e) =>
               setShowroomData({ ...showroomData, website: e })
             }
-            label="Website:"
+            label="Website"
             returnKeyType="done"
           />
           <View style={styles.distance}></View>
           <Button
-            title={"Submit"}
-            onPressHandler={onSubmitHandler}
+            title={
+              uploading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                "Submit"
+              )
+            }
+            onPressHandler={!uploading ? imageURI : console.log("ring")}
             style={styles.buttonContainer}
           />
         </View>
@@ -272,5 +369,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     zIndex: 100,
+  },
+  dropdown: {
+    backgroundColor: "white",
+    borderRadius: 4,
+    borderColor: "grey",
+    borderWidth: 1,
+    marginBottom: -2,
+    borderBottomWidth: 1,
+    paddingLeft:10,
+    
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 2,
+    borderColor: "white",
+    marginBottom: 10,
+    alignSelf: "center",
+    marginTop: -50,
   },
 });

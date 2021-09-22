@@ -37,7 +37,7 @@ const ShowroomCard = () => {
     return (
       <HomeCard
         title={item.name}
-        price={item.location}
+        price={item.city}
         image={{ uri: item.images[0] }}
         pressHandler={() => onPressHandler(item)}
       />

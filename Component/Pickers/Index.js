@@ -26,12 +26,13 @@ const AppPicker = ({
   width = "100%",
   title,
   initialIcon,
+  style
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-        <View style={[styles.container, { width }]}>
+        <View style={[styles.container, { width },style]}>
           {initialIcon}
 
           {selectedItem ? (
