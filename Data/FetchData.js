@@ -329,7 +329,7 @@ export const fetchMoreDealer = async (startAfter) => {
 
 export const fetchMoreShowroom = async (startAfter) => {
   const ref = firestore()
-    .collection("Showrooms")
+    .collection("Showrooms").orderBy('name')
   const arr = [];
   var data = await ref
     .startAfter(startAfter)
@@ -386,7 +386,7 @@ export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
   return { size, arr, lastVal };
 };
 export const fetchShowroomData = async () => {
-  const ref = firestore().collection("Showrooms");
+  const ref = firestore().collection("Showrooms").orderBy('name');
 
   const arr = [];
   const data = await ref.limit(5).get();

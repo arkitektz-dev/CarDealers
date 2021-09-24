@@ -1,11 +1,32 @@
 import React from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import colors from "../../config/colors";
 import AppText from "../AppText";
+import AppLogo from "../../Assets/Sold.png";
 function Card({ title, subTitle, image, onPressHandler }) {
+  const [animating, setanimating] = React.useState(false)
   return (
     <TouchableOpacity style={styles.card} onPress={onPressHandler}>
-      <Image style={styles.image} source={{ uri: image }}></Image>
+      <Image
+        style={styles.image}
+        source={{ uri: image }}
+        loadingIndicatorSource={AppLogo}
+        onLoadStart={()=>setanimating(true)}
+        onLoad={()=>setanimating(false)}
+      ></Image>
+      <ActivityIndicator
+        color="#1c2e65"
+        style={{ position: "absolute", zIndex: 10, top: "30%", left: "42.5%" }}
+        size={'large'}
+        animating={animating}
+      />
+
       <View style={styles.detailsContainer}>
         <AppText style={styles.title} numberOfLines={1}>
           {title}
