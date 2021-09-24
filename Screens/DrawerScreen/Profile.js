@@ -17,12 +17,14 @@ import { getData } from "../../Data/FetchData";
 import { imageChecker, screenHeight } from "../../Global/Dimension";
 import Feather from "react-native-vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 const Profile = ({ navigation }) => {
   const [userinfo, setUserInfo] = useState(null);
   const [update, setUpdate] = useState(false);
 
   const [uploading, setUploading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [transferred, setTransferred] = useState(0);
   const [image, setImage] = useState(undefined);
   useEffect(() => {
@@ -129,13 +131,32 @@ const Profile = ({ navigation }) => {
             paddingBottom: 10,
           }}
         >
-          <Image
-            style={styles.avatar}
-            accessibilityLabel="Pic"
-            source={{
-              uri: imageChecker(image),
-            }}
-          />
+           <Image
+          style={[styles.avatar,{display:'none'}]}
+          accessibilityLabel="Pic"
+          source={{
+            uri: imageChecker(image),
+          }}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
+          {imageLoading ? (
+            <SkeletonPlaceholder >
+              <SkeletonPlaceholder.Item
+                width={80}
+                height={80}
+                borderRadius={63}
+                
+              />
+            </SkeletonPlaceholder>
+          ) : <Image
+          style={styles.avatar}
+          accessibilityLabel="Pic"
+          source={{
+            uri: imageChecker(image),
+          }}
+        />}
+
           <View style={{ marginTop: -15, marginLeft: 10 }}>
             <Text>{userinfo && userinfo.name.toUpperCase()}</Text>
             <Text>{userinfo && userinfo.email}</Text>
