@@ -45,7 +45,8 @@ const ListingCars = () => {
     value = await getData().then((res) => res.DealerId);
   };
   const compare = async () => {
-    const ref = firestore().collection("Advertisments");
+    const ref = firestore()
+      .collection("Advertisments").orderBy('date','desc');
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -65,6 +66,7 @@ const ListingCars = () => {
         }
       });
       setfilteredData(adArr);
+      setDataCar(adArr)
       setcarCount(adArr.length);
     });
   };
@@ -182,12 +184,12 @@ const ListingCars = () => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
-          <Text style={styles.btnText}>Load More</Text>
+        <View  style={styles.loadMoreBtn}>
+          <Text style={styles.btnText}>No more date</Text>
           {moreloading ? (
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
           ) : null}
-        </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -305,7 +307,7 @@ const ListingCars = () => {
         >
           {carCount} Results
         </Text>
-        <Filter
+        {/* <Filter
           onRequestClose={() => setShown(false)}
           modalVisible={shown}
           toggleModal={(dropdownValues) => {
@@ -314,8 +316,8 @@ const ListingCars = () => {
             onFilter(dropdownValues);
           }}
           Visibility={() => setShown(false)}
-        />
-        <TouchableOpacity onPress={() => setShown(true)}>
+        /> */}
+        {/* <TouchableOpacity onPress={() => setShown(true)}>
           <Text
             style={{
               color: "#333",
@@ -331,7 +333,7 @@ const ListingCars = () => {
               resizeMode="contain"
             />
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {noData ? (
         <Text style={{ color: "black", textAlign: "center" }}>No Data</Text>

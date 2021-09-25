@@ -9,6 +9,7 @@ import {
   Text,
 } from "react-native";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
+import Loading from "../../Assets/loading.png";
 
 const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
   return (
@@ -30,6 +31,7 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
           source={image}
           style={styles.imageSize}
           resizeMode={"cover"}
+          defaultSource={Loading}
         >
           <Image
             source={sold}
