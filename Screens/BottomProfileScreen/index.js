@@ -52,6 +52,7 @@ const BottomProfileScreen = ({ route }) => {
         }
       });
       setDataCar(arr);
+      setModalData(param.showrooms)
       setcarCount(arr.length);
     });
   };

@@ -6,6 +6,7 @@ import {
 } from "@react-navigation/drawer";
 import FontAwsome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import HomeStack from "../HomeStack/HomeStack";
 import { Image, StyleSheet, View } from "react-native";
@@ -112,7 +113,7 @@ const DrawerNav = ({ route }) => {
               ),
             }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="Post An Add"
             component={AddCar}
             options={{
@@ -120,13 +121,13 @@ const DrawerNav = ({ route }) => {
                 <MaterialIcons name="post-add" color={color} size={29} />
               ),
             }}
-          />
+          /> */}
           <Drawer.Screen
             name="My Ads"
             component={Listing}
             options={{
               drawerIcon: ({ color, focused }) => (
-                <MaterialIcons name="post-add" color={color} size={29} />
+                <FontAwesome5 name="ad" color={color} size={29} />
               ),
             }}
           />
@@ -135,7 +136,7 @@ const DrawerNav = ({ route }) => {
             component={MyDemand}
             options={{
               drawerIcon: ({ color, focused }) => (
-                <MaterialIcons name="post-add" color={color} size={29} />
+                <FontAwesome5 name="cubes" color={color} size={29} />
               ),
             }}
           />

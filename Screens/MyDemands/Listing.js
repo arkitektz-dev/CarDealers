@@ -50,7 +50,7 @@ const MyDemandListing = () => {
   };
 
   const compare = async () => {
-    const ref = firestore().collection("Demand");
+    const ref = firestore().collection("Demand").orderBy('date','desc');
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -140,16 +140,16 @@ const MyDemandListing = () => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
+        <View
           activeOpacity={0.9}
           onPress={_onEndReached}
           style={styles.loadMoreBtn}
         >
-          <Text style={styles.btnText}>Load More</Text>
+          <Text style={styles.btnText}>No More to Show</Text>
           {moreloading ? (
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />
           ) : null}
-        </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -282,7 +282,7 @@ const MyDemandListing = () => {
           }}
           Visibility={() => setShown(false)}
         />
-        <TouchableOpacity onPress={() => setShown(true)}>
+        {/* <TouchableOpacity onPress={() => setShown(true)}>
           <Text
             style={{
               color: "#333",
@@ -298,7 +298,7 @@ const MyDemandListing = () => {
               resizeMode="contain"
             />
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {noData ? (
         <Text style={{ color: "black", textAlign: "center" }}>No Data</Text>
