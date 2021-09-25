@@ -83,14 +83,17 @@ const ShowroomDetailScreen = ({ route }) => {
       querySnapshot.forEach((documentSnapshot) => {
         let showroomDataId;
         if (typeof documentSnapshot.data().showroom.id == "string") {
-          showroomDataId = documentSnapshot.data().showroom.id.split("/")[1];
+          showroomDataId = documentSnapshot.data().showroom.id;
+          console.log('s')
         } else {
+          console.log(documentSnapshot
+            .data().showroom)
           showroomDataId = documentSnapshot
             .data()
-            .showroom.id.id.toString()
-            .trim();
+            .showroom.id;
         }
         const paramShowroomId = showroomId;
+      
         if (showroomDataId == paramShowroomId)
           arr.push(documentSnapshot.data());
       });

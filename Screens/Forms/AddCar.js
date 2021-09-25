@@ -210,9 +210,9 @@ const AddCar = () => {
           // setImagesUrl(...imagesUrl, { images: url });
           a.push(url);
           if (a.length == imagesArr.length) {
-            const showroomRef = firestore()
-              .collection("Showrooms")
-              .doc(showroomId.toString());
+            // const showroomRef = firestore()
+            //   .collection("Showrooms")
+            //   .doc(showroomId.toString());
             const userRef = firestore()
               .collection("Dealers")
               .doc(authContext.user.toString());
@@ -220,9 +220,10 @@ const AddCar = () => {
               id: userRef,
             };
             const showroomObj = {
-              id: showroomRef,
+              id: showroomId,
               name: showroomPicker,
             };
+            console.log(showroomObj)
             const date = new Date();
             const obj = {
               amount: `${priceRange.init}`,
@@ -297,8 +298,8 @@ const AddCar = () => {
         status: "error",
         description: "Fill the required fields",
         duration: 1500,
-        minWidth:'90%',
-        isClosable:false
+        minWidth: "90%",
+        isClosable: false,
       });
       setLoader(false);
     } else {
@@ -619,7 +620,8 @@ const AddCar = () => {
                 items={showroomStateData.length > 0 ? showroomStateData : null}
                 name="category"
                 onSelectItem={(item) => {
-                  setShowroomPicker(item.label), setShowroomId(item.value);
+                  setShowroomPicker(item.label);
+                  setShowroomId(item.value._documentPath._parts[1]);
                 }}
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Showrooms *"
