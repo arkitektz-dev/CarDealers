@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   Linking,
   View,
+  Modal,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
 import ImageSlider from "react-native-image-slider";
+import AppPicker from "../../Component/Pickers/Index";
+import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 
 import { Button } from "../../Component/Button/Index";
 import Calendar from "../../Assets/NewAsset/Calendar.png";
@@ -20,7 +23,7 @@ import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
-import { screenHeight } from "../../Global/Dimension";
+import { defineValue, screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";
 import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
@@ -95,6 +98,23 @@ const DetailCarScreen = ({ route, navigation }) => {
           </Text>
           <Text style={styles.location}>{`PKR ${item.amount} `} </Text>
           <Text style={styles.location}>{item.vehicle.city} </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={[styles.location, { fontWeight: "normal" }]}>
+              {defineValue(item.adStatus)}{" "}
+            </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#A7D2DE",
+                borderRadius: 20,
+                paddingHorizontal: 8,
+              }}
+              onPress={()=>alert('in progress')}
+            >
+              <Text style={[styles.location, { color: "black" }]}>
+                Edit Status{" "}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
           <View style={styles.CarInfoTitle}>

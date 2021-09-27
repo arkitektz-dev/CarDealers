@@ -33,7 +33,7 @@ const BottomProfileScreen = ({ route }) => {
   const [visible, setVisible] = useState(false);
   const dealer = authContext.user;
   const fetchData = async () => {
-    const ref = firestore().collection("Advertisments");
+    const ref = firestore().collection("Advertisments").orderBy('date','desc');
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;

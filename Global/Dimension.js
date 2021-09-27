@@ -51,3 +51,15 @@ export const defineDate = (value) => {
     return momentString;
   } else return " - ";
 };
+
+export const defineValue = value => {
+  if (
+    value != null &&
+    value != undefined &&
+    value != '' &&
+    value != 0 &&
+    value != '0'
+  ) {
+    return value;
+  } else return ' - ';
+};
