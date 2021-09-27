@@ -17,6 +17,7 @@ import Showroom from "../../Screens/Showroom";
 import { Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ShowroomStack from "../HomeStack/ShowroomStack";
+import BottomProfileScreenStack from "../ProfileStack/ProfileStack";
 import Dealer from "../../Screens/Dealer";
 import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
 import MyAd from "../../Screens/MyAd";
@@ -135,7 +136,7 @@ function MyTabs() {
       {status != undefined ? (
         <Tab.Screen
           name="Profile"
-          component={BottomProfileScreen}
+          component={BottomProfileScreenStack}
           options={{
             tabBarIcon: ({ color }) => (
               <FontAwesome5 name="user-circle" size={26} color={color} />
