@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import MyAds from "../../Screens/MyAd/Listing";
-import DetailCarScreen from "../../Screens/Car/Details";
+import DetailCarScreen from "../../Screens/MyAd/Details";
 
 import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 

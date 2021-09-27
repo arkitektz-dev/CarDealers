@@ -251,6 +251,7 @@ const AddCar = () => {
                 registrationCity: registrationCity,
               },
               date: date,
+              adStatus:'Active'
             };
 
             await AddCarData(obj)

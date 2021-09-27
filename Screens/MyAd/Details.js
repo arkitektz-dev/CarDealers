@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -8,29 +8,34 @@ import {
   Linking,
   View,
 } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
+import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
+import { FlatList } from "react-native-gesture-handler";
+import ImageSlider from "react-native-image-slider";
+
 import { Button } from "../../Component/Button/Index";
 import Calendar from "../../Assets/NewAsset/Calendar.png";
 import Radio from "../../Assets/NewAsset/radio.png";
-
 import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
-import ImageSlider from "react-native-image-slider";
 import { screenHeight } from "../../Global/Dimension";
 import { fetchSpecificDealer } from "../../Data/FetchData";
-import IonIcon from "react-native-vector-icons/Ionicons";
-import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
-import { FlatList } from "react-native-gesture-handler";
+import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
   const [isVisible, setIsVisible] = useState(false);
   const [dealerData, setDealerData] = useState();
   const dealerId = item.dealer.id.id;
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    fetchSpecificDealer(dealerId).then((data) => setDealerData(data.data()));
+    // console.log(authContext.user, "Oka");
+    fetchSpecificDealer(authContext.user).then((data) =>
+      setDealerData(data.data())
+    );
   }, []);
 
   const makeCall = () => {
@@ -51,14 +56,8 @@ const DetailCarScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: "#1e2d64",
-          height: 50,
-        }}
-      >
+    <>
+      <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 5 }}
           name="chevron-back-circle-sharp"
@@ -66,257 +65,263 @@ const DetailCarScreen = ({ route, navigation }) => {
           size={31}
           onPress={() => navigation.goBack()}
         />
-      </View>
-      <View style={styles.imageHolder}>
-        <ImageSlider
-          style={styles.carousel}
-          loop={true}
-          loopBothSides
-          autoPlayWithInterval={3000}
-          images={images}
-        >
-          <IonIcon
-            name="chevron-back-circle-sharp"
-            color="grey"
-            size={35}
-            onPress={() => navigation.goBack()}
-          />
-        </ImageSlider>
-      </View>
-
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {item.vehicle.information.make} {item.vehicle.information.model}{" "}
-          {item.vehicle.information.modelYear}
+        <Text style={styles.headingText}>
+          {" "}
+          {item.vehicle.information.make} {item.vehicle.information.model}
         </Text>
-        <Text style={styles.location}>{item.amount} </Text>
-        <Text style={styles.location}> {item.vehicle.city} </Text>
       </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-        <View style={styles.CarInfoTitle}>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-            }}
+      <ScrollView style={styles.container}>
+        <View style={styles.imageHolder}>
+          <ImageSlider
+            style={styles.carousel}
+            loop={true}
+            loopBothSides
+            autoPlayWithInterval={3000}
+            images={images}
           >
-            <Image source={Calendar} style={styles.img} />
-            <Text style={{ color: "#000000", fontWeight: "bold" }}>
-              {item.vehicle.information.modelYear}
-            </Text>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <Image source={Speedometer} style={styles.img} />
-            <Text style={{ color: "#000000", fontWeight: "bold" }}>
-              {item.vehicle.mileage}
-            </Text>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <Image source={Petrol} style={styles.img} />
-            <Text style={{ color: "#000000", fontWeight: "bold" }}>
-              {item.vehicle.additionalInformation.engineType}
-            </Text>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <Image source={Arrow} style={styles.img} />
-            <Text style={{ color: "#000000", fontWeight: "bold" }}>
-              {item.vehicle.additionalInformation.transmission}
-            </Text>
-          </View>
+            <IonIcon
+              name="chevron-back-circle-sharp"
+              color="grey"
+              size={35}
+              onPress={() => navigation.goBack()}
+            />
+          </ImageSlider>
         </View>
-        <View style={styles.detailView}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <View style={styles.subDataRow}>
-              <View style={styles.propertyBorder}>
-                <Text style={styles.text}>Registration City</Text>
-                <Text style={styles.text2}>
-                  {item.vehicle.registrationCity}
-                </Text>
-              </View>
-              <View style={styles.otherData}>
-                <Text style={styles.text}>Exterior Color</Text>
-                <Text style={styles.text2}>{item.vehicle.exteriorColor}</Text>
-              </View>
-              <View style={styles.otherData}>
-                <Text style={styles.text}> Assembly </Text>
-                <Text style={styles.text2}>
-                  {item.vehicle.additionalInformation.assembly}
-                </Text>
-              </View>
-              <View style={styles.lastData}>
-                <Text style={styles.text}>Engine Capacity</Text>
-                <Text style={styles.text2}>
-                  {item.vehicle.additionalInformation.engineCapacity}
-                </Text>
-              </View>
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>
+            {item.vehicle.information.make} {item.vehicle.information.model}{" "}
+            {item.vehicle.information.modelYear}
+          </Text>
+          <Text style={styles.location}>{`PKR ${item.amount} `} </Text>
+          <Text style={styles.location}>{item.vehicle.city} </Text>
+        </View>
+        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+          <View style={styles.CarInfoTitle}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 0.7,
+              }}
+            >
+              <Image source={Calendar} style={styles.img} />
+              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+                {item.vehicle.information.modelYear}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <Image source={Speedometer} style={styles.img} />
+              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+                {item.vehicle.mileage}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <Image source={Petrol} style={styles.img} />
+              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+                {item.vehicle.additionalInformation.engineType}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <Image source={Arrow} style={styles.img} />
+              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+                {item.vehicle.additionalInformation.transmission}
+              </Text>
             </View>
           </View>
-          <Text
-            style={{
-              margin: 20,
-              fontSize: 21,
-              fontWeight: "bold",
-              color: "#000000",
-            }}
-          >
-            Features
-          </Text>
-          <FlatList
-            contentContainerStyle={{}}
-            numColumns={2}
-            data={item.vehicle.additionalInformation.features}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    flex: 0.5,
-                    // justifyContent: "space-around",
-                  }}
-                >
-                  <Image source={Radio} style={styles.img} />
-
-                  <Text style={styles.feature}>{item}</Text>
+          <View style={styles.detailView}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-around" }}
+            >
+              <View style={styles.subDataRow}>
+                <View style={styles.propertyBorder}>
+                  <Text style={styles.text}>Registration City</Text>
+                  <Text style={styles.text2}>
+                    {item.vehicle.registrationCity}
+                  </Text>
                 </View>
-              );
-            }}
-          />
-          <View style={{ height: screenHeight * 0.04 }}></View>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 21,
-              fontWeight: "bold",
-              color: "#000000",
-            }}
-          >
-            Seller Detail
-          </Text>
+                <View style={styles.otherData}>
+                  <Text style={styles.text}>Exterior Color</Text>
+                  <Text style={styles.text2}>{item.vehicle.exteriorColor}</Text>
+                </View>
+                <View style={styles.otherData}>
+                  <Text style={styles.text}> Assembly </Text>
+                  <Text style={styles.text2}>
+                    {item.vehicle.additionalInformation.assembly}
+                  </Text>
+                </View>
+                <View style={styles.lastData}>
+                  <Text style={styles.text}>Engine Capacity</Text>
+                  <Text style={styles.text2}>
+                    {item.vehicle.additionalInformation.engineCapacity}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Text
+              style={{
+                margin: 20,
+                fontSize: 21,
+                fontWeight: "bold",
+                color: "#000000",
+              }}
+            >
+              Features
+            </Text>
+            <FlatList
+              numColumns={2}
+              data={item.vehicle.additionalInformation.features}
+              renderItem={({ item }) => {
+                return (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flex: 0.4,
+                      left: 18,
+                    }}
+                  >
+                    <Image source={Radio} style={styles.img} />
+
+                    <Text style={styles.feature}>{item}</Text>
+                  </View>
+                );
+              }}
+            />
+            <View style={{ height: screenHeight * 0.04 }}></View>
+            <Text
+              style={{
+                marginLeft: 20,
+                fontSize: 21,
+                fontWeight: "bold",
+                color: "#000000",
+              }}
+            >
+              Seller Detail
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                borderColor: "#e0e0e0",
+                borderStyle: "dotted",
+                borderBottomWidth: 1,
+              }}
+            >
+              <Text style={styles.dealerName}>
+                {dealerData && dealerData.name}
+              </Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0}
+              onPress={bottomSheetHandeler}
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                height: 70,
+              }}
+            >
+              <Image
+                source={CallSeller}
+                style={{
+                  width: 150,
+                  height: 50,
+                  resizeMode: "contain",
+                  alignSelf: "center",
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <BottomSheet
+          isVisible={isVisible}
+          containerStyle={{
+            backgroundColor: "white",
+            marginTop: "90%",
+            borderWidth: 0.3,
+            borderColor: "black",
+
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-evenly",
-              borderColor: "#333",
+              flex: 1,
+              borderBottomColor: "black",
               borderBottomWidth: 1,
+              justifyContent: "space-around",
             }}
           >
-            <Text style={styles.dealerName}>
-              {dealerData && dealerData.name}
+            <Text
+              style={{
+                color: "black",
+                fontSize: 19,
+                fontWeight: "bold",
+                margin: 13,
+              }}
+            >
+              Seller's Number
+            </Text>
+
+            <Text
+              onPress={bottomSheetHandeler}
+              style={{
+                color: "black",
+                fontSize: 19,
+                fontWeight: "bold",
+                margin: 13,
+              }}
+            >
+              Cancel
             </Text>
           </View>
-          <TouchableOpacity
-            activeOpacity={0}
-            onPress={bottomSheetHandeler}
+          <View
             style={{
+              alignItems: "center",
               flexDirection: "column",
+            }}
+          >
+            <Text style={styles.callText}>
+              {dealerData && dealerData.contactInformation[0]}
+            </Text>
+            <Text style={styles.callText}>
+              Mention CarDealer.com when calling seller to get a good deal.
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
               justifyContent: "center",
-              height: 70,
             }}
           >
-            <Image
-              source={CallSeller}
-              style={{
-                width: 150,
-                height: 50,
-                resizeMode: "contain",
-                alignSelf: "center",
-              }}
+            <Button
+              title="Call Now"
+              style={styles.button}
+              onPressHandler={makeCall}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+        </BottomSheet>
       </ScrollView>
-      <BottomSheet
-        isVisible={isVisible}
-        containerStyle={{
-          backgroundColor: "white",
-          marginTop: "90%",
-          borderWidth: 0.3,
-          borderColor: "black",
-
-          flexDirection: "column",
-          flex: 1,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-            justifyContent: "space-around",
-          }}
-        >
-          <Text
-            style={{
-              color: "black",
-              fontSize: 19,
-              fontWeight: "bold",
-              margin: 13,
-            }}
-          >
-            Seller's Number
-          </Text>
-
-          <Text
-            onPress={bottomSheetHandeler}
-            style={{
-              color: "black",
-              fontSize: 19,
-              fontWeight: "bold",
-              margin: 13,
-            }}
-          >
-            Cancel
-          </Text>
-        </View>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Text style={styles.callText}>
-            {dealerData && dealerData.contactInformation[0]}
-          </Text>
-          <Text style={styles.callText}>
-            Mention CarDealer.com when calling seller to get a good deal.
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            title="Call Now"
-            style={styles.button}
-            onPressHandler={makeCall}
-          />
-        </View>
-      </BottomSheet>
-    </View>
+    </>
   );
 };
 export default DetailCarScreen;
@@ -327,6 +332,10 @@ const styles = StyleSheet.create({
     width: "60%",
     borderRadius: 15,
     justifyContent: "center",
+  },
+  searchHolder: {
+    backgroundColor: "#1c2e65",
+    flexDirection: "row",
   },
   dealerName: {
     fontSize: 18,
@@ -405,7 +414,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#A9A9A9",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
     textAlignVertical: "center",
   },
   feature: {
@@ -417,18 +426,20 @@ const styles = StyleSheet.create({
   },
   propertyBorder: {
     flexDirection: "row",
-    borderBottomColor: "#000000",
+    borderBottomColor: "#e0e0e0",
     width: "90%",
     borderBottomWidth: 1,
     borderTopWidth: 1,
-    borderTopColor: "#333",
+    borderTopColor: "#e0e0e0",
     justifyContent: "space-between",
     marginTop: 10,
     textAlign: "right",
+    borderStyle: "dotted",
   },
   otherData: {
     flexDirection: "row",
-    borderBottomColor: "#000000",
+    borderBottomColor: "#e0e0e0",
+    borderStyle: "dotted",
     width: "90%",
     borderBottomWidth: 1,
     justifyContent: "space-between",
@@ -443,8 +454,8 @@ const styles = StyleSheet.create({
   text2: {
     color: "#000000",
     fontWeight: "900",
-    fontSize: 18,
-    margin: 15,
+    fontSize: 15,
+    margin: 10,
   },
   callText: {
     color: "#000000",
@@ -455,9 +466,8 @@ const styles = StyleSheet.create({
   },
   imageHolder: {
     alignSelf: "center",
-    height: 300,
+    height: 200,
     justifyContent: "center",
-    overflow: "hidden",
     width: "100%",
   },
   container: {
@@ -466,6 +476,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     padding: 15,
+    left: 8,
     borderBottomWidth: 0.4,
     opacity: 2,
     shadowColor: "grey",
@@ -473,7 +484,13 @@ const styles = StyleSheet.create({
   },
   carousel: {
     width: "100%",
-    resizeMode: "contain",
-    alignSelf: "center",
+    resizeMode: "center",
+  },
+  headingText: {
+    fontWeight: "bold",
+    fontSize: 19,
+    color: "white",
+    marginLeft: "5%",
+    textAlignVertical: "center",
   },
 });
