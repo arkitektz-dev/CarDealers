@@ -9,7 +9,7 @@ import DealerStack from "../HomeStack/DealerStack";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import Newcar from "../../Assets/NewAsset/newcar.png";
 import AddCar from "../../Screens/Forms/AddCar";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Fontisto from "react-native-vector-icons/Fontisto";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AddFormButton from "../../Component/Button/AddFormButton";
@@ -40,11 +40,38 @@ function MyTabs() {
       initialRouteName="Home"
       detachInactiveScreens={true}
       screenOptions={{ unmountOnBlur: true }}
+      // tabBarOptions={{
+      //   elevation: 2,
+      //   activeTintColor: "#1c2e65",
+      //   inactiveTintColor: "grey",
+      //   showLabel: true,
+      // }}
       tabBarOptions={{
-        elevation: 2,
+        tabBarBadgeStyle: {
+          backgroundColor: "white",
+          height: 12,
+          minWidth: 12,
+          borderRadius: 6,
+        },
+        showIcon: true,
+        showLabel: true,
         activeTintColor: "#1c2e65",
         inactiveTintColor: "grey",
-        showLabel: false,
+        style: {
+          backgroundColor: "white",
+          bottom: 0,
+
+          width: "100%",
+          height: 60,
+          zIndex: 8,
+          borderTopColor: "#35832D",
+          borderTopWidth: 0,
+        },
+        labelStyle: {
+          fontSize: 13,
+          marginTop: -10,
+          marginBottom: 5,
+        },
       }}
     >
       <Tab.Screen
@@ -62,7 +89,7 @@ function MyTabs() {
         component={ShowroomStack}
         options={{
           tabBarIcon: ({ color }) => (
-            <IonIcon name="search-outline" size={26} color={color} />
+            <Fontisto name="shopping-store" size={24} color={color} />
           ),
         }}
       />
@@ -86,7 +113,7 @@ function MyTabs() {
       )}
       {status != undefined ? (
         <Tab.Screen
-          name="DemandTabs"
+          name="My Ads."
           component={DemandTabs}
           options={{
             tabBarIcon: ({ color }) => (
@@ -107,7 +134,7 @@ function MyTabs() {
       )}
       {status != undefined ? (
         <Tab.Screen
-          name="About"
+          name="Profile"
           component={BottomProfileScreen}
           options={{
             tabBarIcon: ({ color }) => (
@@ -117,7 +144,7 @@ function MyTabs() {
         />
       ) : (
         <Tab.Screen
-          name="About"
+          name="Profile"
           component={LottieLoader}
           options={{
             tabBarIcon: ({ color }) => (

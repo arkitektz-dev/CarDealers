@@ -5,7 +5,8 @@ import Feather from "react-native-vector-icons/Fontisto";
 const AddFormButton = ({ children, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.parent}>
-      <Feather name="car" size={35} color="#fff" />
+      <Feather name="car" size={28} color="#fff" />
+      <Text style={{color:'white',marginTop:-5,fontWeight:'bold'}}>Sell</Text>
     </TouchableOpacity>
   );
 };
