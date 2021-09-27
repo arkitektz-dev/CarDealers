@@ -12,6 +12,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useToast } from "native-base";
 
 import Back from "../../Assets/NewAsset/backButton.png";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { Button } from "../../Component/Button/Index";
 import { useNavigation } from "@react-navigation/core";
@@ -22,6 +23,7 @@ import { storeData } from "../../Data/FetchData";
 import Navbar from "../../Component/Navbar.js/Index";
 import AuthContext from "../../Component/Authcontext";
 import { ActivityIndicator } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const buttonWidth = screenWidth * 0.7;
 const buttonHeight = screenWidth * 0.11;
@@ -40,19 +42,19 @@ export const LoginScreen = () => {
   const [loader, setLoader] = useState(false);
   const toast = useToast();
   const callme = () => {
-    setLoader(false)
+    setLoader(false);
     setTimeout(() => {
       toast.show({
         title: "Login Failed",
         status: "error",
         description: "Invalid Username or Password",
         duration: 1500,
-        minWidth:'90%',
-        isClosable:false
+        minWidth: "90%",
+        isClosable: false,
       });
     }, 1000);
   };
- 
+
   const navigation = useNavigation();
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -67,11 +69,10 @@ export const LoginScreen = () => {
       toast.show({
         title: "Login Failed",
         status: "error",
-        description: "Email & Password required",
+        description: "Username & Password required",
         duration: 1500,
-        minWidth:'90%',
-        isClosable:false
-
+        minWidth: "90%",
+        isClosable: false,
       });
     } else {
       await ref
@@ -102,7 +103,6 @@ export const LoginScreen = () => {
               storeData(b);
               navigation.replace("Home");
 
-             
               setLoader(false);
             });
         })
@@ -125,22 +125,32 @@ export const LoginScreen = () => {
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}
       >
-        <View style={styles.inputContainer}>
-          {/* <View style={styles.logoContainer}>
-            <Text style={styles.headText}>Sign In</Text>
-          </View> */}
-          <Image
-            source={require("../../Assets/NewAsset/DrawerLogo.png")}
-            style={styles.image}
+        <TouchableOpacity
+          style={styles.searchHolder}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons
+            style={{ marginRight: 8 }}
+            name="chevron-back-sharp"
+            color="#000000"
+            size={28}
+            onPress={() => navigation.goBack()}
           />
+          <Text style={{ color: "#000000", fontSize: 18 }}>Sign in</Text>
+        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.headText}>Sign in to Car Dealer</Text>
+          </View>
+
           <View>
+            <Text style={{ color: "#000000", fontSize: 18 }}>Username</Text>
             <TextInput
               renderToHardwareTextureAndroid
               returnKeyType="next"
-              placeholderTextColor="#000000"
-              label="Username"
-              mode="outlined"
-              // fla
+            
+              placeholder="Example11"
+              mode="fiat"
 
               theme={{
                 colors: {
@@ -149,7 +159,7 @@ export const LoginScreen = () => {
                   text: "black",
                 },
               }}
-              dense="20"
+              dense
               outlineColor="#CCCCCC"
               focus
               style={{ backgroundColor: "white" }}
@@ -159,13 +169,14 @@ export const LoginScreen = () => {
             />
           </View>
           <View style={styles.distance}></View>
+          <Text style={{ color: "#000000", fontSize: 18 }}>Password</Text>
           <TextInput
             right={
               <TextInput.Icon name="eye" onPress={() => setSecure(!secure)} />
             }
             secureTextEntry={secure}
-            label="Password"
-            mode="outlined"
+            placeholder="Enter Password"
+            mode="fiat"
             theme={{
               colors: {
                 primary: "#1B3661",
@@ -173,7 +184,7 @@ export const LoginScreen = () => {
                 text: "black",
               },
             }}
-            dense="20"
+            dense
             outlineColor="#CCCCCC"
             style={{ backgroundColor: "white" }}
             onChangeText={(e) => {
@@ -187,13 +198,6 @@ export const LoginScreen = () => {
             >
               Forgot Password?
             </Text>
-
-            <Text
-              style={styles.forgotpassText}
-              onPress={() => navigation.navigate("Home")}
-            >
-              Skip to home
-            </Text>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -202,7 +206,7 @@ export const LoginScreen = () => {
                 loader ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  "Login"
+                  "Sign in"
                 )
               }
               onPressHandler={Login}
@@ -210,7 +214,7 @@ export const LoginScreen = () => {
             />
           </View>
           <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Signup for an account? </Text>
+            <Text style={styles.signupText}>Don't have an account? </Text>
             <Text
               style={styles.signupButtonText}
               onPress={() => {
@@ -263,6 +267,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
+  searchHolder: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 20,
+    marginLeft:-9
+  },
   image: {
     height: 80,
     width: "100%",
@@ -296,7 +306,7 @@ const styles = StyleSheet.create({
   distance: {
     height: screenHeight * 0.02,
   },
-  inputContainer: { width: "100%", flex: 1, justifyContent: "center" },
+  inputContainer: { width: "100%", flex: 1 },
   forgotpassContainer: {
     width: "100%",
     flexDirection: "row",
@@ -317,7 +327,7 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: "#000000",
-    fontWeight: "700",
+    fontWeight: "600",
     fontSize: 14,
   },
   signupButtonText: {
@@ -339,7 +349,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
+    backgroundColor: "white",
   },
   nav: {
     backgroundColor: "#fff",
@@ -353,14 +364,14 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   logoContainer: {
-    marginBottom: 70,
+    marginBottom: 40,
+    marginTop: 20,
   },
   headText: {
-    fontSize: 28,
+    fontSize: 25,
 
-    fontWeight: "600",
-    color: "#000000",
-    textAlign: "center",
+    fontWeight: "700",
+    color: "#373737",
   },
   titleContainer: {
     alignSelf: "center",

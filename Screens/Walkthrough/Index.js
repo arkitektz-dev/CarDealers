@@ -128,12 +128,12 @@ export const Walkthrough = () => {
         style={{ flex: 1 }}
       >
         <TouchableOpacity
-          style={{ alignSelf: "flex-end", marginTop: 20 }}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
+          style={{ alignSelf: "flex-end", marginTop: 20}}
+         
         >
-          <AntDesign name="close" color={"grey"} size={28} />
+          <AntDesign name="close" color={"grey"} size={28}  onPress={() => {
+            navigation.navigate("Home");
+          }} />
         </TouchableOpacity>
 
         <View style={styles.inputContainer}>
@@ -155,7 +155,7 @@ export const Walkthrough = () => {
               <Text
                 style={{ fontSize: 17, fontWeight: "700", color: "#373737" }}
               >
-                Continue with Email
+                Continue with Username
               </Text>
               <FontAwesome
                 name="user-plus"
