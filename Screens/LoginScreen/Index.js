@@ -199,7 +199,18 @@ export const LoginScreen = () => {
               Forgot Password?
             </Text>
           </View>
-
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Don't have an account? </Text>
+            <Text
+              style={styles.signupButtonText}
+              onPress={() => {
+                navigation.navigate("SignupScreen");
+              }}
+            >
+              {" "}
+              Signup
+            </Text>
+          </View>
           <View style={styles.buttonContainer}>
             <Button
               title={
@@ -213,18 +224,7 @@ export const LoginScreen = () => {
               style={styles.background}
             />
           </View>
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account? </Text>
-            <Text
-              style={styles.signupButtonText}
-              onPress={() => {
-                navigation.navigate("SignupScreen");
-              }}
-            >
-              {" "}
-              Signup
-            </Text>
-          </View>
+         
           {/* {emptyFieldError ? (
             <HelperText
               type="error"
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   background: {
     alignSelf: "center",
     backgroundColor: "#1e2d64",
-    width: buttonWidth,
+    width: '100%',
     height: buttonHeight,
     justifyContent: "center",
     borderRadius: 5,
@@ -306,12 +306,12 @@ const styles = StyleSheet.create({
   distance: {
     height: screenHeight * 0.02,
   },
-  inputContainer: { width: "100%", flex: 1 },
+  inputContainer: { width: "100%", flex: 1 ,marginTop:20},
   forgotpassContainer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 6,
+    marginTop: 10,
   },
   forgotpassText: {
     color: "#000000",
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 20,
+    marginTop:25
   },
   signupText: {
     color: "#000000",
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   back: { width: 30, height: 20, top: 14, resizeMode: "contain" },
   buttonContainer: {
     width: "100%",
-    marginTop: 28,
+    marginTop: 18,
   },
   logoContainer: {
     marginBottom: 40,

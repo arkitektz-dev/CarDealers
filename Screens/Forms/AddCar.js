@@ -223,7 +223,7 @@ const AddCar = () => {
               id: showroomId,
               name: showroomPicker,
             };
-            console.log(showroomObj)
+            console.log(showroomObj);
             const date = new Date();
             const obj = {
               amount: `${priceRange.init}`,
@@ -279,7 +279,61 @@ const AddCar = () => {
     return imagesUrl;
   };
 
-  const checkboxData = ["AC", "Radio", "Sunroof"];
+  const checkboxData = [
+    "Climate Control",
+    "Cooled Seats",
+    "DVD Player",
+    "Front Wheel Drive",
+    "Keyless Entry",
+    "Leather Seats",
+    "Navigation System",
+    "Parking Sensors",
+    "Premium Sound System",
+    "Rear View Camera",
+    "4 Wheel Drive",
+    "Air Conditioning",
+    "Alarm/Anti-Theft System",
+    "All Wheel Drive",
+    "All Wheel Steering",
+    "AM/FM Radio",
+    "Anti-Lock Brakes/ABS",
+    "Aux Audio In",
+    "Bluetooth System",
+    "Body Kit",
+    "Brush Guard",
+    "Cassette Player",
+    "CD Player",
+    "Cruise Control",
+    "Dual Exhaust",
+    "Fog Lights",
+    "Front Airbags",
+    "Heat",
+    "Heated Seats",
+    "Keyless Start",
+    "Moonroof",
+    "Off-Road Kit",
+    "Off-Road Tyres",
+    "Performance Tyres",
+    "Power Locks",
+    "Power Mirrors",
+    "Power Seats",
+    "Power Steering",
+    "Power Sunroof",
+    "Power Windows",
+    "Premium Lights",
+    "Premium Paint",
+    "Premium Wheels/Rims",
+    "Racing Seats",
+    "Rear Wheel Drive",
+    "Roof Rack",
+    "Satellite Radio",
+    "Side Airbags",
+    "Spoiler",
+    "Sunroof",
+    "Tiptronic Gears",
+    "VHS Player",
+    "The Description",
+  ];
 
   const onPressHandler = async () => {
     const images = [];
@@ -422,65 +476,70 @@ const AddCar = () => {
                   Select Features
                 </Text>
               </TouchableOpacity>
-              <Modal visible={visible} animationType="slide">
+              <Modal visible={visible} animationType="fade" transparent={true}>
                 <View
                   style={{
-                    flexDirection: "row",
-
-                    justifyContent: "space-between",
-                    borderBottomColor: "#000000",
-                    borderBottomWidth: 0.5,
+                    flex: 1,
+                    //backgroundColor: 'transparent',
+                    backgroundColor: "rgba(0,0,0,0.7)",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "#000000",
-                      margin: 10,
-                      fontSize: 16,
-                    }}
-                  >
-                    Select
-                  </Text>
-                  <TouchableOpacity onPress={() => setVisible(false)}>
+                  <View style={styles.dropdownHeader}>
                     <Text
                       style={{
                         color: "#000000",
                         fontSize: 16,
-                        margin: 10,
                       }}
                     >
-                      Close
+                      Describe Your Car
                     </Text>
-                  </TouchableOpacity>
-                </View>
-
-                {checkboxData.map((item) => {
-                  return (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        margin: 10,
-                      }}
-                    >
-                      <AppCheckBox
-                        status={
-                          checkbox.includes(item) ? "checked" : "unchecked"
-                        }
-                        onPress={() => onChangeHandler(item)}
-                      />
+                    <TouchableOpacity onPress={() => setVisible(false)}>
                       <Text
                         style={{
-                          color: "#000",
-                          fontSize: 18,
-                          fontWeight: "800",
+                          color: "#1e2d64",
+                          fontSize: 16,
                         }}
-                        key={(item, index) => index.toString()}
                       >
-                        {item}
+                        Cancel
                       </Text>
-                    </View>
-                  );
-                })}
+                    </TouchableOpacity>
+                  </View>
+                  <ScrollView style={styles.form_container}>
+                    {checkboxData.map((item) => {
+                      return (
+                        <TouchableOpacity
+                          style={styles.checkerItem}
+                          activeOpacity={0.8}
+                          onPress={() => onChangeHandler(item)}
+                        >
+                          <Text
+                            style={{
+                              color: checkbox.includes(item) ? "black" : "grey",
+                              fontSize: 18,
+                              fontWeight: "800",
+                              marginTop: 5,
+                            }}
+                            key={(item, index) => index.toString()}
+                          >
+                            {item}
+                          </Text>
+                          {checkbox.includes(item) ? (
+                            <AppCheckBox
+                              status={
+                                checkbox.includes(item)
+                                  ? "checked"
+                                  : "unchecked"
+                              }
+                            />
+                          ) : null}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
               </Modal>
               {checkbox.length > 0 ? (
                 <Text
@@ -795,5 +854,35 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "red",
     alignSelf: "center",
+  },
+  form_container: {
+    paddingBottom: "20%",
+    backgroundColor: "#fff",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.5,
+    height: 55,
+    backgroundColor: "white",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: "100%",
+    marginTop: 80,
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  checkerItem: {
+    flexDirection: "row",
+    marginTop: 9,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.5,
+    justifyContent: "space-between",
+    paddingVertical: 7,
+    minHeight: 52,
   },
 });
