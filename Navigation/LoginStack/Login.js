@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../../Screens/LoginScreen/Index";
+import { Walkthrough } from "../../Screens/Walkthrough/Index";
 import { SignupScreen } from "../../Screens/SignUp";
 import ForgotPassword from "../../Screens/ForgotPassword";
 import ChangePassword from "../../Screens/ForgotPassword/ChangePassword";
@@ -10,6 +11,11 @@ const LoginStack = () => {
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Walkthrough"
+        component={Walkthrough}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
