@@ -95,33 +95,15 @@ const DrawerNav = ({ route }) => {
               ),
             }}
           />
-          <Drawer.Screen
-            name="Profile"
-            component={ProfileStack}
-            options={{
-              drawerIcon: ({ color, focused }) => (
-                <FontAwsome5 name="user-alt" color={color} size={29} />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Add Showroom"
-            component={AddShowroom}
-            options={{
-              drawerIcon: ({ color, focused }) => (
-                <FontAwsome5 name="building" color={color} size={29} />
-              ),
-            }}
-          />
-          {/* <Drawer.Screen
-            name="Post An Add"
+           <Drawer.Screen
+            name="Post An Ad."
             component={AddCar}
             options={{
               drawerIcon: ({ color, focused }) => (
                 <MaterialIcons name="post-add" color={color} size={29} />
               ),
             }}
-          /> */}
+          />
           <Drawer.Screen
             name="My Ads"
             component={Listing}
@@ -140,6 +122,27 @@ const DrawerNav = ({ route }) => {
               ),
             }}
           />
+           <Drawer.Screen
+            name="Add Showroom"
+            component={AddShowroom}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="building" color={color} size={29} />
+              ),
+            }}
+          />
+         
+          <Drawer.Screen
+            name="Profile"
+            component={ProfileStack}
+            options={{
+              drawerIcon: ({ color, focused }) => (
+                <FontAwsome5 name="user-alt" color={color} size={29} />
+              ),
+            }}
+          />
+         
+          
         </>
       ) : (
         <>
@@ -153,15 +156,15 @@ const DrawerNav = ({ route }) => {
             }}
           />
           <Drawer.Screen
-            name="Profile"
+            name="Post An Ad."
             component={LottieLoader}
             options={{
               drawerIcon: ({ color, focused }) => (
-                <FontAwsome5 name="user-alt" color={color} size={29} />
+                <MaterialIcons name="post-add" color={color} size={29} />
               ),
             }}
           />
-          <Drawer.Screen
+           <Drawer.Screen
             name="Add Showroom"
             component={LottieLoader}
             options={{
@@ -170,15 +173,17 @@ const DrawerNav = ({ route }) => {
               ),
             }}
           />
+          
           <Drawer.Screen
-            name="Add Car"
+            name="Profile"
             component={LottieLoader}
             options={{
               drawerIcon: ({ color, focused }) => (
-                <MaterialIcons name="post-add" color={color} size={29} />
+                <FontAwsome5 name="user-alt" color={color} size={29} />
               ),
             }}
           />
+         
         </>
       )}
     </Drawer.Navigator>
