@@ -13,6 +13,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
 import ImageSlider from "react-native-image-slider";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 import { Button } from "../../Component/Button/Index";
 import Calendar from "../../Assets/NewAsset/Calendar.png";
@@ -25,6 +26,7 @@ import {
   defineDate,
   defineValue,
   defineValuePrice,
+  imageChecker,
   screenHeight,
 } from "../../Global/Dimension";
 import { fetchSpecificDealer, fetchSpecificUser } from "../../Data/FetchData";
@@ -36,12 +38,16 @@ const DetailCarScreen = ({ route, navigation }) => {
   const [dealerData, setDealerData] = useState();
   const dealerId = item.dealer.id.id;
   const authContext = useContext(AuthContext);
+  const [imageLoading, setImageLoading] = useState(false);
 
   useEffect(() => {
     console.log(item);
     console.log(item.dealer.id._documentPath._parts[1]);
 
-    fetchSpecificUser(item.dealer.id).then((e) => {setDealerData(e);console.log(e)});
+    fetchSpecificUser(item.dealer.id).then((e) => {
+      setDealerData(e);
+      console.log(e);
+    });
   }, []);
 
   const makeCall = () => {
@@ -243,15 +249,57 @@ const DetailCarScreen = ({ route, navigation }) => {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-evenly",
-                borderColor: "#e0e0e0",
-                borderStyle: "dotted",
-                borderBottomWidth: 1,
+                alignItems: "center",
+                marginTop: 18,
+                marginBottom: 18,
+                borderBottomColor: "grey",
+                borderBottomWidth: 0.5,
+                paddingBottom: 10,
               }}
             >
+              <Image
+                style={[styles.avatar, { display: "none" }]}
+                accessibilityLabel="Pic"
+                source={{
+                  uri: imageChecker(dealerData?.image),
+                }}
+                onLoadStart={() => setImageLoading(true)}
+                onLoadEnd={() => setImageLoading(false)}
+              />
+              {imageLoading ? (
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item
+                    width={80}
+                    height={80}
+                    borderRadius={63}
+                  />
+                </SkeletonPlaceholder>
+              ) : (
+                <Image
+                  style={styles.avatar}
+                  accessibilityLabel="Pic"
+                  source={{
+                    uri: imageChecker(dealerData?.image),
+                  }}
+                />
+              )}
+              <View>
+
               <Text style={styles.dealerName}>
                 {dealerData && dealerData.name}
               </Text>
+              <View style={styles.dealerEmail}>
+                <IonIcon
+                  name="mail"
+                  color="grey"
+                  size={18}
+                  style={{ marginLeft: 20 }}
+                />
+                <Text style={styles.dealerEmailText}>
+                  {dealerData && dealerData.email}
+                </Text>
+              </View>
+              </View>
             </View>
             <TouchableOpacity
               activeOpacity={0}
@@ -367,9 +415,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#000000",
-    margin: 15,
-    width: "100%",
+    marginLeft:20,
+    textTransform:'capitalize'
+  },
+  dealerEmail: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  dealerEmailText: {
+    fontSize: 15,
+    color: "grey",
     textAlign: "center",
+    marginRight: -5,
+    marginLeft: 5,
   },
   subData: {
     margin: 10,
@@ -421,7 +479,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#373737",
-    fontSize: 24,
+    fontSize: 22,
   },
   location: {
     color: "#ADB0B4",
@@ -517,5 +575,10 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: "5%",
     textAlignVertical: "center",
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 63,
   },
 });
