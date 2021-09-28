@@ -78,7 +78,11 @@ const BottomProfileScreen = ({ route }) => {
   const arr = [];
 
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", { item,onBackHandler:onBackHandler });
+  };
+
+  const onBackHandler = (item) => {
+    fetchData()
   };
 
   const _renderShowroomList = ({ item }) => {

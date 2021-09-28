@@ -67,7 +67,7 @@ export const fetchMoreDemandCar = async (startAfter) => {
 
 export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
   const arr = [];
-  console.log(filter)
+  console.log(filter);
   let ref = firestore().collection("Demand");
   if (filter.Make != "") {
     ref = ref.where("Make", "==", filter.Make);
@@ -104,7 +104,6 @@ export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
   return { size, arr, lastVal };
 };
 
-
 export const fetchMoreDemandWithSearch = async (startAfter, searchText) => {
   const arr = [];
   var ref;
@@ -113,7 +112,9 @@ export const fetchMoreDemandWithSearch = async (startAfter, searchText) => {
     ref = firestore()
       .collection("Demand")
       .where("Make", ">=", searchText)
-      .where("Make", "<=", searchText + "\uf8ff").orderBy('Make').orderBy('date','desc')
+      .where("Make", "<=", searchText + "\uf8ff")
+      .orderBy("Make")
+      .orderBy("date", "desc");
   }
   var data = await ref
     .startAfter(startAfter)
@@ -329,7 +330,8 @@ export const fetchMoreDealer = async (startAfter) => {
 
 export const fetchMoreShowroom = async (startAfter) => {
   const ref = firestore()
-    .collection("Showrooms").orderBy('name')
+    .collection("Showrooms")
+    .orderBy("name");
   const arr = [];
   var data = await ref
     .startAfter(startAfter)
@@ -347,7 +349,7 @@ export const fetchMoreShowroom = async (startAfter) => {
 export const fetchDealerData = async () => {
   const arr = [];
   const ref = firestore().collection("Users");
-  
+
   const data = await ref.limit(20).get();
   const lastVal = data.docs[data.docs.length - 1];
 
@@ -357,11 +359,10 @@ export const fetchDealerData = async () => {
     const obj = { ...res.data(), id: res.id };
     arr.push(obj);
   });
-  console.log(arr)
+  console.log(arr);
 
   return { size, arr, lastVal };
 };
-
 
 export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
   const arr = [];
@@ -386,7 +387,9 @@ export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
   return { size, arr, lastVal };
 };
 export const fetchShowroomData = async () => {
-  const ref = firestore().collection("Showrooms").orderBy('name');
+  const ref = firestore()
+    .collection("Showrooms")
+    .orderBy("name");
 
   const arr = [];
   const data = await ref.limit(5).get();
@@ -473,7 +476,7 @@ export const AddShowroomData = (data) => {
       .collection("Showrooms")
       .add(data.showroomData)
       .then(() => {
-        data.showToaster()
+        data.showToaster();
       });
   }
 };
@@ -492,6 +495,30 @@ export const AddCarData = async (obj) => {
   return firestore()
     .collection("Advertisments")
     .add(obj);
+};
+
+export const UpdateCarData = async (carData, status, functionBack, id) => {
+  const caller = (id) => {
+    firestore()
+      .collection("Advertisments")
+      .doc(id)
+      .update({ ...carData, adStatus: status })
+      .then(async () => {
+        functionBack({ ...carData, adStatus: status });
+      });
+  };
+  caller(id);
+};
+
+export const GetCarId = async (carData, handleId) => {
+  const d = firestore()
+    .collection("Advertisments")
+    .where("date", "==", carData.date)
+    .where("dealer.id", "==", carData.dealer.id)
+    .where("showroom.id", "==", carData.showroom.id)
+    .onSnapshot((snapshot) => {
+      snapshot.docs.map((doc) => handleId(doc.id));
+    });
 };
 
 export const fetchSpecificDealer = async (dealerId) => {

@@ -15,6 +15,9 @@ import { FlatList } from "react-native-gesture-handler";
 import ImageSlider from "react-native-image-slider";
 import AppPicker from "../../Component/Pickers/Index";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
+import firestore from "@react-native-firebase/firestore";
+
+import AppCheckBox from "../../Component/AppCheckbox";
 
 import { Button } from "../../Component/Button/Index";
 import Calendar from "../../Assets/NewAsset/Calendar.png";
@@ -24,23 +27,52 @@ import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
 import { defineValue, screenHeight } from "../../Global/Dimension";
-import { fetchSpecificDealer } from "../../Data/FetchData";
+import {
+  fetchSpecificDealer,
+  UpdateCarData,
+  GetCarId,
+} from "../../Data/FetchData";
 import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
   const [isVisible, setIsVisible] = useState(false);
   const [dealerData, setDealerData] = useState();
+  const [checkbox, setCheckbox] = useState([]);
+  const [id, setId] = useState("");
+
   const dealerId = item.dealer.id.id;
   const authContext = useContext(AuthContext);
-
+  const [modal, setModal] = useState(false);
+  const [stateChange, setStateChange] = useState(false);
+  const statuses = ["Active", "Inactive", "Sold"];
   useEffect(() => {
     // console.log(authContext.user, "Oka");
     fetchSpecificDealer(authContext.user).then((data) =>
       setDealerData(data.data())
     );
+    GetCarId(item, handleId);
+    setCheckbox([item.adStatus]);
   }, []);
-
+  const onChangeHandler = (item) => {
+    setCheckbox([item]);
+  };
+  const handleId = (id) => {
+    setId(id);
+  };
+  const onEdit = () => {
+    if (checkbox[0] == item.adStatus) {
+      setModal(false);
+    } else {
+      UpdateCarData(item, checkbox[0], functionBack, id);
+    }
+  };
+  const functionBack = (data) => {
+    console.log("back called");
+    item.adStatus = data.adStatus;
+    setModal(false);
+    setStateChange(true);
+  };
   const makeCall = () => {
     let phoneNumber = "";
 
@@ -66,7 +98,14 @@ const DetailCarScreen = ({ route, navigation }) => {
           name="chevron-back-circle-sharp"
           color="white"
           size={31}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            if (stateChange) {
+              navigation.goBack();
+              route.params.onBackHandler();
+            } else {
+              navigation.goBack();
+            }
+          }}
         />
         <Text style={styles.headingText}>
           {" "}
@@ -108,14 +147,77 @@ const DetailCarScreen = ({ route, navigation }) => {
                 borderRadius: 20,
                 paddingHorizontal: 8,
               }}
-              onPress={()=>alert('in progress')}
+              onPress={() => setModal(true)}
             >
               <Text style={[styles.location, { color: "black" }]}>
-                Edit Status{" "}
+                Change Status{" "}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
+        <Modal visible={modal} animationType="fade" transparent={true}>
+          <View
+            style={{
+              flex: 1,
+
+              backgroundColor: "rgba(0,0,0,0.7)",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <View style={styles.dropdownHeader}>
+              <Text
+                style={{
+                  color: "#000000",
+                  fontSize: 16,
+                }}
+              >
+                Change Status
+              </Text>
+              <TouchableOpacity onPress={() => onEdit()}>
+                <Text
+                  style={{
+                    color: "#1e2d64",
+                    fontSize: 16,
+                  }}
+                >
+                  Edit
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.form_container}>
+              {statuses.map((item) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.checkerItem}
+                    activeOpacity={0.8}
+                    onPress={() => onChangeHandler(item)}
+                  >
+                    <Text
+                      style={{
+                        color: checkbox.includes(item) ? "black" : "grey",
+                        fontSize: 18,
+                        fontWeight: "800",
+                        marginTop: 5,
+                      }}
+                      key={(item, index) => index.toString()}
+                    >
+                      {item}
+                    </Text>
+                    {checkbox.includes(item) ? (
+                      <AppCheckBox
+                        status={
+                          checkbox.includes(item) ? "checked" : "unchecked"
+                        }
+                      />
+                    ) : null}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </Modal>
         <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
           <View style={styles.CarInfoTitle}>
             <View
@@ -512,5 +614,35 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: "5%",
     textAlignVertical: "center",
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.5,
+    height: 55,
+    backgroundColor: "white",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: "100%",
+    marginTop: 80,
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  checkerItem: {
+    flexDirection: "row",
+    marginTop: 9,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.5,
+    justifyContent: "space-between",
+    paddingVertical: 7,
+    minHeight: 52,
+  },
+  form_container: {
+    paddingBottom: "20%",
+    backgroundColor: "#fff",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
 });
