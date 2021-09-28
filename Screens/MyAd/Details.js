@@ -8,6 +8,7 @@ import {
   Linking,
   View,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
@@ -16,6 +17,7 @@ import ImageSlider from "react-native-image-slider";
 import AppPicker from "../../Component/Pickers/Index";
 import CategoryPickerItem from "../../Component/Picker/CategoryPickerItem";
 import firestore from "@react-native-firebase/firestore";
+import { useToast } from "native-base";
 
 import AppCheckBox from "../../Component/AppCheckbox";
 
@@ -37,9 +39,11 @@ const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
   const [images, setImages] = useState(item.images);
   const [isVisible, setIsVisible] = useState(false);
+  const [statusLoader, setStatusLoader] = useState(false);
   const [dealerData, setDealerData] = useState();
   const [checkbox, setCheckbox] = useState([]);
   const [id, setId] = useState("");
+  const toast = useToast();
 
   const dealerId = item.dealer.id.id;
   const authContext = useContext(AuthContext);
@@ -64,6 +68,7 @@ const DetailCarScreen = ({ route, navigation }) => {
     if (checkbox[0] == item.adStatus) {
       setModal(false);
     } else {
+      setStatusLoader(true);
       UpdateCarData(item, checkbox[0], functionBack, id);
     }
   };
@@ -72,6 +77,15 @@ const DetailCarScreen = ({ route, navigation }) => {
     item.adStatus = data.adStatus;
     setModal(false);
     setStateChange(true);
+    toast.show({
+      title: "Status Changed",
+      status: "success",
+      description: "Your Ad. status has been changed",
+      duration: 1500,
+      minWidth: "90%",
+      isClosable: false,
+    });
+    setStatusLoader(false)
   };
   const makeCall = () => {
     let phoneNumber = "";
@@ -175,16 +189,21 @@ const DetailCarScreen = ({ route, navigation }) => {
               >
                 Change Status
               </Text>
-              <TouchableOpacity onPress={() => onEdit()}>
-                <Text
-                  style={{
-                    color: "#1e2d64",
-                    fontSize: 16,
-                  }}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              {statusLoader ? (
+                <ActivityIndicator size="small" color="#1e2d64" />
+              ) : (
+                <TouchableOpacity onPress={() => onEdit()}>
+                  <Text
+                    style={{
+                      color: "#1e2d64",
+                      fontSize: 16,
+                    }}
+                  >
+                    Edit
+                  </Text>
+                  
+                </TouchableOpacity>
+              )}
             </View>
             <ScrollView style={styles.form_container}>
               {statuses.map((item) => {
