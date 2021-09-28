@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
 import ImageSlider from "react-native-image-slider";
@@ -20,8 +21,13 @@ import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
-import { screenHeight } from "../../Global/Dimension";
-import { fetchSpecificDealer } from "../../Data/FetchData";
+import {
+  defineDate,
+  defineValue,
+  defineValuePrice,
+  screenHeight,
+} from "../../Global/Dimension";
+import { fetchSpecificDealer, fetchSpecificUser } from "../../Data/FetchData";
 import AuthContext from "../../Component/Authcontext";
 const DetailCarScreen = ({ route, navigation }) => {
   const item = route.params.item;
@@ -32,19 +38,19 @@ const DetailCarScreen = ({ route, navigation }) => {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    // console.log(authContext.user, "Oka");
-    fetchSpecificDealer(authContext.user).then((data) =>
-      setDealerData(data.data())
-    );
+    console.log(item);
+    console.log(item.dealer.id._documentPath._parts[1]);
+
+    fetchSpecificUser(item.dealer.id).then((e) => {setDealerData(e);console.log(e)});
   }, []);
 
   const makeCall = () => {
     let phoneNumber = "";
 
     if (Platform.OS === "android") {
-      phoneNumber = `tel:${dealerData.contactInformation[0]}`;
+      phoneNumber = `tel:${dealerData?.phone}`;
     } else {
-      phoneNumber = `telprompt:${dealerData.contactInformation[0]}`;
+      phoneNumber = `telprompt:${dealerData?.phone}`;
     }
 
     Linking.openURL(phoneNumber);
@@ -57,19 +63,18 @@ const DetailCarScreen = ({ route, navigation }) => {
 
   return (
     <>
-      <View style={styles.searchHolder}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={() => navigation.goBack()}
+      >
         <IonIcon
-          style={{ margin: 5 }}
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={31}
+          style={{ marginRight: 8 }}
+          name="chevron-back-sharp"
+          color="#fff"
+          size={32}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headingText}>
-          {" "}
-          {item.vehicle.information.make} {item.vehicle.information.model}
-        </Text>
-      </View>
+      </TouchableOpacity>
       <ScrollView style={styles.container}>
         <View style={styles.imageHolder}>
           <ImageSlider
@@ -90,10 +95,12 @@ const DetailCarScreen = ({ route, navigation }) => {
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
-            {item.vehicle.information.make} {item.vehicle.information.model}{" "}
+            {item.vehicle.information.make} {item.vehicle.information.model}
             {item.vehicle.information.modelYear}
           </Text>
-          <Text style={styles.location}>{`PKR ${item.amount} `} </Text>
+          <Text style={styles.price}>
+            {`PKR ${defineValuePrice(item.amount)} `}{" "}
+          </Text>
           <Text style={styles.location}>{item.vehicle.city} </Text>
         </View>
         <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
@@ -102,48 +109,48 @@ const DetailCarScreen = ({ route, navigation }) => {
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 0.7,
+                // flex: 1,
               }}
             >
               <Image source={Calendar} style={styles.img} />
               <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.information.modelYear}
+                {defineValue(item.vehicle.information.modelYear)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Speedometer} style={styles.img} />
               <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.mileage}
+                {defineValue(item.vehicle.mileage)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Petrol} style={styles.img} />
               <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.engineType}
+                {defineValue(item.vehicle.additionalInformation.engineType)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Arrow} style={styles.img} />
               <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.transmission}
+                {defineValue(item.vehicle.additionalInformation.transmission)}
               </Text>
             </View>
           </View>
@@ -155,30 +162,38 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.propertyBorder}>
                   <Text style={styles.text}>Registration City</Text>
                   <Text style={styles.text2}>
-                    {item.vehicle.registrationCity}
+                    {defineValue(item.vehicle.registrationCity)}
                   </Text>
                 </View>
                 <View style={styles.otherData}>
                   <Text style={styles.text}>Exterior Color</Text>
-                  <Text style={styles.text2}>{item.vehicle.exteriorColor}</Text>
+                  <Text style={styles.text2}>
+                    {defineValue(item.vehicle.exteriorColor)}
+                  </Text>
                 </View>
                 <View style={styles.otherData}>
-                  <Text style={styles.text}> Assembly </Text>
+                  <Text style={styles.text}>Assembly </Text>
                   <Text style={styles.text2}>
-                    {item.vehicle.additionalInformation.assembly}
+                    {defineValue(item.vehicle.additionalInformation.assembly)}
+                  </Text>
+                </View>
+                <View style={styles.otherData}>
+                  <Text style={styles.text}>Engine Capacity</Text>
+                  <Text style={styles.text2}>
+                    {defineValue(
+                      item.vehicle.additionalInformation.engineCapacity
+                    )}
                   </Text>
                 </View>
                 <View style={styles.lastData}>
-                  <Text style={styles.text}>Engine Capacity</Text>
-                  <Text style={styles.text2}>
-                    {item.vehicle.additionalInformation.engineCapacity}
-                  </Text>
+                  <Text style={styles.text}>Last Updated</Text>
+                  <Text style={styles.text2}>{defineDate(item.date)}</Text>
                 </View>
               </View>
             </View>
             <Text
               style={{
-                margin: 20,
+                marginTop: 5,
                 fontSize: 21,
                 fontWeight: "bold",
                 color: "#000000",
@@ -186,29 +201,38 @@ const DetailCarScreen = ({ route, navigation }) => {
             >
               Features
             </Text>
-            <FlatList
-              numColumns={2}
-              data={item.vehicle.additionalInformation.features}
-              renderItem={({ item }) => {
-                return (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flex: 0.4,
-                      left: 18,
-                    }}
-                  >
-                    <Image source={Radio} style={styles.img} />
-
-                    <Text style={styles.feature}>{item}</Text>
-                  </View>
-                );
-              }}
-            />
+            {item.vehicle.additionalInformation.features.length == 0 ? (
+              <Text style={styles.text}>No Features Available</Text>
+            ) : (
+              <FlatList
+                numColumns={2}
+                data={item.vehicle.additionalInformation.features}
+                columnWrapperStyle={{ justifyContent: "space-between" }}
+                renderItem={({ item }) => {
+                  return (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        width: "48%",
+                        marginTop: 20,
+                      }}
+                    >
+                      {/* <Image source={Radio} style={styles.img} /> */}
+                      <MaterialIcons
+                        style={{ marginRight: 8, marginTop: -2 }}
+                        name="radio"
+                        color="#A9A9A9"
+                        size={24}
+                      />
+                      <Text style={styles.feature}>{item}</Text>
+                    </View>
+                  );
+                }}
+              />
+            )}
             <View style={{ height: screenHeight * 0.04 }}></View>
             <Text
               style={{
-                marginLeft: 20,
                 fontSize: 21,
                 fontWeight: "bold",
                 color: "#000000",
@@ -301,7 +325,7 @@ const DetailCarScreen = ({ route, navigation }) => {
             }}
           >
             <Text style={styles.callText}>
-              {dealerData && dealerData.contactInformation[0]}
+              {dealerData && dealerData.phone}
             </Text>
             <Text style={styles.callText}>
               Mention CarDealer.com when calling seller to get a good deal.
@@ -333,9 +357,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
   },
-  searchHolder: {
-    backgroundColor: "#1c2e65",
-    flexDirection: "row",
+  header: {
+    position: "absolute",
+    top: 25,
+    left: 10,
+    zIndex: 10,
   },
   dealerName: {
     fontSize: 18,
@@ -386,24 +412,23 @@ const styles = StyleSheet.create({
   CarInfoTitle: {
     flexDirection: "row",
     justifyContent: "space-around",
-    height: 70,
+    marginTop: 10,
   },
   detailView: {
     flexDirection: "column",
     flex: 1,
+    paddingHorizontal: 20,
   },
   title: {
-    color: "grey",
-    fontWeight: "bold",
+    color: "#373737",
     fontSize: 24,
   },
   location: {
-    color: "grey",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: "#ADB0B4",
+    fontSize: 18,
   },
   price: {
-    color: "red",
+    color: "#373737",
     fontWeight: "bold",
     fontSize: 20,
   },
@@ -413,21 +438,19 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#A9A9A9",
-    fontWeight: "bold",
-    fontSize: 15,
+    fontWeight: "normal",
+    fontSize: 16,
     textAlignVertical: "center",
   },
   feature: {
-    color: "#A9A9A9",
-    fontWeight: "bold",
+    color: "#373737",
     fontSize: 16,
     textAlignVertical: "center",
-    margin: 10,
   },
   propertyBorder: {
     flexDirection: "row",
     borderBottomColor: "#e0e0e0",
-    width: "90%",
+    width: "100%",
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: "#e0e0e0",
@@ -435,26 +458,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "right",
     borderStyle: "dotted",
+    paddingVertical: 5,
   },
   otherData: {
     flexDirection: "row",
     borderBottomColor: "#e0e0e0",
     borderStyle: "dotted",
-    width: "90%",
+    width: "100%",
     borderBottomWidth: 1,
     justifyContent: "space-between",
-    marginTop: 10,
+    paddingVertical: 5,
   },
   lastData: {
     flexDirection: "row",
-    width: "90%",
+    width: "100%",
     justifyContent: "space-between",
-    marginTop: 10,
+    paddingVertical: 5,
   },
   text2: {
-    color: "#000000",
-    fontWeight: "900",
-    fontSize: 15,
+    color: "#373737",
+    fontWeight: "600",
+    fontSize: 16,
     margin: 10,
   },
   callText: {
@@ -475,12 +499,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   titleContainer: {
-    padding: 15,
-    left: 8,
+    marginHorizontal: 20,
     borderBottomWidth: 0.4,
     opacity: 2,
-    shadowColor: "grey",
+    shadowColor: "#ADB0B4",
     shadowOpacity: 2,
+    paddingTop: 8,
+    paddingBottom: 18,
   },
   carousel: {
     width: "100%",

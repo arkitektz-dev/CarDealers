@@ -63,3 +63,18 @@ export const defineValue = value => {
     return value;
   } else return ' - ';
 };
+
+
+export const defineValuePrice = value => {
+  if (
+    value != null &&
+    value != undefined &&
+    value != '' &&
+    value != 0 &&
+    value != '0'
+  ) {
+    return value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  } else return ' - ';
+};
