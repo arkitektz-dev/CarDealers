@@ -8,13 +8,18 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
 
 import Profile from "../../Assets/BlueProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
-import { imageChecker, screenHeight, screenWidth } from "../../Global/Dimension";
+import {
+  imageChecker,
+  screenHeight,
+  screenWidth,
+} from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import { Modal } from "react-native";
 import { fetchSpecificDealer, getData } from "../../Data/FetchData";
@@ -31,9 +36,13 @@ const BottomProfileScreen = ({ route }) => {
   const [image, setImage] = useState(undefined);
 
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dealer = authContext.user;
   const fetchData = async () => {
-    const ref = firestore().collection("Advertisments").orderBy('date','desc');
+    setLoading(true)
+    const ref = firestore()
+      .collection("Advertisments")
+      .orderBy("date", "desc");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -52,7 +61,8 @@ const BottomProfileScreen = ({ route }) => {
         }
       });
       setDataCar(arr);
-      setModalData(param.showrooms)
+
+      setLoading(false);
       setcarCount(arr.length);
     });
   };
@@ -66,6 +76,8 @@ const BottomProfileScreen = ({ route }) => {
   useEffect(() => {
     fetchSpecificDealer(dealer).then((res) => {
       setParam(res.data());
+
+      setModalData(res.data().showrooms);
     });
 
     fetchData();
@@ -78,11 +90,14 @@ const BottomProfileScreen = ({ route }) => {
   const arr = [];
 
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item,onBackHandler:onBackHandler });
+    navigation.navigate("DetailCarScreen", {
+      item,
+      onBackHandler: onBackHandler,
+    });
   };
 
   const onBackHandler = (item) => {
-    fetchData()
+    fetchData();
   };
 
   const _renderShowroomList = ({ item }) => {
@@ -140,7 +155,7 @@ const BottomProfileScreen = ({ route }) => {
   };
   const navigation = useNavigation();
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.parent}>
         <View style={styles.searchHolder}>
           <IonIcon
@@ -185,13 +200,13 @@ const BottomProfileScreen = ({ route }) => {
               marginHorizontal: 25,
             }}
           >
-           <Image
-            style={styles.avatar}
-            accessibilityLabel="Pic"
-            source={{
-              uri: imageChecker(image),
-            }}
-          />
+            <Image
+              style={styles.avatar}
+              accessibilityLabel="Pic"
+              source={{
+                uri: imageChecker(image),
+              }}
+            />
             <View style={{ width: 15 }}></View>
             <View style={{ flexDirection: "row" }}>
               <View
@@ -260,13 +275,19 @@ const BottomProfileScreen = ({ route }) => {
             </View>
           </View>
         </View>
-        <FlatList
-          contentContainerStyle={{ alignSelf: "center" }}
-          numColumns={2}
-          data={dataCar}
-          renderItem={_renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {loading ? (
+          <View style={{ alignSelf: "center", marginTop: 150 }}>
+            <ActivityIndicator color="red" size="large" />
+          </View>
+        ) : (
+          <FlatList
+            contentContainerStyle={{ alignSelf: "center" }}
+            numColumns={2}
+            data={dataCar}
+            renderItem={_renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        )}
       </View>
     </ScrollView>
   );
@@ -280,6 +301,7 @@ const styles = StyleSheet.create({
   parent: {
     flexDirection: "column",
     backgroundColor: "#fff",
+    flex: 1,
   },
   navTxt: {
     textAlign: "center",
