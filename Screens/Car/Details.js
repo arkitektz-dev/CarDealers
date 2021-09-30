@@ -102,7 +102,7 @@ const DetailCarScreen = ({ route, navigation }) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
             {item.vehicle.information.make} {item.vehicle.information.model}
-            {item.vehicle.information.modelYear}
+             {' '}{item.vehicle.information.modelYear}
           </Text>
           <Text style={styles.price}>
             {`PKR ${defineValuePrice(item.amount)} `}{" "}
@@ -119,7 +119,7 @@ const DetailCarScreen = ({ route, navigation }) => {
               }}
             >
               <Image source={Calendar} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
                 {defineValue(item.vehicle.information.modelYear)}
               </Text>
             </View>
@@ -131,7 +131,7 @@ const DetailCarScreen = ({ route, navigation }) => {
               }}
             >
               <Image source={Speedometer} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
                 {defineValue(item.vehicle.mileage)}
               </Text>
             </View>
@@ -143,7 +143,7 @@ const DetailCarScreen = ({ route, navigation }) => {
               }}
             >
               <Image source={Petrol} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              <Text style={{ color: "#000000", fontFamily:'Roboto-Bold' }}>
                 {defineValue(item.vehicle.additionalInformation.engineType)}
               </Text>
             </View>
@@ -155,7 +155,7 @@ const DetailCarScreen = ({ route, navigation }) => {
               }}
             >
               <Image source={Arrow} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
                 {defineValue(item.vehicle.additionalInformation.transmission)}
               </Text>
             </View>
@@ -201,8 +201,8 @@ const DetailCarScreen = ({ route, navigation }) => {
               style={{
                 marginTop: 5,
                 fontSize: 21,
-                fontWeight: "bold",
-                color: "#000000",
+                fontFamily:'Roboto-Bold',
+                color:'#373737'
               }}
             >
               Features
@@ -221,16 +221,21 @@ const DetailCarScreen = ({ route, navigation }) => {
                         flexDirection: "row",
                         width: "48%",
                         marginTop: 20,
+                        // paddingHorizontal:2
                       }}
                     >
                       {/* <Image source={Radio} style={styles.img} /> */}
+                      <View style={{width:'16%'}}>
                       <MaterialIcons
-                        style={{ marginRight: 8, marginTop: -2 }}
+                        style={{ marginRight: 4, marginTop: -2 }}
                         name="radio"
-                        color="#A9A9A9"
+                        color="#AEB1B5"
                         size={24}
                       />
+                      </View>
+                      <View style={{width:'82%'}}>
                       <Text style={styles.feature}>{item}</Text>
+                      </View>
                     </View>
                   );
                 }}
@@ -240,8 +245,8 @@ const DetailCarScreen = ({ route, navigation }) => {
             <Text
               style={{
                 fontSize: 21,
-                fontWeight: "bold",
-                color: "#000000",
+                fontFamily:'Roboto-Bold',
+                color:'#373737'
               }}
             >
               Seller Detail
@@ -480,15 +485,17 @@ const styles = StyleSheet.create({
   title: {
     color: "#373737",
     fontSize: 22,
+    fontFamily:'Roboto-Medium'
   },
   location: {
     color: "#ADB0B4",
-    fontSize: 18,
+    fontSize: 17,
+    fontFamily:'Roboto-Medium'
   },
   price: {
     color: "#373737",
-    fontWeight: "bold",
     fontSize: 20,
+    fontFamily:'Roboto-Bold'
   },
   imageSize: {
     width: "100%",
@@ -496,14 +503,17 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#A9A9A9",
-    fontWeight: "normal",
+    
     fontSize: 16,
     textAlignVertical: "center",
+    fontFamily:'Roboto-Medium'
   },
   feature: {
     color: "#373737",
-    fontSize: 16,
+    fontSize: 15,
     textAlignVertical: "center",
+    fontFamily:'Roboto-Regular'
+    // width:'90%'
   },
   propertyBorder: {
     flexDirection: "row",
@@ -535,9 +545,10 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: "#373737",
-    fontWeight: "600",
     fontSize: 16,
     margin: 10,
+    fontFamily:'Roboto-Medium',
+    textTransform:'capitalize'
   },
   callText: {
     color: "#000000",
