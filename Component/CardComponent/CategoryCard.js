@@ -12,9 +12,11 @@ const CategoryCard = () => {
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: "#f8f8f8",
-          padding: 10,
-          marginBottom: 10,
+          backgroundColor: "#F8F8F8",
+          width: "100%",
+          paddingBottom: 10,
+          paddingTop: 25,
+          paddingHorizontal: 20,
         }}
       >
         <Text style={styles.texthead}>Our Services</Text>
@@ -24,33 +26,46 @@ const CategoryCard = () => {
           justifyContent: "space-evenly",
           flexDirection: "row",
           flex: 1,
-          padding: 10,
+          paddingVertical: 15,
+          paddingHorizontal: 20,
         }}
       >
-        <TouchableOpacity onPress={() => naivgation.navigate("CarStack")}>
-          <View style={styles.container}>
-            <FontAwsome name="car" size={35} color="#1e2d64" />
-            <Text style={styles.text}>CAR</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => naivgation.navigate("CarStack")}
+        >
+          {/* <View style={styles.container}> */}
+          <FontAwsome name="car" size={35} color="#1e2d64" />
+          <Text style={styles.text}>CAR</Text>
+          {/* </View> */}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => naivgation.navigate("DealerStack")}>
-          <View style={styles.container}>
-            <FontAwsome name="user" size={35} color="#1e2d64" />
-            <Text style={styles.text}>DEALER</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => naivgation.navigate("DealerStack")}
+        >
+          {/* <View style={styles.container}> */}
+          <FontAwsome name="user" size={35} color="#1e2d64" />
+          <Text style={styles.text}>DEALERS</Text>
+          {/* </View> */}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => naivgation.navigate("ShowroomStack")}>
-          <View style={styles.container}>
-            <FontAwsome name="building" size={35} color="#1e2d64" />
-            <Text style={styles.text}>SHOWROOM</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => naivgation.navigate("ShowroomStack")}
+        >
+          {/* <View style={styles.container}> */}
+          <FontAwsome name="building" size={35} color="#1e2d64" />
+          <Text style={styles.text}>SHOWROOM</Text>
+          {/* </View> */}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => naivgation.navigate("DemandCars")}>
-          <View style={styles.container}>
-            <Octicons name="request-changes" size={35} color="#1e2d64" />
-            <Text style={styles.text}>DEMAND</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => naivgation.navigate("DemandCars")}
+        >
+          {/* <View style={styles.container}> */}
+          <Octicons name="request-changes" size={35} color="#1e2d64" />
+          <Text style={styles.text}>DEMAND</Text>
+          {/* </View> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -59,12 +74,13 @@ const CategoryCard = () => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-evenly",
-    padding: 15,
-    width: 95,
+    paddingVertical: 15,
+    width: "23%",
     alignItems: "center",
     borderColor: "#b3b5b8",
     borderWidth: 0.3,
     borderRadius: 5,
+    height: 80,
   },
   image: {
     width: "100%",
@@ -78,11 +94,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   text: {
-    color: "#000000",
+    color: "black",
     fontSize: 10,
     width: "100%",
-    fontWeight: "900",
+
     textAlign: "center",
+    fontFamily: "Roboto-Medium",
   },
 });
 export default memo(CategoryCard);

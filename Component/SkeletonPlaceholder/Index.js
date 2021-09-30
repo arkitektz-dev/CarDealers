@@ -10,6 +10,8 @@ const SkeletonLoader = () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "flex-start",
+          paddingHorizontal:15,
+          paddingVertical:15
         }}
       >
         <View style={{ flexDirection: "column" }}>

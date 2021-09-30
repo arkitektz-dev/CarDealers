@@ -74,7 +74,7 @@ const Card = () => {
           width: "100%",
           paddingBottom: 10,
           paddingTop: 25,
-          paddingHorizontal: 15,
+          paddingHorizontal: 20,
         }}
       >
         <Text style={styles.heading}>Our Cars</Text>
@@ -90,7 +90,7 @@ const Card = () => {
             onPress={() => navigation.navigate("CarStack")}
           >
             <Text
-              style={{ fontSize: 15, color: "#606884" }}
+              style={{ fontSize: 15, color: "#606884",fontFamily:"Roboto-Medium" }}
             >
               {" View All "}
             </Text>
@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     color: "#333",
     fontSize: 18,
     fontWeight: "bold",
-    left: "5%",
   },
   border: {
     borderWidth: 1,

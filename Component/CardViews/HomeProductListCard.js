@@ -23,8 +23,8 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
         height: 230,
         width: 300,
         marginLeft: 20,
-        marginTop:15,
-        marginBottom:15
+        marginTop:20,
+        // marginBottom:
       }}
     >
       <TouchableOpacity onPress={pressHandler}>

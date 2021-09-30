@@ -57,7 +57,7 @@ const DealerCard = () => {
           width: "100%",
           paddingBottom: 10,
           paddingTop: 25,
-          paddingHorizontal: 15, }}>
+          paddingHorizontal: 20, }}>
         <Text style={styles.heading}>Our Dealers</Text>
         <View
           style={{
@@ -70,8 +70,8 @@ const DealerCard = () => {
             style={styles.border}
             onPress={() => navigation.navigate("DealerStack")}
           >
-            <Text
-              style={{ fontSize: 15, fontWeight: "bold", color: "#828a9f" }}
+           <Text
+              style={{ fontSize: 15, color: "#606884",fontFamily:"Roboto-Medium" }}
             >
               {" View All "}
             </Text>
@@ -101,11 +101,13 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.15,
   },
   border: {
-    right: "13%",
+    borderWidth: 1,
+    borderColor: "#606884",
+    borderRadius: 5,
   },
   heading: {
     color: "#333",
     fontSize: 18,
-    fontFamily:"Lato-Black"
+    fontFamily:"Roboto-Bold"
   },
 });

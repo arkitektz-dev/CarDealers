@@ -22,8 +22,8 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
         height: 240,
         width: 200,
         marginLeft: 20,
-        marginTop:15,
-        marginBottom:15
+        marginTop:20,
+        // marginBottom:15
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
