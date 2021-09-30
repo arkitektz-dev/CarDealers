@@ -17,11 +17,13 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
       style={{
         justifyContent: "space-between",
         backgroundColor: "white",
-        margin: 5,
         borderColor: "#ACAFB3",
         borderWidth: 0.5,
         height: 240,
         width: 200,
+        marginLeft: 20,
+        marginTop:15,
+        marginBottom:15
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
