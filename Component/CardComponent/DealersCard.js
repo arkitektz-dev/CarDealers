@@ -54,7 +54,7 @@ const DealerCard = () => {
       }}
     >
       <View style={{ flexDirection: "row", marginBottom: 5 }}>
-        <Text style={styles.heading}> OUR DEALERS</Text>
+        <Text style={styles.heading}>Our Dealers</Text>
         <View
           style={{
             flexDirection: "row",
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
   heading: {
     color: "#333",
     fontSize: 16,
-    fontWeight: "bold",
-    left: "5%",
+    fontFamily:"Lato-Black"
   },
 });
