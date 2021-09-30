@@ -10,20 +10,20 @@ import colors from "../../config/colors";
 import AppText from "../AppText";
 import AppLogo from "../../Assets/Sold.png";
 function Card({ title, subTitle, image, onPressHandler }) {
-  const [animating, setanimating] = React.useState(false)
+  const [animating, setanimating] = React.useState(false);
   return (
     <TouchableOpacity style={styles.card} onPress={onPressHandler}>
       <Image
         style={styles.image}
         source={{ uri: image }}
         loadingIndicatorSource={AppLogo}
-        onLoadStart={()=>setanimating(true)}
-        onLoad={()=>setanimating(false)}
+        onLoadStart={() => setanimating(true)}
+        onLoad={() => setanimating(false)}
       ></Image>
       <ActivityIndicator
         color="#1c2e65"
         style={{ position: "absolute", zIndex: 10, top: "30%", left: "42.5%" }}
-        size={'large'}
+        size={"large"}
         animating={animating}
       />
 
@@ -45,10 +45,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     overflow: "hidden",
     margin: 10,
-    shadowColor: "#470000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
   },
   detailsContainer: {
     padding: 10,

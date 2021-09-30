@@ -18,12 +18,10 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
         justifyContent: "space-between",
         backgroundColor: "white",
         margin: 5,
-        borderColor: "#b3b5b8",
-        borderWidth: 1,
-        shadowColor: "#470000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        elevation: 2,
+        borderColor: "#ACAFB3",
+        borderWidth: 0.5,
+        height: 230,
+        width: 300,
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
@@ -44,8 +42,8 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
         <Text
           style={{
             textAlign: "left",
-            color: "#1e2d64",
-            fontSize: 17,
+            color: "#5B6380",
+            fontSize: 16,
             fontWeight: "bold",
           }}
         >
@@ -53,18 +51,18 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
         </Text>
         <Text
           style={{
-            color: "#1e2d64",
+            color: "black",
             fontSize: 14,
             fontWeight: "700",
             textAlign: "left",
           }}
         >
-          {price}
+          PKR {price}
         </Text>
         <Text
           style={{
             textAlign: "left",
-            color: "#1e2d64",
+            color: "#ACAFB3",
             fontSize: 13,
             fontWeight: "600",
           }}
@@ -78,8 +76,8 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
 export default HomeCard;
 const styles = StyleSheet.create({
   imageSize: {
-    width: screenWidth * 0.5,
-    height: screenHeight * 0.15,
+    width: '100%',
+    height: 150,
   },
   border: {
     borderColor: "red",

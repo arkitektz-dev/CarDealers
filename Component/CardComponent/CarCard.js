@@ -17,7 +17,16 @@ import Sold from "../../Assets/Sold.png";
 const Card = () => {
   const [dataCar, setDataCar] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const createSub =(t1,t2,t3)=>{
+    let text = t1;
+    if(t2 !== undefined && t2 !== '' && t2 !== null){
+      text = text + ' | ' + t2
+    }
+    if(t3 !== undefined && t3 !== '' && t3 !== null){
+      text = text + ' | ' + t3
+    }
+    return text
+  }
   useEffect(() => {
     setLoading(true);
     fetchCarData().then((data) => {
@@ -38,11 +47,7 @@ const Card = () => {
           " " +
           item.vehicle.information.modelYear} `}
         price={changeNumberFormat(item.amount)}
-        subtitle={`${item.vehicle.city +
-          " " +
-          item.vehicle.mileage +
-          " " +
-          item.vehicle.additionalInformation.engineType} `}
+        subtitle={createSub(item.vehicle.city,item.vehicle.mileage ,item.vehicle.additionalInformation.engineType,)}
         image={{ uri: item.images[0] }}
         sold={item.sold ? Sold : null}
         pressHandler={() => onPressHandler(item)}
