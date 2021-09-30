@@ -18,13 +18,9 @@ import { Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ShowroomStack from "../HomeStack/ShowroomStack";
 import BottomProfileScreenStack from "../ProfileStack/ProfileStack";
-import Dealer from "../../Screens/Dealer";
-import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
-import MyAd from "../../Screens/MyAd";
+import MyAdStack from "../MyAdStack/MyAdStack";
 import DemandTabs from "../TopTab";
-import Choice from "../../Component/AddTabs";
 import AddTabs from "../../Component/AddTabs";
-import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -115,7 +111,7 @@ function MyTabs() {
       {status != undefined ? (
         <Tab.Screen
           name="My Ads."
-          component={DemandTabs}
+          component={MyAdStack}
           options={{
             tabBarIcon: ({ color }) => (
               <Entypo name="news" size={28} color={color} />
@@ -124,7 +120,7 @@ function MyTabs() {
         />
       ) : (
         <Tab.Screen
-          name="DemandTabs"
+          name="My Ads."
           component={LottieLoader}
           options={{
             tabBarIcon: ({ color }) => (

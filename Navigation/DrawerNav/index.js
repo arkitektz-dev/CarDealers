@@ -9,6 +9,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import HomeStack from "../HomeStack/HomeStack";
+import MyAds from "../MyAds/MyAds";
 import { Image, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
@@ -21,6 +22,8 @@ import LottieLoader from "../../Component/Lottie";
 import Listing from "../../Screens/MyAd/Listing";
 import MyDemand from "../../Screens/MyDemands/index";
 import AuthContext from "../../Component/Authcontext";
+import DetailCarScreen from "../../Screens/MyAd/Details";
+
 const Drawer = createDrawerNavigator();
 var status = [];
 function CustomDrawerContent(props) {
@@ -106,7 +109,7 @@ const DrawerNav = ({ route }) => {
           />
           <Drawer.Screen
             name="My Ads"
-            component={Listing}
+            component={MyAds}
             options={{
               drawerIcon: ({ color, focused }) => (
                 <FontAwesome5 name="ad" color={color} size={29} />

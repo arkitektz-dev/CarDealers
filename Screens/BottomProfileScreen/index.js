@@ -157,7 +157,7 @@ const BottomProfileScreen = ({ route }) => {
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.parent}>
-        <View style={styles.searchHolder}>
+        {/* <View style={styles.searchHolder}>
           <IonIcon
             style={{ margin: 10 }}
             name="chevron-back-circle-sharp"
@@ -166,7 +166,7 @@ const BottomProfileScreen = ({ route }) => {
             onPress={() => navigation.goBack()}
           />
           <Text style={styles.headingText}> {param && param.name}</Text>
-        </View>
+        </View> */}
         <Modal
           visible={visible}
           containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
