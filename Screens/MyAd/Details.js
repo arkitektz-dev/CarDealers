@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { BottomSheet } from "react-native-elements/dist/bottomSheet/BottomSheet";
 import { FlatList } from "react-native-gesture-handler";
 import ImageSlider from "react-native-image-slider";
@@ -28,7 +29,12 @@ import Speedometer from "../../Assets/NewAsset/Speedometer.png";
 import Petrol from "../../Assets/NewAsset/Petrol.png";
 import Arrow from "../../Assets/NewAsset/Arrow.png";
 import CallSeller from "../../Assets/NewAsset/CallSeller.png";
-import { defineValue, screenHeight } from "../../Global/Dimension";
+import {
+  defineDate,
+  defineValue,
+  defineValuePrice,
+  screenHeight,
+} from "../../Global/Dimension";
 import {
   fetchSpecificDealer,
   UpdateCarData,
@@ -85,7 +91,7 @@ const DetailCarScreen = ({ route, navigation }) => {
       minWidth: "90%",
       isClosable: false,
     });
-    setStatusLoader(false)
+    setStatusLoader(false);
   };
   const makeCall = () => {
     let phoneNumber = "";
@@ -106,26 +112,25 @@ const DetailCarScreen = ({ route, navigation }) => {
 
   return (
     <>
-      <View style={styles.searchHolder}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={() => {
+          if (stateChange) {
+            navigation.goBack();
+            route.params.onBackHandler();
+          } else {
+            navigation.goBack();
+          }
+        }}
+      >
         <IonIcon
-          style={{ margin: 5 }}
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={31}
-          onPress={() => {
-            if (stateChange) {
-              navigation.goBack();
-              route.params.onBackHandler();
-            } else {
-              navigation.goBack();
-            }
-          }}
+          style={{ marginRight: 8 }}
+          name="chevron-back-sharp"
+          color="#fff"
+          size={32}
+          onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headingText}>
-          {" "}
-          {item.vehicle.information.make} {item.vehicle.information.model}
-        </Text>
-      </View>
+      </TouchableOpacity>
       <ScrollView style={styles.container}>
         <View style={styles.imageHolder}>
           <ImageSlider
@@ -146,14 +151,16 @@ const DetailCarScreen = ({ route, navigation }) => {
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
-            {item.vehicle.information.make} {item.vehicle.information.model}{" "}
-            {item.vehicle.information.modelYear}
+            {item.vehicle.information.make} {item.vehicle.information.model}
+             {' '}{item.vehicle.information.modelYear}
           </Text>
-          <Text style={styles.location}>{`PKR ${item.amount} `} </Text>
-          <Text style={styles.location}>{item.vehicle.city} </Text>
+          <Text style={styles.price}>
+            {`PKR ${defineValuePrice(item.amount)} `}{" "}
+          </Text>
+          {/* <Text style={styles.location}>{item.vehicle.city} </Text> */}
           <View style={{ flexDirection: "row" }}>
             <Text style={[styles.location, { fontWeight: "normal" }]}>
-              {defineValue(item.adStatus)}{" "}
+            {defineValue(item.vehicle.city)} | {defineValue(item.adStatus)}{" "}
             </Text>
             <TouchableOpacity
               style={{
@@ -201,7 +208,6 @@ const DetailCarScreen = ({ route, navigation }) => {
                   >
                     Edit
                   </Text>
-                  
                 </TouchableOpacity>
               )}
             </View>
@@ -243,48 +249,47 @@ const DetailCarScreen = ({ route, navigation }) => {
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 0.7,
               }}
             >
               <Image source={Calendar} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.information.modelYear}
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
+                {defineValue(item.vehicle.information.modelYear)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Speedometer} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.mileage}
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
+                {defineValue(item.vehicle.mileage)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Petrol} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.engineType}
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
+                {defineValue(item.vehicle.additionalInformation.engineType)}
               </Text>
             </View>
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                flex: 1,
+                // flex: 1,
               }}
             >
               <Image source={Arrow} style={styles.img} />
-              <Text style={{ color: "#000000", fontWeight: "bold" }}>
-                {item.vehicle.additionalInformation.transmission}
+              <Text style={{ color: "#000000",  fontFamily:'Roboto-Bold'  }}>
+                {defineValue(item.vehicle.additionalInformation.transmission)}
               </Text>
             </View>
           </View>
@@ -296,33 +301,39 @@ const DetailCarScreen = ({ route, navigation }) => {
                 <View style={styles.propertyBorder}>
                   <Text style={styles.text}>Registration City</Text>
                   <Text style={styles.text2}>
-                    {item.vehicle.registrationCity}
+                    {defineValue(item.vehicle.registrationCity)}
                   </Text>
                 </View>
                 <View style={styles.otherData}>
                   <Text style={styles.text}>Exterior Color</Text>
-                  <Text style={styles.text2}>{item.vehicle.exteriorColor}</Text>
+                  <Text style={styles.text2}>{defineValue(item.vehicle.exteriorColor)}</Text>
                 </View>
                 <View style={styles.otherData}>
-                  <Text style={styles.text}> Assembly </Text>
+                  <Text style={styles.text}>Assembly </Text>
                   <Text style={styles.text2}>
-                    {item.vehicle.additionalInformation.assembly}
+                    {defineValue(item.vehicle.additionalInformation.assembly)}
+                  </Text>
+                </View>
+                <View style={styles.otherData}>
+                  <Text style={styles.text}>Engine Capacity</Text>
+                  <Text style={styles.text2}>
+                    {defineValue(
+                      item.vehicle.additionalInformation.engineCapacity
+                    )}
                   </Text>
                 </View>
                 <View style={styles.lastData}>
-                  <Text style={styles.text}>Engine Capacity</Text>
-                  <Text style={styles.text2}>
-                    {item.vehicle.additionalInformation.engineCapacity}
-                  </Text>
+                  <Text style={styles.text}>Last Updated</Text>
+                  <Text style={styles.text2}>{defineDate(item.date)}</Text>
                 </View>
               </View>
             </View>
             <Text
               style={{
-                margin: 20,
+                marginTop: 5,
                 fontSize: 21,
-                fontWeight: "bold",
-                color: "#000000",
+                fontFamily:'Roboto-Bold',
+                color:'#373737'
               }}
             >
               Features
@@ -330,24 +341,35 @@ const DetailCarScreen = ({ route, navigation }) => {
             <FlatList
               numColumns={2}
               data={item.vehicle.additionalInformation.features}
+              columnWrapperStyle={{ justifyContent: "space-between" }}
               renderItem={({ item }) => {
                 return (
                   <View
-                    style={{
-                      flexDirection: "row",
-                      flex: 0.4,
-                      left: 18,
-                    }}
-                  >
-                    <Image source={Radio} style={styles.img} />
-
-                    <Text style={styles.feature}>{item}</Text>
-                  </View>
+                      style={{
+                        flexDirection: "row",
+                        width: "48%",
+                        marginTop: 20,
+                        // paddingHorizontal:2
+                      }}
+                    >
+                      {/* <Image source={Radio} style={styles.img} /> */}
+                      <View style={{width:'16%'}}>
+                      <MaterialIcons
+                        style={{ marginRight: 4, marginTop: -2 }}
+                        name="radio"
+                        color="#AEB1B5"
+                        size={24}
+                      />
+                      </View>
+                      <View style={{width:'82%'}}>
+                      <Text style={styles.feature}>{item}</Text>
+                      </View>
+                    </View>
                 );
               }}
             />
             <View style={{ height: screenHeight * 0.04 }}></View>
-            <Text
+            {/* <Text
               style={{
                 marginLeft: 20,
                 fontSize: 21,
@@ -388,10 +410,10 @@ const DetailCarScreen = ({ route, navigation }) => {
                   alignSelf: "center",
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </ScrollView>
-        <BottomSheet
+        {/* <BottomSheet
           isVisible={isVisible}
           containerStyle={{
             backgroundColor: "white",
@@ -460,7 +482,7 @@ const DetailCarScreen = ({ route, navigation }) => {
               onPressHandler={makeCall}
             />
           </View>
-        </BottomSheet>
+        </BottomSheet> */}
       </ScrollView>
     </>
   );
@@ -474,17 +496,29 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
   },
-  searchHolder: {
-    backgroundColor: "#1c2e65",
-    flexDirection: "row",
+  header: {
+    position: "absolute",
+    top: 25,
+    left: 10,
+    zIndex: 10,
   },
   dealerName: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#000000",
-    margin: 15,
-    width: "100%",
+    marginLeft:20,
+    textTransform:'capitalize'
+  },
+  dealerEmail: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  dealerEmailText: {
+    fontSize: 15,
+    color: "grey",
     textAlign: "center",
+    marginRight: -5,
+    marginLeft: 5,
   },
   subData: {
     margin: 10,
@@ -527,26 +561,27 @@ const styles = StyleSheet.create({
   CarInfoTitle: {
     flexDirection: "row",
     justifyContent: "space-around",
-    height: 70,
+    marginTop: 10,
   },
   detailView: {
     flexDirection: "column",
     flex: 1,
+    paddingHorizontal: 20,
   },
   title: {
-    color: "grey",
-    fontWeight: "bold",
-    fontSize: 24,
+    color: "#373737",
+    fontSize: 22,
+    fontFamily:'Roboto-Medium'
   },
   location: {
-    color: "grey",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: "#ADB0B4",
+    fontSize: 17,
+    fontFamily:'Roboto-Medium'
   },
   price: {
-    color: "red",
-    fontWeight: "bold",
+    color: "#373737",
     fontSize: 20,
+    fontFamily:'Roboto-Bold'
   },
   imageSize: {
     width: "100%",
@@ -554,21 +589,22 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#A9A9A9",
-    fontWeight: "bold",
-    fontSize: 15,
-    textAlignVertical: "center",
-  },
-  feature: {
-    color: "#A9A9A9",
-    fontWeight: "bold",
+    
     fontSize: 16,
     textAlignVertical: "center",
-    margin: 10,
+    fontFamily:'Roboto-Medium'
+  },
+  feature: {
+    color: "#373737",
+    fontSize: 15,
+    textAlignVertical: "center",
+    fontFamily:'Roboto-Regular'
+    // width:'90%'
   },
   propertyBorder: {
     flexDirection: "row",
     borderBottomColor: "#e0e0e0",
-    width: "90%",
+    width: "100%",
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: "#e0e0e0",
@@ -576,27 +612,29 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "right",
     borderStyle: "dotted",
+    paddingVertical: 5,
   },
   otherData: {
     flexDirection: "row",
     borderBottomColor: "#e0e0e0",
     borderStyle: "dotted",
-    width: "90%",
+    width: "100%",
     borderBottomWidth: 1,
     justifyContent: "space-between",
-    marginTop: 10,
+    paddingVertical: 5,
   },
   lastData: {
     flexDirection: "row",
-    width: "90%",
+    width: "100%",
     justifyContent: "space-between",
-    marginTop: 10,
+    paddingVertical: 5,
   },
   text2: {
-    color: "#000000",
-    fontWeight: "900",
-    fontSize: 15,
+    color: "#373737",
+    fontSize: 16,
     margin: 10,
+    fontFamily:'Roboto-Medium',
+    textTransform:'capitalize'
   },
   callText: {
     color: "#000000",
@@ -616,12 +654,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   titleContainer: {
-    padding: 15,
-    left: 8,
+    marginHorizontal: 20,
     borderBottomWidth: 0.4,
     opacity: 2,
-    shadowColor: "grey",
+    shadowColor: "#ADB0B4",
     shadowOpacity: 2,
+    paddingTop: 8,
+    paddingBottom: 18,
   },
   carousel: {
     width: "100%",
@@ -634,7 +673,11 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     textAlignVertical: "center",
   },
-  dropdownHeader: {
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 63,
+  },dropdownHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomColor: "#000000",
