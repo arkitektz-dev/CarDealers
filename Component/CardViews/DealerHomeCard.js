@@ -40,13 +40,13 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
           />
         </ImageBackground>
       </TouchableOpacity>
-      <View style={{ padding: 10 }}>
+      <View style={{ padding: 12 }}>
         <Text
           style={{
             textAlign: "left",
             color: "#5B6380",
             fontSize: 16,
-            fontWeight: "bold",
+            fontFamily:'Roboto-Bold'
           }}
         >
           {title}
@@ -55,18 +55,19 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
           style={{
             color: "black",
             fontSize: 14,
-            fontWeight: "700",
+            fontFamily:'Roboto-Bold',
             textAlign: "left",
+            width:'100%',
           }}
         >
-         {price}
+       {price}
         </Text>
         {/* <Text
           style={{
             textAlign: "left",
             color: "#ACAFB3",
             fontSize: 13,
-            fontWeight: "600",
+            fontFamily:'Roboto-Medium'
           }}
         >
           {subtitle}

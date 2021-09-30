@@ -38,7 +38,7 @@ const DealerCard = () => {
     return (
       <DealerHomeCard
         title={item.name ? autoCapitalize(`${item.name}`) : ""}
-        price={item.phone}
+        price={'+92 '+item.phone}
         image={{ uri: imageChecker(item.image) }}
         pressHandler={() => onPressHandler(item)}
       />

@@ -39,7 +39,7 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
           />
         </ImageBackground>
       </TouchableOpacity>
-      <View style={{ padding: 10 }}>
+      <View style={{ padding: 12 }}>
         <Text
           style={{
             textAlign: "left",
