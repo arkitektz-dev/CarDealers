@@ -20,7 +20,7 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import HomeCard from "../../Component/CardViews/ProfileCard";
 import { Modal } from "react-native";
 import { fetchSpecificDealer, getData } from "../../Data/FetchData";
 import AuthContext from "../../Component/Authcontext";
@@ -60,10 +60,10 @@ const BottomProfileScreen = ({ route }) => {
           arr.push(documentSnapshot.data());
         }
       });
+      setcarCount(arr.length);
       setDataCar(arr);
 
       setLoading(false);
-      setcarCount(arr.length);
     });
   };
   const modalVisible = () => {
@@ -281,7 +281,7 @@ const BottomProfileScreen = ({ route }) => {
           </View>
         ) : (
           <FlatList
-            contentContainerStyle={{ alignSelf: "center" }}
+          columnWrapperStyle={{justifyContent: 'space-around'}}
             numColumns={2}
             data={dataCar}
             renderItem={_renderItem}

@@ -264,7 +264,7 @@ const AddCar = () => {
                   minWidth: "90%",
                   isClosable: false,
                 });
-                // navigation.navigate("MyAds");
+                navigation.navigate("MyAds");
               })
               .catch((e) => console.log(e));
 
@@ -293,11 +293,11 @@ const AddCar = () => {
     "Rear View Camera",
     "4 Wheel Drive",
     "Air Conditioning",
-    "Alarm/Anti-Theft System",
+    "Anti-Theft System",
     "All Wheel Drive",
     "All Wheel Steering",
     "AM/FM Radio",
-    "Anti-Lock Brakes/ABS",
+    "ABS",
     "Aux Audio In",
     "Bluetooth System",
     "Body Kit",
@@ -323,7 +323,7 @@ const AddCar = () => {
     "Power Windows",
     "Premium Lights",
     "Premium Paint",
-    "Premium Wheels/Rims",
+    "Premium Rims",
     "Racing Seats",
     "Rear Wheel Drive",
     "Roof Rack",
@@ -333,7 +333,6 @@ const AddCar = () => {
     "Sunroof",
     "Tiptronic Gears",
     "VHS Player",
-    "The Description",
   ];
 
   const onPressHandler = async () => {
