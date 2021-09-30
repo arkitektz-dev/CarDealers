@@ -17,14 +17,12 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
       style={{
         justifyContent: "space-between",
         backgroundColor: "white",
-        // margin: 5,
         borderColor: "#ACAFB3",
         borderWidth: 0.5,
         height: 230,
         width: 300,
         marginLeft: 20,
         marginTop:20,
-        // marginBottom:
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
@@ -47,7 +45,7 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
             textAlign: "left",
             color: "#5B6380",
             fontSize: 16,
-            fontWeight: "bold",
+            fontFamily:'Roboto-Bold'
           }}
         >
           {title}
@@ -56,7 +54,7 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
           style={{
             color: "black",
             fontSize: 14,
-            fontWeight: "700",
+            fontFamily:'Roboto-Bold',
             textAlign: "left",
           }}
         >
@@ -67,7 +65,7 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
             textAlign: "left",
             color: "#ACAFB3",
             fontSize: 13,
-            fontWeight: "600",
+            fontFamily:'Roboto-Medium'
           }}
         >
           {subtitle}

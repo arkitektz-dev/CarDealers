@@ -59,9 +59,9 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
             textAlign: "left",
           }}
         >
-          PKR {price}
+         {price}
         </Text>
-        <Text
+        {/* <Text
           style={{
             textAlign: "left",
             color: "#ACAFB3",
@@ -70,7 +70,7 @@ const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) =
           }}
         >
           {subtitle}
-        </Text>
+        </Text> */}
       </View>
     </View>
   );
@@ -79,7 +79,7 @@ export default DealerHomeCard;
 const styles = StyleSheet.create({
   imageSize: {
     width: '100%',
-    height: 150,
+    height: 170,
   },
   border: {
     borderColor: "red",

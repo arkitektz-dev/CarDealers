@@ -90,7 +90,11 @@ const Card = () => {
             onPress={() => navigation.navigate("CarStack")}
           >
             <Text
-              style={{ fontSize: 15, color: "#606884",fontFamily:"Roboto-Medium" }}
+              style={{
+                fontSize: 15,
+                color: "#606884",
+                fontFamily: "Roboto-Medium",
+              }}
             >
               {" View All "}
             </Text>
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
   heading: {
     color: "#333",
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "Roboto-Bold",
   },
   border: {
     borderWidth: 1,

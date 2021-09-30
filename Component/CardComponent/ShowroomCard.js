@@ -13,7 +13,7 @@ import { fetchShowroomData } from "../../Data/FetchData";
 import ListItemSeparator from "../ItemSeperator/Index";
 import { useNavigation } from "@react-navigation/core";
 import SkeletonLoader from "../SkeletonPlaceholder/Index";
-import HomeCard from "../CardViews/HomeProductListCard";
+import DealerHomeCard from "../CardViews/DealerHomeCard";
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 
 const ShowroomCard = () => {
@@ -35,7 +35,7 @@ const ShowroomCard = () => {
   };
   const _renderItem = ({ item }) => {
     return (
-      <HomeCard
+      <DealerHomeCard
         title={item.name}
         price={item.city}
         image={{ uri: item.images[0] }}
@@ -49,11 +49,15 @@ const ShowroomCard = () => {
         flex: 1,
         flexDirection: "column",
         alignContent: "center",
-        padding: 10,
       }}
     >
-      <View style={{ flexDirection: "row", marginBottom: 5 }}>
-        <Text style={styles.heading}> OUR SHOWROOMS</Text>
+      <View style={{flexDirection: "row",
+          backgroundColor: "#F8F8F8",
+          width: "100%",
+          paddingBottom: 10,
+          paddingTop: 25,
+          paddingHorizontal: 20, }}>
+        <Text style={styles.heading}>Our Showrooms</Text>
         <View
           style={{
             flexDirection: "row",
@@ -70,7 +74,7 @@ const ShowroomCard = () => {
             }
           >
             <Text
-              style={{ fontSize: 15, fontWeight: "bold", color: "#828a9f" }}
+               style={{ fontSize: 15, color: "#606884",fontFamily:"Roboto-Medium" }}
             >
               {" View All "}
             </Text>
@@ -100,12 +104,13 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
   },
   border: {
-    right: "13%",
+    borderWidth: 1,
+    borderColor: "#606884",
+    borderRadius: 5,
   },
   heading: {
     color: "#333",
-    fontSize: 16,
-    fontWeight: "bold",
-    left: "5%",
+    fontSize: 18,
+    fontFamily:"Roboto-Bold"
   },
 });

@@ -23,7 +23,7 @@ const CategoryCard = () => {
       </View>
       <View
         style={{
-          justifyContent: "space-evenly",
+          justifyContent: "space-between",
           flexDirection: "row",
           flex: 1,
           paddingVertical: 15,
@@ -88,10 +88,8 @@ const styles = StyleSheet.create({
   },
   texthead: {
     color: "#333",
-    fontSize: 19,
-    fontWeight: "bold",
-    textAlignVertical: "center",
-    textAlign: "center",
+    fontSize: 18,
+    fontFamily:"Roboto-Bold"
   },
   text: {
     color: "black",
