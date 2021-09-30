@@ -11,20 +11,17 @@ import {
 import { screenHeight, screenWidth } from "../../Global/Dimension";
 import Loading from "../../Assets/loading.png";
 
-const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
+const DealerHomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
   return (
     <View
       style={{
         justifyContent: "space-between",
         backgroundColor: "white",
-        // margin: 5,
+        margin: 5,
         borderColor: "#ACAFB3",
         borderWidth: 0.5,
-        height: 230,
-        width: 300,
-        marginLeft: 20,
-        marginTop:15,
-        marginBottom:15
+        height: 240,
+        width: 200,
       }}
     >
       <TouchableOpacity onPress={pressHandler}>
@@ -76,10 +73,10 @@ const HomeCard = ({ image, sold, title, price, subtitle, pressHandler }) => {
     </View>
   );
 };
-export default HomeCard;
+export default DealerHomeCard;
 const styles = StyleSheet.create({
   imageSize: {
-    width: "100%",
+    width: '100%',
     height: 150,
   },
   border: {
