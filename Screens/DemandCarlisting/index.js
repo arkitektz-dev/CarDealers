@@ -57,14 +57,14 @@ const DemandCarList = () => {
     Model: "",
     Make: "",
     Year: "",
-    price: { init: "0", final: "10000000" },
+    price: { init: "0", final: "100000000" },
   });
   const onClear = () => {
     setFilter({
       Model: "",
       Make: "",
       Year: "",
-      price: { init: "0", final: "10000000" },
+      price: { init: "0", final: "100000000" },
     });
   };
   useEffect(() => {
@@ -142,7 +142,7 @@ const DemandCarList = () => {
       // setFilter({...filter,price:{final:'10000000',init:dropdownValues.price.init}})
       setFilterState(true);
     }
-    if (dropdownValues.price.final != "10000000") {
+    if (dropdownValues.price.final != "100000000") {
       console.log("max", dropdownValues.price.final);
       ref = ref.orderBy("maxPrice", "asc");
       ref = ref.where("maxPrice", "<", dropdownValues.price.final.toString());

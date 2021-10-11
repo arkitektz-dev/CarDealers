@@ -82,7 +82,7 @@ export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
     ref = ref.orderBy("minPrice", "asc");
     ref = ref.where("minPrice", ">", filter.price.init.toString());
   }
-  if (filter.price.final != "10000000") {
+  if (filter.price.final != "100000000") {
     console.log("max", filter.price.final);
     ref = ref.orderBy("maxPrice", "asc");
     ref = ref.where("maxPrice", "<", filter.price.final.toString());

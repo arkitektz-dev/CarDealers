@@ -206,7 +206,7 @@ const DetailCarScreen = ({ route, navigation }) => {
                       fontSize: 16,
                     }}
                   >
-                    Edit
+                    Update
                   </Text>
                 </TouchableOpacity>
               )}

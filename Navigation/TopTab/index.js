@@ -8,8 +8,8 @@ function DemandTabs() {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="My Demands" component={MyDemandListing} />
       <Tab.Screen name="My Ads" component={MyAd} />
+      <Tab.Screen name="My Demands" component={MyDemandListing} />
     </Tab.Navigator>
   );
 }

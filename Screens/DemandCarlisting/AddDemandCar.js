@@ -33,7 +33,7 @@ const AddDemandCar = ({ navigation, route }) => {
 
   const [rangePriceData, setRangePriceData] = useState({
     init: "0",
-    final: "10000000",
+    final: "100000000",
   });
   const [yearRange, setYearRange] = useState({ init: "1980", final: "2024" });
   const [Model, setModel] = useState("");
@@ -191,7 +191,7 @@ const AddDemandCar = ({ navigation, route }) => {
           name="category"
           onSelectItem={(item) => onChangeMake(item)}
           PickerItemComponent={CategoryPickerItem}
-          placeholder="Company"
+          placeholder="Make"
           selectedItem={make.label}
           width="90%"
         />
@@ -242,7 +242,7 @@ const AddDemandCar = ({ navigation, route }) => {
 
             <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <SliderData
-                values={[0, 10000000]}
+                values={[0, 100000000]}
                 enabledTwo={true}
                 onValueChanged={handleValuePriceChange}
               />

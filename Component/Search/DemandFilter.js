@@ -29,7 +29,7 @@ const DemandFilter = ({
     Model: "",
     Make: "",
     Year: "",
-    price: { init: "0", final: "10000000" },
+    price: { init: "0", final: "100000000" },
   });
   const [rangPriceData, setRangePriceData] = useState();
   const clearFilter = () => {
@@ -39,7 +39,7 @@ const DemandFilter = ({
       Model: "",
       Make: "",
       Year: "",
-      price: { init: "0", final: "10000000" },
+      price: { init: "0", final: "100000000" },
     });
   };
   const data = 0;
