@@ -45,8 +45,10 @@ const ListingCars = () => {
     value = await getData().then((res) => res.DealerId);
   };
   const compare = async () => {
+    setLoading(true)
     const ref = firestore()
-      .collection("Advertisments").orderBy('date','desc');
+      .collection("Advertisments")
+      .orderBy("date", "desc");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -65,15 +67,20 @@ const ListingCars = () => {
           adArr.push(documentSnapshot.data());
         }
       });
-      setfilteredData(adArr);
-      setDataCar(adArr)
+      var ar1 = adArr.filter((e) => e.adStatus.startsWith("A"));
+      var ar2 = adArr.filter((e) => e.adStatus.startsWith("S"));
+      var ar3 = adArr.filter((e) => e.adStatus.startsWith("I"));
+      let result = [...ar1, ...ar2, ...ar3];
+
+      setfilteredData(result);
+      setDataCar(result);
       setcarCount(adArr.length);
+      setLoading(false)
     });
   };
   useEffect(() => {
-    setLoading(true);
     convertData();
-    compare().then(() => setLoading(false));
+    compare();
   }, []);
 
   const onSearch = (text) => {
@@ -158,8 +165,17 @@ const ListingCars = () => {
     //     : setcarCount(filteredData.length);
     // }
   };
+
+  const onBackHandler = (item) => {
+    convertData();
+    compare();
+  };
+
   const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
+    navigation.navigate("DetailCarScreen", {
+      item,
+      onBackHandler: onBackHandler,
+    });
   };
   const _onEndReached = () => {
     setMoreLoading(true);
@@ -184,7 +200,7 @@ const ListingCars = () => {
           flexDirection: "row",
         }}
       >
-        <View  style={styles.loadMoreBtn}>
+        <View style={styles.loadMoreBtn}>
           <Text style={styles.btnText}>No more date</Text>
           {moreloading ? (
             <ActivityIndicator color="#1c2e65" style={{ marginLeft: 8 }} />

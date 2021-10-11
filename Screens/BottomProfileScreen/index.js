@@ -39,7 +39,7 @@ const BottomProfileScreen = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const dealer = authContext.user;
   const fetchData = async () => {
-    setLoading(true)
+    setLoading(true);
     const ref = firestore()
       .collection("Advertisments")
       .orderBy("date", "desc");
@@ -60,8 +60,13 @@ const BottomProfileScreen = ({ route }) => {
           arr.push(documentSnapshot.data());
         }
       });
+      
+      var ar1= arr.filter((e) => e.adStatus.startsWith("A"));
+      var ar2= arr.filter((e) => e.adStatus.startsWith("S"));
+      var ar3= arr.filter((e) => e.adStatus.startsWith("I"));
+      let result = [...ar1,...ar2,...ar3]
       setcarCount(arr.length);
-      setDataCar(arr);
+      setDataCar(result);
 
       setLoading(false);
     });
@@ -146,7 +151,7 @@ const BottomProfileScreen = ({ route }) => {
         price={`${item.amount}`}
         subtitle={`${item.vehicle.city +
           " " +
-          item.vehicle.mileage +
+          item.adStatus +
           " " +
           item.vehicle.additionalInformation.engineType} `}
         image={{ uri: item.images[0] }}
@@ -281,7 +286,7 @@ const BottomProfileScreen = ({ route }) => {
           </View>
         ) : (
           <FlatList
-          columnWrapperStyle={{justifyContent: 'space-around'}}
+            columnWrapperStyle={{ justifyContent: "space-around" }}
             numColumns={2}
             data={dataCar}
             renderItem={_renderItem}
