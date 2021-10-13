@@ -146,14 +146,14 @@ const DemandFilter = ({
           }}
         >
           <AppPicker
-            title="Company"
+            title="Make"
             items={makeCompany}
             name="category"
             onSelectItem={(item) =>
               setDropDownValues({ ...dropdownValues, Make: item.label })
             }
             PickerItemComponent={CategoryPickerItem}
-            placeholder="Select Company"
+            placeholder="Select Make"
             selectedItem={dropdownValues.Make}
             width="100%"
           />

@@ -608,7 +608,7 @@ const AddCar = () => {
                 />
               </View>
               <AppPicker
-                title="Company"
+                title="Make"
                 items={carCompany}
                 name="category"
                 onSelectItem={(item) => {
@@ -616,7 +616,7 @@ const AddCar = () => {
                   onChangeHandler2(item.categoryId);
                 }}
                 PickerItemComponent={CategoryPickerItem}
-                placeholder=" Company *"
+                placeholder=" Make *"
                 selectedItem={information.make}
                 width="95%"
               />
@@ -705,6 +705,7 @@ const AddCar = () => {
                   label={"Description"}
                   onChangeHandler={(e) => setDescription(e)}
                   multiline={true}
+                  numberOfLines={5}
                 />
               </View>
               <View style={{ width: "100%" }}>

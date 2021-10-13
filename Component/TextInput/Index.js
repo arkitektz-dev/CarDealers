@@ -10,6 +10,7 @@ const AppTextInput = ({
   returnKeyType,
   value,
   maxLength,
+  numberOfLines
 }) => {
   return (
     <>
@@ -35,6 +36,7 @@ const AppTextInput = ({
         multiline={multiline}
         label={label}
         onChangeText={onChangeHandler}
+        numberOfLines={numberOfLines}
       />
     </>
   );
