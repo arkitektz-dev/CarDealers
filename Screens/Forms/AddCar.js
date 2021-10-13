@@ -251,7 +251,7 @@ const AddCar = () => {
                 registrationCity: registrationCity,
               },
               date: date,
-              adStatus:'Active'
+              adStatus: "Active",
             };
 
             await AddCarData(obj)
@@ -476,7 +476,12 @@ const AddCar = () => {
                   Select Features
                 </Text>
               </TouchableOpacity>
-              <Modal visible={visible} animationType="fade" transparent={true}>
+              <Modal
+                visible={visible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setVisible(false)}
+              >
                 <View
                   style={{
                     flex: 1,

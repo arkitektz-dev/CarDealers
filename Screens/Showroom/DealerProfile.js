@@ -217,6 +217,7 @@ const ShowroomDealerProfile = ({ route }) => {
           >
             <Modal
               visible={visible}
+              onRequestClose={() => setVisible(false)}
               containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
             >
               <TouchableOpacity

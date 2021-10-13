@@ -190,6 +190,7 @@ const BottomProfileScreen = ({ route }) => {
         <Modal
           visible={visible}
           containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+          onRequestClose={() => setVisible(false)}
         >
           <TouchableOpacity
             onPress={modalVisible}

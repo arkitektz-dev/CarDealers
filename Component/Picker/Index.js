@@ -35,7 +35,7 @@ const AppPicker = ({
         </View>
       </TouchableWithoutFeedback>
 
-      <Modal visible={modalVisible} animationType="slide">
+      <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
         <Screen>
           <Button title="Close" onPress={() => setModalVisible(false)} />
           <FlatList

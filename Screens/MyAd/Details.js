@@ -175,7 +175,7 @@ const DetailCarScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <Modal visible={modal} animationType="fade" transparent={true}>
+        <Modal visible={modal} animationType="fade" transparent={true} onRequestClose={() => setModal(false)}>
           <View
             style={{
               flex: 1,
