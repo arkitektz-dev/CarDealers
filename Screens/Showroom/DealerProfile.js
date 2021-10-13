@@ -10,7 +10,7 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import HomeCard from "../../Component/CardViews/ProfileCard";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Modal } from "react-native";
@@ -215,7 +215,35 @@ const ShowroomDealerProfile = ({ route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <View style={{ flexDirection: "column" }}>
+            <Modal
+              visible={visible}
+              containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+            >
+              <TouchableOpacity
+                onPress={modalVisible}
+                style={{
+                  margin: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={{ color: "blue", fontSize: 18, fontWeight: "900" }}
+                >
+                  Close
+                </Text>
+              </TouchableOpacity>
+
+              <FlatList
+                renderItem={_renderShowroomList}
+                data={modalData}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </Modal>
+            <TouchableOpacity
+              style={{ flexDirection: "column" }}
+              onPress={modalVisible}
+            >
               <Text
                 style={{
                   fontSize: 35,
@@ -226,34 +254,8 @@ const ShowroomDealerProfile = ({ route }) => {
               >
                 {showroomCount}
               </Text>
-              <Modal
-                visible={visible}
-                containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
-              >
-                <TouchableOpacity
-                  onPress={modalVisible}
-                  style={{
-                    margin: 10,
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Text
-                    style={{ color: "blue", fontSize: 18, fontWeight: "900" }}
-                  >
-                    Close
-                  </Text>
-                </TouchableOpacity>
 
-                <FlatList
-                  renderItem={_renderShowroomList}
-                  data={modalData}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </Modal>
-
-              <TouchableOpacity
-                onPress={modalVisible}
+              <View
                 style={{
                   margin: 10,
                   flexDirection: "row",
@@ -262,9 +264,9 @@ const ShowroomDealerProfile = ({ route }) => {
                 style={styles.CarInfoTitle}
               >
                 <Text style={styles.countText}> SHOWROOMS </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: "column" }}>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "column" }}>
               <Text
                 style={{
                   fontSize: 35,
@@ -278,14 +280,11 @@ const ShowroomDealerProfile = ({ route }) => {
               <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> CARS </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <FlatList
-            contentContainerStyle={{
-              alignSelf: "center",
-              backgroundColor: "#fff",
-            }}
+            columnWrapperStyle={{ justifyContent: "space-around" }}
             numColumns={2}
             data={dataCar}
             ListEmptyComponent={_onEmpty}
