@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import MyAds from "../../Screens/MyAd/Listing";
 import DetailCarScreen from "../../Screens/MyAd/Details";
+import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 
 import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 
@@ -28,6 +29,11 @@ const BottomProfileScreenStack = () => {
       <Stack.Screen
         name="DetailCarScreen"
         component={DetailCarScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ShowroomDetailScreen"
+        component={ShowroomDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

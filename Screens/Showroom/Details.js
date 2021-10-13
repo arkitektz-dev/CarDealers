@@ -18,7 +18,7 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import HomeCard from "../../Component/CardViews/ProfileCard";
 import AuthContext from "../../Component/Authcontext";
 import LottieView from "lottie-react-native";
 const ShowroomDetailScreen = ({ route }) => {
@@ -353,10 +353,8 @@ const ShowroomDetailScreen = ({ route }) => {
             </View>
           </View>
           <FlatList
-            contentContainerStyle={{
-              alignSelf: "center",
-            }}
-            numColumns={2}
+           columnWrapperStyle={{ justifyContent: "space-around" }}
+           numColumns={2}
             data={dataCar}
             ListEmptyComponent={_onEmpty}
             renderItem={_renderItem}

@@ -529,17 +529,26 @@ export const fetchSpecificDealer = async (dealerId) => {
 };
 
 export const fetchSpecificUser = async (dealerId) => {
-  let arr =[]
+  let arr = [];
   const ref = firestore()
     .collection("Users")
     .where("DealerId", "==", dealerId);
 
   var data = await ref.get();
- 
+
   data.forEach((res) => {
     arr.push(res.data());
   });
-  return arr[0]
+  return arr[0];
+};
+
+export const fetchSpecificShowroom = async (id) => {
+  const cityRef = firestore()
+    .collection("Showrooms")
+    .doc(id);
+  const doc = await cityRef.get();
+  let result = { ...doc.data() ,id:id};
+  return result
 };
 
 export const fetchShowroomCar = async (value) => {

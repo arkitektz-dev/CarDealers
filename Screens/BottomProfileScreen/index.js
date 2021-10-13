@@ -22,7 +22,11 @@ import {
 } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/ProfileCard";
 import { Modal } from "react-native";
-import { fetchSpecificDealer, getData } from "../../Data/FetchData";
+import {
+  fetchSpecificDealer,
+  fetchSpecificShowroom,
+  getData,
+} from "../../Data/FetchData";
 import AuthContext from "../../Component/Authcontext";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -60,11 +64,11 @@ const BottomProfileScreen = ({ route }) => {
           arr.push(documentSnapshot.data());
         }
       });
-      
-      var ar1= arr.filter((e) => e.adStatus.startsWith("A"));
-      var ar2= arr.filter((e) => e.adStatus.startsWith("S"));
-      var ar3= arr.filter((e) => e.adStatus.startsWith("I"));
-      let result = [...ar1,...ar2,...ar3]
+
+      var ar1 = arr.filter((e) => e.adStatus.startsWith("A"));
+      var ar2 = arr.filter((e) => e.adStatus.startsWith("S"));
+      var ar3 = arr.filter((e) => e.adStatus.startsWith("I"));
+      let result = [...ar1, ...ar2, ...ar3];
       setcarCount(arr.length);
       setDataCar(result);
 
@@ -100,6 +104,14 @@ const BottomProfileScreen = ({ route }) => {
       onBackHandler: onBackHandler,
     });
   };
+  const onPressHandler2 = async (obj) => {
+    const data = await fetchSpecificShowroom(obj._documentPath._parts[1]).then(
+      (item) => {
+        modalVisible(false);
+        navigation.navigate("ShowroomDetailScreen", { item });
+      }
+    );
+  };
 
   const onBackHandler = (item) => {
     fetchData();
@@ -121,7 +133,10 @@ const BottomProfileScreen = ({ route }) => {
           }}
         >
           <TouchableOpacity
-            // onPress={() => onPressHandler2(item)}
+            onPress={() =>
+              // navigation.navigate("ShowroomDetailScreen", {item })
+              onPressHandler2(item.id)
+            }
             style={{ flexDirection: "column", margin: 15, top: 10 }}
           >
             <Text
@@ -245,7 +260,10 @@ const BottomProfileScreen = ({ route }) => {
             justifyContent: "space-evenly",
           }}
         >
-          <View style={{ flexDirection: "column" }}>
+          <TouchableOpacity
+            style={{ flexDirection: "column" }}
+            onPress={modalVisible}
+          >
             <Text
               style={{
                 fontSize: 35,
@@ -257,14 +275,14 @@ const BottomProfileScreen = ({ route }) => {
               {param && param.showrooms.length}
             </Text>
 
-            <TouchableOpacity
-              onPress={modalVisible}
-              style={styles.CarInfoTitle}
-            >
+            <View style={styles.CarInfoTitle}>
               <Text style={styles.countText}> SHOWROOMS </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "column" }}>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flexDirection: "column" }}
+            onPress={() => navigation.navigate("MyAds")}
+          >
             <Text
               style={{
                 fontSize: 35,
@@ -278,7 +296,7 @@ const BottomProfileScreen = ({ route }) => {
             <View style={styles.CarInfoTitle}>
               <Text style={styles.countText}> CARS </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         {loading ? (
           <View style={{ alignSelf: "center", marginTop: 150 }}>
