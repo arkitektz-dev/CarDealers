@@ -113,7 +113,7 @@ const DemandCarList = () => {
           .where("Make", "<=", searchText + "\uf8ff").orderBy('Make').orderBy('date','desc')
       }
 
-      var a = await ref.limit(5).get();
+      var a = await ref.limit(10).get();
       const lastVal = a.docs[a.docs.length - 1];
       console.log("lastV", lastVal);
       setStartAfter(lastVal);
@@ -162,7 +162,7 @@ const DemandCarList = () => {
 
     setFilter(dropdownValues);
     ref = ref.orderBy("date", "desc");
-    var a = await ref.limit(5).get();
+    var a = await ref.limit(10).get();
     a.docs.forEach((data) => {
       arr.push(data.data());
     });

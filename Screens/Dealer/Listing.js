@@ -60,7 +60,7 @@ const ListingDealer = () => {
           .where("name", "<=", searchText + "\uf8ff");
       }
 
-      var a = await ref.limit(20).get();
+      var a = await ref.limit(10).get();
       const lastVal = a.docs[a.docs.length - 1];
       console.log("lastV", lastVal);
       setStartAfter(lastVal);
@@ -115,7 +115,7 @@ const ListingDealer = () => {
           flexDirection: "row",
         }}
       >
-        {datalength == 20 ? (
+        {datalength == 10 ? (
           <TouchableOpacity onPress={_onEndReached} style={styles.loadMoreBtn}>
             <Text style={styles.btnText}>Load More</Text>
             {moreloading ? (

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import colors from "../../config/colors";
 import AppText from "../AppText";
-import AppLogo from "../../Assets/Sold.png";
+import AppLogo from "../../Assets/loading.png";
 function Card({ title, subTitle, image, onPressHandler }) {
   const [animating, setanimating] = React.useState(false);
   return (
@@ -17,8 +17,6 @@ function Card({ title, subTitle, image, onPressHandler }) {
         style={styles.image}
         source={{ uri: image }}
         loadingIndicatorSource={AppLogo}
-        onLoadStart={() => setanimating(true)}
-        onLoad={() => setanimating(false)}
       ></Image>
       <ActivityIndicator
         color="#1c2e65"

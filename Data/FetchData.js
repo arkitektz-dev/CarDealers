@@ -5,7 +5,7 @@ export const fetchCarData = async () => {
   const arr = [];
   const ref = firestore().collection("Advertisments");
   // .where("featured", "==", true);
-  var data = await ref.limit(20).get();
+  var data = await ref.limit(10).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -20,7 +20,7 @@ export const fetchCarListData = async () => {
   const ref = firestore().collection("Advertisments");
   var data = await ref
     .orderBy("date", "desc")
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -35,7 +35,7 @@ export const fetchDemandCarData = async () => {
   const arr = [];
   let ref = firestore().collection("Demand");
   ref = ref.orderBy("date", "desc");
-  var data = await ref.limit(5).get();
+  var data = await ref.limit(10).get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
   data.forEach((res) => {
@@ -51,7 +51,7 @@ export const fetchMoreDemandCar = async (startAfter) => {
   ref = ref.orderBy("date", "desc");
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -92,7 +92,7 @@ export const fetchMoreDemandCarWithFilter = async (startAfter, filter) => {
   console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -118,7 +118,7 @@ export const fetchMoreDemandWithSearch = async (startAfter, searchText) => {
   }
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -173,7 +173,7 @@ export const fetchMoreCarSearch = async (startAfter, filter) => {
 
   var data = await ref
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -259,7 +259,7 @@ export const fetchMoreCar = async (startAfter, filter) => {
   console.log(startAfter, "last bacl");
   var data = await ref
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -277,7 +277,7 @@ export const fetchMoreCarWithoutFilter = async (startAfter) => {
   var data = await ref
     .orderBy("date", "desc")
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -299,7 +299,7 @@ export const fetchMoreCarWithSearch = async (startAfter, searchText) => {
   }
   var data = await ref
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -316,7 +316,7 @@ export const fetchMoreDealer = async (startAfter) => {
   const ref = firestore().collection("Users");
   var data = await ref
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -335,7 +335,7 @@ export const fetchMoreShowroom = async (startAfter) => {
   const arr = [];
   var data = await ref
     .startAfter(startAfter)
-    .limit(5)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -350,7 +350,7 @@ export const fetchDealerData = async () => {
   const arr = [];
   const ref = firestore().collection("Users");
 
-  const data = await ref.limit(20).get();
+  const data = await ref.limit(10).get();
   const lastVal = data.docs[data.docs.length - 1];
 
   const size = data.size;
@@ -375,7 +375,7 @@ export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
   }
   var data = await ref
     .startAfter(startAfter)
-    .limit(20)
+    .limit(10)
     .get();
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
@@ -392,7 +392,7 @@ export const fetchShowroomData = async () => {
     .orderBy("name");
 
   const arr = [];
-  const data = await ref.limit(5).get();
+  const data = await ref.limit(10).get();
   const size = data.size;
   const lastVal = data.docs[data.docs.length - 1];
 

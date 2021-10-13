@@ -106,7 +106,7 @@ const ListingCars = () => {
           .where("vehicle.information.make", "<=", searchText + "\uf8ff");
       }
 
-      var a = await ref.limit(20).get();
+      var a = await ref.limit(10).get();
       const lastVal = a.docs[a.docs.length - 1];
       console.log("lastV", lastVal);
       setStartAfter(lastVal);
@@ -257,7 +257,7 @@ const ListingCars = () => {
       setFilterState(true);
     }
     ref = ref.orderBy("date", "desc");
-    var a = await ref.limit(20).get();
+    var a = await ref.limit(10).get();
     const lastVal = a.docs[a.docs.length - 1];
     console.log("lastV", lastVal);
     setStartAfter(lastVal);
@@ -278,7 +278,7 @@ const ListingCars = () => {
     navigation.navigate("DetailCarScreen", { item });
   };
   const _renderFooter = () => {
-    if (dataCar.length == 20)
+    if (dataCar.length == 10)
       return (
         <View
           style={{
