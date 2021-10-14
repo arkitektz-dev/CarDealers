@@ -9,8 +9,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
+  ScrollView,
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import AppCheckBox from "../../Component/AppCheckbox";
+import { useToast } from "native-base";
 
 import LottieView from "lottie-react-native";
 
@@ -20,6 +24,7 @@ import {
   fetchDealerCar,
   fetchMoreCar,
   getData,
+  UpdateDemandData,
 } from "../../Data/FetchData";
 import { SearchComponent } from "../../Component/Search";
 import Filter from "../../Component/Search/Fliter";
@@ -31,6 +36,8 @@ import DemandFilter from "../../Component/Search/DemandFilter";
 const MyDemandListing = () => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
+  const toast = useToast();
+
   const [filteredData, setfilteredData] = useState([]);
   const [search, setSearch] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -41,16 +48,27 @@ const MyDemandListing = () => {
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
   const [noData, setNoData] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState(false);
+  const [stateChange, setStateChange] = useState(false);
+  const [statusLoader, setStatusLoader] = useState(false);
+  const [checkbox, setCheckbox] = useState([]);
+
+  const statuses = ["Active", "Inactive", "Sold"];
   var value;
   const adArr = [];
   const navigation = useNavigation();
-
+  const onChangeHandler = (item) => {
+    setCheckbox([item]);
+  };
   const convertData = async () => {
     value = await getData().then((res) => res.DealerId);
   };
 
   const compare = async () => {
-    const ref = firestore().collection("Demand").orderBy('date','desc');
+    const ref = firestore()
+      .collection("Demand")
+      .orderBy("date", "desc");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -66,10 +84,15 @@ const MyDemandListing = () => {
         const paramdealerId = value;
 
         if (dealerId == paramdealerId) {
-          adArr.push(documentSnapshot.data());
+          adArr.push({...documentSnapshot.data(),id: documentSnapshot.id});
         }
       });
-      setDataCar(adArr);
+      
+      var ar1 = adArr.filter((e) => e.adStatus.startsWith("A"));
+      var ar2 = adArr.filter((e) => e.adStatus.startsWith("S"));
+      var ar3 = adArr.filter((e) => e.adStatus.startsWith("I"));
+      let result = [...ar1, ...ar2, ...ar3];
+      setDataCar(result);
       setcarCount(adArr.length);
     });
   };
@@ -129,7 +152,32 @@ const MyDemandListing = () => {
         : setcarCount(dataCar.length);
     }
   };
+  const onEdit = (item) => {
+    if (checkbox[0] == item.adStatus) {
+      setModal(false);
+    } else {
+      setStatusLoader(true);
+      UpdateDemandData(item, checkbox[0], functionBack, item.id);
+    }
+  };
+  const functionBack = (data) => {
+    console.log("back called");
 
+    setModal(false);
+
+    toast.show({
+      title: "Status Changed",
+      status: "success",
+      description: "Your Ad. status has been changed",
+      duration: 1500,
+      minWidth: "90%",
+      isClosable: false,
+    });
+    setStatusLoader(false);
+    setLoading(true);
+    convertData();
+    compare().then(() => setLoading(false));
+  };
   const _renderFooter = () => {
     return (
       <View
@@ -169,17 +217,29 @@ const MyDemandListing = () => {
           }}
         >
           <View style={{ flexDirection: "column", margin: 15, top: 10 }}>
-            <Text
-              style={{
-                textAlign: "left",
-                color: "#565656",
-                fontSize: 16,
-                fontWeight: "bold",
-              }}
-            >
-              {item.Make} {item.Model} {"\b"}
-              {item.Year}
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  color: "#565656",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.Make} {item.Model} {"\b"}
+                {item.Year}
+              </Text>
+              <Text
+                style={{
+                  textAlign: "left",
+                  color: "#565656",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                - {item?.adStatus}
+              </Text>
+            </View>
             <View style={{ height: 10 }}></View>
 
             <Text
@@ -205,7 +265,25 @@ const MyDemandListing = () => {
             >
               {`${item.minYear} - ${item.maxYear}`}
             </Text>
-
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#A7D2DE",
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 5,
+                width: 120,
+              }}
+              onPress={() => {
+                setCheckbox([item.adStatus]);
+                setModalData(item);
+                setModal(true);
+              }}
+            >
+              <Text style={[styles.location, { color: "black" }]}>
+                Change Status{" "}
+              </Text>
+            </TouchableOpacity>
             <View style={{ height: 10 }}></View>
 
             {/* <Text
@@ -240,6 +318,76 @@ const MyDemandListing = () => {
   };
   return (
     <View style={{ backgroundColor: "white" }}>
+      <Modal
+        visible={modal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setModal(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+
+            backgroundColor: "rgba(0,0,0,0.7)",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <View style={styles.dropdownHeader}>
+            <Text
+              style={{
+                color: "#000000",
+                fontSize: 16,
+              }}
+            >
+              Change Status
+            </Text>
+            {statusLoader ? (
+              <ActivityIndicator size="small" color="#1e2d64" />
+            ) : (
+              <TouchableOpacity onPress={() => onEdit(modalData)}>
+                <Text
+                  style={{
+                    color: "#1e2d64",
+                    fontSize: 16,
+                  }}
+                >
+                  Update
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <ScrollView style={styles.form_container}>
+            {statuses.map((item) => {
+              return (
+                <TouchableOpacity
+                  style={styles.checkerItem}
+                  activeOpacity={0.8}
+                  onPress={() => onChangeHandler(item)}
+                >
+                  <Text
+                    style={{
+                      color: checkbox.includes(item) ? "black" : "grey",
+                      fontSize: 18,
+                      fontWeight: "800",
+                      marginTop: 5,
+                    }}
+                    key={(item, index) => index.toString()}
+                  >
+                    {item}
+                  </Text>
+                  {checkbox.includes(item) ? (
+                    <AppCheckBox
+                      status={checkbox.includes(item) ? "checked" : "unchecked"}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      </Modal>
       <View style={styles.searchHolder}>
         <IonIcon
           style={{ margin: 10 }}
@@ -361,6 +509,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.5,
+    height: 55,
+    backgroundColor: "white",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: "100%",
+    marginTop: 80,
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  checkerItem: {
+    flexDirection: "row",
+    marginTop: 9,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.5,
+    justifyContent: "space-between",
+    paddingVertical: 7,
+    minHeight: 52,
+  },
+  form_container: {
+    paddingBottom: "20%",
+    backgroundColor: "#fff",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  location: {
+    fontSize: 15,
+    fontFamily: "Roboto-Medium",
   },
 });
 

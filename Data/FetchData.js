@@ -551,6 +551,22 @@ export const fetchSpecificShowroom = async (id) => {
   return result
 };
 
+
+export const UpdateDemandData = async (carData, status, functionBack, id) => {
+  console.log(id,carData)
+  const caller = (id) => {
+    firestore()
+      .collection("Demand")
+      .doc(id)
+      .update({ ...carData, adStatus: status })
+      .then(async () => {
+        functionBack({ ...carData, adStatus: status });
+      });
+  };
+  caller(id);
+};
+
+
 export const fetchShowroomCar = async (value) => {
   return await firestore()
     .collection("Dealers")

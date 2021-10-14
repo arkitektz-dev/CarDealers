@@ -207,6 +207,8 @@ const DemandFilter = ({
               }
               onValueChanged={handleValueChange}
               values={[dropdownValues.price.init, dropdownValues.price.final]}
+              max={100000000}
+              step={100000}
             />
           </View>
 

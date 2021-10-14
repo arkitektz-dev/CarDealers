@@ -94,6 +94,7 @@ const AddDemandCar = ({ navigation, route }) => {
       maxYear: yearRange.final,
       minPrice: `${rangePriceData.init}`,
       maxPrice: `${rangePriceData.final}`,
+      adStatus: "Active",
       date:date
     };
     const obj = {
@@ -245,6 +246,8 @@ const AddDemandCar = ({ navigation, route }) => {
                 values={[0, 100000000]}
                 enabledTwo={true}
                 onValueChanged={handleValuePriceChange}
+                max={100000000}
+                step={100000}
               />
             </View>
           </View>
