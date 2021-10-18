@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   FlatList,
+  ScrollView,
 } from "react-native";
 import AppText from "../AppText";
 import PickerItem from "./PickerItem";
@@ -26,13 +27,13 @@ const AppPicker = ({
   width = "100%",
   title,
   initialIcon,
-  style
+  style,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-        <View style={[styles.container, { width },style]}>
+        <View style={[styles.container, { width }, style]}>
           {initialIcon}
 
           {selectedItem ? (
@@ -46,21 +47,23 @@ const AppPicker = ({
       <Modal
         onRequestClose={() => setModalVisible(false)}
         visible={modalVisible}
-        animationType="slide"
+        animationType="fade"
+        transparent={true}
       >
-        <Screen>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              borderBottomColor: "#000000",
-              borderBottomWidth: 0.5,
-            }}
-          >
+        <View
+          style={{
+            flex: 1,
+
+            backgroundColor: "rgba(0,0,0,0.7)",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <View style={styles.dropdownHeader}>
             <Text
               style={{
                 color: "#000000",
-                margin: 10,
                 fontSize: 16,
               }}
             >
@@ -69,36 +72,61 @@ const AppPicker = ({
             <TouchableOpacity onPress={() => setModalVisible(false)}>
               <Text
                 style={{
-                  color: "#000000",
+                  color: "#1e2d64",
                   fontSize: 16,
-                  margin: 10,
                 }}
               >
-                Close
+                Cancel
               </Text>
             </TouchableOpacity>
           </View>
-
-          <FlatList
-            data={items}
-            keyExtractor={(item) => item.value.toString()}
-            numColumns={numberOfColumns}
-            renderItem={({ item }) => (
-              <View
-                style={{ borderBottomWidth: 1, borderBottomColor: "#000000" }}
-              >
-                <PickerItemComponent
-                  item={item}
-                  label={item.label}
+          {items?.length !== 0 ? (
+            <FlatList
+              data={items}
+              keyExtractor={(item) => item.value.toString()}
+              numColumns={numberOfColumns}
+              style={styles.form_container}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.checkerItem}
+                  activeOpacity={0.8}
                   onPress={() => {
                     setModalVisible(false);
                     onSelectItem(item);
                   }}
-                />
-              </View>
-            )}
-          />
-        </Screen>
+                >
+                  <Text
+                    style={{
+                      color: "grey",
+                      fontSize: 18,
+                      fontWeight: "800",
+                      marginTop: 5,
+                    }}
+                    key={(item, index) => index.toString()}
+                  >
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <ScrollView style={styles.form_container}>
+
+            <Text
+              style={{
+                color: "grey",
+                fontSize: 22,
+                fontWeight: "800",
+                marginTop: 80,
+                textAlign:'center'
+                
+              }}
+            >
+              No {title} Available
+            </Text>
+            </ScrollView>
+          )}
+        </View>
       </Modal>
     </>
   );
@@ -126,5 +154,35 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  form_container: {
+    paddingBottom: "20%",
+    backgroundColor: "#fff",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.5,
+    height: 55,
+    backgroundColor: "white",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: "100%",
+    marginTop: 80,
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  checkerItem: {
+    flexDirection: "row",
+    marginTop: 9,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.5,
+    justifyContent: "space-between",
+    paddingVertical: 7,
+    minHeight: 52,
   },
 });
