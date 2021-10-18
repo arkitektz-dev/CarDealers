@@ -321,8 +321,10 @@ export const fetchMoreDealer = async (startAfter) => {
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
 
+  
   data.forEach((res) => {
-    arr.push(res.data());
+    const obj = { ...res.data(), id: res.id };
+    arr.push(obj);
   });
 
   return { size, arr, lastVal };

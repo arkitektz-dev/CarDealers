@@ -18,7 +18,7 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import HomeCard from "../../Component/CardViews/HomeProductListCard";
+import HomeCard from "../../Component/CardViews/ProfileCard";
 import { Modal } from "react-native";
 
 const DealerDetailScreen = ({ route }) => {
@@ -32,8 +32,9 @@ const DealerDetailScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
-  
-    const ref = firestore().collection("Advertisments").orderBy('date','desc');
+    const ref = firestore()
+      .collection("Advertisments")
+      .orderBy("date", "desc");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -45,7 +46,7 @@ const DealerDetailScreen = ({ route }) => {
             .dealer.id.id.toString()
             .trim();
         }
-      
+
         const paramdealerId = param.DealerId._documentPath._parts[1].toString();
         if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
@@ -207,11 +208,11 @@ const DealerDetailScreen = ({ route }) => {
               }}
             >
               <Image
-                source={{uri:imageChecker(param.image)}}
+                source={{ uri: imageChecker(param.image) }}
                 style={{
                   width: 85,
                   height: 85,
-                  borderRadius:50
+                  borderRadius: 50,
                 }}
               />
               <View style={{ width: 15 }}></View>
@@ -233,9 +234,7 @@ const DealerDetailScreen = ({ route }) => {
                   <View style={{ flexDirection: "column" }}>
                     <Text style={styles.h1}>{param.showrooms[0].name}</Text>
 
-                    <Text style={styles.txt1}>
-                      {param.phone}
-                    </Text>
+                    <Text style={styles.txt1}>{param.phone}</Text>
                   </View>
                 </View>
               </View>
@@ -267,7 +266,10 @@ const DealerDetailScreen = ({ route }) => {
                 <Text style={styles.countText}> SHOWROOMS </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: "column" }}>
+            <TouchableOpacity
+              style={{ flexDirection: "column" }}
+              onPress={() => navigation.navigate("DealerAds",{param})}
+            >
               <Text
                 style={{
                   fontSize: 35,
@@ -281,14 +283,15 @@ const DealerDetailScreen = ({ route }) => {
               <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> CARS </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <FlatList
             contentContainerStyle={{
-              alignSelf: "center",
+              alignSelf: dataCar.length > 0 ? "auto" : "center",
               backgroundColor: "#fff",
             }}
+            columnWrapperStyle={{ justifyContent: "space-around" }}
             numColumns={2}
             ListEmptyComponent={_onEmpty}
             data={dataCar}
