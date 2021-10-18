@@ -26,7 +26,7 @@ import { screenHeight, screenWidth } from "../../Global/Dimension";
 import { RefreshControl } from "react-native";
 import changeNumberFormat from "../../Component/Converter";
 
-const ListingCars = ({data}) => {
+const ListingCars = ({ data }) => {
   const [dataCar, setDataCar] = useState([]);
   const [carCount, setcarCount] = useState(0);
   const [filteredData, setfilteredData] = useState([]);
@@ -43,10 +43,9 @@ const ListingCars = ({data}) => {
   const navigation = useNavigation();
   const convertData = async () => {
     value = data.route.params.param.DealerId._documentPath._parts[1];
-    
   };
   const compare = async () => {
-    setLoading(true)
+    setLoading(true);
     const ref = firestore()
       .collection("Advertisments")
       .orderBy("date", "desc");
@@ -76,12 +75,43 @@ const ListingCars = ({data}) => {
       setfilteredData(result);
       setDataCar(result);
       setcarCount(adArr.length);
+      setLoading(false);
+    });
+  };
+
+  const fetchDataForShowrrom = async () => {
+    setLoading(true);
+    const ref = firestore().collection("Advertisments");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        let showroomDataId;
+        if (typeof documentSnapshot.data().showroom.id == "string") {
+          showroomDataId = documentSnapshot.data().showroom.id;
+          console.log('s')
+        } else {
+          console.log(documentSnapshot
+            .data().showroom)
+          showroomDataId = documentSnapshot
+            .data()
+            .showroom.id;
+        }
+        const paramShowroomId = data.route.params.param.showroomId;
+      
+        if (showroomDataId == paramShowroomId)
+        adArr.push(documentSnapshot.data());
+      });
+      setDataCar(adArr);
+      setcarCount(adArr.length);
       setLoading(false)
     });
   };
   useEffect(() => {
-    convertData();
-    compare();
+    if (data.route.params.dealer) {
+      convertData();
+      compare();
+    } else {
+      fetchDataForShowrrom()
+    }
   }, []);
 
   const onSearch = (text) => {

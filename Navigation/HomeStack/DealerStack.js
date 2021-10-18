@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import DealerScreen from "../../Screens/Dealer";
 import ListingDealer from "../../Screens/Dealer/Listing";
-import DealerAds from "../../Screens/DealerAds/index";
+import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
 
 const DealerStack = () => {
   const Stack = createStackNavigator();
@@ -15,8 +15,8 @@ const DealerStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="DealerAds"
-        component={DealerAds}
+        name="GeneralAdScreen"
+        component={GeneralAdScreen}
         options={{ headerShown: false }}
       />
 

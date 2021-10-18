@@ -268,7 +268,7 @@ const DealerDetailScreen = ({ route }) => {
             </View>
             <TouchableOpacity
               style={{ flexDirection: "column" }}
-              onPress={() => navigation.navigate("DealerAds",{param})}
+              onPress={() => navigation.navigate("GeneralAdScreen",{param:param,dealer:true})}
             >
               <Text
                 style={{

@@ -84,16 +84,11 @@ const ShowroomDetailScreen = ({ route }) => {
         let showroomDataId;
         if (typeof documentSnapshot.data().showroom.id == "string") {
           showroomDataId = documentSnapshot.data().showroom.id;
-          console.log('s')
         } else {
-          console.log(documentSnapshot
-            .data().showroom)
-          showroomDataId = documentSnapshot
-            .data()
-            .showroom.id;
+          showroomDataId = documentSnapshot.data().showroom.id;
         }
         const paramShowroomId = showroomId;
-      
+
         if (showroomDataId == paramShowroomId)
           arr.push(documentSnapshot.data());
       });
@@ -336,7 +331,15 @@ const ShowroomDetailScreen = ({ route }) => {
                 <Text style={styles.countText}> Dealers </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: "column" }}>
+            <TouchableOpacity
+              style={{ flexDirection: "column" }}
+              onPress={() =>
+                navigation.navigate("GeneralAdScreen", {
+                  param: { showroomId: showroomId },
+                  dealer: false,
+                })
+              }
+            >
               <Text
                 style={{
                   fontSize: 35,
@@ -350,11 +353,11 @@ const ShowroomDetailScreen = ({ route }) => {
               <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> Cars </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
           <FlatList
-           columnWrapperStyle={{ justifyContent: "space-around" }}
-           numColumns={2}
+            columnWrapperStyle={{ justifyContent: "space-around" }}
+            numColumns={2}
             data={dataCar}
             ListEmptyComponent={_onEmpty}
             renderItem={_renderItem}
