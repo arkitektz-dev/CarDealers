@@ -156,11 +156,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   form_container: {
-    paddingBottom: "20%",
     backgroundColor: "#fff",
     width: "100%",
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingVertical: 20,
+
   },
   dropdownHeader: {
     flexDirection: "row",
@@ -178,11 +178,12 @@ const styles = StyleSheet.create({
   },
   checkerItem: {
     flexDirection: "row",
-    marginTop: 9,
+    // marginTop: 9,
     borderBottomColor: "grey",
     borderBottomWidth: 0.5,
     justifyContent: "space-between",
     paddingVertical: 7,
     minHeight: 52,
+    marginBottom:10
   },
 });

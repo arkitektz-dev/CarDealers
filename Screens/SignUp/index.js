@@ -430,11 +430,12 @@ export const SignupScreen = () => {
                 style={{ color: "#9B9B9B", fontSize: 17 }}
                 onPress={onModalHandler}
               >
-                Select Showrooms
+                {checkbox.length == 0 ? 'Select Showrooms' : `Selected Showrooms:  ${checkbox?.length}`}
+                
               </Text>
               <Feather name="arrow-down" size={14} color="#9B9B9B" />
             </TouchableOpacity>
-            <Modal
+            {/* <Modal
               onRequestClose={() => setVisible(false)}
               visible={visible}
               animationType="slide"
@@ -471,6 +472,74 @@ export const SignupScreen = () => {
                   );
                 })}
               </ScrollView>
+            </Modal> */}
+            <Modal
+              visible={visible}
+              animationType="fade"
+              transparent={true}
+              onRequestClose={() => setVisible(false)}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  //backgroundColor: 'transparent',
+                  backgroundColor: "rgba(0,0,0,0.7)",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <View style={styles.dropdownHeader}>
+                  <Text
+                    style={{
+                      color: "#000000",
+                      fontSize: 16,
+                    }}
+                  >
+                    Select Showroom
+                  </Text>
+                  <TouchableOpacity onPress={() => setVisible(false)}>
+                    <Text
+                      style={{
+                        color: "#1e2d64",
+                        fontSize: 16,
+                      }}
+                    >
+                      Close
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.form_container_modal}>
+                  {showroomData.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        style={styles.checkerItem}
+                        activeOpacity={0.8}
+                        onPress={() => onChangeHandler(item)}
+                      >
+                        <Text
+                          style={{
+                            color: checkbox.includes(item) ? "black" : "grey",
+                            fontSize: 18,
+                            fontWeight: "800",
+                            marginTop: 5,
+                          }}
+                          key={(item, index) => index.toString()}
+                        >
+                          {item.label}
+                        </Text>
+                        {checkbox.includes(item) ? (
+                          <AppCheckBox
+                            status={
+                              checkbox.includes(item) ? "checked" : "unchecked"
+                            }
+                          />
+                        ) : null}
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
             </Modal>
           </View>
           {confirmPasswordError ? (
@@ -918,5 +987,36 @@ const styles = StyleSheet.create({
     width: titleWidth,
     justifyContent: "center",
     flexDirection: "column",
+  },
+  form_container_modal: {
+    backgroundColor: "#fff",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#000000",
+    borderBottomWidth: 0.5,
+    height: 55,
+    backgroundColor: "white",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: "100%",
+    marginTop: 80,
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  checkerItem: {
+    flexDirection: "row",
+    // marginTop: 9,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.5,
+    justifyContent: "space-between",
+    paddingVertical: 7,
+    minHeight: 52,
+    marginBottom:10
   },
 });
