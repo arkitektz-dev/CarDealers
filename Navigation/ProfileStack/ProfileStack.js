@@ -7,6 +7,8 @@ import ShowroomDealerProfile from "../../Screens/Showroom/DealerProfile";
 import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
 import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 import ShowroomScreen from "../../Screens/GeneralShowroomScreen/index";
+import GeneralDealerScreen from "../../Screens/GeneralDealerScreen/index";
+import DealerDetailScreen from "../../Screens/Dealer/Detail";
 
 const BottomProfileScreenStack = () => {
   const Stack = createStackNavigator();
@@ -51,6 +53,16 @@ const BottomProfileScreenStack = () => {
       <Stack.Screen
         name="GeneralAdScreen"
         component={GeneralAdScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GeneralDealerScreen"
+        component={GeneralDealerScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DealerDetailScreen"
+        component={DealerDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

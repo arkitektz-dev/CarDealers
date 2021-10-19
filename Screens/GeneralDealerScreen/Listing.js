@@ -54,28 +54,9 @@ const ListingDealer = ({ data }) => {
     if (searchText) {
       setSearchLoadMore(true);
       setLoading(true);
-
-      const arr = [];
-      let ref = firestore().collection("Users");
-
-      if (searchText != "") {
-        ref = firestore()
-          .collection("Users")
-          .where("name", ">=", searchText)
-          .where("name", "<=", searchText + "\uf8ff");
-      }
-
-      var a = await ref.limit(10).get();
-      const lastVal = a.docs[a.docs.length - 1];
-      console.log("lastV", lastVal);
-      setStartAfter(lastVal);
-      a.docs.forEach((data) => {
-        arr.push(data.data());
-      });
-      console.log(arr);
-      setDealerData(arr);
-
-      setDealerCount(arr.length);
+      let result =filteredData.filter(e=> e.name.includes(searchText))
+      setDealerData(result)
+      setDealerCount(result.length)
 
       setLoading(false);
     }
