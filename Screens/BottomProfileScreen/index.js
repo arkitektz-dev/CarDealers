@@ -23,6 +23,7 @@ import {
 import HomeCard from "../../Component/CardViews/ProfileCard";
 import { Modal } from "react-native";
 import {
+  
   fetchSpecificDealer,
   fetchSpecificShowroom,
   getData,
@@ -87,6 +88,7 @@ const BottomProfileScreen = ({ route }) => {
       setParam(res.data());
 
       setModalData(res.data().showrooms);
+     
     });
 
     fetchData();
@@ -263,7 +265,8 @@ const BottomProfileScreen = ({ route }) => {
         >
           <TouchableOpacity
             style={{ flexDirection: "column" }}
-            onPress={modalVisible}
+            // onPress={modalVisible}
+              onPress={() => navigation.navigate("ShowroomScreen",modalData)}
           >
             <Text
               style={{

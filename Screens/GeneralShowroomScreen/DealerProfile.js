@@ -1,12 +1,5 @@
-import React, { memo, useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Image, StyleSheet, Text, View, FlatList } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import LottieView from "lottie-react-native";
@@ -14,16 +7,16 @@ import Profile from "../../Assets/BlueProfileLogo.png";
 import { useNavigation } from "@react-navigation/core";
 import {
   autoCapitalize,
-  imageChecker,
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
 import HomeCard from "../../Component/CardViews/ProfileCard";
+import { useState } from "react";
+import { TouchableOpacity } from "react-native";
 import { Modal } from "react-native";
-
-
-const DealerDetailScreen = ({ route }) => {
-  const param = route.params.item;
+const ShowroomDealerProfile = ({ route }) => {
+  const param = route.params.item.data;
+  const paramId = route.params.item.id;
 
   const [showroomCount, setshowroomCount] = useState(0);
   const [carCount, setcarCount] = useState(0);
@@ -31,11 +24,8 @@ const DealerDetailScreen = ({ route }) => {
   const [modalData, setModalData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const fetchData = async () => {
-    const ref = firestore()
-      .collection("Advertisments")
-      .orderBy("date", "desc");
+    const ref = firestore().collection("Advertisments");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         let dealerId;
@@ -47,8 +37,7 @@ const DealerDetailScreen = ({ route }) => {
             .dealer.id.id.toString()
             .trim();
         }
-
-        const paramdealerId = param.DealerId._documentPath._parts[1].toString();
+        const paramdealerId = paramId.toString();
         if (dealerId == paramdealerId) {
           arr.push(documentSnapshot.data());
         }
@@ -56,24 +45,6 @@ const DealerDetailScreen = ({ route }) => {
       setDataCar(arr);
       setcarCount(arr.length);
     });
-  };
-  const modalVisible = () => {
-    if (visible == false) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  };
-  useEffect(() => {
-    setLoading(true);
-    setModalData(param.showrooms);
-    
-    setshowroomCount(param.showrooms.length);
-    fetchData().then(() => setLoading(false));
-  }, []);
-  const arr = [];
-  const onPressHandler = (item) => {
-    navigation.navigate("DetailCarScreen", { item });
   };
   const onPressShowroomHandeler = (item) => {
     setVisible(false);
@@ -113,6 +84,22 @@ const DealerDetailScreen = ({ route }) => {
       </View>
     );
   };
+  useEffect(() => {
+    setLoading(true);
+    setshowroomCount(param.showrooms.length);
+    fetchData().then(() => setLoading(false));
+    setModalData(route.params.item.data.showrooms);
+  }, []);
+  const modalVisible = () => {
+    if (visible == false) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
+  const arr = [];
+  const navigation = useNavigation();
+
   const _renderItem = ({ item }) => {
     return (
       <HomeCard
@@ -138,29 +125,19 @@ const DealerDetailScreen = ({ route }) => {
     return (
       <View
         style={{
-          flexDirection: "column",
-          backgroundColor: "#fff",
           top: "40%",
           paddingBottom: "90%",
+          flex: 1,
+          flexDirection: "column",
+          backgroundColor: "#fff",
         }}
       >
         <Text style={{ fontSize: 20 }}> No Cars Available </Text>
       </View>
     );
   };
-  const navigation = useNavigation();
   return (
     <>
-      <View style={styles.searchHolder}>
-        <IonIcon
-          style={{ margin: 10 }}
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={35}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headingText}>Dealer Profile</Text>
-      </View>
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}
@@ -176,29 +153,16 @@ const DealerDetailScreen = ({ route }) => {
         />
       ) : (
         <View style={styles.parent}>
-          <Modal
-            visible={visible}
-            containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
-          >
-            <TouchableOpacity
-              onPress={modalVisible}
-              style={{
-                margin: 10,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Text style={{ color: "blue", fontSize: 18, fontWeight: "900" }}>
-                Close
-              </Text>
-            </TouchableOpacity>
-
-            <FlatList
-              renderItem={_renderShowroomList}
-              data={modalData}
-              keyExtractor={(item, index) => index.toString()}
+          <View style={styles.searchHolder}>
+            <IonIcon
+              style={{ margin: 10 }}
+              name="chevron-back-circle-sharp"
+              color="white"
+              size={35}
+              onPress={() => navigation.goBack()}
             />
-          </Modal>
+            <Text style={styles.headingText}>Dealer Profile</Text>
+          </View>
 
           <View style={styles.distance}></View>
           <View style={styles.topDiv}>
@@ -210,11 +174,10 @@ const DealerDetailScreen = ({ route }) => {
               }}
             >
               <Image
-                source={{ uri: imageChecker(param.image) }}
+                source={Profile}
                 style={{
                   width: 85,
                   height: 85,
-                  borderRadius: 50,
                 }}
               />
               <View style={{ width: 15 }}></View>
@@ -236,7 +199,9 @@ const DealerDetailScreen = ({ route }) => {
                   <View style={{ flexDirection: "column" }}>
                     <Text style={styles.h1}>{param.showrooms[0].name}</Text>
 
-                    <Text style={styles.txt1}>{param.phone}</Text>
+                    <Text style={styles.txt1}>
+                      {param.contactInformation[0]}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -250,7 +215,36 @@ const DealerDetailScreen = ({ route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <View style={{ flexDirection: "column" }}>
+            <Modal
+              visible={visible}
+              onRequestClose={() => setVisible(false)}
+              containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+            >
+              <TouchableOpacity
+                onPress={modalVisible}
+                style={{
+                  margin: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={{ color: "blue", fontSize: 18, fontWeight: "900" }}
+                >
+                  Close
+                </Text>
+              </TouchableOpacity>
+
+              <FlatList
+                renderItem={_renderShowroomList}
+                data={modalData}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </Modal>
+            <TouchableOpacity
+              style={{ flexDirection: "column" }}
+              onPress={modalVisible}
+            >
               <Text
                 style={{
                   fontSize: 35,
@@ -261,17 +255,19 @@ const DealerDetailScreen = ({ route }) => {
               >
                 {showroomCount}
               </Text>
-              <TouchableOpacity
+
+              <View
+                style={{
+                  margin: 10,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
                 style={styles.CarInfoTitle}
-                onPress={modalVisible}
               >
                 <Text style={styles.countText}> SHOWROOMS </Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={{ flexDirection: "column" }}
-              onPress={() => navigation.navigate("GeneralAdScreen",{param:param,dealer:true})}
-            >
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "column" }}>
               <Text
                 style={{
                   fontSize: 35,
@@ -289,15 +285,11 @@ const DealerDetailScreen = ({ route }) => {
           </View>
 
           <FlatList
-            contentContainerStyle={{
-              alignSelf: dataCar.length > 0 ? "auto" : "center",
-              backgroundColor: "#fff",
-            }}
             columnWrapperStyle={{ justifyContent: "space-around" }}
             numColumns={2}
-            ListEmptyComponent={_onEmpty}
             data={dataCar}
-            renderItem={dataCar.length > 0 ? _renderItem : _onEmpty}
+            ListEmptyComponent={_onEmpty}
+            renderItem={_renderItem}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
@@ -305,11 +297,9 @@ const DealerDetailScreen = ({ route }) => {
     </>
   );
 };
-export default memo(DealerDetailScreen);
+export default ShowroomDealerProfile;
 const styles = StyleSheet.create({
-  Nav: {
-    flexDirection: "row",
-  },
+  Nav: { flexDirection: "row" },
   distance: {
     height: screenHeight * 0.035,
   },
@@ -349,11 +339,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     color: "white",
-    // marginBottom: 5,
+    marginBottom: 5,
   },
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
+    flexGrow: 1,
   },
   countText: {
     fontWeight: "bold",
@@ -364,7 +355,7 @@ const styles = StyleSheet.create({
   },
   DealerName: {
     backgroundColor: "#1c2e65",
-    // maxWidth:150
+    justifyContent: "center",
   },
   CarInfoTitle: {
     backgroundColor: "#1c2e65",

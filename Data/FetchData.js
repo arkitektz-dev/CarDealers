@@ -1,4 +1,4 @@
-import firestore from "@react-native-firebase/firestore";
+import firestore, { firebase } from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const fetchCarData = async () => {
@@ -321,7 +321,6 @@ export const fetchMoreDealer = async (startAfter) => {
   const lastVal = data.docs[data.docs.length - 1];
   const size = data.size;
 
-  
   data.forEach((res) => {
     const obj = { ...res.data(), id: res.id };
     arr.push(obj);
@@ -388,6 +387,7 @@ export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
 
   return { size, arr, lastVal };
 };
+
 export const fetchShowroomData = async () => {
   const ref = firestore()
     .collection("Showrooms")
@@ -402,6 +402,26 @@ export const fetchShowroomData = async () => {
     const obj = { ...res.data(), id: res.id };
     arr.push(obj);
   });
+  return { size, arr, lastVal };
+};
+
+export const fetchShowroomDataGeneral = async (query) => {
+  const r = query.map((e) => e.id);
+  console.log(r)
+  const ref = firestore()
+    .collection("Showrooms")
+    .where(firestore.FieldPath.documentId(), "in", r);
+
+  const arr = [];
+  const data = await ref.limit(10).get();
+  const size = data.size;
+  const lastVal = data.docs[data.docs.length - 1];
+
+  data.forEach((res) => {
+    const obj = { ...res.data(), id: res.id };
+    arr.push(obj);
+  });
+  console.log(arr)
   return { size, arr, lastVal };
 };
 
@@ -549,13 +569,12 @@ export const fetchSpecificShowroom = async (id) => {
     .collection("Showrooms")
     .doc(id);
   const doc = await cityRef.get();
-  let result = { ...doc.data() ,id:id};
-  return result
+  let result = { ...doc.data(), id: id };
+  return result;
 };
 
-
 export const UpdateDemandData = async (carData, status, functionBack, id) => {
-  console.log(id,carData)
+  console.log(id, carData);
   const caller = (id) => {
     firestore()
       .collection("Demand")
@@ -567,7 +586,6 @@ export const UpdateDemandData = async (carData, status, functionBack, id) => {
   };
   caller(id);
 };
-
 
 export const fetchShowroomCar = async (value) => {
   return await firestore()
