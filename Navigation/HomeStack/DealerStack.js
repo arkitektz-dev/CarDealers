@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import DealerScreen from "../../Screens/Dealer";
 import ListingDealer from "../../Screens/Dealer/Listing";
 import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
+import ShowroomScreen from "../../Screens/GeneralShowroomScreen/index";
 
 const DealerStack = () => {
   const Stack = createStackNavigator();
@@ -17,6 +18,11 @@ const DealerStack = () => {
       <Stack.Screen
         name="GeneralAdScreen"
         component={GeneralAdScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ShowroomScreen"
+        component={ShowroomScreen}
         options={{ headerShown: false }}
       />
 

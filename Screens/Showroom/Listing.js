@@ -81,7 +81,7 @@ const ListingShowroom = ({ route }) => {
           flexDirection: "row",
         }}
       >
-        {datalength == 5 ? (
+        {datalength == 10 ? (
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={_onEndReached}

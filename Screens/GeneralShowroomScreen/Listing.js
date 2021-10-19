@@ -18,6 +18,7 @@ import LottieView from "lottie-react-native";
 import {
   fetchMoreShowroom,
   fetchShowroomDataGeneral,
+  fetchShowroomDataGeneralSearch,
 } from "../../Data/FetchData";
 import { RefreshControl } from "react-native";
 
@@ -28,6 +29,7 @@ const ListingShowroom = ({ data }) => {
   const [moreloading, setMoreLoading] = useState(false);
   const [startAfter, setStartAfter] = useState(Object);
   const [datalength, setDatalength] = useState(0);
+  const [slicer, setSlicer] = useState([0, 10]);
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -35,8 +37,11 @@ const ListingShowroom = ({ data }) => {
   const [searchText, setSearchText] = useState("");
   useEffect(() => {
     setLoading(true);
-    fetchShowroomDataGeneral(data.route.params).then((data) => {
+    fetchShowroomDataGeneral(
+      data.route.params.slice(slicer[0], slicer[1])
+    ).then((data) => {
       setShowroomData(data.arr);
+      setSlicer([slicer[0] + 10,slicer[1] + 10])
       setStartAfter(data.lastVal);
       setfilteredData(data.arr);
       setDatalength(data.size);
@@ -48,23 +53,26 @@ const ListingShowroom = ({ data }) => {
   const navigation = useNavigation();
 
   const searchShowroom = () => {
-    if (searchText) {
-      const newData = showroomdata.filter((item) => {
-        const itemData = `${item.location.toUpperCase()}   
-         ${item.name.toUpperCase()}`;
-        const textData = searchText.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setShowroomData(newData);
-      setshowroomCount(newData.length);
-    } else {
-      setShowroomData(filteredData);
-    }
+    setLoading(true);
+    fetchShowroomDataGeneralSearch({
+      query: data.route.params,
+      searchText: searchText,
+    }).then((data) => {
+      setShowroomData(data.arr);
+      setStartAfter(data.lastVal);
+      setfilteredData(data.arr);
+      setDatalength(data.size);
+      setshowroomCount(data.size);
+      setLoading(false);
+    });
   };
   const onRefresh = () => {
     setRefreshing(true);
-    fetchShowroomData().then((data) => {
+    fetchShowroomDataGeneral(
+      data.route.params.slice(0, 10)
+    ).then((data) => {
       setShowroomData(data.arr);
+      setSlicer([10,20])
       setStartAfter(data.lastVal);
       setfilteredData(data.arr);
       setDatalength(data.size);
@@ -106,7 +114,10 @@ const ListingShowroom = ({ data }) => {
   };
   const _onEndReached = () => {
     setMoreLoading(true);
-    fetchMoreShowroom(startAfter).then((res) => {
+    fetchShowroomDataGeneral(
+      data.route.params.slice(slicer[0], slicer[1])
+    ).then((res) => {
+      setSlicer([slicer[0] + 10,slicer[1] + 10])
       setShowroomData([...showroomdata, ...res.arr]);
       setDatalength(res.arr.length);
       setshowroomCount(showroomdata.length + res.arr.length);

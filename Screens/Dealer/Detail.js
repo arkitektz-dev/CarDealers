@@ -21,7 +21,6 @@ import {
 import HomeCard from "../../Component/CardViews/ProfileCard";
 import { Modal } from "react-native";
 
-
 const DealerDetailScreen = ({ route }) => {
   const param = route.params.item;
 
@@ -67,7 +66,7 @@ const DealerDetailScreen = ({ route }) => {
   useEffect(() => {
     setLoading(true);
     setModalData(param.showrooms);
-    
+
     setshowroomCount(param.showrooms.length);
     fetchData().then(() => setLoading(false));
   }, []);
@@ -250,7 +249,10 @@ const DealerDetailScreen = ({ route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <View style={{ flexDirection: "column" }}>
+            <TouchableOpacity
+                style={{ flexDirection: "column" }}
+                onPress={() => navigation.navigate("ShowroomScreen", modalData)}
+              >
               <Text
                 style={{
                   fontSize: 35,
@@ -261,16 +263,19 @@ const DealerDetailScreen = ({ route }) => {
               >
                 {showroomCount}
               </Text>
-              <TouchableOpacity
-                style={styles.CarInfoTitle}
-                onPress={modalVisible}
-              >
+
+              <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> SHOWROOMS </Text>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity
               style={{ flexDirection: "column" }}
-              onPress={() => navigation.navigate("GeneralAdScreen",{param:param,dealer:true})}
+              onPress={() =>
+                navigation.navigate("GeneralAdScreen", {
+                  param: param,
+                  dealer: true,
+                })
+              }
             >
               <Text
                 style={{
