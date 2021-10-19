@@ -15,6 +15,8 @@ import AddDemandCar from "../../Screens/DemandCarlisting/AddDemandCar";
 import ShowroomDealerProfile from "../../Screens/Showroom/DealerProfile";
 import DealerShowroomProfile from "../../Screens/Dealer/Showroom";
 import MyAd from "../../Screens/MyAd/Listing";
+import ShowroomScreen from "../../Screens/GeneralShowroomScreen/index";
+import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
 
 const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -104,6 +106,16 @@ const HomeStack = () => {
       <Stack.Screen
         name="DealerShowroomProfile"
         component={DealerShowroomProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ShowroomScreen"
+        component={ShowroomScreen}
+        options={{ headerShown: false }}
+      />
+       <Stack.Screen
+        name="GeneralAdScreen"
+        component={GeneralAdScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

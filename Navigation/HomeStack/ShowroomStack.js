@@ -6,6 +6,7 @@ import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 import ShowroomProfile from "../../Screens/Showroom/Profile";
 import ShowroomDealerProfile from "../../Screens/Showroom/DealerProfile";
 import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
+import GeneralDealerScreen from "../../Screens/GeneralDealerScreen/index";
 import DetailCarScreen from "../../Screens/Car/Details";
 
 const ShowroomStack = () => {
@@ -41,6 +42,11 @@ const ShowroomStack = () => {
         <Stack.Screen
         name="DetailCarScreen"
         component={DetailCarScreen}
+        options={{ headerShown: false }}
+      />
+        <Stack.Screen
+        name="GeneralDealerScreen"
+        component={GeneralDealerScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -4,7 +4,7 @@ import MyAds from "../../Screens/MyAd/Listing";
 import DetailCarScreen from "../../Screens/MyAd/Details";
 import ShowroomDetailScreen from "../../Screens/Showroom/Details";
 import ShowroomDealerProfile from "../../Screens/Showroom/DealerProfile";
-
+import GeneralAdScreen from "../../Screens/GeneralAdScreen/index";
 import BottomProfileScreen from "../../Screens/BottomProfileScreen";
 import ShowroomScreen from "../../Screens/GeneralShowroomScreen/index";
 
@@ -46,6 +46,11 @@ const BottomProfileScreenStack = () => {
       <Stack.Screen
         name="ShowroomScreen"
         component={ShowroomScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GeneralAdScreen"
+        component={GeneralAdScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

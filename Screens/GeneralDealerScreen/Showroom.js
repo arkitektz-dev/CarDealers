@@ -18,47 +18,28 @@ import {
   screenHeight,
   screenWidth,
 } from "../../Global/Dimension";
-import HomeCard from "../../Component/CardViews/ProfileCard";
+import HomeCard from "../../Component/CardViews/HomeProductListCard";
 import AuthContext from "../../Component/Authcontext";
 import LottieView from "lottie-react-native";
-const ShowroomDetailScreen = ({ route }) => {
-  const item = route.params.item;
-  const showroomId = route.params.item.id;
+
+const DealerShowroomProfile = ({ route, navigation }) => {
+  const showroomId = route.params.item.id._documentPath._parts[1];
+  const showroomName = route.params.item.name;
+
   const [dealerCount, setdealerCount] = useState(0);
   const [modalData, setModalData] = useState([]);
   const [refreshPage, setRefreshPage] = useState("");
   const [carCount, setcarCount] = useState(0);
   const [dataCar, setDataCar] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [showroomData, setShowroomData] = useState([]);
   const [showroomExist, setShowroomExist] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tempArr, setTempArr] = useState([]);
   const authContext = useContext(AuthContext);
-  var user;
-  if (authContext.user != null) {
-    user = authContext.user.toString();
-  }
+  const user = authContext.user;
   const arr = [];
-
-  useEffect(() => {
-    // console.log(user);
-    // const ref = firestore()
-    //   .collection("Dealers")
-    //   .doc(user);
-    // ref.get().then((res) => {
-    //   console.log(res);
-    //   // setTempArr(res.data().showrooms);
-    //   res.data().showrooms.forEach((data) => {
-    //     if (data.id._documentPath._parts[1] == showroomId) {
-    //       setShowroomExist(showroomId);
-    //     }
-    //   });
-    // });
-
-    setLoading(true);
-    fetchShowroomData();
-    fetchData().then(() => setLoading(false));
-  }, [refreshPage]);
+  const showroomArr = [];
 
   const AssignShowroom = () => {
     const Id_Showroom = firestore()
@@ -83,12 +64,14 @@ const ShowroomDetailScreen = ({ route }) => {
       querySnapshot.forEach((documentSnapshot) => {
         let showroomDataId;
         if (typeof documentSnapshot.data().showroom.id == "string") {
-          showroomDataId = documentSnapshot.data().showroom.id;
+          showroomDataId = documentSnapshot.data().showroom.id.split("/")[1];
         } else {
-          showroomDataId = documentSnapshot.data().showroom.id;
+          showroomDataId = documentSnapshot
+            .data()
+            .showroom.id.id.toString()
+            .trim();
         }
         const paramShowroomId = showroomId;
-
         if (showroomDataId == paramShowroomId)
           arr.push(documentSnapshot.data());
       });
@@ -99,25 +82,45 @@ const ShowroomDetailScreen = ({ route }) => {
   const fetchShowroomData = async () => {
     let dealersCount = 0;
     const arr = [];
-    const ref = firestore().collection("Users");
+    const ref = firestore().collection("Dealers");
     await ref.get().then((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
-        var a = documentSnapshot.data().showrooms?.filter((s) => {
+        var a = documentSnapshot.data().showrooms.filter((s) => {
           if (s.id.id.trim() == showroomId) {
             arr.push({
               id: documentSnapshot.id,
+              data: documentSnapshot.data(),
             });
-            console.log(true);
+
             return true;
           }
-          console.log(arr);
+
           setModalData(arr);
         });
-        if (a?.length > 0) {
+        if (a.length > 0) {
           dealersCount++;
         }
       });
       setdealerCount(dealersCount);
+    });
+  };
+  const getShowrooms = async () => {
+    const ref = firestore().collection("Showrooms");
+    await ref.get().then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        let showroomDataId;
+        if (typeof documentSnapshot.id == "string") {
+          showroomDataId = documentSnapshot.id;
+        } else {
+          showroomDataId = documentSnapshot.id.toString().trim();
+        }
+        console.log(showroomId);
+        const paramShowroomId = showroomId.toString();
+        if (showroomDataId == paramShowroomId) {
+          showroomArr.push(documentSnapshot.data());
+        }
+      });
+      setShowroomData(showroomArr);
     });
   };
   const modalVisible = () => {
@@ -128,9 +131,7 @@ const ShowroomDetailScreen = ({ route }) => {
     }
   };
   const onPressHandlerDealerList = (item) => {
-    console.log(item);
     navigation.navigate("ShowroomDealerProfile", { item });
-
     setVisible(false);
   };
   const _renderDealerList = ({ item }) => {
@@ -191,33 +192,29 @@ const ShowroomDetailScreen = ({ route }) => {
       />
     );
   };
-  const _onEmpty = () => {
-    return (
-      <View
-        style={{
-          flexDirection: "column",
-          backgroundColor: "#fff",
-          top: "40%",
-          paddingBottom: "90%",
-        }}
-      >
-        <Text style={{ fontSize: 20 }}> No Cars Available </Text>
-      </View>
-    );
-  };
-  const navigation = useNavigation();
+
+  //    Showroom Exist Code
+
+  // const ref = firestore()
+  //   .collection("Dealers")
+  //   .doc(user);
+  // ref.get().then((res) => {
+  //   setTempArr(res.data().showrooms);
+  //   res.data().showrooms.forEach((data) => {
+  //     if (data.id._documentPath._parts[1] == showroomId) {
+  //       setShowroomExist(showroomId);
+  //     }
+  //   });
+  // });
+
+  useEffect(() => {
+    getShowrooms();
+    setLoading(true);
+    fetchShowroomData();
+    fetchData().then(() => setLoading(false));
+  }, []);
   return (
     <>
-      <View style={styles.searchHolder}>
-        <IonIcon
-          style={{ margin: 10 }}
-          name="chevron-back-circle-sharp"
-          color="white"
-          size={35}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headingText}> Showroom Profile</Text>
-      </View>
       {loading ? (
         <LottieView
           source={require("../../Assets/CarLoader.json")}
@@ -239,10 +236,20 @@ const ShowroomDetailScreen = ({ route }) => {
               justifyContent: "space-between",
             }}
           >
+            <View style={styles.searchHolder}>
+              <IonIcon
+                style={{ margin: 10 }}
+                name="chevron-back-circle-sharp"
+                color="white"
+                size={35}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.headingText}> Showroom Profile</Text>
+            </View>
             <Modal
-              onRequestClose={() => setVisible(false)}
               visible={visible}
               containerStyle={{ backgroundColor: "rgba(0.5, 0.25, 0, 0.2)" }}
+              onRequestClose={() => setVisible(false)}
             >
               <TouchableOpacity
                 activeOpacity={0}
@@ -277,7 +284,7 @@ const ShowroomDetailScreen = ({ route }) => {
               }}
             >
               <Image
-                source={{ uri: item.images[0] }}
+                source={{ uri: showroomData[0] && showroomData[0].images[0] }}
                 onPress={() => navigation.goBack()}
                 style={{
                   width: 85,
@@ -290,21 +297,25 @@ const ShowroomDetailScreen = ({ route }) => {
                 style={{ flexDirection: "column", justifyContent: "flex-end" }}
               >
                 <View style={styles.DealerName}>
-                  <Text style={styles.carInfoText}> {item.name} </Text>
+                  <Text style={styles.carInfoText}>{showroomName}</Text>
                 </View>
                 <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.h1}>{item.contactInformation}</Text>
-                  <Text style={styles.txt1}>{item.location}</Text>
+                  <Text style={styles.h1}>
+                    {showroomData[0] && showroomData[0].contactInformation}
+                  </Text>
+                  <Text style={styles.txt1}>
+                    {showroomData[0] && showroomData[0].location}
+                  </Text>
                 </View>
               </View>
             </View>
             {/* {showroomExist ? (
-          <Text style={styles.carSubInfoText}>Showroom Exist</Text>
-        ) : (
-          <TouchableOpacity onPress={AssignShowroom}>
-            <Text style={styles.carSubInfoText}>Showroom Does Not Exist</Text>
-          </TouchableOpacity>
-        )} */}
+        <Text style={styles.carSubInfoText}>Showroom Exist</Text>
+      ) : (
+        <TouchableOpacity onPress={AssignShowroom}>
+          <Text style={styles.carSubInfoText}>Showroom Does Not Exist</Text>
+        </TouchableOpacity>
+      )} */}
           </View>
           <View
             style={{
@@ -313,10 +324,7 @@ const ShowroomDetailScreen = ({ route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <TouchableOpacity
-              onPress={()=>navigation.navigate('GeneralDealerScreen',showroomId)}
-              style={{ flexDirection: "column" }}
-            >
+            <View style={{ flexDirection: "column" }}>
               <Text
                 style={{
                   fontSize: 35,
@@ -327,19 +335,14 @@ const ShowroomDetailScreen = ({ route }) => {
               >
                 {dealerCount}
               </Text>
-              <View style={styles.CarInfoTitle}>
+              <TouchableOpacity
+                onPress={modalVisible}
+                style={styles.CarInfoTitle}
+              >
                 <Text style={styles.countText}> Dealers </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flexDirection: "column" }}
-              onPress={() =>
-                navigation.navigate("GeneralAdScreen", {
-                  param: { showroomId: showroomId },
-                  dealer: false,
-                })
-              }
-            >
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: "column" }}>
               <Text
                 style={{
                   fontSize: 35,
@@ -353,22 +356,39 @@ const ShowroomDetailScreen = ({ route }) => {
               <View style={styles.CarInfoTitle}>
                 <Text style={styles.countText}> Cars </Text>
               </View>
-            </TouchableOpacity>
+            </View>
           </View>
-          <FlatList
-            columnWrapperStyle={{ justifyContent: "space-around" }}
-            numColumns={2}
-            data={dataCar}
-            ListEmptyComponent={_onEmpty}
-            renderItem={_renderItem}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {/*  */}
+          {dataCar.length > 0 ? (
+            <FlatList
+              contentContainerStyle={{
+                alignSelf: "center",
+              }}
+              numColumns={2}
+              data={dataCar}
+              renderItem={_renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          ) : (
+            <LottieView
+              source={require("../../Assets/NoData.json")}
+              autoPlay
+              resizeMode="contain"
+              style={{
+                bottom: 10,
+                alignSelf: "center",
+                width: 300,
+                height: 300,
+              }}
+              hardwareAccelerationAndroid={true}
+            />
+          )}
         </View>
       )}
     </>
   );
 };
-export default memo(ShowroomDetailScreen);
+export default DealerShowroomProfile;
 const styles = StyleSheet.create({
   Nav: { flexDirection: "row" },
   parent: {
@@ -379,6 +399,7 @@ const styles = StyleSheet.create({
   searchHolder: {
     backgroundColor: "#1c2e65",
     flexDirection: "row",
+    flexGrow: 1,
   },
   navTxt: {
     textAlign: "center",

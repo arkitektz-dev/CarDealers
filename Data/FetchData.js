@@ -388,6 +388,26 @@ export const fetchMoreDealerWithSearch = async (startAfter, searchText) => {
   return { size, arr, lastVal };
 };
 
+export const fetchDealerDataGeneral = async (showroomid) => {
+  const arr = [];
+  const ref = firestore().collection("Users");
+  await ref.get().then((querySnapshot) => {
+    querySnapshot.forEach((documentSnapshot) => {
+      console.log(documentSnapshot);
+      var a = documentSnapshot.data().showrooms?.filter((s) => {
+        if (s.id.id.trim() == showroomid) {
+          arr.push(documentSnapshot.data());
+
+          return true;
+        }
+        console.log(arr);
+      });
+    });
+  });
+
+  return { arr};
+};
+
 export const fetchShowroomData = async () => {
   const ref = firestore()
     .collection("Showrooms")
@@ -428,25 +448,24 @@ export const fetchShowroomDataGeneral = async (query) => {
 
 export const fetchShowroomDataGeneralSearch = async (query) => {
   const queryIds = query.query.map((e) => e.id._documentPath._parts[1]);
-  
 
   console.log(queryIds, query);
   const ref = firestore()
     .collection("Showrooms")
     .where("name", ">=", query.searchText)
     .where("name", "<=", query.searchText + "\uf8ff");
-    let arr = [];
-    const data = await ref.get();
-    
-    const lastVal = data.docs[data.docs.length - 1];
-    
-    data.forEach((res) => {
-      const obj = { ...res.data(), id: res.id };
-      arr.push(obj);
-    });
-    arr = arr.filter(entry1 => queryIds.some(entry2 => entry1.id === entry2));
-    const size = arr.length;
-    console.log(arr)
+  let arr = [];
+  const data = await ref.get();
+
+  const lastVal = data.docs[data.docs.length - 1];
+
+  data.forEach((res) => {
+    const obj = { ...res.data(), id: res.id };
+    arr.push(obj);
+  });
+  arr = arr.filter((entry1) => queryIds.some((entry2) => entry1.id === entry2));
+  const size = arr.length;
+  console.log(arr);
   return { size, arr, lastVal };
 };
 
