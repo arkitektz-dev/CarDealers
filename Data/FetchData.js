@@ -248,6 +248,10 @@ export const fetchMoreCar = async (startAfter, filter) => {
     console.log("city", filter.City);
     ref = ref.where("vehicle.city", "==", filter.City);
   }
+  if (filter.location != "") {
+    console.log("city", filter.location);
+    ref = ref.where("location", "==", filter.location);
+  }
   if (filter.Assemble != "") {
     ref = ref.where(
       "vehicle.additionalInformation.assembly",

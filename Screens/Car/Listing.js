@@ -47,6 +47,7 @@ const ListingCars = () => {
     Year: "",
     Make: "",
     City: "",
+    location: "",
     ExteriorColor: "",
     Assemble: "",
     initPrice: "",
@@ -63,6 +64,7 @@ const ListingCars = () => {
       Year: "",
       Make: "",
       City: "",
+      location: "",
       ExteriorColor: "",
       Assemble: "",
       initPrice: "",
@@ -173,6 +175,12 @@ const ListingCars = () => {
       console.log(dropdownValues.City);
       ref = ref.where("vehicle.city", "==", dropdownValues.City);
       setFilter({ ...filter, City: dropdownValues.City });
+      setFilterState(true);
+    }
+    if (dropdownValues.location != "") {
+      console.log(dropdownValues.location);
+      ref = ref.where("location", "==", dropdownValues.location);
+      setFilter({ ...filter, location: dropdownValues.location });
       setFilterState(true);
     }
     if (dropdownValues.registrationCity != "") {

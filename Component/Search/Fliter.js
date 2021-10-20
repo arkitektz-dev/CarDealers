@@ -42,6 +42,7 @@ const Filter = ({
     Engine: "",
     Features: [],
     City: "",
+    location: "",
     Model: "",
     Make: "",
     Year: "",
@@ -72,6 +73,7 @@ const Filter = ({
       Engine: "",
       Features: [],
       City: "",
+      location: "",
       Model: "",
       Make: "",
       Year: "",
@@ -122,6 +124,7 @@ const Filter = ({
       },
     });
   };
+  const [locations, setLocations] = useState([]);
 
   const items = [
     { label: "800cc", value: 1 },
@@ -139,10 +142,25 @@ const Filter = ({
     { label: "Gold", value: 3 },
   ];
   const city = [
-    { label: "Karachi", value: 1 },
-    { label: "Lahore", value: 2 },
-    { label: "Islamabad", value: 3 },
+    { label: "Karachi", value: "Karachi", cityId: 1 },
+    { label: "Lahore", value: "Lahore", cityId: 2 },
+    { label: "Islamabad", value: "Islamabad", cityId: 3 },
   ];
+  const areas = [
+    { label: "Gulshan", value: "Gulshan", cityId: 1 },
+    { label: "Defence", value: "Defence", cityId: 1 },
+    { label: "Johar", value: "Johar", cityId: 1 },
+    { label: "Green Area", value: "Green Area", cityId: 3 },
+    { label: "Blue Area", value: "Blue Area", cityId: 3 },
+    { label: "Gulberg", value: "Gulberg", cityId: 2 },
+    { label: "Lalokhet", value: "Lalokhet", cityId: 1},
+  ];
+  const onChangeHandler2 = (item) => {
+    const body = areas.filter((e) => e.cityId == item.cityId);
+    setDropDownValues({ ...dropdownValues, City: item.label,location:'' })
+    setLocations(body);
+    console.log(body);
+  };
   const type = [
     { label: "local", value: 1 },
     { label: "imported", value: 2 },
@@ -212,7 +230,7 @@ const Filter = ({
             alignItems: "center",
 
             backgroundColor: "white",
-            height:900,
+            height:1000,
           }}
         >
           <View
@@ -339,11 +357,24 @@ const Filter = ({
             items={city}
             name="category"
             onSelectItem={(item) =>
-              setDropDownValues({ ...dropdownValues, City: item.label })
+              
+              onChangeHandler2(item)
             }
             PickerItemComponent={CategoryPickerItem}
             placeholder="Select City"
             selectedItem={dropdownValues.City}
+            width="95%"
+          />
+          <AppPicker
+            title="Location"
+            items={locations}
+            name="category"
+            onSelectItem={(item) =>
+              setDropDownValues({ ...dropdownValues, location: item.label })
+            }
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Select Location"
+            selectedItem={dropdownValues.location}
             width="95%"
           />
           <AppPicker
