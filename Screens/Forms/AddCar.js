@@ -28,6 +28,7 @@ import {
   fetchDealerCar,
   getData,
   AddCompanyMake,
+  fetchSpecificShowroom,
 } from "../../Data/FetchData";
 import SliderData from "../../Component/SliderData/Index";
 import storage from "@react-native-firebase/storage";
@@ -124,6 +125,7 @@ const AddCar = () => {
   const dealerData = [];
 
   const [registrationCity, setRegistrationCity] = useState("");
+  const [location, setLocation] = useState("");
   const [Description, setDescription] = useState("");
   const [imagesUrl, setImagesUrl] = useState([]);
   const [checkbox, setCheckbox] = useState([]);
@@ -139,6 +141,7 @@ const AddCar = () => {
       // console.log(res.data());
       // if (res.data().showrooms.length > 0) {
       res.data().showrooms.forEach((data) => {
+        console.log(data);
         showroomData.push({
           value: data.id,
           label: data.name,
@@ -159,6 +162,10 @@ const AddCar = () => {
       setDealerState(dealerData)
     );
   }, []);
+  const handleLocation = async (id) => {
+    const result = await fetchSpecificShowroom(id);
+    setLocation(result.location)
+  };
   const getCompanies = () => {
     AddCompanyMake().then((res) => {
       const arr = [];
@@ -252,6 +259,7 @@ const AddCar = () => {
               },
               date: date,
               adStatus: "Active",
+              location:location
             };
 
             await AddCarData(obj)
@@ -686,6 +694,7 @@ const AddCar = () => {
                 onSelectItem={(item) => {
                   setShowroomPicker(item.label);
                   setShowroomId(item.value._documentPath._parts[1]);
+                  handleLocation(item.value._documentPath._parts[1]);
                 }}
                 PickerItemComponent={CategoryPickerItem}
                 placeholder=" Showrooms *"
@@ -866,7 +875,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     paddingVertical: 20,
-
   },
   dropdownHeader: {
     flexDirection: "row",
@@ -890,6 +898,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 7,
     minHeight: 52,
-    marginBottom:10
+    marginBottom: 10,
   },
 });

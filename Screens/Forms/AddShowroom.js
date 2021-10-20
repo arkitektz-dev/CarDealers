@@ -32,12 +32,14 @@ const AddShowroom = ({ navigation }) => {
     name: "",
     website: "",
     city: "",
+    location: "",
     contactInformation: "",
     email: "",
     address: "",
     images: [],
   });
   const [uploading, setUploading] = useState(false);
+  const [locations, setLocations] = useState([]);
 
   const [errorState, setErrorState] = useState({
     name: false,
@@ -45,13 +47,29 @@ const AddShowroom = ({ navigation }) => {
     contactInformation: false,
     contactInformationType: false,
     email: false,
+    location: false,
   });
   const city = [
-    { label: "Karachi", value: "Karachi" },
-    { label: "Lahore", value: "Lahore" },
-    { label: "Islamabad", value: "Islamabad" },
+    { label: "Karachi", value: "Karachi", cityId: 1 },
+    { label: "Lahore", value: "Lahore", cityId: 2 },
+    { label: "Islamabad", value: "Islamabad", cityId: 3 },
   ];
+  const areas = [
+    { label: "Gulshan", value: "Gulshan", cityId: 1 },
+    { label: "Defence", value: "Defence", cityId: 1 },
+    { label: "Johar", value: "Johar", cityId: 1 },
+    { label: "Green Area", value: "Green Area", cityId: 3 },
+    { label: "Blue Area", value: "Blue Area", cityId: 3 },
+    { label: "Gulberg", value: "Gulberg", cityId: 2 },
+    { label: "Lalokhet", value: "Lalokhet", cityId: 1},
+  ];
+  const onChangeHandler2 = (item) => {
+    const body = areas.filter((e) => e.cityId == item.cityId);
+    setLocations(body);
 
+    setShowroomData({ ...showroomData, city: item.label, location: "" });
+    console.log(body);
+  };
   const [image, setImage] = useState(undefined);
 
   const toast = useToast();
@@ -73,6 +91,7 @@ const AddShowroom = ({ navigation }) => {
       showroomData.name != "" &&
       showroomData.address != "" &&
       showroomData.contactInformation != "" &&
+      showroomData.location != "" &&
       image != undefined
     ) {
       setUploading(true);
@@ -181,9 +200,19 @@ const AddShowroom = ({ navigation }) => {
     android: 20,
   });
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View
+    style={{
+      flexDirection: "column",
+      flex: 1,
+      backgroundColor: "#fff",
+    }}
+  >
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
       <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "padding"}
+        behavior={Platform.OS === "android" ? "padding" : "padding"}
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}
       >
@@ -218,9 +247,7 @@ const AddShowroom = ({ navigation }) => {
             width: "100%",
             flex: 1,
             paddingHorizontal: 20,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 60,
+            marginTop: 70,
           }}
         >
           <View>
@@ -230,7 +257,7 @@ const AddShowroom = ({ navigation }) => {
                 position: "absolute",
                 zIndex: 10,
                 top: -55,
-                right: -12,
+                right: '30%',
                 borderRadius: 50,
                 backgroundColor: "white",
                 width: 25,
@@ -278,11 +305,24 @@ const AddShowroom = ({ navigation }) => {
             items={city}
             name="category"
             onSelectItem={(item) => {
-              setShowroomData({ ...showroomData, city: item.label });
+              onChangeHandler2(item);
             }}
             PickerItemComponent={CategoryPickerItem}
             placeholder=" City *"
             selectedItem={showroomData.city}
+            width="100%"
+            style={styles.dropdown}
+          />
+          <AppPicker
+            title="Location"
+            items={locations}
+            name="category"
+            onSelectItem={(item) => {
+              setShowroomData({ ...showroomData, location: item.label });
+            }}
+            PickerItemComponent={CategoryPickerItem}
+            placeholder=" Location *"
+            selectedItem={showroomData.location}
             width="100%"
             style={styles.dropdown}
           />
@@ -327,6 +367,7 @@ const AddShowroom = ({ navigation }) => {
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
+    </View>
   );
 };
 export default memo(AddShowroom);
@@ -377,8 +418,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: -2,
     borderBottomWidth: 1,
-    paddingLeft:10,
-    
+    paddingLeft: 10,
   },
   avatar: {
     width: 130,
